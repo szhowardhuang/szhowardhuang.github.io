@@ -69,6 +69,279 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-lagent_sft" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/01/31/lagent_sft/" class="article-date">
+  <time class="dt-published" datetime="2024-01-31T06:18:07.784Z" itemprop="datePublished">2024-01-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/01/31/lagent_sft/">微调Lagent的实践</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>InternLM的Lagent是智能代理的一个框架，近几日实践了智能代理调用MM yolo进行图像类识别的任务，特写此文作为记录。</p>
+<h3 id="基座模型"><a href="#基座模型" class="headerlink" title="基座模型"></a>基座模型</h3><p>用InternLM chat 7B基座模型，下载huggingface格式的模型，放到&#x2F;root&#x2F;ft-msagent目录下。</p>
+<h3 id="数据集："><a href="#数据集：" class="headerlink" title="数据集："></a>数据集：</h3><p>去魔搭下载魔搭通用agent数据集：   </p>
+<pre><code>apt install git-lfs
+git clone https://www.modelscope.cn/datasets/iic/ms_agent.git
+</code></pre>
+<p>打开train_agent_react.jsonl ， 搜索图像识别，发现 image_recognition , ImageRecognitionAPI, image_classifier 字段</p>
+<p>需要修改 ImageRecognitionAPI 为 ImageRecognition，<br>修改 image_recognition 为 ImageRecognition，<br>修改 image_classifier 为 ImageClassifier，    </p>
+<p>用sed直接修改    </p>
+<pre><code>sed -i &#39;s/ImageRecognitionAPI/ImageRecognition/g&#39; train_agent_react.jsonl
+sed -i &#39;s/image_recognition/ImageRecognition/g&#39; train_agent_react.jsonl
+sed -i &#39;s/image_classifier/ImageClassifier/g&#39; train_agent_react.jsonl
+</code></pre>
+<p>可以看一下是否修改成功 </p>
+<pre><code>grep ImageClassifier train_agent_react.jsonl
+grep ImageRecognition train_agent_react.jsonl
+</code></pre>
+<p>修改配置文件 &#x2F;root&#x2F;ft-msagent&#x2F;internlm_7b_qlora_msagent_react_e3_gpu8_copy.py<br><img src="/../asset_lagentsft/sft001.png"><br>看到这里你一定要疑问，为什么不把 data_path 指向 本地刚刚git clone下来的数据集路径呢？<br>其实是因为lagent有bug，会把本地数据集当作json格式的客户定制数据集，导致出错。<br>所以用一个work around的方法，就是先让lagent跑通，下载数据集到cache目录，然后进入lagent目录，再修改数据集文件。</p>
+<p>先进入ft-msagent目录，运行</p>
+<pre><code>xtuner train internlm_7b_qlora_msagent_react_e3_gpu8_copy.py --deepspeed deepspeed_zero2
+</code></pre>
+<p>跑一次train，不需要跑完，进入train就可以 CTRL+C 关掉</p>
+<p>然后</p>
+<pre><code>cd ~/.cache/modelscope/hub/datasets/iic/ms_agent/master/data_files 
+</code></pre>
+<p><img src="/../asset_lagentsft/sft003.png"></p>
+<p>修改数据集文件 f0d878b6a17a5cec981643649ea383cc , 这个文件名具体看你们自己的环境，会变化的。</p>
+<pre><code>sed -i &#39;s/ImageRecognitionAPI/ImageRecognition/g&#39; f0d878b6a17a5cec981643649ea383cc
+sed -i &#39;s/image_recognition/ImageRecognition/g&#39; f0d878b6a17a5cec981643649ea383cc
+sed -i &#39;s/image_classifier/ImageClassifier/g&#39; f0d878b6a17a5cec981643649ea383cc
+</code></pre>
+<p>再进入ft-msagent目录，运行</p>
+<pre><code>xtuner train internlm_7b_qlora_msagent_react_e3_gpu8_copy.py --deepspeed deepspeed_zero2
+</code></pre>
+<p><img src="/../asset_lagentsft/sft002.png"><br>可以看到reusing dataset，然后开始训练。<br><img src="/../asset_lagentsft/sft004.png"></p>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>为了避免后续重复以上数据集繁琐操作，我在魔搭上创建了一个数据集，大家可以直接用这个数据集 szhowardhuang&#x2F;msagent_lite 。</p>
+<p><a target="_blank" rel="noopener" href="https://modelscope.cn/datasets/szhowardhuang/msagent_lite">https://modelscope.cn/datasets/szhowardhuang/msagent_lite</a></p>
+<p>配置文件修改如下，拷贝即可使用：</p>
+<pre><code># Copyright (c) OpenMMLab. All rights reserved.
+import torch
+from bitsandbytes.optim import PagedAdamW32bit
+from mmengine.dataset import DefaultSampler
+from mmengine.hooks import (CheckpointHook, DistSamplerSeedHook, IterTimerHook,
+                            LoggerHook, ParamSchedulerHook)
+from mmengine.optim import AmpOptimWrapper, CosineAnnealingLR
+from modelscope.msdatasets import MsDataset
+from peft import LoraConfig
+from transformers import (AutoModelForCausalLM, AutoTokenizer,
+                        BitsAndBytesConfig)
+
+from xtuner.dataset import process_ms_dataset
+from xtuner.dataset.collate_fns import default_collate_fn
+from xtuner.dataset.map_fns import (msagent_react_map_fn,
+                                    template_map_fn_factory)
+from xtuner.engine import DatasetInfoHook, EvaluateChatHook
+from xtuner.model import SupervisedFinetune
+from xtuner.utils import PROMPT_TEMPLATE
+
+
+#######################################################################
+#                          PART 1  Settings                           #
+#######################################################################
+# Model
+pretrained_model_name_or_path = &#39;/root/ft-msagent/internlm-chat-7b&#39;
+
+# Data
+data_path = &#39;szhowardhuang/msagent_lite&#39;
+prompt_template = PROMPT_TEMPLATE.default
+max_length = 2048
+pack_to_max_length = False
+
+# Scheduler &amp; Optimizer
+batch_size = 4  # per_device
+accumulative_counts = 1
+dataloader_num_workers = 2
+max_epochs = 3
+optim_type = PagedAdamW32bit
+lr = 2e-4
+betas = (0.9, 0.999)
+weight_decay = 0
+max_norm = 1  # grad clip
+
+# Evaluate the generation performance during the training
+evaluation_freq = 500
+SYSTEM = (
+    &#39;你是一个可以调用外部工具的助手，可以使用的工具包括：\n&#39;
+    &quot;&#123;&#123;\'ImageRecognition\': \'用来进行图像识别的API。\\n"
+        '当你需要对于一个图片进行识别时，可以使用这个API。\\n'
+        "输入应该是一张图片文件的路径，或者是图片的URL。\\n\\n\',"
+        "\'ImageClassifier\': \"用来进行图像分类的API，\\n"
+        "当你需要对于一个图片进行分类时，可以使用这个API。\\n"
+        "输入应该是一张图片文件的路径，或者是图片的URL。\\n\"&#125;&#125;\n&quot;
+    &#39;如果使用工具请遵循以下格式回复：\n```\n&#39;
+    &#39;Thought:思考你当前步骤需要解决什么问题，是否需要使用工具\n&#39;
+    &quot;Action:工具名称，你的工具必须从 [[\&#39;ImageRecognition\&#39;, \&#39;ImageClassifier\&#39;]] 选择&quot;
+    &#39;\nAction Input:工具输入参数\n```\n工具返回按照以下格式回复：\n&#39;
+    &#39;```\nResponse:调用工具后的结果\n```&#39;
+    &#39;\n如果你已经知道了答案，或者你不需要工具，请遵循以下格式回复\n```&#39;
+    &#39;\nThought:给出最终答案的思考过程\nFinal Answer:最终答案\n```\n开始!\n&#39;)
+evaluation_inputs = [&#39;识别图片中的物体类别？&#39;]
+
+#######################################################################
+#                      PART 2  Model &amp; Tokenizer                      #
+#######################################################################
+tokenizer = dict(
+    type=AutoTokenizer.from_pretrained,
+    pretrained_model_name_or_path=pretrained_model_name_or_path,
+    trust_remote_code=True,
+    padding_side=&#39;right&#39;)
+
+model = dict(
+    type=SupervisedFinetune,
+    llm=dict(
+        type=AutoModelForCausalLM.from_pretrained,
+        pretrained_model_name_or_path=pretrained_model_name_or_path,
+        trust_remote_code=True,
+        torch_dtype=torch.float16,
+        quantization_config=dict(
+            type=BitsAndBytesConfig,
+            load_in_4bit=True,
+            load_in_8bit=False,
+            llm_int8_threshold=6.0,
+            llm_int8_has_fp16_weight=False,
+            bnb_4bit_compute_dtype=torch.float16,
+            bnb_4bit_use_double_quant=True,
+            bnb_4bit_quant_type=&#39;nf4&#39;)),
+    lora=dict(
+        type=LoraConfig,
+        r=64,
+        lora_alpha=16,
+        lora_dropout=0.1,
+        bias=&#39;none&#39;,
+        task_type=&#39;CAUSAL_LM&#39;))
+
+#######################################################################
+#                      PART 3  Dataset &amp; Dataloader                   #
+#######################################################################
+train_dataset = dict(
+    type=process_ms_dataset,
+    dataset=dict(type=MsDataset.load, dataset_name=data_path, split=&#39;train&#39;),
+    tokenizer=tokenizer,
+    max_length=max_length,
+    dataset_map_fn=msagent_react_map_fn,
+    template_map_fn=dict(
+        type=template_map_fn_factory, template=prompt_template),
+    remove_unused_columns=True,
+    shuffle_before_pack=True,
+    pack_to_max_length=pack_to_max_length)
+
+train_dataloader = dict(
+    batch_size=batch_size,
+    num_workers=dataloader_num_workers,
+    dataset=train_dataset,
+    sampler=dict(type=DefaultSampler, shuffle=True),
+    collate_fn=dict(type=default_collate_fn))
+
+#######################################################################
+#                    PART 4  Scheduler &amp; Optimizer                    #
+#######################################################################
+# optimizer
+optim_wrapper = dict(
+    type=AmpOptimWrapper,
+    optimizer=dict(
+        type=optim_type, lr=lr, betas=betas, weight_decay=weight_decay),
+    clip_grad=dict(max_norm=max_norm, error_if_nonfinite=False),
+    accumulative_counts=accumulative_counts,
+    loss_scale=&#39;dynamic&#39;,
+    dtype=&#39;float16&#39;)
+
+# learning policy
+# More information: https://github.com/open-mmlab/mmengine/blob/main/docs/en/tutorials/param_scheduler.md  # noqa: E501
+param_scheduler = dict(
+    type=CosineAnnealingLR,
+    eta_min=0.0,
+    by_epoch=True,
+    T_max=max_epochs,
+    convert_to_iter_based=True)
+
+# train, val, test setting
+train_cfg = dict(by_epoch=True, max_epochs=max_epochs, val_interval=1)
+
+#######################################################################
+#                           PART 5  Runtime                           #
+#######################################################################
+# Log the dialogue periodically during the training process, optional
+custom_hooks = [
+    dict(type=DatasetInfoHook, tokenizer=tokenizer),
+    dict(
+        type=EvaluateChatHook,
+        tokenizer=tokenizer,
+        every_n_iters=evaluation_freq,
+        evaluation_inputs=evaluation_inputs,
+        system=SYSTEM,
+        prompt_template=prompt_template)
+]
+
+# configure default hooks
+default_hooks = dict(
+    # record the time of every iteration.
+    timer=dict(type=IterTimerHook),
+    # print log every 100 iterations.
+    logger=dict(type=LoggerHook, interval=10),
+    # enable the parameter scheduler.
+    param_scheduler=dict(type=ParamSchedulerHook),
+    # save checkpoint per epoch.
+    checkpoint=dict(type=CheckpointHook, interval=1),
+    # set sampler seed in distributed evrionment.
+    sampler_seed=dict(type=DistSamplerSeedHook),
+)
+
+# configure environment
+env_cfg = dict(
+    # whether to enable cudnn benchmark
+    cudnn_benchmark=False,
+    # set multi process parameters
+    mp_cfg=dict(mp_start_method=&#39;fork&#39;, opencv_num_threads=0),
+    # set distributed parameters
+    dist_cfg=dict(backend=&#39;nccl&#39;),
+)
+
+# set visualizer
+visualizer = None
+
+# set log level
+log_level = &#39;INFO&#39;
+
+# load from which checkpoint
+load_from = None
+
+# whether to resume training from the loaded checkpoint
+resume = False
+
+# Defaults to use random seed and disable `deterministic`
+randomness = dict(seed=None, deterministic=False)
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://szhowardhuang.github.io/2024/01/31/lagent_sft/" data-id="cls1eg4db00052sup500rfnjm" data-title="微调Lagent的实践" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-InternLm-training" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/01/29/InternLm-training/" class="article-date">
@@ -113,7 +386,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/01/29/InternLm-training/" data-id="clryzzvfr0000i0up2bhkgs8k" data-title="书生-浦语实战训练营" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/01/29/InternLm-training/" data-id="cls1eg4d300002suph8ficmvn" data-title="书生-浦语实战训练营" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -432,7 +705,7 @@ Final Answer: Barack Obama was born on August 4, 1961. So as of January 3, 2024,
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/01/18/make-react/" data-id="clryzzvg70003i0upazhohvx0" data-title="构建 ReAct AI 代理" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/01/18/make-react/" data-id="cls1eg4dc00062sup0yvs77aa" data-title="构建 ReAct AI 代理" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -775,7 +1048,7 @@ Final Answer: Barack Obama was born on August 4, 1961. So as of January 3, 2024,
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/01/18/it-for-ai-swe/" data-id="clryzzvg70004i0up9ad8c17z" data-title="商业模式与 IT 组织：做好迎接AI冲击的准备！" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/01/18/it-for-ai-swe/" data-id="cls1eg4da00032sup67t4h1ds" data-title="商业模式与 IT 组织：做好迎接AI冲击的准备！" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -871,7 +1144,7 @@ Final Answer: Barack Obama was born on August 4, 1961. So as of January 3, 2024,
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/01/17/ai-swe/" data-id="clryzzvg80005i0up6gqhgrf4" data-title="如何设计一个人工智能驱动的软件工程团队" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/01/17/ai-swe/" data-id="cls1eg4d800012suph28egywh" data-title="如何设计一个人工智能驱动的软件工程团队" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -965,7 +1238,7 @@ Final Answer: Camila Morrone is Leo DiCaprio&#39;s girlfriend and her current ag
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/01/17/exploring-llm-agents/" data-id="clryzzvg20002i0upfjvbgr2l" data-title="探索大型语言模型代理的世界" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/01/17/exploring-llm-agents/" data-id="cls1eg4d900022supgne4du4n" data-title="探索大型语言模型代理的世界" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -1016,7 +1289,7 @@ Final Answer: Camila Morrone is Leo DiCaprio&#39;s girlfriend and her current ag
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/01/15/hello-world/" data-id="clryzzvg10001i0up4jmvb8iv" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/01/15/hello-world/" data-id="cls1eg4db00042supgzx8cm24" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -1059,6 +1332,10 @@ Final Answer: Camila Morrone is Leo DiCaprio&#39;s girlfriend and her current ag
       <ul>
         
           <li>
+            <a href="/2024/01/31/lagent_sft/">微调Lagent的实践</a>
+          </li>
+        
+          <li>
             <a href="/2024/01/29/InternLm-training/">书生-浦语实战训练营</a>
           </li>
         
@@ -1072,10 +1349,6 @@ Final Answer: Camila Morrone is Leo DiCaprio&#39;s girlfriend and her current ag
         
           <li>
             <a href="/2024/01/17/ai-swe/">如何设计一个人工智能驱动的软件工程团队</a>
-          </li>
-        
-          <li>
-            <a href="/2024/01/17/exploring-llm-agents/">探索大型语言模型代理的世界</a>
           </li>
         
       </ul>
