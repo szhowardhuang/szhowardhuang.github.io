@@ -6,19 +6,21 @@
   
   <title>微调Lagent的实践 | 嵌入式老兵博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="InternLM的Lagent是智能代理的一个框架，近几日实践了智能代理调用MM yolo进行图像类识别的任务，特写此文作为记录。 基座模型用InternLM chat 7B基座模型，下载huggingface格式的模型，放到&#x2F;root&#x2F;ft-msagent目录下。 数据集：去魔搭下载魔搭通用agent数据集：    apt install git-lfs git clone">
+  <meta name="description" content="InternLM的Lagent是智能代理的一个框架，近几日实践了智能代理调用MM yolo进行图像类识别的任务，特写此文作为记录。 环境安装conda create --name xtuner0.1.9 --clone&#x3D;&#x2F;root&#x2F;share&#x2F;conda_envs&#x2F;internlm-base conda activate xtuner0.1.9 git clone -b v0.1.9 https:">
 <meta property="og:type" content="article">
 <meta property="og:title" content="微调Lagent的实践">
 <meta property="og:url" content="https://szhowardhuang.github.io/2024/01/31/lagent_sft/index.html">
 <meta property="og:site_name" content="嵌入式老兵博客">
-<meta property="og:description" content="InternLM的Lagent是智能代理的一个框架，近几日实践了智能代理调用MM yolo进行图像类识别的任务，特写此文作为记录。 基座模型用InternLM chat 7B基座模型，下载huggingface格式的模型，放到&#x2F;root&#x2F;ft-msagent目录下。 数据集：去魔搭下载魔搭通用agent数据集：    apt install git-lfs git clone">
+<meta property="og:description" content="InternLM的Lagent是智能代理的一个框架，近几日实践了智能代理调用MM yolo进行图像类识别的任务，特写此文作为记录。 环境安装conda create --name xtuner0.1.9 --clone&#x3D;&#x2F;root&#x2F;share&#x2F;conda_envs&#x2F;internlm-base conda activate xtuner0.1.9 git clone -b v0.1.9 https:">
 <meta property="og:locale">
 <meta property="og:image" content="https://szhowardhuang.github.io/asset_lagentsft/sft001.png">
 <meta property="og:image" content="https://szhowardhuang.github.io/asset_lagentsft/sft003.png">
 <meta property="og:image" content="https://szhowardhuang.github.io/asset_lagentsft/sft002.png">
 <meta property="og:image" content="https://szhowardhuang.github.io/asset_lagentsft/sft004.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_lagentsft/sft005.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_lagentsft/sft006.png">
 <meta property="article:published_time" content="2024-01-31T06:18:07.784Z">
-<meta property="article:modified_time" content="2024-01-31T06:21:06.035Z">
+<meta property="article:modified_time" content="2024-02-01T15:06:12.954Z">
 <meta property="article:author" content="Howard Huang">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://szhowardhuang.github.io/asset_lagentsft/sft001.png">
@@ -99,6 +101,12 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <p>InternLM的Lagent是智能代理的一个框架，近几日实践了智能代理调用MM yolo进行图像类识别的任务，特写此文作为记录。</p>
+<h3 id="环境安装"><a href="#环境安装" class="headerlink" title="环境安装"></a>环境安装</h3><pre><code>conda create --name xtuner0.1.9 --clone=/root/share/conda_envs/internlm-base
+conda activate xtuner0.1.9
+git clone -b v0.1.9 https://gitee.com/internlm/xtuner
+cd xtuner
+pip install -e &#39;.[all]&#39;
+</code></pre>
 <h3 id="基座模型"><a href="#基座模型" class="headerlink" title="基座模型"></a>基座模型</h3><p>用InternLM chat 7B基座模型，下载huggingface格式的模型，放到&#x2F;root&#x2F;ft-msagent目录下。</p>
 <h3 id="数据集："><a href="#数据集：" class="headerlink" title="数据集："></a>数据集：</h3><p>去魔搭下载魔搭通用agent数据集：   </p>
 <pre><code>apt install git-lfs
@@ -132,7 +140,9 @@ sed -i &#39;s/image_classifier/ImageClassifier/g&#39; f0d878b6a17a5cec981643649e
 <p>再进入ft-msagent目录，运行</p>
 <pre><code>xtuner train internlm_7b_qlora_msagent_react_e3_gpu8_copy.py --deepspeed deepspeed_zero2
 </code></pre>
-<p><img src="/../asset_lagentsft/sft002.png"><br>可以看到reusing dataset，然后开始训练。<br><img src="/../asset_lagentsft/sft004.png"></p>
+<p><img src="/../asset_lagentsft/sft002.png"><br>可以看到reusing dataset，然后开始训练。<br><img src="/../asset_lagentsft/sft004.png"><br>如果训练一个epoch想停掉，可以按CTRL+C，下次想继续训练，要看一下last_checkpoint文件，把最后一个checkpoint的路径复制到命令行参数里。如下：</p>
+<pre><code>xtuner train internlm_7b_qlora_msagent_react_e3_gpu8_copy.py --deepspeed deepspeed_zero2 --resume /root/ft-msagent/work_dirs/internlm_7b_qlora_msagent_react_e3_gpu8_copy/epoch_2.pth
+</code></pre>
 <h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>为了避免后续重复以上数据集繁琐操作，我在魔搭上创建了一个数据集，大家可以直接用这个数据集 szhowardhuang&#x2F;msagent_lite 。</p>
 <p><a target="_blank" rel="noopener" href="https://modelscope.cn/datasets/szhowardhuang/msagent_lite">https://modelscope.cn/datasets/szhowardhuang/msagent_lite</a></p>
 <p>配置文件修改如下，拷贝即可使用：</p>
@@ -333,11 +343,19 @@ resume = False
 # Defaults to use random seed and disable `deterministic`
 randomness = dict(seed=None, deterministic=False)
 </code></pre>
+<h3 id="模型转换"><a href="#模型转换" class="headerlink" title="模型转换"></a>模型转换</h3><p>将PTH模型转换成HuggingFace模型，即生成Adapter文件夹, hf文件夹即为我们平时所理解的所谓 “LoRA模型文件”<br>    mkdir hf<br>    export MKL_SERVICE_FORCE_INTEL&#x3D;1<br>    xtuner convert pth_to_hf internlm_7b_qlora_msagent_react_e3_gpu8_copy.py .&#x2F;work_dirs&#x2F;internlm_7b_qlora_msagent_react_e3_gpu8_copy&#x2F;epoch_2.pth .&#x2F;hf</p>
+<h3 id="模型测试"><a href="#模型测试" class="headerlink" title="模型测试"></a>模型测试</h3><p>先下载并安装VisionAgent（即lagent）<br>    <a target="_blank" rel="noopener" href="https://github.com/szhowardhuang/VisionAgent.git">https://github.com/szhowardhuang/VisionAgent.git</a><br>    cd VisionAgent<br>    git checkout a93162536f04679ace6572365a1884e584b4cb03<br>    pip install -e .<br>然后安装 mmdetection<br>    pip install -U openmim<br>    mim install mmengine<br>    mim install “mmcv&gt;&#x3D;2.0.0”<br>    mim install mmdet<br>注释掉 &#x2F;root&#x2F;xtuner019&#x2F;xtuner&#x2F;xtuner&#x2F;tools&#x2F;chat.py 的139行<br><img src="/../asset_lagentsft/sft005.png"></p>
+<pre><code>export SERPER_API_KEY=abcdefg
+xtuner chat ./internlm-chat-7b --adapter hf --lagent
+</code></pre>
+<h3 id="将-HuggingFace-adapter-合并到大语言模型"><a href="#将-HuggingFace-adapter-合并到大语言模型" class="headerlink" title="将 HuggingFace adapter 合并到大语言模型"></a>将 HuggingFace adapter 合并到大语言模型</h3><pre><code>xtuner convert merge ./internlm-chat-7b ./hf ./merged --max-shard-size 2GB
+</code></pre>
+<h3 id="用VisionAgent测试合并后的模型"><a href="#用VisionAgent测试合并后的模型" class="headerlink" title="用VisionAgent测试合并后的模型"></a>用VisionAgent测试合并后的模型</h3><p>修改一下 &#x2F;root&#x2F;code&#x2F;VisionAgent&#x2F;examples&#x2F;react_web_demo.py的92行<br><img src="/../asset_lagentsft/sft006.png"><br>    pip install modelscope&#x3D;&#x3D;1.9.5<br>    pip install transformers&#x3D;&#x3D;4.35.2<br>    pip install streamlit&#x3D;&#x3D;1.24.0<br>    pip install sentencepiece&#x3D;&#x3D;0.1.99<br>    pip install accelerate&#x3D;&#x3D;0.24.1<br>    streamlit run &#x2F;root&#x2F;code&#x2F;lagent&#x2F;examples&#x2F;react_web_demo.py –server.address 127.0.0.1 –server.port 6006</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/01/31/lagent_sft/" data-id="cls1eg4db00052sup500rfnjm" data-title="微调Lagent的实践" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/01/31/lagent_sft/" data-id="clsvz52w90006asup2zu0akr1" data-title="微调Lagent的实践" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -346,6 +364,15 @@ randomness = dict(seed=None, deterministic=False)
   
     
 <nav id="article-nav">
+  
+    <a href="/2024/02/20/digital-human/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Neuer</strong>
+      <div class="article-nav-title">
+        
+          如何设计一个数字人
+        
+      </div>
+    </a>
   
   
     <a href="/2024/01/29/InternLm-training/" id="article-nav-older" class="article-nav-link-wrap">
@@ -375,7 +402,7 @@ randomness = dict(seed=None, deterministic=False)
   <div class="widget-wrap">
     <h3 class="widget-title">Archiv</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">January 2024</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/02/">February 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">January 2024</a></li></ul>
     </div>
   </div>
 
@@ -386,6 +413,10 @@ randomness = dict(seed=None, deterministic=False)
     <h3 class="widget-title">letzter Beitrag</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2024/02/20/digital-human/">如何设计一个数字人</a>
+          </li>
         
           <li>
             <a href="/2024/01/31/lagent_sft/">微调Lagent的实践</a>
@@ -401,10 +432,6 @@ randomness = dict(seed=None, deterministic=False)
         
           <li>
             <a href="/2024/01/18/it-for-ai-swe/">商业模式与 IT 组织：做好迎接AI冲击的准备！</a>
-          </li>
-        
-          <li>
-            <a href="/2024/01/17/ai-swe/">如何设计一个人工智能驱动的软件工程团队</a>
           </li>
         
       </ul>
