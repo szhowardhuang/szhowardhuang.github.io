@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   
   
-  <title>如何设计一个数字人 | 嵌入式老兵博客</title>
+  <title>如何设计一个数字人 --- 3D模型篇 | 嵌入式老兵博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="下面我就以制作一个数字人卖货视频为例 首先介绍一下将会用到的 AI 工具。  ChatGPT: 在制作数字人的过程中，ChatGPT 可以用于设定数字人的性格、生成演讲文本、回答技术问题等。  MetaHuman Creator: 这是一款由 Epic Games 开发的三维人物建模软件，可以通过对头部、身体等部位个性化的调整，实现高度逼真的数字人三维建模。  微软语音合成助手，由微软公司开发，用">
 <meta property="og:type" content="article">
-<meta property="og:title" content="如何设计一个数字人">
+<meta property="og:title" content="如何设计一个数字人 --- 3D模型篇">
 <meta property="og:url" content="https://szhowardhuang.github.io/2024/02/20/digital-human/index.html">
 <meta property="og:site_name" content="嵌入式老兵博客">
 <meta property="og:description" content="下面我就以制作一个数字人卖货视频为例 首先介绍一下将会用到的 AI 工具。  ChatGPT: 在制作数字人的过程中，ChatGPT 可以用于设定数字人的性格、生成演讲文本、回答技术问题等。  MetaHuman Creator: 这是一款由 Epic Games 开发的三维人物建模软件，可以通过对头部、身体等部位个性化的调整，实现高度逼真的数字人三维建模。  微软语音合成助手，由微软公司开发，用">
@@ -46,8 +46,19 @@
 <meta property="og:image" content="https://szhowardhuang.github.io/asset_digitalhuman/azure_tts_open_4.jpg">
 <meta property="og:image" content="https://szhowardhuang.github.io/asset_digitalhuman/azure_tts_secret_1.jpg">
 <meta property="og:image" content="https://szhowardhuang.github.io/asset_digitalhuman/azure_tts_secret_2.jpg">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_digitalhuman/021.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_digitalhuman/023.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_digitalhuman/024.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_digitalhuman/025.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_digitalhuman/026.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_digitalhuman/027.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_digitalhuman/028.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_digitalhuman/029.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_digitalhuman/030.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_digitalhuman/031.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_digitalhuman/022.png">
 <meta property="article:published_time" content="2024-02-20T07:11:15.929Z">
-<meta property="article:modified_time" content="2024-02-22T04:40:42.329Z">
+<meta property="article:modified_time" content="2024-02-23T14:08:16.775Z">
 <meta property="article:author" content="Howard Huang">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://szhowardhuang.github.io/asset_digitalhuman/003.png">
@@ -119,7 +130,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      如何设计一个数字人
+      如何设计一个数字人 --- 3D模型篇
     </h1>
   
 
@@ -136,7 +147,7 @@
 </li>
 <li><p>微软语音合成助手，由微软公司开发，用于语音识别与合成，可以将 ChatGPT 生成的文本内容转化为数字人所需要的自然语音输出。</p>
 </li>
-<li><p>Audio2Face: 怪是由英伟达公司开发的一款表情驱动技术软件，可以将音频的语调、音量等信息转化为数字人的面部表情，从而使数字人的表现更加生动真实</p>
+<li><p>Audio2Face: 由英伟达公司开发的一款表情驱动技术软件，可以将音频的语调、音量等信息转化为数字人的面部表情，从而使数字人的表现更加生动真实</p>
 </li>
 <li><p>UE5: Epic Games 开发的一款高级游戏引擎，可以提供实时渲染、动态光照、体积雾等功能，可用于打造更加真实的数字人场景。</p>
 </li>
@@ -271,6 +282,35 @@
 <p>3、特殊参数-an,-vn,-sn分别排除所有的音频，视频，字幕流。</p>
 <h4 id="播放验证"><a href="#播放验证" class="headerlink" title="播放验证"></a>播放验证</h4><pre><code>ffplay out.sync.mp4
 </code></pre>
+<h3 id="如何定制数字人的人脸"><a href="#如何定制数字人的人脸" class="headerlink" title="如何定制数字人的人脸"></a>如何定制数字人的人脸</h3><p>用polycam扫描人脸</p>
+<p>导出GLTF</p>
+<p>打开blender，导入GLTF，删除多余部分，选中，按X键删除， 然后merge mesh</p>
+<p>导出FBX，path mode选择copy，并点击旁边的按钮；object选择Animate和mesh；Geometry选择face；disable Bake Animation；然后点击export，保存为.fbx文件<br><img src="/../asset_digitalhuman/021.png"></p>
+<p>到UE5，新建项目，影视和现场活动 - 空白<br><img src="/../asset_digitalhuman/023.png"></p>
+<p>把fbx文件拖到UE5内容窗口，导入.fbx文件</p>
+<p><img src="/../asset_digitalhuman/024.png"></p>
+<p>导入后，双击material，调整material，添加常量节点</p>
+<p><img src="/../asset_digitalhuman/025.png"></p>
+<p>调整后，如下图</p>
+<p><img src="/../asset_digitalhuman/026.png"></p>
+<p>MetaHuman Plugin安装, 在Epic商城安装<br><a target="_blank" rel="noopener" href="https://www.unrealengine.com/marketplace/en-US/product/metahuman-plugin#">https://www.unrealengine.com/marketplace/en-US/product/metahuman-plugin#</a></p>
+<p>打开插件菜单，enable metahuman plugin</p>
+<p>在内容窗口右键，选择metahuman本体</p>
+<p><img src="/../asset_digitalhuman/027.png"></p>
+<p>双击这个本体，进入编辑窗口，导入mesh</p>
+<p><img src="/../asset_digitalhuman/028.png"></p>
+<p>调整人脸的位置， 快捷键 W&#x2F;R&#x2F;E ， 设置viewport的FOV到20</p>
+<p><img src="/../asset_digitalhuman/029.png"></p>
+<p>打开提升帧，选择自动追踪</p>
+<p>点击metahuman本体解算</p>
+<p>点击body，选择一个体型</p>
+<p>点击Mesh to Metahuman，如下图</p>
+<p><img src="/../asset_digitalhuman/030.png"></p>
+<p>进入Quilel Bridge，选择metahuman - my metahuman， 选择你新建立的本体，启动MHC</p>
+<p><img src="/../asset_digitalhuman/031.png"></p>
+<p>进入metahuman后，调整人物各部分</p>
+<p><img src="/../asset_digitalhuman/022.png"></p>
+<p>结束，后续在UE5项目导入你定制的人脸即可。</p>
 <h3 id="参考视频"><a href="#参考视频" class="headerlink" title="参考视频"></a>参考视频</h3><p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=HEFIvFnUfpw">Audio2Face to MetaHuman | How to Animate MetaHuman using Audio2Face Live Link</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=2tGPx0Athvk">Importing a Metahuman into Unreal Engine 5 (simplified way) </a></p>
 <p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=xFk_WU32igA">How to Use Mesh to Metahuman (From Scan to Metahuman)</a></p>
@@ -278,7 +318,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/02/20/digital-human/" data-id="clswqk5xa00032supfwg22vu4" data-title="如何设计一个数字人" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/02/20/digital-human/" data-id="clsyq9k2v0001xgup225ebqzc" data-title="如何设计一个数字人 --- 3D模型篇" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -329,7 +369,7 @@
       <ul>
         
           <li>
-            <a href="/2024/02/20/digital-human/">如何设计一个数字人</a>
+            <a href="/2024/02/20/digital-human/">如何设计一个数字人 --- 3D模型篇</a>
           </li>
         
           <li>
