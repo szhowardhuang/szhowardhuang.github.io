@@ -69,6 +69,118 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-digital-human-2" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/02/25/digital-human-2/" class="article-date">
+  <time class="dt-published" datetime="2024-02-25T03:08:27.707Z" itemprop="datePublished">2024-02-25</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/02/25/digital-human-2/">如何设计一个数字人续篇 --- Video Retalking 模型篇</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="环境安装"><a href="#环境安装" class="headerlink" title="环境安装"></a>环境安装</h3><pre><code>git clone https://github.com/vinthony/video-retalking.git
+cd video-retalking
+conda create -n video_retalking python=3.8
+conda activate video_retalking
+
+conda install ffmpeg
+</code></pre>
+<p>win10安装cuda11.1， cuda各版本可以共存。通常你现有N卡驱动会很新，所以安装cuda11.1时，不要安装N卡驱动。</p>
+<p>where nvcc，可以看到路径<br><img src="/../asset_digitalhuman2/01.png"></p>
+<p>我们修改环境变量，将cuda11.1的目录添加到PATH中。<br>主要是C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\bin;<br>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\libnvvp这两个变量；<br>先建立cuda11.1 和 cuda12.1的环境变量，再建立CUDA_PATH的环境变量，以后根据需要修改这个变量，选择不同的CUDA版本路径。</p>
+<p><img src="/../asset_digitalhuman2/02.png"></p>
+<p>修改PATH环境变量如下图</p>
+<p><img src="/../asset_digitalhuman2/03.png"></p>
+<pre><code>pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 -f https://download.pytorch.org/whl/torch_stable.html
+
+pip install -r requirements.txt
+</code></pre>
+<p>清华源会出现tb-nightly的错误，因为在tsinghua镜像库中没有tb-nightly</p>
+<p>备注：tb-nightly 是一个 Python 包，它是 TensorFlow 的 TensorBoard 的夜间版本（nightly version）。TensorBoard 是一个用于可视化和监控 TensorFlow 训练过程和模型的工具。TensorBoard 提供了一组交互式的仪表板，可以显示训练过程中的指标、损失函数、模型结构图、梯度直方图等信息。它可以帮助您理解和调试 TensorFlow 模型，以及优化模型的性能。</p>
+<p>pip临时使用阿里源</p>
+<pre><code>pip install -i https://mirrors.aliyun.com/pypi/simple basicsr==1.4.2
+</code></pre>
+<p>安装cmake</p>
+<p>然后继续 pip install -r requirements.txt</p>
+<p>环境安装完成</p>
+<h3 id="模型下载"><a href="#模型下载" class="headerlink" title="模型下载"></a>模型下载</h3><p>下载<a target="_blank" rel="noopener" href="https://drive.google.com/drive/folders/18rhjMpxK8LVVxf7PI6XwOidt8Vouv_H0?usp=share_link">预训练模型</a>，放到checkpoints目录下,这个下载链接没有放GFPGANv1.4模型，可以去<a target="_blank" rel="noopener" href="https://github.com/TencentARC/GFPGAN/releases/download/v1.3.0/GFPGANv1.4.pth">此处</a>下载然后放到checkpoints目录下</p>
+<p>GFPGAN1.4人脸超分效果最好</p>
+<p>修改inference.py的 GFPGANer的model_path参数为checkpoints&#x2F;GFPGANv1.4.pth，如下：</p>
+<pre><code>restorer = GFPGANer(model_path=&#39;checkpoints/GFPGANv1.4.pth&#39;, upscale=1, arch=&#39;clean&#39;, channel_multiplier=2, bg_upsampler=None)
+</code></pre>
+<p>模型如果不好下载，可以去百度云盘下载：<br>链接：<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1GTccvI8QUTQOhHrRnYeeAQ">https://pan.baidu.com/s/1GTccvI8QUTQOhHrRnYeeAQ</a><br>提取码：9l0u </p>
+<h3 id="推理"><a href="#推理" class="headerlink" title="推理"></a>推理</h3><pre><code>python3 inference.py --face examples/face/1.mp4 --audio examples/audio/1.wav --outfile results/1_1.mp4
+</code></pre>
+<p>–exp_img ：预定义的表情模板。默认为“neutral”。您可以选择“smile”或图像路径。</p>
+<p>–up_face ：您可以选择“surprise”或“angry”来修改脸上的表情，参考<a target="_blank" rel="noopener" href="https://github.com/donydchen/ganimation_replicate">GANimation</a>。</p>
+<p>注意： 1.mp4的分辨率要正方形，用FFMPEG处理一下</p>
+<pre><code>ffmpeg -i 6.mp4 -vf crop=720:720:0:0 7.mp4
+corp： w h x y， 裁剪的宽、高、起始横坐标、起始纵坐标（左上角为0，0）。
+</code></pre>
+<p>生成的视频文件已经配上口型，画质有点模糊，可以用GFPGAN1.4做整个画面的超分。<br>方法如下：</p>
+<h4 id="视频转图片流"><a href="#视频转图片流" class="headerlink" title="视频转图片流"></a>视频转图片流</h4><pre><code>ffmpeg -i 1_4.mp4  image%03d.png
+</code></pre>
+<h4 id="将图片流进行超分"><a href="#将图片流进行超分" class="headerlink" title="将图片流进行超分"></a>将图片流进行超分</h4><pre><code>git clone https://github.com/TencentARC/GFPGAN.git
+
+cd GFPGAN
+
+pip install realesrgan
+
+python inference_gfpgan.py -i inputs/whole_imgs -o results -v 1.4 -s 1
+
+-h                   show this help
+-i input             Input image or folder. Default: inputs/whole_imgs
+-o output            Output folder. Default: results
+-v version           GFPGAN model version. Option: 1 | 1.2 | 1.3. Default: 1.3
+-s upscale           The final upsampling scale of the image. Default: 2
+-bg_upsampler        background upsampler. Default: realesrgan
+-bg_tile             Tile size for background sampler, 0 for no tile during testing. Default: 400
+-suffix              Suffix of the restored faces
+-only_center_face    Only restore the center face
+-aligned             Input are aligned faces
+-ext                 Image extension. Options: auto | jpg | png, auto means using the same extension as inputs. Default: auto
+</code></pre>
+<h4 id="将图片流合成视频"><a href="#将图片流合成视频" class="headerlink" title="将图片流合成视频"></a>将图片流合成视频</h4><pre><code>ffmpeg -framerate 30 -i image%03d.png -b:v 575k gfpganwoa.mp4
+</code></pre>
+<p>视频码率属性 -b:v ， 具体码率要参考生成的原视频</p>
+<p>如有必要，可以把两个视频横向合并，便于对比画质，合成视频的音频只会用左边视频的音频</p>
+<pre><code>ffmpeg -i left.mp4 -i right.mp4 -filter_complex hstack output.mp4
+</code></pre>
+<p>如果要重新合成音频，如下：</p>
+<pre><code>ffmpeg -i input.mp4 -i 3.wav -vcodec copy -acodec aac -map 0:v:0 -map 1:a:0 output.mp4
+
+-map 0:v:0 选择了第0个输入文件（视频输入）的第0个轨道。
+–map 1:a:0 选择了第1个输入文件（音频输入）的第0个轨道。
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://szhowardhuang.github.io/2024/02/25/digital-human-2/" data-id="clt71zg87000260upf70p6pxh" data-title="如何设计一个数字人续篇 --- Video Retalking 模型篇" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-digital-human" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/02/20/digital-human/" class="article-date">
@@ -271,7 +383,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/02/20/digital-human/" data-id="clsyq9k2v0001xgup225ebqzc" data-title="如何设计一个数字人 --- 3D模型篇" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/02/20/digital-human/" data-id="clt71zg8c000360up3g2648xq" data-title="如何设计一个数字人 --- 3D模型篇" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -560,7 +672,7 @@ xtuner chat ./internlm-chat-7b --adapter hf --lagent
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/01/31/lagent_sft/" data-id="clsyq9k2y0004xgup1mdlgw4y" data-title="微调Lagent的实践" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/01/31/lagent_sft/" data-id="clt71zg8o000760upc1hc4ue2" data-title="微调Lagent的实践" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -616,7 +728,7 @@ xtuner chat ./internlm-chat-7b --adapter hf --lagent
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/01/29/InternLm-training/" data-id="clsyq9k2h0000xguphk5ld41q" data-title="书生-浦语实战训练营" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/01/29/InternLm-training/" data-id="clt71zg7q000060up131w8oh6" data-title="书生-浦语实战训练营" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -935,7 +1047,7 @@ Final Answer: Barack Obama was born on August 4, 1961. So as of January 3, 2024,
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/01/18/make-react/" data-id="clsyq9k2z0005xgupebdtdmk0" data-title="构建 ReAct AI 代理" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/01/18/make-react/" data-id="clt71zg8p000860up3mrbchmt" data-title="构建 ReAct AI 代理" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -1278,7 +1390,7 @@ Final Answer: Barack Obama was born on August 4, 1961. So as of January 3, 2024,
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/01/18/it-for-ai-swe/" data-id="clsyq9k2x0003xgupfa8p4cqg" data-title="商业模式与 IT 组织：做好迎接AI冲击的准备！" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/01/18/it-for-ai-swe/" data-id="clt71zg8n000660up9w3dgwyi" data-title="商业模式与 IT 组织：做好迎接AI冲击的准备！" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -1374,7 +1486,7 @@ Final Answer: Barack Obama was born on August 4, 1961. So as of January 3, 2024,
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/01/17/ai-swe/" data-id="clsyq9k300007xgup9lp35jr2" data-title="如何设计一个人工智能驱动的软件工程团队" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/01/17/ai-swe/" data-id="clt71zg84000160updr7i4zy8" data-title="如何设计一个人工智能驱动的软件工程团队" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -1468,7 +1580,7 @@ Final Answer: Camila Morrone is Leo DiCaprio&#39;s girlfriend and her current ag
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/01/17/exploring-llm-agents/" data-id="clsyq9k2z0006xgupe18w1xu7" data-title="探索大型语言模型代理的世界" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/01/17/exploring-llm-agents/" data-id="clt71zg8h000460up8lwu49d8" data-title="探索大型语言模型代理的世界" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -1519,7 +1631,7 @@ Final Answer: Camila Morrone is Leo DiCaprio&#39;s girlfriend and her current ag
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/01/15/hello-world/" data-id="clsyq9k2w0002xguphvx31q23" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/01/15/hello-world/" data-id="clt71zg8j000560upc3vv9o1w" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -1562,6 +1674,10 @@ Final Answer: Camila Morrone is Leo DiCaprio&#39;s girlfriend and her current ag
       <ul>
         
           <li>
+            <a href="/2024/02/25/digital-human-2/">如何设计一个数字人续篇 --- Video Retalking 模型篇</a>
+          </li>
+        
+          <li>
             <a href="/2024/02/20/digital-human/">如何设计一个数字人 --- 3D模型篇</a>
           </li>
         
@@ -1575,10 +1691,6 @@ Final Answer: Camila Morrone is Leo DiCaprio&#39;s girlfriend and her current ag
         
           <li>
             <a href="/2024/01/18/make-react/">构建 ReAct AI 代理</a>
-          </li>
-        
-          <li>
-            <a href="/2024/01/18/it-for-ai-swe/">商业模式与 IT 组织：做好迎接AI冲击的准备！</a>
           </li>
         
       </ul>
