@@ -197,10 +197,10 @@ public class DemoApplication &#123;
 <p>保存后，重新运行demo，浏览器刷新页面，可以看到Hello World!</p>
 <p>至此，环境已经准备ready，可以开始开发springboot项目了。</p>
 <h2 id="下载开源music-website并运行"><a href="#下载开源music-website并运行" class="headerlink" title="下载开源music-website并运行"></a>下载开源music-website并运行</h2><p>1、下载项目到本地<br><code>git clone https://github.com/Yin-Hongwei/music-website.git</code></p>
-<p>2、下载数据库中记录的资源<br>去【链接：<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1TCV3bQ9npxx--9cOrDSsbQ">https://pan.baidu.com/s/1TCV3bQ9npxx--9cOrDSsbQ</a><br>提取码：pi7r  】下载网站依赖的歌曲及图片，将 data 夹里的文件放到 music-website&#x2F;music-server 文件夹下。<br>将 data 夹里的sql文件放到 music-website&#x2F;music-server&#x2F;sql 文件夹下</p>
+<p>2、下载数据库中记录的资源<br>去【链接：<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1TCV3bQ9npxx--9cOrDSsbQ">https://pan.baidu.com/s/1TCV3bQ9npxx--9cOrDSsbQ</a><br>提取码：pi7r  】下载网站依赖的歌曲及图片，将 data 夹里的文件放到 music-website&#x2F;music-server 文件夹下。<br>将 data 夹里的sql文件放到 music-website&#x2F;music-server&#x2F;sql 文件夹下，原因是这个开源项目的sql文件里面有少量数据有些问题，需要修改。</p>
 <p>3、修改配置文件<br>1）创建数据库 将 music-website&#x2F;music-server&#x2F;sql 文件夹中的 tp_music.sql 文件用mysql workbench或者Navicat导入数据库。<br><img src="/../asset_sprintbootmusic/04.png"></p>
 <p>2）修改用户名密码 修改 music-website&#x2F;music-server&#x2F;src&#x2F;main&#x2F;resources&#x2F;application-dev.properties 文件里的 spring.datasource.username 和 spring.datasource.password；</p>
-<p>4、启动项目<br>启动管理端：进入 music-server 文件夹，运行下面命令启动服务器</p>
+<p>4、启动项目<br>启动服务端：进入 music-server 文件夹，运行下面命令启动服务器</p>
 <p><code>mvn spring-boot:run</code> &#x2F;&#x2F; 前提装了 maven</p>
 <p>启动客户端：进入 music-client 目录，运行下面命令<br><code>npm install</code> &#x2F;&#x2F; 安装依赖</p>
 <p><code>npm run serve</code> &#x2F;&#x2F; 启动前台项目</p>
@@ -213,7 +213,7 @@ public class DemoApplication &#123;
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/03/08/springboot-music/" data-id="cltka0prw000dkwuph3dl1kq2" data-title="用VSCode实践一个Spring Boot项目" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/03/08/springboot-music/" data-id="cltkxys8j000c0wup1ghb9gqk" data-title="用VSCode实践一个Spring Boot项目" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -283,7 +283,7 @@ public class DemoApplication &#123;
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/03/07/mysql5_7_21-cmd-install/" data-id="cltka0pru000akwup4n9dcb8j" data-title="命令行安装MySQL 5.7.21" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/03/07/mysql5_7_21-cmd-install/" data-id="cltkxys8i000a0wup8eib2pjk" data-title="命令行安装MySQL 5.7.21" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -421,7 +421,7 @@ public class DemoApplication &#123;
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/03/03/generativeDiffusion/" data-id="cltka0prr0005kwupbzdl99bu" data-title="生成扩散模型综述" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/03/03/generativeDiffusion/" data-id="cltkxys8e00060wup984t0y7i" data-title="生成扩散模型综述" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -517,7 +517,7 @@ They are also bred specifically for their fiber.[Utility:5]
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/03/02/self-RAG/" data-id="cltka0prv000bkwup9hzr51hl" data-title="self-RAG如何革新工业LLMs" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/03/02/self-RAG/" data-id="cltkxys8j000d0wuphp4ma93l" data-title="self-RAG如何革新工业LLMs" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -597,7 +597,7 @@ They are also bred specifically for their fiber.[Utility:5]
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/03/01/sora/" data-id="cltka0prw000ckwupfow23q02" data-title="OpenAI Sora视频生成模型技术报告" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/03/01/sora/" data-id="cltkxys8i000b0wupbscxaab7" data-title="OpenAI Sora视频生成模型技术报告" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -709,7 +709,7 @@ python inference_gfpgan.py -i inputs/whole_imgs -o results -v 1.4 -s 1
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/02/27/digital-human-2/" data-id="cltka0prp0002kwup8udjecsz" data-title="如何设计一个数字人续篇 --- Video Retalking 模型篇" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/02/27/digital-human-2/" data-id="cltkxys8a00010wupbkvr76vb" data-title="如何设计一个数字人续篇 --- Video Retalking 模型篇" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -923,7 +923,7 @@ python inference_gfpgan.py -i inputs/whole_imgs -o results -v 1.4 -s 1
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/02/22/digital-human/" data-id="cltka0prq0003kwupes6c1j33" data-title="如何设计一个数字人 --- 3D模型篇" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/02/22/digital-human/" data-id="cltkxys8c00030wup5al13zte" data-title="如何设计一个数字人 --- 3D模型篇" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -1212,7 +1212,7 @@ xtuner chat ./internlm-chat-7b --adapter hf --lagent
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/02/01/lagent_sft/" data-id="cltka0prt0008kwup6adi29f3" data-title="微调Lagent的实践" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/02/01/lagent_sft/" data-id="cltkxys8g00080wupfxz5br5f" data-title="微调Lagent的实践" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -1268,7 +1268,7 @@ xtuner chat ./internlm-chat-7b --adapter hf --lagent
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/01/28/InternLm-training/" data-id="cltka0prj0000kwupe74v8045" data-title="书生-浦语实战训练营" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/01/28/InternLm-training/" data-id="cltkxys8600000wupejlh63xg" data-title="书生-浦语实战训练营" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
@@ -1587,7 +1587,7 @@ Final Answer: Barack Obama was born on August 4, 1961. So as of January 3, 2024,
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/01/19/make-react/" data-id="cltka0prt0009kwupgjmqgx73" data-title="构建 ReAct AI 代理" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://szhowardhuang.github.io/2024/01/19/make-react/" data-id="cltkxys8h00090wupf00j3wce" data-title="构建 ReAct AI 代理" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
