@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>书生-浦语实战训练营 | 嵌入式老兵博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="历经2周的InternLM实战训练营，我收获颇丰。 本次训练营的主要内容是：  书生·浦语大模型全链路开源体系 书生·浦语大模型 Demo 基于 InternLM 和 LangChain 搭建知识库 XTuner 大模型单卡低成本微调实战 LMDeploy 大模型量化部署实践 OpenCompass 大模型评测  我将每一课的内容和作业都发布在GitHub上，欢迎大家参与讨论和学习。 课程内容第1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="书生-浦语实战训练营">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/01/28/InternLm-training/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="历经2周的InternLM实战训练营，我收获颇丰。 本次训练营的主要内容是：  书生·浦语大模型全链路开源体系 书生·浦语大模型 Demo 基于 InternLM 和 LangChain 搭建知识库 XTuner 大模型单卡低成本微调实战 LMDeploy 大模型量化部署实践 OpenCompass 大模型评测  我将每一课的内容和作业都发布在GitHub上，欢迎大家参与讨论和学习。 课程内容第1">
+<meta property="og:locale">
+<meta property="article:published_time" content="2024-01-28T15:00:16.000Z">
+<meta property="article:modified_time" content="2024-01-29T13:59:29.000Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="嵌入式老兵博客" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">嵌入式老兵博客</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Suche"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://szhowardhuang.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-InternLm-training" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/01/28/InternLm-training/" class="article-date">
+  <time class="dt-published" datetime="2024-01-28T15:00:16.000Z" itemprop="datePublished">2024-01-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      书生-浦语实战训练营
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>历经2周的InternLM实战训练营，我收获颇丰。</p>
+<p>本次训练营的主要内容是：</p>
+<ul>
+<li>书生·浦语大模型全链路开源体系</li>
+<li>书生·浦语大模型 Demo</li>
+<li>基于 InternLM 和 LangChain 搭建知识库</li>
+<li>XTuner 大模型单卡低成本微调实战</li>
+<li>LMDeploy 大模型量化部署实践</li>
+<li>OpenCompass 大模型评测</li>
+</ul>
+<p>我将每一课的内容和作业都发布在GitHub上，欢迎大家参与讨论和学习。</p>
+<h2 id="课程内容"><a href="#课程内容" class="headerlink" title="课程内容"></a>课程内容</h2><h4 id="第1课"><a href="#第1课" class="headerlink" title="第1课"></a>第1课</h4><p>笔记 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/36#discussioncomment-8013121">https://github.com/InternLM/tutorial/discussions/36#discussioncomment-8013121</a></p>
+<h4 id="第2课"><a href="#第2课" class="headerlink" title="第2课"></a>第2课</h4><p>笔记 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/37#discussioncomment-8035063">https://github.com/InternLM/tutorial/discussions/37#discussioncomment-8035063</a>	<br>作业 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/92#discussioncomment-8035219">https://github.com/InternLM/tutorial/discussions/92#discussioncomment-8035219</a></p>
+<h4 id="第3课"><a href="#第3课" class="headerlink" title="第3课"></a>第3课</h4><p>笔记 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/38#discussioncomment-8061447">https://github.com/InternLM/tutorial/discussions/38#discussioncomment-8061447</a>	<br>作业 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/93#discussioncomment-8081121">https://github.com/InternLM/tutorial/discussions/93#discussioncomment-8081121</a></p>
+<h4 id="第4课"><a href="#第4课" class="headerlink" title="第4课"></a>第4课</h4><p>笔记 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/39#discussioncomment-8108951">https://github.com/InternLM/tutorial/discussions/39#discussioncomment-8108951</a>	<br>作业 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/94#discussioncomment-8116585">https://github.com/InternLM/tutorial/discussions/94#discussioncomment-8116585</a></p>
+<h4 id="第5课"><a href="#第5课" class="headerlink" title="第5课"></a>第5课</h4><p>笔记 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/40#discussioncomment-8122800">https://github.com/InternLM/tutorial/discussions/40#discussioncomment-8122800</a>	<br>作业 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/95#discussioncomment-8122839">https://github.com/InternLM/tutorial/discussions/95#discussioncomment-8122839</a></p>
+<h4 id="第6课"><a href="#第6课" class="headerlink" title="第6课"></a>第6课</h4><p>笔记 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/41#discussioncomment-8217329">https://github.com/InternLM/tutorial/discussions/41#discussioncomment-8217329</a>	<br>作业 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/96#discussioncomment-8217311">https://github.com/InternLM/tutorial/discussions/96#discussioncomment-8217311</a></p>
+<p>后续还要在通用算力平台实践一把，欢迎大家关注！</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://szhowardhuang.github.io/2024/01/28/InternLm-training/" data-id="clto3ikk60003fgmj37ek20q3" data-title="书生-浦语实战训练营" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/02/01/lagent_sft/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Neuer</strong>
+      <div class="article-nav-title">
+        
+          微调Lagent的实践
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/01/19/make-react/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Älter</strong>
+      <div class="article-nav-title">构建 ReAct AI 代理</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/03/">March 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/02/">February 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">January 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/03/12/ollama/">ollama使用方法</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/11/make-million-llm/">使用Python从头开始构建一个百万参数的LLM</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/08/springboot-music/">用VSCode实践一个Spring Boot项目</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/07/mysql5_7_21-cmd-install/">命令行安装MySQL 5.7.21</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/03/generativeDiffusion/">生成扩散模型综述</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 Howard Huang<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

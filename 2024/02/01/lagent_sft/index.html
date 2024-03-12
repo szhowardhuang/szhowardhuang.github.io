@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>微调Lagent的实践 | 嵌入式老兵博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="InternLM的Lagent是智能代理的一个框架，近几日实践了智能代理调用MM yolo进行图像类识别的任务，特写此文作为记录。 环境安装conda create --name xtuner0.1.9 --clone&#x3D;&#x2F;root&#x2F;share&#x2F;conda_envs&#x2F;internlm-base conda activate xtuner0.1.9 git clone -b v0.1.9 https:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微调Lagent的实践">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/02/01/lagent_sft/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="InternLM的Lagent是智能代理的一个框架，近几日实践了智能代理调用MM yolo进行图像类识别的任务，特写此文作为记录。 环境安装conda create --name xtuner0.1.9 --clone&#x3D;&#x2F;root&#x2F;share&#x2F;conda_envs&#x2F;internlm-base conda activate xtuner0.1.9 git clone -b v0.1.9 https:">
+<meta property="og:locale">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_lagentsft/sft001.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_lagentsft/sft003.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_lagentsft/sft002.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_lagentsft/sft004.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_lagentsft/sft005.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_lagentsft/sft006.png">
+<meta property="article:published_time" content="2024-02-01T13:00:16.000Z">
+<meta property="article:modified_time" content="2024-02-01T15:06:12.000Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://szhowardhuang.github.io/asset_lagentsft/sft001.png">
+  
+    <link rel="alternate" href="/atom.xml" title="嵌入式老兵博客" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">嵌入式老兵博客</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Suche"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://szhowardhuang.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-lagent_sft" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/02/01/lagent_sft/" class="article-date">
+  <time class="dt-published" datetime="2024-02-01T13:00:16.000Z" itemprop="datePublished">2024-02-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      微调Lagent的实践
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>InternLM的Lagent是智能代理的一个框架，近几日实践了智能代理调用MM yolo进行图像类识别的任务，特写此文作为记录。</p>
+<h3 id="环境安装"><a href="#环境安装" class="headerlink" title="环境安装"></a>环境安装</h3><pre><code>conda create --name xtuner0.1.9 --clone=/root/share/conda_envs/internlm-base
+conda activate xtuner0.1.9
+git clone -b v0.1.9 https://gitee.com/internlm/xtuner
+cd xtuner
+pip install -e &#39;.[all]&#39;
+</code></pre>
+<h3 id="基座模型"><a href="#基座模型" class="headerlink" title="基座模型"></a>基座模型</h3><p>用InternLM chat 7B基座模型，下载huggingface格式的模型，放到&#x2F;root&#x2F;ft-msagent目录下。</p>
+<h3 id="数据集："><a href="#数据集：" class="headerlink" title="数据集："></a>数据集：</h3><p>去魔搭下载魔搭通用agent数据集：   </p>
+<pre><code>apt install git-lfs
+git clone https://www.modelscope.cn/datasets/iic/ms_agent.git
+</code></pre>
+<p>打开train_agent_react.jsonl ， 搜索图像识别，发现 image_recognition , ImageRecognitionAPI, image_classifier 字段</p>
+<p>需要修改 ImageRecognitionAPI 为 ImageRecognition，<br>修改 image_recognition 为 ImageRecognition，<br>修改 image_classifier 为 ImageClassifier，    </p>
+<p>用sed直接修改    </p>
+<pre><code>sed -i &#39;s/ImageRecognitionAPI/ImageRecognition/g&#39; train_agent_react.jsonl
+sed -i &#39;s/image_recognition/ImageRecognition/g&#39; train_agent_react.jsonl
+sed -i &#39;s/image_classifier/ImageClassifier/g&#39; train_agent_react.jsonl
+</code></pre>
+<p>可以看一下是否修改成功 </p>
+<pre><code>grep ImageClassifier train_agent_react.jsonl
+grep ImageRecognition train_agent_react.jsonl
+</code></pre>
+<p>修改配置文件 &#x2F;root&#x2F;ft-msagent&#x2F;internlm_7b_qlora_msagent_react_e3_gpu8_copy.py<br><img src="/../asset_lagentsft/sft001.png"><br>看到这里你一定要疑问，为什么不把 data_path 指向 本地刚刚git clone下来的数据集路径呢？<br>其实是因为lagent有bug，会把本地数据集当作json格式的客户定制数据集，导致出错。<br>所以用一个work around的方法，就是先让lagent跑通，下载数据集到cache目录，然后进入lagent目录，再修改数据集文件。</p>
+<p>先进入ft-msagent目录，运行</p>
+<pre><code>xtuner train internlm_7b_qlora_msagent_react_e3_gpu8_copy.py --deepspeed deepspeed_zero2
+</code></pre>
+<p>跑一次train，不需要跑完，进入train就可以 CTRL+C 关掉</p>
+<p>然后</p>
+<pre><code>cd ~/.cache/modelscope/hub/datasets/iic/ms_agent/master/data_files 
+</code></pre>
+<p><img src="/../asset_lagentsft/sft003.png"></p>
+<p>修改数据集文件 f0d878b6a17a5cec981643649ea383cc , 这个文件名具体看你们自己的环境，会变化的。</p>
+<pre><code>sed -i &#39;s/ImageRecognitionAPI/ImageRecognition/g&#39; f0d878b6a17a5cec981643649ea383cc
+sed -i &#39;s/image_recognition/ImageRecognition/g&#39; f0d878b6a17a5cec981643649ea383cc
+sed -i &#39;s/image_classifier/ImageClassifier/g&#39; f0d878b6a17a5cec981643649ea383cc
+</code></pre>
+<p>再进入ft-msagent目录，运行</p>
+<pre><code>xtuner train internlm_7b_qlora_msagent_react_e3_gpu8_copy.py --deepspeed deepspeed_zero2
+</code></pre>
+<p><img src="/../asset_lagentsft/sft002.png"><br>可以看到reusing dataset，然后开始训练。<br><img src="/../asset_lagentsft/sft004.png"><br>如果训练一个epoch想停掉，可以按CTRL+C，下次想继续训练，要看一下last_checkpoint文件，把最后一个checkpoint的路径复制到命令行参数里。如下：</p>
+<pre><code>xtuner train internlm_7b_qlora_msagent_react_e3_gpu8_copy.py --deepspeed deepspeed_zero2 --resume /root/ft-msagent/work_dirs/internlm_7b_qlora_msagent_react_e3_gpu8_copy/epoch_2.pth
+</code></pre>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>为了避免后续重复以上数据集繁琐操作，我在魔搭上创建了一个数据集，大家可以直接用这个数据集 szhowardhuang&#x2F;msagent_lite 。</p>
+<p><a target="_blank" rel="noopener" href="https://modelscope.cn/datasets/szhowardhuang/msagent_lite">https://modelscope.cn/datasets/szhowardhuang/msagent_lite</a></p>
+<p>配置文件修改如下，拷贝即可使用：</p>
+<pre><code># Copyright (c) OpenMMLab. All rights reserved.
+import torch
+from bitsandbytes.optim import PagedAdamW32bit
+from mmengine.dataset import DefaultSampler
+from mmengine.hooks import (CheckpointHook, DistSamplerSeedHook, IterTimerHook,
+                            LoggerHook, ParamSchedulerHook)
+from mmengine.optim import AmpOptimWrapper, CosineAnnealingLR
+from modelscope.msdatasets import MsDataset
+from peft import LoraConfig
+from transformers import (AutoModelForCausalLM, AutoTokenizer,
+                        BitsAndBytesConfig)
+
+from xtuner.dataset import process_ms_dataset
+from xtuner.dataset.collate_fns import default_collate_fn
+from xtuner.dataset.map_fns import (msagent_react_map_fn,
+                                    template_map_fn_factory)
+from xtuner.engine import DatasetInfoHook, EvaluateChatHook
+from xtuner.model import SupervisedFinetune
+from xtuner.utils import PROMPT_TEMPLATE
+
+
+#######################################################################
+#                          PART 1  Settings                           #
+#######################################################################
+# Model
+pretrained_model_name_or_path = &#39;/root/ft-msagent/internlm-chat-7b&#39;
+
+# Data
+data_path = &#39;szhowardhuang/msagent_lite&#39;
+prompt_template = PROMPT_TEMPLATE.default
+max_length = 2048
+pack_to_max_length = False
+
+# Scheduler &amp; Optimizer
+batch_size = 4  # per_device
+accumulative_counts = 1
+dataloader_num_workers = 2
+max_epochs = 3
+optim_type = PagedAdamW32bit
+lr = 2e-4
+betas = (0.9, 0.999)
+weight_decay = 0
+max_norm = 1  # grad clip
+
+# Evaluate the generation performance during the training
+evaluation_freq = 500
+SYSTEM = (
+    &#39;你是一个可以调用外部工具的助手，可以使用的工具包括：\n&#39;
+    &quot;&#123;&#123;\'ImageRecognition\': \'用来进行图像识别的API。\\n"
+        '当你需要对于一个图片进行识别时，可以使用这个API。\\n'
+        "输入应该是一张图片文件的路径，或者是图片的URL。\\n\\n\',"
+        "\'ImageClassifier\': \"用来进行图像分类的API，\\n"
+        "当你需要对于一个图片进行分类时，可以使用这个API。\\n"
+        "输入应该是一张图片文件的路径，或者是图片的URL。\\n\"&#125;&#125;\n&quot;
+    &#39;如果使用工具请遵循以下格式回复：\n```\n&#39;
+    &#39;Thought:思考你当前步骤需要解决什么问题，是否需要使用工具\n&#39;
+    &quot;Action:工具名称，你的工具必须从 [[\&#39;ImageRecognition\&#39;, \&#39;ImageClassifier\&#39;]] 选择&quot;
+    &#39;\nAction Input:工具输入参数\n```\n工具返回按照以下格式回复：\n&#39;
+    &#39;```\nResponse:调用工具后的结果\n```&#39;
+    &#39;\n如果你已经知道了答案，或者你不需要工具，请遵循以下格式回复\n```&#39;
+    &#39;\nThought:给出最终答案的思考过程\nFinal Answer:最终答案\n```\n开始!\n&#39;)
+evaluation_inputs = [&#39;识别图片中的物体类别？&#39;]
+
+#######################################################################
+#                      PART 2  Model &amp; Tokenizer                      #
+#######################################################################
+tokenizer = dict(
+    type=AutoTokenizer.from_pretrained,
+    pretrained_model_name_or_path=pretrained_model_name_or_path,
+    trust_remote_code=True,
+    padding_side=&#39;right&#39;)
+
+model = dict(
+    type=SupervisedFinetune,
+    llm=dict(
+        type=AutoModelForCausalLM.from_pretrained,
+        pretrained_model_name_or_path=pretrained_model_name_or_path,
+        trust_remote_code=True,
+        torch_dtype=torch.float16,
+        quantization_config=dict(
+            type=BitsAndBytesConfig,
+            load_in_4bit=True,
+            load_in_8bit=False,
+            llm_int8_threshold=6.0,
+            llm_int8_has_fp16_weight=False,
+            bnb_4bit_compute_dtype=torch.float16,
+            bnb_4bit_use_double_quant=True,
+            bnb_4bit_quant_type=&#39;nf4&#39;)),
+    lora=dict(
+        type=LoraConfig,
+        r=64,
+        lora_alpha=16,
+        lora_dropout=0.1,
+        bias=&#39;none&#39;,
+        task_type=&#39;CAUSAL_LM&#39;))
+
+#######################################################################
+#                      PART 3  Dataset &amp; Dataloader                   #
+#######################################################################
+train_dataset = dict(
+    type=process_ms_dataset,
+    dataset=dict(type=MsDataset.load, dataset_name=data_path, split=&#39;train&#39;),
+    tokenizer=tokenizer,
+    max_length=max_length,
+    dataset_map_fn=msagent_react_map_fn,
+    template_map_fn=dict(
+        type=template_map_fn_factory, template=prompt_template),
+    remove_unused_columns=True,
+    shuffle_before_pack=True,
+    pack_to_max_length=pack_to_max_length)
+
+train_dataloader = dict(
+    batch_size=batch_size,
+    num_workers=dataloader_num_workers,
+    dataset=train_dataset,
+    sampler=dict(type=DefaultSampler, shuffle=True),
+    collate_fn=dict(type=default_collate_fn))
+
+#######################################################################
+#                    PART 4  Scheduler &amp; Optimizer                    #
+#######################################################################
+# optimizer
+optim_wrapper = dict(
+    type=AmpOptimWrapper,
+    optimizer=dict(
+        type=optim_type, lr=lr, betas=betas, weight_decay=weight_decay),
+    clip_grad=dict(max_norm=max_norm, error_if_nonfinite=False),
+    accumulative_counts=accumulative_counts,
+    loss_scale=&#39;dynamic&#39;,
+    dtype=&#39;float16&#39;)
+
+# learning policy
+# More information: https://github.com/open-mmlab/mmengine/blob/main/docs/en/tutorials/param_scheduler.md  # noqa: E501
+param_scheduler = dict(
+    type=CosineAnnealingLR,
+    eta_min=0.0,
+    by_epoch=True,
+    T_max=max_epochs,
+    convert_to_iter_based=True)
+
+# train, val, test setting
+train_cfg = dict(by_epoch=True, max_epochs=max_epochs, val_interval=1)
+
+#######################################################################
+#                           PART 5  Runtime                           #
+#######################################################################
+# Log the dialogue periodically during the training process, optional
+custom_hooks = [
+    dict(type=DatasetInfoHook, tokenizer=tokenizer),
+    dict(
+        type=EvaluateChatHook,
+        tokenizer=tokenizer,
+        every_n_iters=evaluation_freq,
+        evaluation_inputs=evaluation_inputs,
+        system=SYSTEM,
+        prompt_template=prompt_template)
+]
+
+# configure default hooks
+default_hooks = dict(
+    # record the time of every iteration.
+    timer=dict(type=IterTimerHook),
+    # print log every 100 iterations.
+    logger=dict(type=LoggerHook, interval=10),
+    # enable the parameter scheduler.
+    param_scheduler=dict(type=ParamSchedulerHook),
+    # save checkpoint per epoch.
+    checkpoint=dict(type=CheckpointHook, interval=1),
+    # set sampler seed in distributed evrionment.
+    sampler_seed=dict(type=DistSamplerSeedHook),
+)
+
+# configure environment
+env_cfg = dict(
+    # whether to enable cudnn benchmark
+    cudnn_benchmark=False,
+    # set multi process parameters
+    mp_cfg=dict(mp_start_method=&#39;fork&#39;, opencv_num_threads=0),
+    # set distributed parameters
+    dist_cfg=dict(backend=&#39;nccl&#39;),
+)
+
+# set visualizer
+visualizer = None
+
+# set log level
+log_level = &#39;INFO&#39;
+
+# load from which checkpoint
+load_from = None
+
+# whether to resume training from the loaded checkpoint
+resume = False
+
+# Defaults to use random seed and disable `deterministic`
+randomness = dict(seed=None, deterministic=False)
+</code></pre>
+<h3 id="模型转换"><a href="#模型转换" class="headerlink" title="模型转换"></a>模型转换</h3><p>将PTH模型转换成HuggingFace模型，即生成Adapter文件夹, hf文件夹即为我们平时所理解的所谓 “LoRA模型文件”<br>    mkdir hf<br>    export MKL_SERVICE_FORCE_INTEL&#x3D;1<br>    xtuner convert pth_to_hf internlm_7b_qlora_msagent_react_e3_gpu8_copy.py .&#x2F;work_dirs&#x2F;internlm_7b_qlora_msagent_react_e3_gpu8_copy&#x2F;epoch_2.pth .&#x2F;hf</p>
+<h3 id="模型测试"><a href="#模型测试" class="headerlink" title="模型测试"></a>模型测试</h3><p>先下载并安装VisionAgent（即lagent）<br>    <a target="_blank" rel="noopener" href="https://github.com/szhowardhuang/VisionAgent.git">https://github.com/szhowardhuang/VisionAgent.git</a><br>    cd VisionAgent<br>    git checkout a93162536f04679ace6572365a1884e584b4cb03<br>    pip install -e .<br>然后安装 mmdetection<br>    pip install -U openmim<br>    mim install mmengine<br>    mim install “mmcv&gt;&#x3D;2.0.0”<br>    mim install mmdet<br>注释掉 &#x2F;root&#x2F;xtuner019&#x2F;xtuner&#x2F;xtuner&#x2F;tools&#x2F;chat.py 的139行<br><img src="/../asset_lagentsft/sft005.png"></p>
+<pre><code>export SERPER_API_KEY=abcdefg
+xtuner chat ./internlm-chat-7b --adapter hf --lagent
+</code></pre>
+<h3 id="将-HuggingFace-adapter-合并到大语言模型"><a href="#将-HuggingFace-adapter-合并到大语言模型" class="headerlink" title="将 HuggingFace adapter 合并到大语言模型"></a>将 HuggingFace adapter 合并到大语言模型</h3><pre><code>xtuner convert merge ./internlm-chat-7b ./hf ./merged --max-shard-size 2GB
+</code></pre>
+<h3 id="用VisionAgent测试合并后的模型"><a href="#用VisionAgent测试合并后的模型" class="headerlink" title="用VisionAgent测试合并后的模型"></a>用VisionAgent测试合并后的模型</h3><p>修改一下 &#x2F;root&#x2F;code&#x2F;VisionAgent&#x2F;examples&#x2F;react_web_demo.py的92行<br><img src="/../asset_lagentsft/sft006.png"><br>    pip install modelscope&#x3D;&#x3D;1.9.5<br>    pip install transformers&#x3D;&#x3D;4.35.2<br>    pip install streamlit&#x3D;&#x3D;1.24.0<br>    pip install sentencepiece&#x3D;&#x3D;0.1.99<br>    pip install accelerate&#x3D;&#x3D;0.24.1<br>    streamlit run &#x2F;root&#x2F;code&#x2F;lagent&#x2F;examples&#x2F;react_web_demo.py –server.address 127.0.0.1 –server.port 6006</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://szhowardhuang.github.io/2024/02/01/lagent_sft/" data-id="clto3ikk80007fgmjedzc19jg" data-title="微调Lagent的实践" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/02/22/digital-human/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Neuer</strong>
+      <div class="article-nav-title">
+        
+          如何设计一个数字人 --- 3D模型篇
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/01/28/InternLm-training/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Älter</strong>
+      <div class="article-nav-title">书生-浦语实战训练营</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/03/">March 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/02/">February 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">January 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/03/12/ollama/">ollama使用方法</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/11/make-million-llm/">使用Python从头开始构建一个百万参数的LLM</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/08/springboot-music/">用VSCode实践一个Spring Boot项目</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/07/mysql5_7_21-cmd-install/">命令行安装MySQL 5.7.21</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/03/generativeDiffusion/">生成扩散模型综述</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 Howard Huang<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

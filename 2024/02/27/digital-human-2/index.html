@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>如何设计一个数字人续篇 --- Video Retalking 模型篇 | 嵌入式老兵博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="环境安装git clone https:&#x2F;&#x2F;github.com&#x2F;vinthony&#x2F;video-retalking.git cd video-retalking conda create -n video_retalking python&#x3D;3.8 conda activate video_retalking  conda install ffmpeg  win10安装cuda11.1， cuda各">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何设计一个数字人续篇 --- Video Retalking 模型篇">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/02/27/digital-human-2/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="环境安装git clone https:&#x2F;&#x2F;github.com&#x2F;vinthony&#x2F;video-retalking.git cd video-retalking conda create -n video_retalking python&#x3D;3.8 conda activate video_retalking  conda install ffmpeg  win10安装cuda11.1， cuda各">
+<meta property="og:locale">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_digitalhuman2/01.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_digitalhuman2/02.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_digitalhuman2/03.png">
+<meta property="article:published_time" content="2024-02-27T15:00:16.000Z">
+<meta property="article:modified_time" content="2024-02-29T09:56:17.000Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://szhowardhuang.github.io/asset_digitalhuman2/01.png">
+  
+    <link rel="alternate" href="/atom.xml" title="嵌入式老兵博客" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">嵌入式老兵博客</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Suche"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://szhowardhuang.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-digital-human-2" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/02/27/digital-human-2/" class="article-date">
+  <time class="dt-published" datetime="2024-02-27T15:00:16.000Z" itemprop="datePublished">2024-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      如何设计一个数字人续篇 --- Video Retalking 模型篇
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="环境安装"><a href="#环境安装" class="headerlink" title="环境安装"></a>环境安装</h3><pre><code>git clone https://github.com/vinthony/video-retalking.git
+cd video-retalking
+conda create -n video_retalking python=3.8
+conda activate video_retalking
+
+conda install ffmpeg
+</code></pre>
+<p>win10安装cuda11.1， cuda各版本可以共存。通常你现有N卡驱动会很新，所以安装cuda11.1时，不要安装N卡驱动。</p>
+<p>where nvcc，可以看到路径<br><img src="/../asset_digitalhuman2/01.png"></p>
+<p>我们修改环境变量，将cuda11.1的目录添加到PATH中。<br>主要是C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\bin;<br>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\libnvvp这两个变量；<br>先建立cuda11.1 和 cuda12.1的环境变量，再建立CUDA_PATH的环境变量，以后根据需要修改这个变量，选择不同的CUDA版本路径。</p>
+<p><img src="/../asset_digitalhuman2/02.png"></p>
+<p>修改PATH环境变量如下图</p>
+<p><img src="/../asset_digitalhuman2/03.png"></p>
+<pre><code>pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 -f https://download.pytorch.org/whl/torch_stable.html
+
+pip install -r requirements.txt
+</code></pre>
+<p>清华源会出现tb-nightly的错误，因为在tsinghua镜像库中没有tb-nightly</p>
+<p>备注：tb-nightly 是一个 Python 包，它是 TensorFlow 的 TensorBoard 的夜间版本（nightly version）。TensorBoard 是一个用于可视化和监控 TensorFlow 训练过程和模型的工具。TensorBoard 提供了一组交互式的仪表板，可以显示训练过程中的指标、损失函数、模型结构图、梯度直方图等信息。它可以帮助您理解和调试 TensorFlow 模型，以及优化模型的性能。</p>
+<p>pip临时使用阿里源</p>
+<pre><code>pip install -i https://mirrors.aliyun.com/pypi/simple basicsr==1.4.2
+</code></pre>
+<p>安装cmake</p>
+<p>然后继续 pip install -r requirements.txt</p>
+<p>环境安装完成</p>
+<h3 id="模型下载"><a href="#模型下载" class="headerlink" title="模型下载"></a>模型下载</h3><p>下载<a target="_blank" rel="noopener" href="https://drive.google.com/drive/folders/18rhjMpxK8LVVxf7PI6XwOidt8Vouv_H0?usp=share_link">预训练模型</a>，放到checkpoints目录下,这个下载链接没有放GFPGANv1.4模型，可以去<a target="_blank" rel="noopener" href="https://github.com/TencentARC/GFPGAN/releases/download/v1.3.0/GFPGANv1.4.pth">此处</a>下载然后放到checkpoints目录下</p>
+<p>GFPGAN1.4人脸超分效果最好</p>
+<p>修改inference.py的 GFPGANer的model_path参数为checkpoints&#x2F;GFPGANv1.4.pth，如下：</p>
+<pre><code>restorer = GFPGANer(model_path=&#39;checkpoints/GFPGANv1.4.pth&#39;, upscale=1, arch=&#39;clean&#39;, channel_multiplier=2, bg_upsampler=None)
+</code></pre>
+<p>模型如果不好下载，可以去百度云盘下载：<br>链接：<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1GTccvI8QUTQOhHrRnYeeAQ">https://pan.baidu.com/s/1GTccvI8QUTQOhHrRnYeeAQ</a><br>提取码：9l0u </p>
+<h3 id="推理"><a href="#推理" class="headerlink" title="推理"></a>推理</h3><pre><code>python3 inference.py --face examples/face/1.mp4 --audio examples/audio/1.wav --outfile results/1_1.mp4
+</code></pre>
+<p>–exp_img ：预定义的表情模板。默认为“neutral”。您可以选择“smile”或图像路径。</p>
+<p>–up_face ：您可以选择“surprise”或“angry”来修改脸上的表情，参考<a target="_blank" rel="noopener" href="https://github.com/donydchen/ganimation_replicate">GANimation</a>。</p>
+<p>注意： 1.mp4的分辨率要正方形，用FFMPEG处理一下</p>
+<pre><code>ffmpeg -i 6.mp4 -vf crop=720:720:0:0 7.mp4
+corp： w h x y， 裁剪的宽、高、起始横坐标、起始纵坐标（左上角为0，0）。
+</code></pre>
+<p>生成的视频文件已经配上口型，画质有点模糊，可以用GFPGAN1.4做整个画面的超分。<br>方法如下：</p>
+<h4 id="视频转图片流"><a href="#视频转图片流" class="headerlink" title="视频转图片流"></a>视频转图片流</h4><pre><code>ffmpeg -i 1_4.mp4  image%03d.png
+</code></pre>
+<h4 id="将图片流进行超分"><a href="#将图片流进行超分" class="headerlink" title="将图片流进行超分"></a>将图片流进行超分</h4><pre><code>git clone https://github.com/TencentARC/GFPGAN.git
+
+cd GFPGAN
+
+pip install realesrgan
+
+python inference_gfpgan.py -i inputs/whole_imgs -o results -v 1.4 -s 1
+
+-h                   show this help
+-i input             Input image or folder. Default: inputs/whole_imgs
+-o output            Output folder. Default: results
+-v version           GFPGAN model version. Option: 1 | 1.2 | 1.3. Default: 1.3
+-s upscale           The final upsampling scale of the image. Default: 2
+-bg_upsampler        background upsampler. Default: realesrgan
+-bg_tile             Tile size for background sampler, 0 for no tile during testing. Default: 400
+-suffix              Suffix of the restored faces
+-only_center_face    Only restore the center face
+-aligned             Input are aligned faces
+-ext                 Image extension. Options: auto | jpg | png, auto means using the same extension as inputs. Default: auto
+</code></pre>
+<h4 id="将图片流合成视频"><a href="#将图片流合成视频" class="headerlink" title="将图片流合成视频"></a>将图片流合成视频</h4><pre><code>ffmpeg -framerate 30 -i image%03d.png -b:v 575k gfpganwoa.mp4
+</code></pre>
+<p>视频码率属性 -b:v ， 具体码率要参考生成的原视频</p>
+<p>如有必要，可以把两个视频横向合并，便于对比画质，合成视频的音频只会用左边视频的音频</p>
+<pre><code>ffmpeg -i left.mp4 -i right.mp4 -filter_complex hstack output.mp4
+</code></pre>
+<p>如果要重新合成音频，如下：</p>
+<pre><code>ffmpeg -i input.mp4 -i 3.wav -vcodec copy -acodec aac -map 0:v:0 -map 1:a:0 output.mp4
+
+-map 0:v:0 选择了第0个输入文件（视频输入）的第0个轨道。
+–map 1:a:0 选择了第1个输入文件（音频输入）的第0个轨道。
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://szhowardhuang.github.io/2024/02/27/digital-human-2/" data-id="clto3ikk00000fgmj0b8n4i3k" data-title="如何设计一个数字人续篇 --- Video Retalking 模型篇" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/03/01/sora/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Neuer</strong>
+      <div class="article-nav-title">
+        
+          OpenAI Sora视频生成模型技术报告
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/02/22/digital-human/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Älter</strong>
+      <div class="article-nav-title">如何设计一个数字人 --- 3D模型篇</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/03/">March 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/02/">February 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">January 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/03/12/ollama/">ollama使用方法</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/11/make-million-llm/">使用Python从头开始构建一个百万参数的LLM</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/08/springboot-music/">用VSCode实践一个Spring Boot项目</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/07/mysql5_7_21-cmd-install/">命令行安装MySQL 5.7.21</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/03/generativeDiffusion/">生成扩散模型综述</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 Howard Huang<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

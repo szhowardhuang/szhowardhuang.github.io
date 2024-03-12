@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>生成扩散模型综述 | 嵌入式老兵博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="视频生成模型的发展与技术脉络 视频生成模型发展脉络： Google，2022年，第一篇视频生成模型。效果较差，分辨率低，帧率低，动作有偏移 OpenAI，2024年，Sora，长文本提示，逼真，视觉一致性的视频。 回顾图像生成领域基础工作DDPM -&gt;latent diffusion(SD)-&gt;SD XL-&gt; SD3 扩散生成模型分为Pixel space（pixel level">
+<meta property="og:type" content="article">
+<meta property="og:title" content="生成扩散模型综述">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/03/03/generativeDiffusion/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="视频生成模型的发展与技术脉络 视频生成模型发展脉络： Google，2022年，第一篇视频生成模型。效果较差，分辨率低，帧率低，动作有偏移 OpenAI，2024年，Sora，长文本提示，逼真，视觉一致性的视频。 回顾图像生成领域基础工作DDPM -&gt;latent diffusion(SD)-&gt;SD XL-&gt; SD3 扩散生成模型分为Pixel space（pixel level">
+<meta property="og:locale">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_generativediffusion/01.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_generativediffusion/02.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_generativediffusion/03.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_generativediffusion/04.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_generativediffusion/05.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_generativediffusion/06.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_generativediffusion/07.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_generativediffusion/09.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_generativediffusion/10.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_generativediffusion/11.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_generativediffusion/12.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_generativediffusion/13.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_generativediffusion/14.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_generativediffusion/15.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_generativediffusion/16.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_generativediffusion/17.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_generativediffusion/18.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_generativediffusion/19.png">
+<meta property="article:published_time" content="2024-03-03T09:00:16.000Z">
+<meta property="article:modified_time" content="2024-03-04T09:21:58.000Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://szhowardhuang.github.io/asset_generativediffusion/01.png">
+  
+    <link rel="alternate" href="/atom.xml" title="嵌入式老兵博客" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">嵌入式老兵博客</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Suche"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://szhowardhuang.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-generativeDiffusion" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/03/generativeDiffusion/" class="article-date">
+  <time class="dt-published" datetime="2024-03-03T09:00:16.000Z" itemprop="datePublished">2024-03-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      生成扩散模型综述
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="视频生成模型的发展与技术脉络"><a href="#视频生成模型的发展与技术脉络" class="headerlink" title="视频生成模型的发展与技术脉络"></a>视频生成模型的发展与技术脉络</h3><p><img src="/../asset_generativediffusion/01.png"></p>
+<p>视频生成模型发展脉络：</p>
+<p>Google，2022年，第一篇视频生成模型。效果较差，分辨率低，帧率低，动作有偏移</p>
+<p>OpenAI，2024年，Sora，长文本提示，逼真，视觉一致性的视频。</p>
+<h3 id="回顾图像生成领域基础工作"><a href="#回顾图像生成领域基础工作" class="headerlink" title="回顾图像生成领域基础工作"></a>回顾图像生成领域基础工作</h3><p>DDPM -&gt;latent diffusion(SD)-&gt;SD XL-&gt; SD3<br><img src="/../asset_generativediffusion/02.png"></p>
+<p>扩散生成模型分为Pixel space（pixel level）和latent space（latent level）两种。前者直接在图像pixel上加噪声，去噪声。后者先用训练的autoencoder编码到latent level低维空间做 加噪和去噪声。</p>
+<p>典型的pixel level 模型：DDPM模型 ，分为Forward过程和Reverse过程。</p>
+<p>前者逐步对图像加噪声，最终接近标准高斯噪声</p>
+<p>后者从一个高斯噪声还原为一个图像。</p>
+<p><img src="/../asset_generativediffusion/03.png"><br>主流的是latent level模型 latent Diffusion model，在潜空间上训练大大节省资源。</p>
+<p><img src="/../asset_generativediffusion/04.png"><br>SD XL参数量更大，transformer block更多，更高分辨率1024×1024下训练。</p>
+<p>最近发布最新版 SD3</p>
+<p><img src="/../asset_generativediffusion/05.png"><br>ControlNet ICCV 2023最佳论文, image condition with pose</p>
+<p>用于生成给定文本的图像，可接受额外控制条件，包括人体姿态图、草图</p>
+<p>通过复制stable diffusion encoder的参数，并在固定参数的基础上训练右侧模块来实现额外条件的注入。</p>
+<h3 id="视频扩散模型领域工作"><a href="#视频扩散模型领域工作" class="headerlink" title="视频扩散模型领域工作"></a>视频扩散模型领域工作</h3><h4 id="Pixel-Level模型"><a href="#Pixel-Level模型" class="headerlink" title="Pixel Level模型"></a>Pixel Level模型</h4><p><img src="/../asset_generativediffusion/06.png"></p>
+<p>First video diffusion model</p>
+<p>VDM: Video diffusion model NeurIPS2022， 是pixel level模型</p>
+<p>Conv2D&gt;3D(3x3 -&gt; 1x3x3)</p>
+<p>Space Attention &gt;Divided Space-Temporal Attention</p>
+<p>Joint training on video and image modeling</p>
+<p>2D卷积→3D，</p>
+<p>空间注意力→时空分离的注意力（先做空间注意力，再做时间注意力）</p>
+<p>pixel space 两篇改进</p>
+<p>make a video<br><img src="/../asset_generativediffusion/07.png"></p>
+<p>Multi-stage Generation</p>
+<ul>
+<li>Input Text</li>
+<li>Spatiotemporal Decoder</li>
+<li>Frame Interpolation</li>
+<li>Spatiotemporal, Super-Resolution</li>
+<li>Spatial, Super-Resolution</li>
+</ul>
+<p><img src="/../asset_generativediffusion/09.png"><br>Imagen Video 参数量较大</p>
+<p><img src="/../asset_generativediffusion/10.png"></p>
+<p>22年底，google发布 Imagen， Imagen Video。 冻结文本编码器得到Embedding，训练t2v Diffusion model。</p>
+<p>生成低分辨率图像，通过插帧, 超分辨率模块提升帧率和分辨率</p>
+<p>参数量大：每个模块参数量大，总共上百亿</p>
+<h4 id="Latent-level模型"><a href="#Latent-level模型" class="headerlink" title="Latent level模型"></a>Latent level模型</h4><p>latent video diffusion model<br><img src="/../asset_generativediffusion/11.png"><br>NVIDIA，CVPR2023，使用预训练SD扩展到video上</p>
+<p>T2I → T2V： 扩展SD结构</p>
+<p>2d to3d conv3d ，添加temporal attention，时序建模</p>
+<p>消耗资源大</p>
+<p>生成关键帧， 256个GPU，1.7B参数量</p>
+<p>插帧模型， 128个GPU</p>
+<p>超分辨率模型， 32个GPU</p>
+<p>训练集<br><img src="/../asset_generativediffusion/12.png"></p>
+<p>训练T2V模型，需要 文本-视频对</p>
+<p>最常用：</p>
+<ul>
+<li>WebVid-10M， 子集 WebVid-2M， 视频质量低，360p，有水印（会导致T2V也学习并生成水印）</li>
+<li>HD-VILA-100M， 高清， 720P，规模大。 文本质量低（语音识别生成，不准确，导致文本和视频匹配度不高）</li>
+</ul>
+<p>评价指标<br><img src="/../asset_generativediffusion/13.png"></p>
+<p>人工主观评价，评价生成视频质量，评价视频文本匹配度</p>
+<p>自动化指标：</p>
+<h4 id="图像level"><a href="#图像level" class="headerlink" title="图像level"></a>图像level</h4><p>FID 算一个视频每一帧和真实视频每一帧的分布之间的距离。距离越小，生成的图像每一帧和真实的越相似。</p>
+<p>Clip Similarity 图文匹配度。逐帧 将生成视频用clip提取视觉Embedding，再用 text encoder提前文本Embedding，计算clip相似度。</p>
+<p>PSNR，针对超分模型，有真值就可以评价</p>
+<h4 id="视频level"><a href="#视频level" class="headerlink" title="视频level"></a>视频level</h4><p>FVD，KVD，两个类似 FID。评价生成视频和真实视频分布的距离</p>
+<p>IS 衡量分布差异外，还考虑多样性。</p>
+<p>ClipSIM， 逐帧计算生成视频每一帧的相似度。用于视频编辑任务。</p>
+<p>Sora，代表文本驱动的视频合成的断崖式突破。</p>
+<p>EMO，也代表音频驱动的视频合成一个新高度。</p>
+<p>两者尽管任务不同、具体架构不同，但还有一个重要的共性：</p>
+<p>中间都没有加入显式的物理模型，却都在一定程度上模拟了物理规律。</p>
+<h3 id="Sora架构"><a href="#Sora架构" class="headerlink" title="Sora架构"></a>Sora架构</h3><p><img src="/../asset_generativediffusion/14.png"><br><img src="/../asset_generativediffusion/15.png"></p>
+<p>视频压缩器，60s<em>30帧</em>1024*1024</p>
+<p>压缩量到180？2-2-2卷积 -&gt;90<em>16</em>16</p>
+<p>昂贵的训练代价， 训练过程中， 可能用比较短的视频来训练， 后面用长数据集Finetune</p>
+<p>数据：Transformer数据， 支持输入的任意比例和长度</p>
+<h5 id="推理"><a href="#推理" class="headerlink" title="推理"></a>推理</h5><p><img src="/../asset_generativediffusion/16.png"></p>
+<p>Inference speed.</p>
+<p>降低推理成本：</p>
+<p>模型轻量化，</p>
+<p>Latent</p>
+<h5 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h5><p><img src="/../asset_generativediffusion/17.png"></p>
+<p>语言理解</p>
+<ul>
+<li>Train a captioner model， 标注视频</li>
+<li>GPT4 captioning， 重写用户prompt，变成更长caption，补充更多细节，以便生成更好视频</li>
+<li>Virtual engine，</li>
+</ul>
+<h3 id="EMO架构"><a href="#EMO架构" class="headerlink" title="EMO架构"></a>EMO架构</h3><p>EMO并不是建立在类似DiT架构的基础上，也就是没有用Transformer去替代传统UNet，其骨干网络魔改自Stable Diffusion 1.5。</p>
+<p>具体来说，EMO是一种富有表现力的音频驱动的肖像视频生成框架，可以根据输入视频的长度生成任何持续时间的视频。<br><img src="/../asset_generativediffusion/18.png"></p>
+<p>该框架主要由两个阶段构成：</p>
+<ul>
+<li>帧编码阶段</li>
+</ul>
+<p>部署一个称为ReferenceNet的UNet网络，负责从参考图像和视频的帧中提取特征。</p>
+<ul>
+<li>扩散阶段</li>
+</ul>
+<p>首先，预训练的音频编码器处理音频嵌入，人脸区域掩模与多帧噪声相结合来控制人脸图像的生成。</p>
+<p>随后是骨干网络主导去噪操作。在骨干网络中应用了两种注意力，参考注意力和音频注意力，分别作用于保持角色的身份一致性和调节角色的运动。</p>
+<p>此外，时间模块被用来操纵的时间维度，并调整运动的速度。</p>
+<p>在训练数据方面，团队构建了一个包含超过250小时视频和超过1500万张图像的庞大且多样化的音视频数据集。</p>
+<p>最终实现的具体特性如下：</p>
+<p>可以根据输入音频生成任意持续时间的视频，同时保证角色身份一致性（演示中给出的最长单个视频为1分49秒）。</p>
+<p>支持各种语言的交谈与唱歌（演示中包括普通话、广东话、英语、日语、韩语</p>
+<p>支持不同画风（照片、传统绘画、漫画、3D渲染、AI数字人）<br><img src="/../asset_generativediffusion/19.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://szhowardhuang.github.io/2024/03/03/generativeDiffusion/" data-id="clto3ikk60004fgmjhp5778ng" data-title="生成扩散模型综述" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/03/07/mysql5_7_21-cmd-install/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Neuer</strong>
+      <div class="article-nav-title">
+        
+          命令行安装MySQL 5.7.21
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/03/02/self-RAG/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Älter</strong>
+      <div class="article-nav-title">self-RAG如何革新工业LLMs</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/03/">March 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/02/">February 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">January 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/03/12/ollama/">ollama使用方法</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/11/make-million-llm/">使用Python从头开始构建一个百万参数的LLM</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/08/springboot-music/">用VSCode实践一个Spring Boot项目</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/07/mysql5_7_21-cmd-install/">命令行安装MySQL 5.7.21</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/03/generativeDiffusion/">生成扩散模型综述</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 Howard Huang<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

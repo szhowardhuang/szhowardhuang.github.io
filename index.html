@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>嵌入式老兵博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="嵌入式老兵博客">
+<meta property="og:url" content="https://szhowardhuang.github.io/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:locale">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="嵌入式老兵博客" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">嵌入式老兵博客</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Suche"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://szhowardhuang.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-ollama" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/12/ollama/" class="article-date">
+  <time class="dt-published" datetime="2024-03-12T03:49:50.540Z" itemprop="datePublished">2024-03-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/03/12/ollama/">ollama使用方法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>Ollama 终于可以在 Windows 上运行了</p>
+<h2 id="下载-Ollma-安装文件"><a href="#下载-Ollma-安装文件" class="headerlink" title="下载 Ollma 安装文件"></a>下载 Ollma 安装文件</h2><p>访问 <a target="_blank" rel="noopener" href="https://ollama.com/download%EF%BC%8C%E9%80%89%E6%8B%A9">https://ollama.com/download，选择</a> Windows，单击 “Download for Windows (Preview)” 进行下载。</p>
+<h2 id="安装-Ollama"><a href="#安装-Ollama" class="headerlink" title="安装 Ollama"></a>安装 Ollama</h2><p>双击下载的 “OllamaSetup.exe”，直接安装就可以了。安装完以后，ollama app后台进程会自动运行。</p>
+<h2 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h2><p>Ollama 下载的模型模型保存在 C 盘，如果想更改默认路径的话，可以通过设置 OLLAMA_MODELS 进行修改。</p>
+<p>OLLAMA_MODELS：F:\OllamaCache</p>
+<p>Ollama 默认提供 OpenAI 的兼容 API，默认端口是 11434，默认只可以通过 localhost 进行访问，如果想公开访问的话，可以通过设置 OLLAMA_HOST 进行修改。</p>
+<p>OLLAMA_HOST：0.0.0.0</p>
+<p>修改环境变量后，需要去任务管理器杀掉ollama的各个进程或者重启电脑，然后重新打开cmd，set看下环境变量，再重新启动ollama</p>
+<h2 id="使用-Ollama"><a href="#使用-Ollama" class="headerlink" title="使用 Ollama"></a>使用 Ollama</h2><p>访问 <a target="_blank" rel="noopener" href="https://ollama.com/library">https://ollama.com/library</a></p>
+<p>搜索你要使用的模型，主流的模型，比如 llama2、qwen1.5、mixtral 等，Ollama都支持。</p>
+<p>下面以允许 qwen 为例，我们要运行 7b 的模型，</p>
+<p>ollama App在后台已经跑起来的情况下，打开cmd，输入</p>
+<p><code>ollama run qwen:7b</code></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://szhowardhuang.github.io/2024/03/12/ollama/" data-id="clto3ikkb000cfgmjamfcb441" data-title="ollama使用方法" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-make-million-llm" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/11/make-million-llm/" class="article-date">
+  <time class="dt-published" datetime="2024-03-11T12:32:51.752Z" itemprop="datePublished">2024-03-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/03/11/make-million-llm/">使用Python从头开始构建一个百万参数的LLM</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>构建LLaMA架构的逐步指南<br>Fareed Khan</p>
+<p>制作自己的大型语言模型（LLM）是一件很酷的事情，许多像谷歌、推特和Facebook这样的大公司都在做。他们发布了不同版本的这些模型，如70亿、130亿或700亿。甚至较小的社区也在做自己的模型。你可能已经阅读过创建自己的LLM的博客或观看了相关视频，但它们通常更多地讨论理论，而不是实际的步骤和代码。</p>
+<p>在这篇博客中，我将尝试制作仅有230万个参数的LLM，有趣的是我们不需要一台高级的GPU。我们将遵循LLaMA 1 Paper的方法来进行。我们会保持简单，并使用一个基本的数据集，这样你就可以看到创建自己的百万参数LLM有多容易。</p>
+<h2 id="先决条件"><a href="#先决条件" class="headerlink" title="先决条件"></a>先决条件</h2><p>需要您对面向对象编程（OOP）和神经网络（NN）有基本的了解。熟悉PyTorch在编码方面也会有帮助。</p>
+<h2 id="理解LLaMA的Transformer架构"><a href="#理解LLaMA的Transformer架构" class="headerlink" title="理解LLaMA的Transformer架构"></a>理解LLaMA的Transformer架构</h2><p>在深入研究使用LLaMA方法创建我们自己的LLM之前，了解LLaMA的架构是至关重要的。下面是普通Transformer和LLaMA之间的比较图。<br><img src="/../asset_makemillionllm/01.webp"></p>
+<p>Transformers和Llama架构（由Umar Jamil提出的Llama架构）之间的区别</p>
+<p>如果您对vanilla transformer架构不熟悉，可以阅读这篇<a target="_blank" rel="noopener" href="https://medium.com/@fareedkhandev/understanding-transformers-a-step-by-step-math-example-part-1-a7809015150a">博客</a>了解基本信息。</p>
+<p>让我们更详细地了解LLaMA的基本概念</p>
+<h2 id="预归一化使用RMSNorm："><a href="#预归一化使用RMSNorm：" class="headerlink" title="预归一化使用RMSNorm："></a>预归一化使用RMSNorm：</h2><p>In the LLaMA approach, a technique called RMSNorm is employed for normalizing the input of each transformer sub-layer. This method is inspired by GPT-3 and is designed to optimize the computational cost associated with Layer Normalization. RMSNorm provides similar performance to LayerNorm but reduces the running time significantly (by 7%∼64%).</p>
+<p>在LLaMA方法中，采用了一种称为RMSNorm的技术来对每个transformer子层的输入进行归一化。这种方法受到了GPT-3的启发，并旨在优化与层归一化相关的计算成本。RMSNorm提供了与LayerNorm类似的性能，但显著减少了运行时间（约7%∼64%）。</p>
+<p><img src="/../asset_makemillionllm/02.webp"><br>均方根层归一化论文（<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1910.07467%EF%BC%89">https://arxiv.org/abs/1910.07467）</a></p>
+<p>It achieves this by emphasizing re-scaling invariance and regulating the summed inputs based on the root mean square (RMS) statistic. The primary motivation is to simplify LayerNorm by removing the mean statistic. Interested readers can explore the detailed implementation of RMSNorm here.<br>通过强调重新缩放不变性并根据均方根（RMS）统计量调节总输入，它实现了这一点。主要动机是通过去除均值统计量来简化LayerNorm。有兴趣的读者可以在<a target="_blank" rel="noopener" href="https://github.com/bzhangGo/rmsnorm/blob/master/rmsnorm_torch.py">这里</a>探索RMSNorm的详细实现。</p>
+<h2 id="SwiGLU激活函数"><a href="#SwiGLU激活函数" class="headerlink" title="SwiGLU激活函数"></a>SwiGLU激活函数</h2><p>LLaMA introduces the SwiGLU activation function, drawing inspiration from PaLM. To understand SwiGLU, it’s essential to first grasp the Swish activation function. SwiGLU extends Swish and involves a custom layer with a dense network to split and multiply input activations.<br>LLaMA引入了SwiGLU激活函数，灵感来自于PaLM。要理解SwiGLU，首先必须掌握Swish激活函数。SwiGLU扩展了Swish，并涉及一个自定义层，其中包含一个密集网络来分割和乘以输入激活。</p>
+<p><img src="/../asset_makemillionllm/03.webp"><br>SwiGLU: GLU Variants Improve Transformer (<a target="_blank" rel="noopener" href="https://kikaben.com/swiglu-2020/">https://kikaben.com/swiglu-2020/</a>)</p>
+<p>The aim is to enhance the expressive power of the model by introducing a more sophisticated activation function. Further details on SwiGLU can be found in the associated paper.<br>目标是通过引入更复杂的激活函数来增强模型的表达能力。有关SwiGLU的更多详细信息，请参阅相关论文。</p>
+<h2 id="旋转嵌入（RoPE）"><a href="#旋转嵌入（RoPE）" class="headerlink" title="旋转嵌入（RoPE）"></a>旋转嵌入（RoPE）</h2><p>Rotary Embeddings, or RoPE, is a type of position embedding used in LLaMA. It encodes absolute positional information using a rotation matrix and naturally includes explicit relative position dependency in self-attention formulations. RoPE offers advantages such as scalability to various sequence lengths and decaying inter-token dependency with increasing relative distances.<br>旋转嵌入，或称RoPE，是LLaMA中使用的一种位置嵌入类型。它使用旋转矩阵对绝对位置信息进行编码，并在自注意力公式中自然地包含了显式的相对位置依赖关系。RoPE具有可扩展到不同序列长度的优势，并且随着相对距离的增加，它能够减弱令牌之间的依赖关系。</p>
+<p>This is achieved by encoding relative positions through multiplication with a rotation matrix, resulting in decayed relative distances — a desirable feature for natural language encoding. Those interested in the mathematical details can refer to the RoPE paper.<br>这是通过使用旋转矩阵对相对位置进行乘法编码来实现的，从而导致相对距离的衰减 - 这是自然语言编码的一个理想特征。对于对数学细节感兴趣的人可以参考RoPE论文。</p>
+<p>In addition to these concepts, the LLaMA paper introduces other significant approaches, including the use of the AdamW optimizer with specific parameters, efficient implementations such as the causal multi-head attention operator available in the xformers library, and manually implemented backward functions for transformer layers to optimize computation during backward passes.<br>除了这些概念之外，LLaMA论文还介绍了其他重要的方法，包括使用具体参数的AdamW优化器，高效实现，如xformers库中提供的因果多头注意力操作符，以及手动实现的反向函数，用于在反向传递过程中优化计算。</p>
+<h2 id="基本设置"><a href="#基本设置" class="headerlink" title="基本设置"></a>基本设置</h2><p>我们将在整个项目中使用一系列的Python库，所以先导入它们：</p>
+<pre><code># PyTorch for implementing LLM (No GPU)
+import torch
+
+# Neural network modules and functions from PyTorch
+from torch import nn
+from torch.nn import functional as F
+
+# NumPy for numerical operations
+import numpy as np
+
+# Matplotlib for plotting Loss etc.
+from matplotlib import pyplot as plt
+
+# Time module for tracking execution time
+import time
+
+# Pandas for data manipulation and analysis
+import pandas as pd
+
+# urllib for handling URL requests (Downloading Dataset)
+import urllib.request
+</code></pre>
+<p>此外，创建一个存储模型参数的配置对象。</p>
+<pre><code># Configuration object for model parameters
+MASTER_CONFIG = &#123;
+    # Adding parameters later
+&#125;
+</code></pre>
+<p>这种方法保持了灵活性，允许在将来需要时添加更多的参数。</p>
+<h2 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h2><p>在原始的LLaMA论文中，使用了多样的开源数据集来训练和评估模型。</p>
+<p><img src="/../asset_makemillionllm/04.webp"><br><a target="_blank" rel="noopener" href="https://research.facebook.com/publications/llama-open-and-efficient-foundation-language-models/">https://research.facebook.com/publications/llama-open-and-efficient-foundation-language-models/</a></p>
+<p>不幸的是，对于较小的项目来说，利用大量的数据集可能是不切实际的。因此，对于我们的实施，我们将采取一种更为适度的方法，创建一个大幅缩小的LLaMA版本。</p>
+<p>Given the constraints of not having access to vast amounts of data, we will focus on training a simplified version of LLaMA using the TinyShakespeare dataset. This open source dataset, available here, contains approximately 40,000 lines of text from various Shakespearean works. This choice is influenced by the Makemore series by Karpathy, which provides valuable insights into training language models.<br>鉴于无法获取大量数据的限制，我们将专注于使用TinyShakespeare数据集训练LLaMA的简化版本。这个开源数据集可以在这里找到，其中包含了大约40,000行来自不同莎士比亚作品的文本。这个选择受到了<a target="_blank" rel="noopener" href="https://www.youtube.com/playlist?list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ">Karpathy的Makemore系列</a>的影响，该系列提供了训练语言模型的宝贵见解。</p>
+<p>While LLaMA was trained on an extensive dataset comprising 1.4 trillion tokens, our dataset, TinyShakespeare, containing around 1 million characters.<br>虽然LLaMA是在包含1.4万亿个标记的大型数据集上进行训练的，但我们的数据集TinyShakespeare只包含约100万个字符。</p>
+<p>首先，让我们通过下载来获取我们的数据集</p>
+<pre><code># The URL of the raw text file on GitHub
+url = &quot;https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt&quot;
+
+# The file name for local storage
+file_name = &quot;tinyshakespeare.txt&quot;
+
+# Execute the download
+urllib.request.urlretrieve(url, file_name)
+</code></pre>
+<p>这个Python脚本从指定的URL获取tinyshakespeare数据集，并将其保存在本地，文件名为“tinyshakespeare.txt”。</p>
+<p>Next, let’s determine the vocabulary size, which represents the unique number of characters in our dataset. Here’s the code snippet:<br>接下来，让我们确定词汇量，它代表了我们数据集中唯一字符的数量。以下是代码片段：</p>
+<pre><code># Read the content of the dataset
+lines = open(&quot;tinyshakespeare.txt&quot;, &#39;r&#39;).read()
+
+# Create a sorted list of unique characters in the dataset
+vocab = sorted(list(set(lines)))
+
+# Display the first 10 characters in the vocabulary list
+print(&#39;Printing the first 10 characters of the vocab list:&#39;, vocab[:10])
+
+# Output the total number of characters in our dataset (Vocabulary Size)
+print(&#39;Total number of characters in our dataset (Vocabulary Size):&#39;, len(vocab))
+</code></pre>
+<p><img src="/../asset_makemillionllm/05.webp"></p>
+<p>Now, we’re creating mappings between integers to characters (itos) and characters to integers (stoi). Here’s the code:<br>现在，我们正在创建整数到字符的映射（itos）和字符到整数的映射（stoi）。以下是代码：</p>
+<pre><code># Mapping integers to characters (itos)
+itos = &#123;i: ch for i, ch in enumerate(vocab)&#125;
+
+# Mapping characters to integers (stoi)
+stoi = &#123;ch: i for i, ch in enumerate(vocab)&#125;
+</code></pre>
+<p><img src="/../asset_makemillionllm/06.webp"></p>
+<p>In the original LLaMA paper, the SentencePiece byte-pair encoding tokenizer from Google was used. However, for simplicity, we’ll opt for a basic character-level tokenizer. Let’s create encode and decode functions that we’ll later apply to our dataset:<br>在原始的LLaMA论文中，使用了Google的SentencePiece字节对编码分词器。然而，为了简单起见，我们将选择一个基本的字符级分词器。让我们创建编码和解码函数，稍后将应用于我们的数据集：</p>
+<pre><code># Encode function: Converts a string to a list of integers using the mapping stoi
+def encode(s):
+    return [stoi[ch] for ch in s]
+
+# Decode function: Converts a list of integers back to a string using the mapping itos
+def decode(l):
+    return &#39;&#39;.join([itos[i] for i in l])
+
+# Example: Encode the string &quot;hello&quot; and then decode the result
+decode(encode(&quot;morning&quot;))
+</code></pre>
+<p>The final line will output morning confirms the proper functionality of the encode and decode functions.<br>最后一行将输出 morning ，确认编码和解码函数的正确功能。</p>
+<p>We are now converting our dataset into a torch tensor, specifying its data type for further operations using PyTorch:<br>我们现在将我们的数据集转换为一个torch张量，使用PyTorch指定其数据类型以进行进一步的操作</p>
+<pre><code># Convert the dataset into a torch tensor with specified data type (dtype)
+dataset = torch.tensor(encode(lines), dtype=torch.int8)
+
+# Display the shape of the resulting tensor
+print(dataset.shape)
+</code></pre>
+<p>The output istorch.Size([1115394]) indicates that our dataset contains approximately one million tokens. It’s worth noting that this is significantly smaller than the LLaMA dataset, which consists of 1.4 trillion tokens.<br>输出 torch.Size([1115394]) 表示我们的数据集包含大约一百万个标记。值得注意的是，这比LLaMA数据集要小得多，后者包含了1.4万亿个标记。</p>
+<p>We’ll create a function responsible for splitting our dataset into training, validation, or test sets. In machine learning or deep learning projects, such splits are crucial for developing and evaluating models, and the same principle applies here in replicating a Large Language Model (LLM) approach:<br>我们将创建一个负责将数据集分割为训练、验证或测试集的函数。在机器学习或深度学习项目中，这种分割对于开发和评估模型至关重要，同样的原则也适用于复制大型语言模型（LLM）的方法。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"># Function to get batches for training, validation, or testing</span><br><span class="line">def get_batches(data, split, batch_size, context_window, config=MASTER_CONFIG):</span><br><span class="line">    # Split the dataset into training, validation, and test sets</span><br><span class="line">    train = data[:int(.8 * len(data))]</span><br><span class="line">    val = data[int(.8 * len(data)): int(.9 * len(data))]</span><br><span class="line">    test = data[int(.9 * len(data)):]</span><br><span class="line"></span><br><span class="line">    # Determine which split to use</span><br><span class="line">    batch_data = train</span><br><span class="line">    if split == &#x27;val&#x27;:</span><br><span class="line">        batch_data = val</span><br><span class="line">    if split == &#x27;test&#x27;:</span><br><span class="line">        batch_data = test</span><br><span class="line"></span><br><span class="line">    # Pick random starting points within the data</span><br><span class="line">    ix = torch.randint(0, batch_data.size(0) - context_window - 1, (batch_size,))</span><br><span class="line"></span><br><span class="line">    # Create input sequences (x) and corresponding target sequences (y)</span><br><span class="line">    x = torch.stack([batch_data[i:i+context_window] for i in ix]).long()</span><br><span class="line">    y = torch.stack([batch_data[i+1:i+context_window+1] for i in ix]).long()</span><br><span class="line"></span><br><span class="line">    return x, y</span><br></pre></td></tr></table></figure>
+
+<p>Now that our splitting function is defined, let’s establish two parameters crucial for this process:<br>现在我们已经定义了分割函数，让我们确定两个对这个过程至关重要的参数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Update the MASTER_CONFIG with batch_size and context_window parameters</span><br><span class="line">MASTER_CONFIG.update(&#123;</span><br><span class="line">    &#x27;batch_size&#x27;: 8,          # Number of batches to be processed at each random split</span><br><span class="line">    &#x27;context_window&#x27;: 16      # Number of characters in each input (x) and target (y) sequence of each batch</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>batch_size determines how many batches are processed at each random split, while context_window specifies the number of characters in each input (x) and target (y) sequence of each batch.<br>batch_size 确定每个随机拆分中处理的批次数量，而 context_window 指定每个批次中输入（ x ）和目标（ y ）序列中的字符数量。</p>
+<p>Let’s print a random sample from the train split of batch 8 and context window 16 from our dataset:<br>让我们从我们的数据集中的批次8和上下文窗口16的训练集中打印一个随机样本</p>
+<pre><code># Obtain batches for training using the specified batch size and context window
+xs, ys = get_batches(dataset, &#39;train&#39;, MASTER_CONFIG[&#39;batch_size&#39;], MASTER_CONFIG[&#39;context_window&#39;])
+
+# Decode the sequences to obtain the corresponding text representations
+decoded_samples = [(decode(xs[i].tolist()), decode(ys[i].tolist())) for i in range(len(xs))]
+
+# Print the random sample
+print(decoded_samples)
+</code></pre>
+<p><img src="/../asset_makemillionllm/07.webp"></p>
+<h2 id="评估策略"><a href="#评估策略" class="headerlink" title="评估策略"></a>评估策略</h2><p>Now, we are set to create a function dedicated to evaluating our self-created LLaMA architecture. The reason for doing this before defining the actual model approach is to enable continuous evaluation during the training process.<br>现在，我们准备创建一个专门用于评估我们自己创建的LLaMA架构的函数。在定义实际的模型方法之前这样做的原因是为了在训练过程中实现持续评估。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">@torch.no_grad()  # Don&#x27;t compute gradients for this function</span><br><span class="line">def evaluate_loss(model, config=MASTER_CONFIG):</span><br><span class="line">    # Placeholder for the evaluation results</span><br><span class="line">    out = &#123;&#125;</span><br><span class="line">    </span><br><span class="line">    # Set the model to evaluation mode</span><br><span class="line">    model.eval()</span><br><span class="line"></span><br><span class="line">    # Iterate through training and validation splits</span><br><span class="line">    for split in [&quot;train&quot;, &quot;val&quot;]:</span><br><span class="line">        # Placeholder for individual losses</span><br><span class="line">        losses = []</span><br><span class="line"></span><br><span class="line">        # Generate 10 batches for evaluation</span><br><span class="line">        for _ in range(10):</span><br><span class="line">            # Get input sequences (xb) and target sequences (yb)</span><br><span class="line">            xb, yb = get_batches(dataset, split, config[&#x27;batch_size&#x27;], config[&#x27;context_window&#x27;])</span><br><span class="line">            </span><br><span class="line">            # Perform model inference and calculate the loss</span><br><span class="line">            _, loss = model(xb, yb)</span><br><span class="line">            </span><br><span class="line">            # Append the loss to the list</span><br><span class="line">            losses.append(loss.item())</span><br><span class="line"></span><br><span class="line">        # Calculate the mean loss for the split and store it in the output dictionary</span><br><span class="line">        out[split] = np.mean(losses)</span><br><span class="line">    </span><br><span class="line">    # Set the model back to training mode</span><br><span class="line">    model.train()</span><br><span class="line">    </span><br><span class="line">    return out</span><br></pre></td></tr></table></figure>
+
+<p>We have used the loss as a metric to assess the performance of the model during training iterations. Our function iterates through the training and validation splits, computes the mean loss over 10 batches for each split, and finally returns the results. The model is then set back to training mode with model.train().<br>我们使用损失作为度量标准来评估模型在训练迭代过程中的性能。我们的函数通过训练和验证集进行迭代，计算每个集合中10个批次的平均损失，并最终返回结果。然后，模型被设置回训练模式，使用 model.train() 。</p>
+<h2 id="建立一个基本的神经网络模型"><a href="#建立一个基本的神经网络模型" class="headerlink" title="建立一个基本的神经网络模型"></a>建立一个基本的神经网络模型</h2><p>We’re building a basic neural network that we’ll improve later using LLaMA techniques.<br>我们正在构建一个基本的神经网络，稍后我们将使用LLaMA技术进行改进。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"># Definition of a basic neural network class</span><br><span class="line">class SimpleBrokenModel(nn.Module):</span><br><span class="line">    def __init__(self, config=MASTER_CONFIG):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.config = config</span><br><span class="line"></span><br><span class="line">        # Embedding layer to convert character indices to vectors (vocab size: 65)</span><br><span class="line">        self.embedding = nn.Embedding(config[&#x27;vocab_size&#x27;], config[&#x27;d_model&#x27;])</span><br><span class="line"></span><br><span class="line">        # Linear layers for modeling relationships between features</span><br><span class="line">        # (to be updated with SwiGLU activation function as in LLaMA)</span><br><span class="line">        self.linear = nn.Sequential(</span><br><span class="line">            nn.Linear(config[&#x27;d_model&#x27;], config[&#x27;d_model&#x27;]),</span><br><span class="line">            nn.ReLU(),  # Currently using ReLU, will be replaced with SwiGLU as in LLaMA</span><br><span class="line">            nn.Linear(config[&#x27;d_model&#x27;], config[&#x27;vocab_size&#x27;]),</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        # Print the total number of model parameters</span><br><span class="line">        print(&quot;Model parameters:&quot;, sum([m.numel() for m in self.parameters()]))</span><br></pre></td></tr></table></figure>
+
+<p>In the current architecture, the embedding layer has a vocabulary size of 65, representing the characters in our dataset. As this serves as our base model, we are using ReLU as the activation function in the linear layers; however, this will later be replaced with SwiGLU, as used in LLaMA.<br>在当前的架构中，嵌入层的词汇量为65，代表我们数据集中的字符。由于这是我们的基础模型，我们在线性层中使用ReLU作为激活函数；然而，这将在后面被替换为SwiGLU，就像LLaMA中使用的那样。</p>
+<p>To create a forward pass for our base model, we must define a forward function within our NN model.<br>为了为我们的基础模型创建一个前向传递，我们必须在我们的神经网络模型中定义一个前向函数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"># Definition of a basic neural network class</span><br><span class="line">class SimpleBrokenModel(nn.Module):</span><br><span class="line">    def __init__(self, config=MASTER_CONFIG):</span><br><span class="line"></span><br><span class="line">        # Rest of the code        </span><br><span class="line">        ... </span><br><span class="line"></span><br><span class="line">        # Forward pass function for the base model</span><br><span class="line">        def forward(self, idx, targets=None):</span><br><span class="line">            # Embedding layer converts character indices to vectors</span><br><span class="line">            x = self.embedding(idx)</span><br><span class="line">            </span><br><span class="line">            # Linear layers for modeling relationships between features</span><br><span class="line">            a = self.linear(x)</span><br><span class="line">            </span><br><span class="line">            # Apply softmax activation to obtain probability distribution</span><br><span class="line">            logits = F.softmax(a, dim=-1)</span><br><span class="line"></span><br><span class="line">            # If targets are provided, calculate and return the cross-entropy loss</span><br><span class="line">            if targets is not None:</span><br><span class="line">                # Reshape logits and targets for cross-entropy calculation</span><br><span class="line">                loss = F.cross_entropy(logits.view(-1, self.config[&#x27;vocab_size&#x27;]), targets.view(-1))</span><br><span class="line">                return logits, loss</span><br><span class="line"></span><br><span class="line">            # If targets are not provided, return the logits</span><br><span class="line">            else:</span><br><span class="line">                return logits</span><br><span class="line"></span><br><span class="line">        # Print the total number of model parameters</span><br><span class="line">        print(&quot;Model parameters:&quot;, sum([m.numel() for m in self.parameters()]))</span><br></pre></td></tr></table></figure>
+
+<p>This forward pass function takes character indices (idx) as input, applies the embedding layer, passes the result through linear layers, applies a softmax activation to obtain a probability distribution (logits). If targets are provided, it calculates the cross-entropy loss and returns both logits and loss. If targets are not provided, it returns only the logits.<br>这个前向传播函数以字符索引（ idx ）作为输入，应用嵌入层，通过线性层传递结果，应用softmax激活函数以获得概率分布（ logits ）。如果提供了目标值，它计算交叉熵损失并返回logits和损失。如果没有提供目标值，它只返回logits。</p>
+<p>To instantiate this model, we can directly invoke the class and print the total number of parameters in our Simple Neural Network Model. We’ve set the dimension of our linear layers to 128, specifying this value in our config object:<br>要实例化这个模型，我们可以直接调用类并打印出简单神经网络模型中的参数总数。我们将线性层的维度设置为128，在我们的配置对象中指定了这个值。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># Update MASTER_CONFIG with the dimension of linear layers (128)</span><br><span class="line">MASTER_CONFIG.update(&#123;</span><br><span class="line">    &#x27;d_model&#x27;: 128,</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"># Instantiate the SimpleBrokenModel using the updated MASTER_CONFIG</span><br><span class="line">model = SimpleBrokenModel(MASTER_CONFIG)</span><br><span class="line"></span><br><span class="line"># Print the total number of parameters in the model</span><br><span class="line">print(&quot;Total number of parameters in the Simple Neural Network Model:&quot;, sum([m.numel() for m in model.parameters()]))</span><br></pre></td></tr></table></figure>
+<p><img src="/../asset_makemillionllm/08.webp"></p>
+<p>Our Simple Neural Network Model comprises approximately 33,000 parameters.<br>我们的简单神经网络模型包含大约33,000个参数。</p>
+<p>Similarly, to compute logits and loss, we only need to feed our split dataset into our model:<br>同样，为了计算logits和损失，我们只需要将我们的分割数据集输入到我们的模型中：</p>
+<pre><code># Obtain batches for training using the specified batch size and context window
+xs, ys = get_batches(dataset, &#39;train&#39;, MASTER_CONFIG[&#39;batch_size&#39;], MASTER_CONFIG[&#39;context_window&#39;])
+
+# Calculate logits and loss using the model
+logits, loss = model(xs, ys)
+</code></pre>
+<p>To train our base model and note its performance, we need to specify some parameters. We are training for a total of 1000 epochs. Increasing the batch size to 32 from 8, and set the log_interval to 10, indicating that the code will print or log information about the training progress every 10 batches. For optimization, we’ll use the Adam optimizer.<br>为了训练我们的基础模型并记录其性能，我们需要指定一些参数。我们总共训练1000个epochs。将批量大小从8增加到32，并将log_interval设置为10，表示代码将每10个批次打印或记录有关训练进度的信息。对于优化，我们将使用Adam优化器。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># Update MASTER_CONFIG with training parameters</span><br><span class="line">MASTER_CONFIG.update(&#123;</span><br><span class="line">    &#x27;epochs&#x27;: 1000,          # Number of training epochs</span><br><span class="line">    &#x27;log_interval&#x27;: 10,      # Log information every 10 batches during training</span><br><span class="line">    &#x27;batch_size&#x27;: 32,        # Increase batch size to 32</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"># Instantiate the SimpleBrokenModel with updated configuration</span><br><span class="line">model = SimpleBrokenModel(MASTER_CONFIG)</span><br><span class="line"></span><br><span class="line"># Define the Adam optimizer for model parameters</span><br><span class="line">optimizer = torch.optim.Adam(</span><br><span class="line">    model.parameters(),      # Pass the model parameters to the optimizer</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>Let’s execute the training process and capture the loss from our base model, including the total number of parameters. Additionally, each line is commented for clarity:<br>让我们执行训练过程并捕获基本模型的损失，包括参数的总数。此外，每一行都有注释以便清晰理解。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"># Function to perform training</span><br><span class="line">def train(model, optimizer, scheduler=None, config=MASTER_CONFIG, print_logs=False):</span><br><span class="line">    # Placeholder for storing losses</span><br><span class="line">    losses = []</span><br><span class="line">    </span><br><span class="line">    # Start tracking time</span><br><span class="line">    start_time = time.time()</span><br><span class="line"></span><br><span class="line">    # Iterate through epochs</span><br><span class="line">    for epoch in range(config[&#x27;epochs&#x27;]):</span><br><span class="line">        # Zero out gradients</span><br><span class="line">        optimizer.zero_grad()</span><br><span class="line"></span><br><span class="line">        # Obtain batches for training</span><br><span class="line">        xs, ys = get_batches(dataset, &#x27;train&#x27;, config[&#x27;batch_size&#x27;], config[&#x27;context_window&#x27;])</span><br><span class="line"></span><br><span class="line">        # Forward pass through the model to calculate logits and loss</span><br><span class="line">        logits, loss = model(xs, targets=ys)</span><br><span class="line"></span><br><span class="line">        # Backward pass and optimization step</span><br><span class="line">        loss.backward()</span><br><span class="line">        optimizer.step()</span><br><span class="line"></span><br><span class="line">        # If a learning rate scheduler is provided, adjust the learning rate</span><br><span class="line">        if scheduler:</span><br><span class="line">            scheduler.step()</span><br><span class="line"></span><br><span class="line">        # Log progress every specified interval</span><br><span class="line">        if epoch % config[&#x27;log_interval&#x27;] == 0:</span><br><span class="line">            # Calculate batch time</span><br><span class="line">            batch_time = time.time() - start_time</span><br><span class="line">            </span><br><span class="line">            # Evaluate loss on validation set</span><br><span class="line">            x = evaluate_loss(model)</span><br><span class="line">            </span><br><span class="line">            # Store the validation loss</span><br><span class="line">            losses += [x]</span><br><span class="line">            </span><br><span class="line">            # Print progress logs if specified</span><br><span class="line">            if print_logs:</span><br><span class="line">                print(f&quot;Epoch &#123;epoch&#125; | val loss &#123;x[&#x27;val&#x27;]:.3f&#125; | Time &#123;batch_time:.3f&#125; | ETA in seconds &#123;batch_time * (config[&#x27;epochs&#x27;] - epoch)/config[&#x27;log_interval&#x27;] :.3f&#125;&quot;)</span><br><span class="line">                </span><br><span class="line">            # Reset the timer</span><br><span class="line">            start_time = time.time()</span><br><span class="line"></span><br><span class="line">            # Print learning rate if a scheduler is provided</span><br><span class="line">            if scheduler:</span><br><span class="line">                print(&quot;lr: &quot;, scheduler.get_lr())</span><br><span class="line"></span><br><span class="line">    # Print the final validation loss</span><br><span class="line">    print(&quot;Validation loss: &quot;, losses[-1][&#x27;val&#x27;])</span><br><span class="line">    </span><br><span class="line">    # Plot the training and validation loss curves</span><br><span class="line">    return pd.DataFrame(losses).plot()</span><br><span class="line"></span><br><span class="line"># Execute the training process</span><br><span class="line">train(model, optimizer)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../asset_makemillionllm/09.webp"></p>
+<p>The initial cross-entropy loss before training stands at 4.17, and after 1000 epochs, it reduces to 3.93. In this context, cross-entropy reflects the likelihood of selecting the incorrect word.<br>训练前的初始交叉熵损失为4.17，经过1000个时期后，降至3.93。在这个背景下，交叉熵反映了选择错误单词的可能性。</p>
+<p>Our model incorporates a softmax layer on the logits, which transforms a vector of numbers into a probability distribution. Let’s use the built-in F.cross_entropy function, we need to directly pass in the unnormalized logits. Consequently, we will modify our model accordingly.<br>我们的模型在logits上加入了一个softmax层，将一个数字向量转化为概率分布。让我们使用内置的F.cross_entropy函数，我们需要直接传入未归一化的logits。因此，我们将相应地修改我们的模型。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"># Modified SimpleModel class without softmax layer</span><br><span class="line">class SimpleModel(nn.Module):</span><br><span class="line">    def __init__(self, config):</span><br><span class="line">       </span><br><span class="line">       # Rest of the code</span><br><span class="line">       ...</span><br><span class="line"></span><br><span class="line">    def forward(self, idx, targets=None):</span><br><span class="line">        # Embedding layer converts character indices to vectors</span><br><span class="line">        x = self.embedding(idx)</span><br><span class="line">        </span><br><span class="line">        # Linear layers for modeling relationships between features</span><br><span class="line">        logits = self.linear(x)</span><br><span class="line"></span><br><span class="line">        # If targets are provided, calculate and return the cross-entropy loss</span><br><span class="line">        if targets is not None:</span><br><span class="line"></span><br><span class="line">            # Rest of the code</span><br><span class="line">            ...</span><br></pre></td></tr></table></figure>
+
+<p>Let’s recreate the updated SimpleModel and train it for 1000 epochs to observe any changes:<br>让我们重新创建更新的SimpleModel，并进行1000个周期的训练，以观察是否有任何变化</p>
+<pre><code># Create the updated SimpleModel
+model = SimpleModel(MASTER_CONFIG)
+
+# Obtain batches for training
+xs, ys = get_batches(dataset, &#39;train&#39;, MASTER_CONFIG[&#39;batch_size&#39;], MASTER_CONFIG[&#39;context_window&#39;])
+
+# Calculate logits and loss using the model
+logits, loss = model(xs, ys)
+
+# Define the Adam optimizer for model parameters
+optimizer = torch.optim.Adam(model.parameters())
+
+# Train the model for 100 epochs
+train(model, optimizer)
+</code></pre>
+<p><img src="/../asset_makemillionllm/10.webp"></p>
+<p>After reducing the loss to 2.51, let’s explore how our language model with approximately 33,000 parameters generates text during inferencing. We’ll create a ‘generate’ function, which we’ll later use when replicating LLaMA:<br>将损失降低到2.51后，让我们探索一下我们的语言模型在推理过程中如何生成文本。我们将创建一个“generate”函数，在复制LLaMA时将使用该函数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># Generate function for text generation using the trained model</span><br><span class="line">def generate(model, config=MASTER_CONFIG, max_new_tokens=30):</span><br><span class="line">    idx = torch.zeros(5, 1).long()</span><br><span class="line">    for _ in range(max_new_tokens):</span><br><span class="line">        # Call the model</span><br><span class="line">        logits = model(idx[:, -config[&#x27;context_window&#x27;]:])</span><br><span class="line">        last_time_step_logits = logits[</span><br><span class="line">            :, -1, :</span><br><span class="line">        ]  # all the batches (1), last time step, all the logits</span><br><span class="line">        p = F.softmax(last_time_step_logits, dim=-1)  # softmax to get probabilities</span><br><span class="line">        idx_next = torch.multinomial(</span><br><span class="line">            p, num_samples=1</span><br><span class="line">        )  # sample from the distribution to get the next token</span><br><span class="line">        idx = torch.cat([idx, idx_next], dim=-1)  # append to the sequence</span><br><span class="line">    return [decode(x) for x in idx.tolist()]</span><br><span class="line"></span><br><span class="line"># Generate text using the trained model</span><br><span class="line">generate(model)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../asset_makemillionllm/11.webp"></p>
+<p>The generated text doesn’t look great with our basic model of around 33K parameters. However, now that we’ve laid the groundwork with this simple model, we’ll move on to constructing the LLaMA architecture in the next section.<br>生成的文本在我们的基本模型中（大约33K个参数）看起来不太好。然而，既然我们已经用这个简单模型打下了基础，我们将在下一节中构建LLaMA架构。</p>
+<h2 id="复制LLaMA架构"><a href="#复制LLaMA架构" class="headerlink" title="复制LLaMA架构"></a>复制LLaMA架构</h2><p>In the earlier part of the blog, we covered essential concepts, and now, we’ll integrate these concepts into our base model. LLaMA introduces three architectural modifications to the original Transformer:<br>在博客的前半部分，我们介绍了基本概念，现在我们将把这些概念融入到我们的基础模型中。LLaMA对原始Transformer进行了三个架构修改。</p>
+<ul>
+<li>RMSNorm用于预归一化</li>
+<li>旋转嵌入</li>
+<li>SwiGLU激活函数</li>
+</ul>
+<p>我们将逐个将这些修改合并到我们的基础模型中，进行迭代和构建。</p>
+<h2 id="RMSNorm用于预归一化："><a href="#RMSNorm用于预归一化：" class="headerlink" title="RMSNorm用于预归一化："></a>RMSNorm用于预归一化：</h2><p>We are defining an RMSNorm function with the following functionalities:<br>我们正在定义一个具有以下功能的RMSNorm函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">class RMSNorm(nn.Module):</span><br><span class="line">    def __init__(self, layer_shape, eps=1e-8, bias=False):</span><br><span class="line">        super(RMSNorm, self).__init__()</span><br><span class="line"></span><br><span class="line">        # Registering a learnable parameter &#x27;scale&#x27; as a parameter of the module</span><br><span class="line">        self.register_parameter(&quot;scale&quot;, nn.Parameter(torch.ones(layer_shape)))</span><br><span class="line"></span><br><span class="line">    def forward(self, x):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        Assumes shape is (batch, seq_len, d_model)</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        # Calculating the Frobenius norm, RMS = 1/sqrt(N) * Frobenius norm</span><br><span class="line">        ff_rms = torch.linalg.norm(x, dim=(1,2)) * x[0].numel() ** -.5</span><br><span class="line"></span><br><span class="line">        # Normalizing the input tensor &#x27;x&#x27; with respect to RMS</span><br><span class="line">        raw = x / ff_rms.unsqueeze(-1).unsqueeze(-1)</span><br><span class="line"></span><br><span class="line">        # Scaling the normalized tensor using the learnable parameter &#x27;scale&#x27;</span><br><span class="line">        return self.scale[:x.shape[1], :].unsqueeze(0) * raw</span><br></pre></td></tr></table></figure>
+
+<p>we define the RMSNorm class. During initialization, it registers a scale parameter. In the forward pass, it calculates the Frobenius norm of the input tensor and then normalizes the tensor. Finally, the tensor is scaled by the registered scale parameter. This function is designed for use in LLaMA to replace the LayerNorm operation.<br>我们定义了RMSNorm类。在初始化过程中，它注册了一个比例参数。在前向传播过程中，它计算输入张量的Frobenius范数，然后对张量进行归一化。最后，张量被注册的比例参数进行缩放。这个函数被设计用于在LLaMA中替代LayerNorm操作。</p>
+<p>Now it’s time to incorporate the first implementation concept of LLaMA, which is RMSNorm, into our simple NN model. Here’s the updated code:<br>现在是将LLaMA的第一个实现概念RMSNorm融入我们简单的神经网络模型的时候了。以下是更新后的代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"># Define the SimpleModel_RMS with RMSNorm</span><br><span class="line">class SimpleModel_RMS(nn.Module):</span><br><span class="line">    def __init__(self, config):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.config = config</span><br><span class="line"></span><br><span class="line">        # Embedding layer to convert character indices to vectors</span><br><span class="line">        self.embedding = nn.Embedding(config[&#x27;vocab_size&#x27;], config[&#x27;d_model&#x27;])</span><br><span class="line"></span><br><span class="line">        # RMSNorm layer for pre-normalization</span><br><span class="line">        self.rms = RMSNorm((config[&#x27;context_window&#x27;], config[&#x27;d_model&#x27;]))</span><br><span class="line"></span><br><span class="line">        # Linear layers for modeling relationships between features</span><br><span class="line">        self.linear = nn.Sequential(</span><br><span class="line">            # Rest of the code</span><br><span class="line">            ...</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        # Print the total number of model parameters</span><br><span class="line">        print(&quot;Model parameters:&quot;, sum([m.numel() for m in self.parameters()]))</span><br><span class="line"></span><br><span class="line">    def forward(self, idx, targets=None):</span><br><span class="line">        # Embedding layer converts character indices to vectors</span><br><span class="line">        x = self.embedding(idx)</span><br><span class="line"></span><br><span class="line">        # RMSNorm pre-normalization</span><br><span class="line">        x = self.rms(x)</span><br><span class="line"></span><br><span class="line">        # Linear layers for modeling relationships between features</span><br><span class="line">        logits = self.linear(x)</span><br><span class="line"></span><br><span class="line">        if targets is not None:</span><br><span class="line"></span><br><span class="line">            # Rest of the code</span><br><span class="line">            ...</span><br></pre></td></tr></table></figure>
+
+<p>Let’s execute the modified NN model with RMSNorm and observe the updated number of parameters in the model, along with the loss:<br>让我们使用带有RMSNorm的修改后的NN模型，并观察模型中更新的参数数量以及损失</p>
+<pre><code># Create an instance of SimpleModel_RMS
+model = SimpleModel_RMS(MASTER_CONFIG)
+
+# Obtain batches for training
+xs, ys = get_batches(dataset, &#39;train&#39;, MASTER_CONFIG[&#39;batch_size&#39;], MASTER_CONFIG[&#39;context_window&#39;])
+
+# Calculate logits and loss using the model
+logits, loss = model(xs, ys)
+
+# Define the Adam optimizer for model parameters
+optimizer = torch.optim.Adam(model.parameters())
+
+# Train the model
+train(model, optimizer)
+</code></pre>
+<p><img src="/../asset_makemillionllm/12.webp"></p>
+<p>The validation loss experiences a small decrease, and the parameters of our updated LLM now total approximately 55,000.<br>验证损失经历了小幅下降，我们更新的LLM的参数总数约为55,000。</p>
+<h2 id="旋转嵌入："><a href="#旋转嵌入：" class="headerlink" title="旋转嵌入："></a>旋转嵌入：</h2><p>Next, we will implement rotary positional embeddings. In RoPE, the authors suggest embedding the position of a token in a sequence by rotating the embedding, applying a different rotation at each position. Let’s create a function that mimics the actual paper implementation of RoPE:<br>接下来，我们将实现旋转位置嵌入。在RoPE中，作者建议通过旋转嵌入来嵌入序列中的令牌位置，每个位置应用不同的旋转。让我们创建一个模拟RoPE实际论文实现的函数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">def get_rotary_matrix(context_window, embedding_dim):</span><br><span class="line">    # Initialize a tensor for the rotary matrix with zeros</span><br><span class="line">    R = torch.zeros((context_window, embedding_dim, embedding_dim), requires_grad=False)</span><br><span class="line">    </span><br><span class="line">    # Loop through each position in the context window</span><br><span class="line">    for position in range(context_window):</span><br><span class="line">        # Loop through each dimension in the embedding</span><br><span class="line">        for i in range(embedding_dim // 2):</span><br><span class="line">            # Calculate the rotation angle (theta) based on the position and embedding dimension</span><br><span class="line">            theta = 10000. ** (-2. * (i - 1) / embedding_dim)</span><br><span class="line">            # Calculate the rotated matrix elements using sine and cosine functions</span><br><span class="line">            m_theta = position * theta</span><br><span class="line">            R[position, 2 * i, 2 * i] = np.cos(m_theta)</span><br><span class="line">            R[position, 2 * i, 2 * i + 1] = -np.sin(m_theta)</span><br><span class="line">            R[position, 2 * i + 1, 2 * i] = np.sin(m_theta)</span><br><span class="line">            R[position, 2 * i + 1, 2 * i + 1] = np.cos(m_theta)</span><br><span class="line">    return R</span><br></pre></td></tr></table></figure>
+
+<p>we generate a rotary matrix based on the specified context window and embedding dimension, following the proposed RoPE implementation.<br>我们根据指定的上下文窗口和嵌入维度生成一个旋转矩阵，遵循提出的RoPE实现。</p>
+<p>As you may be familiar with the architecture of transformers, which involves attention heads, we similarly need to create attention heads when replicating LLaMA. To start, let’s first create a single masked attention head using the get_rotary_matrix function we previously developed for rotary embeddings. Additionally, each line is commented for clarity:<br>正如您可能熟悉的transformer架构，其中涉及到注意力头，我们在复制LLaMA时同样需要创建注意力头。首先，让我们使用之前为旋转嵌入开发的 get_rotary_matrix 函数来创建一个单独的掩码注意力头。此外，为了清晰起见，每行都有注释。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">class RoPEAttentionHead(nn.Module):</span><br><span class="line">    def __init__(self, config):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.config = config</span><br><span class="line">        # Linear transformation for query</span><br><span class="line">        self.w_q = nn.Linear(config[&#x27;d_model&#x27;], config[&#x27;d_model&#x27;], bias=False)</span><br><span class="line">        # Linear transformation for key</span><br><span class="line">        self.w_k = nn.Linear(config[&#x27;d_model&#x27;], config[&#x27;d_model&#x27;], bias=False)</span><br><span class="line">        # Linear transformation for value</span><br><span class="line">        self.w_v = nn.Linear(config[&#x27;d_model&#x27;], config[&#x27;d_model&#x27;], bias=False)</span><br><span class="line">        # Obtain rotary matrix for positional embeddings</span><br><span class="line">        self.R = get_rotary_matrix(config[&#x27;context_window&#x27;], config[&#x27;d_model&#x27;])</span><br><span class="line"></span><br><span class="line">    def get_rotary_matrix(context_window, embedding_dim):</span><br><span class="line">        # Generate rotational matrix for RoPE</span><br><span class="line">        R = torch.zeros((context_window, embedding_dim, embedding_dim), requires_grad=False)</span><br><span class="line">        for position in range(context_window):</span><br><span class="line">            for i in range(embedding_dim//2):</span><br><span class="line">                </span><br><span class="line">                # Rest of the code</span><br><span class="line">                ...</span><br><span class="line"></span><br><span class="line">        return R</span><br><span class="line"></span><br><span class="line">    def forward(self, x, return_attn_weights=False):</span><br><span class="line">        # x: input tensor of shape (batch, sequence length, dimension)</span><br><span class="line"></span><br><span class="line">        b, m, d = x.shape  # batch size, sequence length, dimension</span><br><span class="line"></span><br><span class="line">        # Linear transformations for Q, K, and V</span><br><span class="line">        q = self.w_q(x)</span><br><span class="line">        k = self.w_k(x)</span><br><span class="line">        v = self.w_v(x)</span><br><span class="line"></span><br><span class="line">        # Rotate Q and K using the RoPE matrix</span><br><span class="line">        q_rotated = (torch.bmm(q.transpose(0, 1), self.R[:m])).transpose(0, 1)</span><br><span class="line">        k_rotated = (torch.bmm(k.transpose(0, 1), self.R[:m])).transpose(0, 1)</span><br><span class="line"></span><br><span class="line">        # Perform scaled dot-product attention</span><br><span class="line">        activations = F.scaled_dot_product_attention(</span><br><span class="line">            q_rotated, k_rotated, v, dropout_p=0.1, is_causal=True</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        if return_attn_weights:</span><br><span class="line">            # Create a causal attention mask</span><br><span class="line">            attn_mask = torch.tril(torch.ones((m, m)), diagonal=0)</span><br><span class="line">            # Calculate attention weights and add causal mask</span><br><span class="line">            attn_weights = torch.bmm(q_rotated, k_rotated.transpose(1, 2)) / np.sqrt(d) + attn_mask</span><br><span class="line">            attn_weights = F.softmax(attn_weights, dim=-1)</span><br><span class="line">            return activations, attn_weights</span><br><span class="line"></span><br><span class="line">        return activations</span><br></pre></td></tr></table></figure>
+
+<p>Now that we have a single masked attention head that returns attention weights, the next step is to create a multi-Head attention mechanism.<br>现在我们有一个返回注意力权重的单个掩码注意力头，下一步是创建一个多头注意力机制。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">class RoPEMaskedMultiheadAttention(nn.Module):</span><br><span class="line">    def __init__(self, config):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.config = config</span><br><span class="line">        # Create a list of RoPEMaskedAttentionHead instances as attention heads</span><br><span class="line">        self.heads = nn.ModuleList([</span><br><span class="line">            RoPEMaskedAttentionHead(config) for _ in range(config[&#x27;n_heads&#x27;])</span><br><span class="line">        ])</span><br><span class="line">        self.linear = nn.Linear(config[&#x27;n_heads&#x27;] * config[&#x27;d_model&#x27;], config[&#x27;d_model&#x27;])  # Linear layer after concatenating heads</span><br><span class="line">        self.dropout = nn.Dropout(.1)  # Dropout layer</span><br><span class="line"></span><br><span class="line">    def forward(self, x):</span><br><span class="line">        # x: input tensor of shape (batch, sequence length, dimension)</span><br><span class="line"></span><br><span class="line">        # Process each attention head and concatenate the results</span><br><span class="line">        heads = [h(x) for h in self.heads]</span><br><span class="line">        x = torch.cat(heads, dim=-1)</span><br><span class="line">        </span><br><span class="line">        # Apply linear transformation to the concatenated output</span><br><span class="line">        x = self.linear(x)</span><br><span class="line">        </span><br><span class="line">        # Apply dropout</span><br><span class="line">        x = self.dropout(x)</span><br><span class="line">        return x</span><br></pre></td></tr></table></figure>
+
+<p>The original paper used 32 heads for their smaller 7b LLM variation, but due to constraints, we’ll use 8 heads for our approach.<br>原始论文在其较小的7b LLM 变体中使用了32个头，但由于限制，我们的方法将使用8个头。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># Update the master configuration with the number of attention heads</span><br><span class="line">MASTER_CONFIG.update(&#123;</span><br><span class="line">    &#x27;n_heads&#x27;: 8,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>Now that we’ve implemented Rotational Embedding and Multi-head Attention, let’s re-write our RMSNorm neural network model with the updated code. We’ll test its performance, compute the loss, and check the number of parameters. We’ll refer to this updated model as “RopeModel”<br>现在我们已经实施了旋转嵌入和多头注意力，让我们用更新后的代码重新编写我们的RMSNorm神经网络模型。我们将测试其性能，计算损失，并检查参数的数量。我们将称这个更新的模型为“RopeModel”。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">class RopeModel(nn.Module):</span><br><span class="line">    def __init__(self, config):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.config = config</span><br><span class="line"></span><br><span class="line">        # Embedding layer for input tokens</span><br><span class="line">        self.embedding = nn.Embedding(config[&#x27;vocab_size&#x27;], config[&#x27;d_model&#x27;])</span><br><span class="line">        </span><br><span class="line">        # RMSNorm layer for pre-normalization</span><br><span class="line">        self.rms = RMSNorm((config[&#x27;context_window&#x27;], config[&#x27;d_model&#x27;]))</span><br><span class="line">        </span><br><span class="line">        # RoPEMaskedMultiheadAttention layer</span><br><span class="line">        self.rope_attention = RoPEMaskedMultiheadAttention(config)</span><br><span class="line"></span><br><span class="line">        # Linear layer followed by ReLU activation</span><br><span class="line">        self.linear = nn.Sequential(</span><br><span class="line">            nn.Linear(config[&#x27;d_model&#x27;], config[&#x27;d_model&#x27;]),</span><br><span class="line">            nn.ReLU(),</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        # Final linear layer for prediction</span><br><span class="line">        self.last_linear = nn.Linear(config[&#x27;d_model&#x27;], config[&#x27;vocab_size&#x27;])</span><br><span class="line"></span><br><span class="line">        print(&quot;model params:&quot;, sum([m.numel() for m in self.parameters()]))</span><br><span class="line"></span><br><span class="line">    def forward(self, idx, targets=None):</span><br><span class="line">        # idx: input indices</span><br><span class="line">        x = self.embedding(idx)</span><br><span class="line"></span><br><span class="line">        # One block of attention</span><br><span class="line">        x = self.rms(x)  # RMS pre-normalization</span><br><span class="line">        x = x + self.rope_attention(x)</span><br><span class="line"></span><br><span class="line">        x = self.rms(x)  # RMS pre-normalization</span><br><span class="line">        x = x + self.linear(x)</span><br><span class="line"></span><br><span class="line">        logits = self.last_linear(x)</span><br><span class="line"></span><br><span class="line">        if targets is not None:</span><br><span class="line">            loss = F.cross_entropy(logits.view(-1, self.config[&#x27;vocab_size&#x27;]), targets.view(-1))</span><br><span class="line">            return logits, loss</span><br><span class="line"></span><br><span class="line">        else:</span><br><span class="line">            return logits</span><br></pre></td></tr></table></figure>
+
+<p>Let’s execute the modified NN model with RMSNorm, Rotational Embeddings and Masked Multi Head Attentions to observe the updated number of parameters in the model, along with the loss:<br>让我们使用带有RMSNorm、旋转嵌入和掩码多头注意力的修改后的NN模型来执行，观察模型中更新后的参数数量以及损失</p>
+<pre><code># Create an instance of RopeModel (RMSNorm, RoPE, Multi-Head)
+model = RopeModel(MASTER_CONFIG)
+
+# Obtain batches for training
+xs, ys = get_batches(dataset, &#39;train&#39;, MASTER_CONFIG[&#39;batch_size&#39;], MASTER_CONFIG[&#39;context_window&#39;])
+
+# Calculate logits and loss using the model
+logits, loss = model(xs, ys)
+
+# Define the Adam optimizer for model parameters
+optimizer = torch.optim.Adam(model.parameters())
+
+# Train the model
+train(model, optimizer)
+</code></pre>
+<p><img src="/../asset_makemillionllm/13.webp"></p>
+<p>The validation loss experiences a small decrease again, and the parameters of our updated LLM now total approximately 55,000.<br>验证损失再次略微下降，我们更新的LLM的参数总数约为55,000。</p>
+<p>Let’s train the model for more epochs to see if the loss of our recreated LLaMA LLM continues to decrease or not.<br>让我们训练模型更多个周期，看看我们重新创建的 LLaMA LLM 的损失是否继续减少。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># Updating training configuration with more epochs and a logging interval</span><br><span class="line">MASTER_CONFIG.update(&#123;</span><br><span class="line">    &quot;epochs&quot;: 5000,</span><br><span class="line">    &quot;log_interval&quot;: 10,</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"># Training the model with the updated configuration</span><br><span class="line">train(model, optimizer)</span><br></pre></td></tr></table></figure>
+<p><img src="/../asset_makemillionllm/14.webp"></p>
+<p>The validation loss continues to decrease, suggesting that training for more epochs could lead to further loss reduction, though not significantly.<br>验证损失继续下降，表明训练更多轮次可能会进一步减少损失，尽管不显著。</p>
+<h2 id="SwiGLU激活函数-1"><a href="#SwiGLU激活函数-1" class="headerlink" title="SwiGLU激活函数"></a>SwiGLU激活函数</h2><p>如前所述，LLaMA的创建者使用SwiGLU而不是ReLU，因此我们将在我们的代码中实现SwiGLU方程。</p>
+<p><img src="/../asset_makemillionllm/15.webp"><br><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2002.05202v1.pdf">https://arxiv.org/pdf/2002.05202v1.pdf</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">class SwiGLU(nn.Module):</span><br><span class="line">    &quot;&quot;&quot; Paper Link -&gt; https://arxiv.org/pdf/2002.05202v1.pdf &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, size):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.config = config  # Configuration information</span><br><span class="line">        self.linear_gate = nn.Linear(size, size)  # Linear transformation for the gating mechanism</span><br><span class="line">        self.linear = nn.Linear(size, size)  # Linear transformation for the main branch</span><br><span class="line">        self.beta = torch.randn(1, requires_grad=True)  # Random initialization of the beta parameter</span><br><span class="line"></span><br><span class="line">        # Using nn.Parameter for beta to ensure it&#x27;s recognized as a learnable parameter</span><br><span class="line">        self.beta = nn.Parameter(torch.ones(1))</span><br><span class="line">        self.register_parameter(&quot;beta&quot;, self.beta)</span><br><span class="line"></span><br><span class="line">    def forward(self, x):</span><br><span class="line">        # Swish-Gated Linear Unit computation</span><br><span class="line">        swish_gate = self.linear_gate(x) * torch.sigmoid(self.beta * self.linear_gate(x))</span><br><span class="line">        out = swish_gate * self.linear(x)  # Element-wise multiplication of the gate and main branch</span><br><span class="line">        return out</span><br></pre></td></tr></table></figure>
+
+<p>在Python中实现SwiGLU方程后，我们需要将其集成到我们修改过的LLaMA语言模型（RopeModel）中。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">class RopeModel(nn.Module):</span><br><span class="line">    def __init__(self, config):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.config = config</span><br><span class="line"></span><br><span class="line">        # Embedding layer for input tokens</span><br><span class="line">        self.embedding = nn.Embedding(config[&#x27;vocab_size&#x27;], config[&#x27;d_model&#x27;])</span><br><span class="line">        </span><br><span class="line">        # RMSNorm layer for pre-normalization</span><br><span class="line">        self.rms = RMSNorm((config[&#x27;context_window&#x27;], config[&#x27;d_model&#x27;]))</span><br><span class="line">        </span><br><span class="line">        # Multi-head attention layer with RoPE (Rotary Positional Embeddings)</span><br><span class="line">        self.rope_attention = RoPEMaskedMultiheadAttention(config)</span><br><span class="line"></span><br><span class="line">        # Linear layer followed by SwiGLU activation</span><br><span class="line">        self.linear = nn.Sequential(</span><br><span class="line">            nn.Linear(config[&#x27;d_model&#x27;], config[&#x27;d_model&#x27;]),</span><br><span class="line">            SwiGLU(config[&#x27;d_model&#x27;]),  # Adding SwiGLU activation</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        # Output linear layer</span><br><span class="line">        self.last_linear = nn.Linear(config[&#x27;d_model&#x27;], config[&#x27;vocab_size&#x27;])</span><br><span class="line"></span><br><span class="line">        # Printing total model parameters</span><br><span class="line">        print(&quot;model params:&quot;, sum([m.numel() for m in self.parameters()]))</span><br><span class="line"></span><br><span class="line">    def forward(self, idx, targets=None):</span><br><span class="line">        x = self.embedding(idx)</span><br><span class="line"></span><br><span class="line">        # One block of attention</span><br><span class="line">        x = self.rms(x)  # RMS pre-normalization</span><br><span class="line">        x = x + self.rope_attention(x)</span><br><span class="line"></span><br><span class="line">        x = self.rms(x)  # RMS pre-normalization</span><br><span class="line">        x = x + self.linear(x)  # Applying SwiGLU activation</span><br><span class="line"></span><br><span class="line">        logits = self.last_linear(x)</span><br><span class="line"></span><br><span class="line">        if targets is not None:</span><br><span class="line">            # Calculate cross-entropy loss if targets are provided</span><br><span class="line">            loss = F.cross_entropy(logits.view(-1, self.config[&#x27;vocab_size&#x27;]), targets.view(-1))</span><br><span class="line">            return logits, loss</span><br><span class="line"></span><br><span class="line">        else:</span><br><span class="line">            return logits</span><br></pre></td></tr></table></figure>
+
+<p>让我们使用RMSNorm、旋转嵌入、掩码多头注意力和SwiGLU来执行修改后的NN模型，观察模型中更新的参数数量以及损失</p>
+<pre><code># Create an instance of RopeModel (RMSNorm, RoPE, Multi-Head, SwiGLU)
+model = RopeModel(MASTER_CONFIG)
+
+# Obtain batches for training
+xs, ys = get_batches(dataset, &#39;train&#39;, MASTER_CONFIG[&#39;batch_size&#39;], MASTER_CONFIG[&#39;context_window&#39;])
+
+# Calculate logits and loss using the model
+logits, loss = model(xs, ys)
+
+# Define the Adam optimizer for model parameters
+optimizer = torch.optim.Adam(model.parameters())
+
+# Train the model
+train(model, optimizer)
+</code></pre>
+<p><img src="/../asset_makemillionllm/16.webp"></p>
+<p>Once again the validation loss experiences a small decrease, and the parameters of our updated LLM now total approximately 60,000.<br>验证损失再次小幅下降，我们更新的LLM的参数总数约为60,000。</p>
+<p>So far, we have successfully implemented the key components of the paper, namely RMSNorm, RoPE, and SwiGLU. We observed that these implementations led to a minimal decrease in the loss.<br>到目前为止，我们已成功实现了论文的关键组件，即RMSNorm、RoPE和SwiGLU。我们观察到这些实现导致了损失的轻微减少。</p>
+<p>Now we will add layers to our LLaMA to examine its impact on the loss. The original paper used 32 layers for the 7b version, but we will use only 4 layers. Let’s adjust our model settings accordingly.<br>现在我们将为我们的LLaMA添加层来检查其对损失的影响。原始论文中使用了32层来进行7b版本的训练，但我们只使用4层。让我们相应地调整我们的模型设置。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># Update model configurations for the number of layers</span><br><span class="line">MASTER_CONFIG.update(&#123;</span><br><span class="line">    &#x27;n_layers&#x27;: 4,  # Set the number of layers to 4</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>Let’s start by creating a single layer to understand its impact.<br>让我们先创建一个单一的图层来了解它的影响。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"># add RMSNorm and residual connection</span><br><span class="line">class LlamaBlock(nn.Module):</span><br><span class="line">    def __init__(self, config):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.config = config</span><br><span class="line"></span><br><span class="line">        # RMSNorm layer</span><br><span class="line">        self.rms = RMSNorm((config[&#x27;context_window&#x27;], config[&#x27;d_model&#x27;]))</span><br><span class="line"></span><br><span class="line">        # RoPE Masked Multihead Attention layer</span><br><span class="line">        self.attention = RoPEMaskedMultiheadAttention(config)</span><br><span class="line"></span><br><span class="line">        # Feedforward layer with SwiGLU activation</span><br><span class="line">        self.feedforward = nn.Sequential(</span><br><span class="line">            nn.Linear(config[&#x27;d_model&#x27;], config[&#x27;d_model&#x27;]),</span><br><span class="line">            SwiGLU(config[&#x27;d_model&#x27;]),</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    def forward(self, x):</span><br><span class="line">        # one block of attention</span><br><span class="line">        x = self.rms(x) # RMS pre-normalization</span><br><span class="line">        x = x + self.attention(x)  # residual connection</span><br><span class="line"></span><br><span class="line">        x = self.rms(x) # RMS pre-normalization</span><br><span class="line">        x = x + self.feedforward(x)  # residual connection</span><br><span class="line">        return x</span><br></pre></td></tr></table></figure>
+
+<p>Create an instance of the LlamaBlock class and applies it to a random tensor.<br>创建一个 LlamaBlock 类的实例，并将其应用于一个随机张量。</p>
+<pre><code># Create an instance of the LlamaBlock class with the provided configuration
+block = LlamaBlock(MASTER_CONFIG)
+
+# Generate a random tensor with the specified batch size, context window, and model dimension
+random_input = torch.randn(MASTER_CONFIG[&#39;batch_size&#39;], MASTER_CONFIG[&#39;context_window&#39;], MASTER_CONFIG[&#39;d_model&#39;])
+
+# Apply the LlamaBlock to the random input tensor
+output = block(random_input)
+</code></pre>
+<p>Having successfully created a single layer, we can now use it to construct multiple layers. Additionally, we will rename our model class from “ropemodel” to “Llama” as we have replicated every component of the LLaMA language model.<br>成功创建了一个单层后，我们现在可以使用它来构建多个层。此外，我们将把我们的模型类从“ropemodel”重命名为“Llama”，因为我们已经复制了LLaMA语言模型的每个组件。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">class Llama(nn.Module):</span><br><span class="line">    def __init__(self, config):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.config = config</span><br><span class="line">        # Embedding layer for token representations</span><br><span class="line">        self.embeddings = nn.Embedding(config[&#x27;vocab_size&#x27;], config[&#x27;d_model&#x27;])</span><br><span class="line">        # Sequential block of LlamaBlocks based on the specified number of layers</span><br><span class="line">        self.llama_blocks = nn.Sequential(</span><br><span class="line">            OrderedDict([(f&quot;llama_&#123;i&#125;&quot;, LlamaBlock(config)) for i in range(config[&#x27;n_layers&#x27;])])</span><br><span class="line">        )</span><br><span class="line">        # Feedforward network (FFN) for final output</span><br><span class="line">        self.ffn = nn.Sequential(</span><br><span class="line">            nn.Linear(config[&#x27;d_model&#x27;], config[&#x27;d_model&#x27;]),</span><br><span class="line">            SwiGLU(config[&#x27;d_model&#x27;]),</span><br><span class="line">            nn.Linear(config[&#x27;d_model&#x27;], config[&#x27;vocab_size&#x27;]),</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        # Print total number of parameters in the model</span><br><span class="line">        print(&quot;model params:&quot;, sum([m.numel() for m in self.parameters()]))</span><br><span class="line"></span><br><span class="line">    def forward(self, idx, targets=None):</span><br><span class="line">        # Input token indices are passed through the embedding layer</span><br><span class="line">        x = self.embeddings(idx)</span><br><span class="line">        # Process the input through the LlamaBlocks</span><br><span class="line">        x = self.llama_blocks(x)</span><br><span class="line">        # Pass the processed input through the final FFN for output logits</span><br><span class="line">        logits = self.ffn(x)</span><br><span class="line"></span><br><span class="line">        # If targets are not provided, return only the logits</span><br><span class="line">        if targets is None:</span><br><span class="line">            return logits</span><br><span class="line">        # If targets are provided, compute and return the cross-entropy loss</span><br><span class="line">        else:</span><br><span class="line">            loss = F.cross_entropy(logits.view(-1, self.config[&#x27;vocab_size&#x27;]), targets.view(-1))</span><br><span class="line">            return logits, loss</span><br></pre></td></tr></table></figure>
+
+<p>Let’s execute the modified LLaMA model with RMSNorm, Rotational Embeddings, Masked Multi Head Attentions, SwiGLU and N_layers to observe the updated number of parameters in the model, along with the loss:<br>让我们使用RMSNorm、旋转嵌入、掩码多头注意力、SwiGLU和N_layers来执行修改后的LLaMA模型，观察模型中更新的参数数量以及损失</p>
+<pre><code># Create an instance of RopeModel (RMSNorm, RoPE, Multi-Head, SwiGLU, N_layers)
+llama = Llama(MASTER_CONFIG)
+
+# Obtain batches for training
+xs, ys = get_batches(dataset, &#39;train&#39;, MASTER_CONFIG[&#39;batch_size&#39;], MASTER_CONFIG[&#39;context_window&#39;])
+
+# Calculate logits and loss using the model
+logits, loss = llama(xs, ys)
+
+# Define the Adam optimizer for model parameters
+optimizer = torch.optim.Adam(llama.parameters())
+
+# Train the model
+train(llama, optimizer)
+</code></pre>
+<p><img src="/../asset_makemillionllm/17.webp"></p>
+<p>While there’s a possibility of overfitting, it’s crucial to explore whether extending the number of epochs leads to a further reduction in loss. Additionally, note that our current LLM has over 2 million parameters.<br>虽然存在过拟合的可能性，但探索增加训练轮数是否能进一步降低损失是至关重要的。此外，请注意我们当前的LLM具有超过200万个参数。</p>
+<p>Let’s train it for higher number of epochs.<br>让我们将其训练更多个时期。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># Update the number of epochs in the configuration</span><br><span class="line">MASTER_CONFIG.update(&#123;</span><br><span class="line">    &#x27;epochs&#x27;: 10000,</span><br><span class="line">&#125;)</span><br><span class="line"># Train the LLaMA model for the specified number of epochs</span><br><span class="line">train(llama, optimizer, scheduler=None, config=MASTER_CONFIG)</span><br></pre></td></tr></table></figure>
+<p><img src="/../asset_makemillionllm/18.webp"></p>
+<p>The loss here is 1.08, we can achieve even more lower loss without encountering significant overfitting. This suggests the model is performing well.<br>这里的损失为1.08，我们可以实现更低的损失而不会遇到显著的过拟合。这表明模型表现良好。</p>
+<p>Let’s train the model once more, this time incorporating a scheduler<br>让我们再次训练模型，这次加入一个调度器</p>
+<pre><code># Training the model again, scheduler for better optimization.
+train(llama, optimizer, config=MASTER_CONFIG)
+</code></pre>
+<p><img src="/../asset_makemillionllm/19.webp"></p>
+<p>Up until now, we’ve successfully implemented a scaled-down version of the LLaMA architecture on our custom dataset. Now, let’s examine the generated output from our 2 million-parameter Language Model.<br>到目前为止，我们已经成功地在我们的自定义数据集上实现了LLaMA架构的一个缩小版本。现在，让我们来检查一下我们200万参数的语言模型生成的输出。</p>
+<pre><code># Generate text using the trained LLM (llama) with a maximum of 500 tokens
+generated_text = generate(llama, MASTER_CONFIG, 500)[0]
+print(generated_text)
+</code></pre>
+<p><img src="/../asset_makemillionllm/20.webp"></p>
+<p>Even though some generated words may not be perfect English, our LLM with just 2 million parameters has shown a basic understanding of the English language.<br>尽管一些生成的词语可能不是完美的英语，但我们的LLM只有200万个参数，已经展示了对英语的基本理解。</p>
+<p>现在，让我们看看我们的模型在测试集上的表现如何。</p>
+<pre><code># Get batches from the test set
+xs, ys = get_batches(dataset, &#39;test&#39;, MASTER_CONFIG[&#39;batch_size&#39;], MASTER_CONFIG[&#39;context_window&#39;])
+
+# Pass the test data through the LLaMA model
+logits, loss = llama(xs, ys)
+
+# Print the loss on the test set
+print(loss)
+</code></pre>
+<p>测试集上计算得到的损失约为1.236。</p>
+<p>A simple way to check for changes in the generated output is to run training for a large number of epochs and observe the results.<br>检查生成输出的简单方法是运行大量的训练周期并观察结果。</p>
+<h2 id="尝试调整超参"><a href="#尝试调整超参" class="headerlink" title="尝试调整超参"></a>尝试调整超参</h2><p>Hyperparameter tuning is a crucial step in training neural networks. In the original Llama paper, the authors utilized the Cosine Annealing learning schedule. However, in our experimentation, it didn’t perform well. Here’s an example of experimenting with hyperparameters using a different learning schedule:<br>超参调优是训练神经网络中的关键步骤。在原始的Llama论文中，作者们使用了余弦退火学习率调度。然而，在我们的实验中，它表现不佳。以下是使用不同学习率调度进行超参实验的示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"># Update configuration</span><br><span class="line">MASTER_CONFIG.update(&#123;</span><br><span class="line">    &quot;epochs&quot;: 1000</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"># Create Llama model with Cosine Annealing learning schedule</span><br><span class="line">llama_with_cosine = Llama(MASTER_CONFIG)</span><br><span class="line"></span><br><span class="line"># Define Adam optimizer with specific hyperparameters</span><br><span class="line">llama_optimizer = torch.optim.Adam(</span><br><span class="line">    llama.parameters(),</span><br><span class="line">    betas=(.9, .95),</span><br><span class="line">    weight_decay=.1,</span><br><span class="line">    eps=1e-9,</span><br><span class="line">    lr=1e-3</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"># Define Cosine Annealing learning rate scheduler</span><br><span class="line">scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(llama_optimizer, 300, eta_min=1e-5)</span><br><span class="line"></span><br><span class="line"># Train the Llama model with the specified optimizer and scheduler</span><br><span class="line">train(llama_with_cosine, llama_optimizer, scheduler=scheduler)</span><br></pre></td></tr></table></figure>
+
+<h2 id="保存您的语言模型-LLM"><a href="#保存您的语言模型-LLM" class="headerlink" title="保存您的语言模型 (LLM)"></a>保存您的语言模型 (LLM)</h2><p>您可以使用以下方法保存整个LLM或仅保存参数</p>
+<pre><code># Save the entire model
+torch.save(llama, &#39;llama_model.pth&#39;)
+
+# If you want to save only the model parameters
+torch.save(llama.state_dict(), &#39;llama_model_params.pth&#39;)
+</code></pre>
+<p>为了将您的PyTorch模型保存到Hugging Face的Transformers库中，您可以使用 save_pretrained 方法。这是一个示例：</p>
+<pre><code>from transformers import GPT2LMHeadModel, GPT2Config
+
+# Assuming Llama is your PyTorch model
+llama_config = GPT2Config.from_dict(MASTER_CONFIG)
+llama_transformers = GPT2LMHeadModel(config=llama_config)
+llama_transformers.load_state_dict(llama.state_dict())
+
+# Specify the directory where you want to save the model
+output_dir = &quot;llama_model_transformers&quot;
+
+# Save the model and configuration
+llama_transformers.save_pretrained(output_dir)
+</code></pre>
+<p>GPT2Config is used to create a configuration object compatible with GPT-2. Then, a GPT2LMHeadModel is created and loaded with the weights from your Llama model. Finally, save_pretrained is called to save both the model and configuration in the specified directory.<br>GPT2Config 用于创建与GPT-2兼容的配置对象。然后，创建并加载一个 GPT2LMHeadModel ，其中包含来自您的Llama模型的权重。最后，调用 save_pretrained 将模型和配置保存在指定的目录中。</p>
+<p>您可以使用Transformers库加载模型</p>
+<pre><code>from transformers import GPT2LMHeadModel, GPT2Config
+
+# Specify the directory where the model was saved
+output_dir = &quot;llama_model_transformers&quot;
+
+# Load the model and configuration
+llama_transformers = GPT2LMHeadModel.from_pretrained(output_dir)
+</code></pre>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>In this blog, we’ve walked through a step-by-step process on how to implement the LLaMA approach to build your own small Language Model (LLM). As a suggestion, consider expanding your model to around 15 million parameters, as smaller models in the range of 10M to 20M tend to comprehend English better. Once your LLM becomes proficient in language, you can fine-tune it for specific use cases.<br>在这篇博客中，我们逐步介绍了如何实施LLaMA方法来构建自己的小型语言模型（LLM）。作为建议，考虑将模型扩展到大约1500万个参数，因为在10M到20M范围内的较小模型往往更能理解英语。一旦您的LLM在语言方面熟练，您可以对其进行特定用例的微调。</p>
+<p>我希望这篇全面的博客能为您提供通过论文来创建个性化LLM的认知。</p>
+<p>感谢阅读这篇详尽的帖子！</p>
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><p><a target="_blank" rel="noopener" href="https://levelup.gitconnected.com/building-a-million-parameter-llm-from-scratch-using-python-f612398f06c2">https://levelup.gitconnected.com/building-a-million-parameter-llm-from-scratch-using-python-f612398f06c2</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://szhowardhuang.github.io/2024/03/11/make-million-llm/" data-id="clto3ikk90009fgmjfu6z1zb1" data-title="使用Python从头开始构建一个百万参数的LLM" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-springboot-music" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/08/springboot-music/" class="article-date">
+  <time class="dt-published" datetime="2024-03-08T15:23:21.548Z" itemprop="datePublished">2024-03-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/03/08/springboot-music/">用VSCode实践一个Spring Boot项目</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>最近在学习Spring Boot，VSCode作为宇宙最强大的IDE，可以方便地开发Spring Boot项目，所以就用VSCode实践一下。</p>
+<h2 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h2><p>JDK： jdk-8u141   </p>
+<p>JDK： OpenJDK17U-jdk_x64_windows_hotspot_17.0.10_7</p>
+<p>mysql：mysql-5.7.21-winx64.zip</p>
+<p>redis：redis-windows-7.0.9</p>
+<p>node：14.21.3</p>
+<p>maven：maven-3.6.3</p>
+<p>IDE：VSCode</p>
+<h3 id="JDK"><a href="#JDK" class="headerlink" title="JDK"></a>JDK</h3><p>安装JDK17和JDK8，添加路径进入环境变量Path</p>
+<p>可如下配置</p>
+<p><img src="/../asset_sprintbootmusic/03.png"></p>
+<p>添加 %JAVA_HOME%\bin 到path环境变量</p>
+<p>验证 java -version</p>
+<h3 id="mysql"><a href="#mysql" class="headerlink" title="mysql"></a>mysql</h3><p>具体见上文mysql 命令行安装</p>
+<h3 id="node"><a href="#node" class="headerlink" title="node"></a>node</h3><p>下载 <a target="_blank" rel="noopener" href="https://nodejs.org/dist/v14.21.3/node-v14.21.3-win-x64.zip">https://nodejs.org/dist/v14.21.3/node-v14.21.3-win-x64.zip</a></p>
+<p>解压，添加路径到环境变量Path</p>
+<p>验证 node -v</p>
+<h3 id="redis"><a href="#redis" class="headerlink" title="redis"></a>redis</h3><p>1、应用下载地址：<a target="_blank" rel="noopener" href="https://github.com/zkteco-home/redis-windows/archive/refs/tags/7.0.9.zip">https://github.com/zkteco-home/redis-windows/archive/refs/tags/7.0.9.zip</a></p>
+<p>2、下载安装包。下载7.0.9。解压，把路径 F:\redis-windows-7.0.9 加到环境变量path</p>
+<p>3、安装和取消安装服务<br><code>redis-server --service-install F:\redis-windows-7.0.9\redis.conf --loglevel verbose</code></p>
+<p><code>redis-server --service-uninstall</code></p>
+<p>4、启动和停止服务<br><code>redis-server --service-start</code></p>
+<p><code>redis-server --service-stop</code></p>
+<p>记得要启动服务</p>
+<h3 id="maven"><a href="#maven" class="headerlink" title="maven"></a>maven</h3><p>下载 <a target="_blank" rel="noopener" href="https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.zip">https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.zip</a> ， 解压到 F:\apache-maven-3.6.3</p>
+<p>配置环境变量</p>
+<p>MAVEN_HOME ： F:\apache-maven-3.6.3</p>
+<p>Path添加 %MAVEN_HOME%\bin</p>
+<p>验证 mvn -v</p>
+<p>修改settings.xml<br>修改 .&#x2F;conf&#x2F;settings.xml 文件</p>
+<p><img src="/../asset_sprintbootmusic/01.png"></p>
+<p>配置本地仓库<br><code>  &lt;localRepository&gt;D:\MVN_repository&lt;/localRepository&gt;</code></p>
+<p>设置阿里云镜像</p>
+<pre><code>&lt;!-- 阿里云中央仓库 159行 --&gt;
+&lt;mirror&gt;
+  &lt;id&gt;alimaven&lt;/id&gt;
+  &lt;name&gt;aliyun maven&lt;/name&gt;
+  &lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public/&lt;/url&gt;
+  &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;        
+&lt;/mirror&gt;
+</code></pre>
+<p><img src="/../asset_sprintbootmusic/02.png"></p>
+<h2 id="用VSCode开发一个Spring-Boot-demo项目"><a href="#用VSCode开发一个Spring-Boot-demo项目" class="headerlink" title="用VSCode开发一个Spring Boot demo项目"></a>用VSCode开发一个Spring Boot demo项目</h2><p>1.在 Visual Studio Code 中打开扩展视图(Ctrl+Shift+X)，<br>搜索并安装</p>
+<p>Java Extension Pack (Java 扩展包)<br>Spring Boot Extension Pack</p>
+<p>2.配置maven<br>打开设置，搜索maven，编辑 settings.json</p>
+<p>然后把maven的可执行文件路径配置、maven的setting路径配置、java.home的路径配置，拷贝到右侧的用户设置区域并且设置为自己电脑的实际路径</p>
+<pre><code>&quot;maven.executable.path&quot;: &quot;F:\\apache-maven-3.6.3\\bin\\mvn.cmd&quot;,
+&quot;maven.terminal.useJavaHome&quot;: true,
+&quot;maven.terminal.customEnv&quot;: [
+    &#123;
+        &quot;environmentVariable&quot;: &quot;JAVA_HOME&quot;,
+        &quot;value&quot;: &quot;C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.10.7-hotspot&quot;
+    &#125;
+],
+&quot;java.configuration.maven.userSettings&quot;: &quot;F:\\apache-maven-3.6.3\\conf\\settings.xml&quot;,
+&quot;java.jdt.ls.java.home&quot;:&quot;C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.10.7-hotspot&quot;,
+</code></pre>
+<p>配置完成重启 VSCode</p>
+<p>3.创建springboot项目Demo<br>使用快捷键(Ctrl+Shift+P)命令窗口，输入 Spring 选择创建 Maven 项目。</p>
+<p>选择springboot 3.2.3</p>
+<p>选择java</p>
+<p>设置包名</p>
+<p>选择jar</p>
+<p>jdk 选择17, 因为springboot 3.2.3最低版本是17</p>
+<p>选择依赖：Spring Web web 和 SQL下的 MySQL Driver SQL和 MyBatis Framework </p>
+<p>最后选择一个工作空间，打开项目</p>
+<p>修改配置文件 application.properties， 添加数据库配置</p>
+<pre><code>spring.datasource.url=jdbc:mysql://localhost:3306/sys?serverTimezone=Asia/Shanghai&amp;useSSL=false
+spring.datasource.username=root
+spring.datasource.password=123456
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+</code></pre>
+<p>在项目目录下启动项目：  <code>mvn spring-boot:run</code></p>
+<p>启动成功后，浏览器访问 <a target="_blank" rel="noopener" href="http://localhost:8080/">http://localhost:8080/</a></p>
+<p>可以看到Whitelabel Error Page</p>
+<p>修改DemoApplication.java文件，添加helloWorld接口如下：</p>
+<pre><code>package com.example.demo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@SpringBootApplication
+public class DemoApplication &#123;
+
+    public static void main(String[] args) &#123;
+        SpringApplication.run(DemoApplication.class, args);
+    &#125;
+
+
+    @RestController
+    public class HelloWorldController &#123;
+
+        @GetMapping(&quot;/hello&quot;)
+        public String helloWorld() &#123;
+            return &quot;Hello World!&quot;;
+        &#125;
+
+    &#125;
+
+&#125;
+</code></pre>
+<p>保存后，重新运行demo，浏览器刷新页面，可以看到Hello World!</p>
+<p>至此，环境已经准备ready，可以开始开发springboot项目了。</p>
+<h2 id="下载开源music-website并运行"><a href="#下载开源music-website并运行" class="headerlink" title="下载开源music-website并运行"></a>下载开源music-website并运行</h2><p>1、下载项目到本地<br><code>git clone https://github.com/Yin-Hongwei/music-website.git</code></p>
+<p>2、下载数据库中记录的资源<br>去【链接：<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1TCV3bQ9npxx--9cOrDSsbQ">https://pan.baidu.com/s/1TCV3bQ9npxx--9cOrDSsbQ</a><br>提取码：pi7r  】下载网站依赖的歌曲及图片，将 data 夹里的文件放到 music-website&#x2F;music-server 文件夹下。<br>将 data 夹里的sql文件放到 music-website&#x2F;music-server&#x2F;sql 文件夹下，原因是这个开源项目的sql文件里面有少量数据有些问题，需要修改。</p>
+<p>3、修改配置文件<br>1）创建数据库 将 music-website&#x2F;music-server&#x2F;sql 文件夹中的 tp_music.sql 文件用mysql workbench或者Navicat导入数据库。<br><img src="/../asset_sprintbootmusic/04.png"></p>
+<p>2）修改用户名密码 修改 music-website&#x2F;music-server&#x2F;src&#x2F;main&#x2F;resources&#x2F;application-dev.properties 文件里的 spring.datasource.username 和 spring.datasource.password；</p>
+<p>4、启动项目<br>启动服务端：进入 music-server 文件夹，运行下面命令启动服务器</p>
+<p><code>mvn spring-boot:run</code> &#x2F;&#x2F; 前提装了 maven</p>
+<p>启动客户端：进入 music-client 目录，运行下面命令<br><code>npm install</code> &#x2F;&#x2F; 安装依赖</p>
+<p><code>npm run serve</code> &#x2F;&#x2F; 启动前台项目</p>
+<p>启动管理端：进入 music-manage 目录，运行下面命令<br><code>npm install</code> &#x2F;&#x2F; 安装依赖</p>
+<p><code>npm run serve</code> &#x2F;&#x2F; 启动后台管理项目</p>
+<h2 id="技术栈"><a href="#技术栈" class="headerlink" title="技术栈"></a>技术栈</h2><h3 id="后端"><a href="#后端" class="headerlink" title="后端"></a>后端</h3><p>SpringBoot + MyBatis + Redis</p>
+<h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3><p>docker</p>
+<h3 id="前端"><a href="#前端" class="headerlink" title="前端"></a>前端</h3><p>Vue3.0 + TypeScript + Vue-Router + Vuex + Axios + ElementPlus + Echarts</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://szhowardhuang.github.io/2024/03/08/springboot-music/" data-id="clto3ikkc000ffgmj7lb7285h" data-title="用VSCode实践一个Spring Boot项目" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-mysql5_7_21-cmd-install" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/07/mysql5_7_21-cmd-install/" class="article-date">
+  <time class="dt-published" datetime="2024-03-07T02:49:42.568Z" itemprop="datePublished">2024-03-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/03/07/mysql5_7_21-cmd-install/">命令行安装MySQL 5.7.21</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="下载MySQL安装包"><a href="#下载MySQL安装包" class="headerlink" title="下载MySQL安装包"></a>下载MySQL安装包</h2><p>从MySQL官网下载MySQL 5.7.21的安装包，下载地址：<a target="_blank" rel="noopener" href="https://downloads.mysql.com/archives/community/">https://downloads.mysql.com/archives/community/</a></p>
+<h2 id="解压安装包"><a href="#解压安装包" class="headerlink" title="解压安装包"></a>解压安装包</h2><p>将下载好的安装包解压到指定目录，如：<code>D:\mysql-5.7.21-winx64</code></p>
+<h2 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h2><p>打开系统环境变量编辑器，如：<code>控制面板 -&gt; 系统 -&gt; 系统设置 -&gt; 高级系统设置 -&gt; 环境变量</code></p>
+<p>在系统变量中找到<code>Path</code>，双击编辑，在弹出的编辑框中将<code>D:\mysql-5.7.21-winx64\bin</code>添加到变量值末尾，并点击确定。</p>
+<h2 id="启动MySQL服务"><a href="#启动MySQL服务" class="headerlink" title="启动MySQL服务"></a>启动MySQL服务</h2><p>用管理员身份打开命令行，在命令行中输入<code>mysqld --install</code>，回车，等待服务启动完成。</p>
+<p>因为5.7以上版本中，D:\mysql-5.7.21-winx64\目录下没有data文件夹，需要在窗口输入<code>mysqld --initialize-insecure --user=mysql</code>，回车，等待初始化完成。</p>
+<p>创建完成data后，再输入<code>mysqld –install</code>，然后按回车键</p>
+<p>在命令行中输入<code>net start mysql</code>，回车，如果出现<code>The MySQL Server service is starting.</code>字样，则表示服务启动成功。启动服务器</p>
+<h2 id="登录MySQL"><a href="#登录MySQL" class="headerlink" title="登录MySQL"></a>登录MySQL</h2><p>在命令行中输入<code>mysql -u root -p</code>，回车，因为没有设置登录密码，所以什么都不用输入，直接按回车键即可，即可登录MySQL。</p>
+<p>设置密码<br><code>update mysql.user set authentication_string = password(&quot;your_password&quot;) where user = &quot;root&quot;;</code></p>
+<p>刷新权限：<code>flush privileges;</code></p>
+<p>退出MySQL：<code>exit;</code></p>
+<h2 id="卸载MySQL"><a href="#卸载MySQL" class="headerlink" title="卸载MySQL"></a>卸载MySQL</h2><p>在命令行中输入<code>mysqld --remove</code>，回车，等待服务停止，然后输入<code>sc delete MySQL</code>，回车，即可卸载MySQL。</p>
+<h2 id="workbench安装使用"><a href="#workbench安装使用" class="headerlink" title="workbench安装使用"></a>workbench安装使用</h2><p>workbench是MySQL的图形化管理工具，可以用来管理MySQL数据库。<br>我下载了较低的版本的workbench： mysql-workbench-community-6.3.3-winx64.msi</p>
+<p>安装后，打开workbench，出现以下界面：</p>
+<p><img src="/../asset_mysql/01.png"></p>
+<p>双击 Local Instance 连接到本地的 MySQL 实例，输入 root 密码，点击 Connect 连接成功。然后出现以下界面</p>
+<p><img src="/../asset_mysql/02.png"></p>
+<p>点击上图中的 New Schema 新建数据库，输入数据库名称tp_music，选择编码方式utf-8,点击 Create 即可。</p>
+<p><img src="/../asset_mysql/03.png">  </p>
+<p>tp_music创建成功后，右键单击 Tables –&gt; Create table,新建表，输入表名称，点击 Create 即可。</p>
+<p><img src="/../asset_mysql/04.png">  </p>
+<p><img src="/../asset_mysql/05.png">  </p>
+<p>构建数据库最终如下图</p>
+<p><img src="/../asset_mysql/06.png">  </p>
+<p>导入本地数据库(Server栏里Data Import)</p>
+<ul>
+<li>选择导入文件的路径</li>
+<li>Start Import</li>
+<li>刷新查看结果</li>
+</ul>
+<p><img src="/../asset_mysql/07.png">  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://szhowardhuang.github.io/2024/03/07/mysql5_7_21-cmd-install/" data-id="clto3ikka000bfgmjhaniayal" data-title="命令行安装MySQL 5.7.21" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-generativeDiffusion" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/03/generativeDiffusion/" class="article-date">
+  <time class="dt-published" datetime="2024-03-03T09:00:16.000Z" itemprop="datePublished">2024-03-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/03/03/generativeDiffusion/">生成扩散模型综述</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="视频生成模型的发展与技术脉络"><a href="#视频生成模型的发展与技术脉络" class="headerlink" title="视频生成模型的发展与技术脉络"></a>视频生成模型的发展与技术脉络</h3><p><img src="/../asset_generativediffusion/01.png"></p>
+<p>视频生成模型发展脉络：</p>
+<p>Google，2022年，第一篇视频生成模型。效果较差，分辨率低，帧率低，动作有偏移</p>
+<p>OpenAI，2024年，Sora，长文本提示，逼真，视觉一致性的视频。</p>
+<h3 id="回顾图像生成领域基础工作"><a href="#回顾图像生成领域基础工作" class="headerlink" title="回顾图像生成领域基础工作"></a>回顾图像生成领域基础工作</h3><p>DDPM -&gt;latent diffusion(SD)-&gt;SD XL-&gt; SD3<br><img src="/../asset_generativediffusion/02.png"></p>
+<p>扩散生成模型分为Pixel space（pixel level）和latent space（latent level）两种。前者直接在图像pixel上加噪声，去噪声。后者先用训练的autoencoder编码到latent level低维空间做 加噪和去噪声。</p>
+<p>典型的pixel level 模型：DDPM模型 ，分为Forward过程和Reverse过程。</p>
+<p>前者逐步对图像加噪声，最终接近标准高斯噪声</p>
+<p>后者从一个高斯噪声还原为一个图像。</p>
+<p><img src="/../asset_generativediffusion/03.png"><br>主流的是latent level模型 latent Diffusion model，在潜空间上训练大大节省资源。</p>
+<p><img src="/../asset_generativediffusion/04.png"><br>SD XL参数量更大，transformer block更多，更高分辨率1024×1024下训练。</p>
+<p>最近发布最新版 SD3</p>
+<p><img src="/../asset_generativediffusion/05.png"><br>ControlNet ICCV 2023最佳论文, image condition with pose</p>
+<p>用于生成给定文本的图像，可接受额外控制条件，包括人体姿态图、草图</p>
+<p>通过复制stable diffusion encoder的参数，并在固定参数的基础上训练右侧模块来实现额外条件的注入。</p>
+<h3 id="视频扩散模型领域工作"><a href="#视频扩散模型领域工作" class="headerlink" title="视频扩散模型领域工作"></a>视频扩散模型领域工作</h3><h4 id="Pixel-Level模型"><a href="#Pixel-Level模型" class="headerlink" title="Pixel Level模型"></a>Pixel Level模型</h4><p><img src="/../asset_generativediffusion/06.png"></p>
+<p>First video diffusion model</p>
+<p>VDM: Video diffusion model NeurIPS2022， 是pixel level模型</p>
+<p>Conv2D&gt;3D(3x3 -&gt; 1x3x3)</p>
+<p>Space Attention &gt;Divided Space-Temporal Attention</p>
+<p>Joint training on video and image modeling</p>
+<p>2D卷积→3D，</p>
+<p>空间注意力→时空分离的注意力（先做空间注意力，再做时间注意力）</p>
+<p>pixel space 两篇改进</p>
+<p>make a video<br><img src="/../asset_generativediffusion/07.png"></p>
+<p>Multi-stage Generation</p>
+<ul>
+<li>Input Text</li>
+<li>Spatiotemporal Decoder</li>
+<li>Frame Interpolation</li>
+<li>Spatiotemporal, Super-Resolution</li>
+<li>Spatial, Super-Resolution</li>
+</ul>
+<p><img src="/../asset_generativediffusion/09.png"><br>Imagen Video 参数量较大</p>
+<p><img src="/../asset_generativediffusion/10.png"></p>
+<p>22年底，google发布 Imagen， Imagen Video。 冻结文本编码器得到Embedding，训练t2v Diffusion model。</p>
+<p>生成低分辨率图像，通过插帧, 超分辨率模块提升帧率和分辨率</p>
+<p>参数量大：每个模块参数量大，总共上百亿</p>
+<h4 id="Latent-level模型"><a href="#Latent-level模型" class="headerlink" title="Latent level模型"></a>Latent level模型</h4><p>latent video diffusion model<br><img src="/../asset_generativediffusion/11.png"><br>NVIDIA，CVPR2023，使用预训练SD扩展到video上</p>
+<p>T2I → T2V： 扩展SD结构</p>
+<p>2d to3d conv3d ，添加temporal attention，时序建模</p>
+<p>消耗资源大</p>
+<p>生成关键帧， 256个GPU，1.7B参数量</p>
+<p>插帧模型， 128个GPU</p>
+<p>超分辨率模型， 32个GPU</p>
+<p>训练集<br><img src="/../asset_generativediffusion/12.png"></p>
+<p>训练T2V模型，需要 文本-视频对</p>
+<p>最常用：</p>
+<ul>
+<li>WebVid-10M， 子集 WebVid-2M， 视频质量低，360p，有水印（会导致T2V也学习并生成水印）</li>
+<li>HD-VILA-100M， 高清， 720P，规模大。 文本质量低（语音识别生成，不准确，导致文本和视频匹配度不高）</li>
+</ul>
+<p>评价指标<br><img src="/../asset_generativediffusion/13.png"></p>
+<p>人工主观评价，评价生成视频质量，评价视频文本匹配度</p>
+<p>自动化指标：</p>
+<h4 id="图像level"><a href="#图像level" class="headerlink" title="图像level"></a>图像level</h4><p>FID 算一个视频每一帧和真实视频每一帧的分布之间的距离。距离越小，生成的图像每一帧和真实的越相似。</p>
+<p>Clip Similarity 图文匹配度。逐帧 将生成视频用clip提取视觉Embedding，再用 text encoder提前文本Embedding，计算clip相似度。</p>
+<p>PSNR，针对超分模型，有真值就可以评价</p>
+<h4 id="视频level"><a href="#视频level" class="headerlink" title="视频level"></a>视频level</h4><p>FVD，KVD，两个类似 FID。评价生成视频和真实视频分布的距离</p>
+<p>IS 衡量分布差异外，还考虑多样性。</p>
+<p>ClipSIM， 逐帧计算生成视频每一帧的相似度。用于视频编辑任务。</p>
+<p>Sora，代表文本驱动的视频合成的断崖式突破。</p>
+<p>EMO，也代表音频驱动的视频合成一个新高度。</p>
+<p>两者尽管任务不同、具体架构不同，但还有一个重要的共性：</p>
+<p>中间都没有加入显式的物理模型，却都在一定程度上模拟了物理规律。</p>
+<h3 id="Sora架构"><a href="#Sora架构" class="headerlink" title="Sora架构"></a>Sora架构</h3><p><img src="/../asset_generativediffusion/14.png"><br><img src="/../asset_generativediffusion/15.png"></p>
+<p>视频压缩器，60s<em>30帧</em>1024*1024</p>
+<p>压缩量到180？2-2-2卷积 -&gt;90<em>16</em>16</p>
+<p>昂贵的训练代价， 训练过程中， 可能用比较短的视频来训练， 后面用长数据集Finetune</p>
+<p>数据：Transformer数据， 支持输入的任意比例和长度</p>
+<h5 id="推理"><a href="#推理" class="headerlink" title="推理"></a>推理</h5><p><img src="/../asset_generativediffusion/16.png"></p>
+<p>Inference speed.</p>
+<p>降低推理成本：</p>
+<p>模型轻量化，</p>
+<p>Latent</p>
+<h5 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h5><p><img src="/../asset_generativediffusion/17.png"></p>
+<p>语言理解</p>
+<ul>
+<li>Train a captioner model， 标注视频</li>
+<li>GPT4 captioning， 重写用户prompt，变成更长caption，补充更多细节，以便生成更好视频</li>
+<li>Virtual engine，</li>
+</ul>
+<h3 id="EMO架构"><a href="#EMO架构" class="headerlink" title="EMO架构"></a>EMO架构</h3><p>EMO并不是建立在类似DiT架构的基础上，也就是没有用Transformer去替代传统UNet，其骨干网络魔改自Stable Diffusion 1.5。</p>
+<p>具体来说，EMO是一种富有表现力的音频驱动的肖像视频生成框架，可以根据输入视频的长度生成任何持续时间的视频。<br><img src="/../asset_generativediffusion/18.png"></p>
+<p>该框架主要由两个阶段构成：</p>
+<ul>
+<li>帧编码阶段</li>
+</ul>
+<p>部署一个称为ReferenceNet的UNet网络，负责从参考图像和视频的帧中提取特征。</p>
+<ul>
+<li>扩散阶段</li>
+</ul>
+<p>首先，预训练的音频编码器处理音频嵌入，人脸区域掩模与多帧噪声相结合来控制人脸图像的生成。</p>
+<p>随后是骨干网络主导去噪操作。在骨干网络中应用了两种注意力，参考注意力和音频注意力，分别作用于保持角色的身份一致性和调节角色的运动。</p>
+<p>此外，时间模块被用来操纵的时间维度，并调整运动的速度。</p>
+<p>在训练数据方面，团队构建了一个包含超过250小时视频和超过1500万张图像的庞大且多样化的音视频数据集。</p>
+<p>最终实现的具体特性如下：</p>
+<p>可以根据输入音频生成任意持续时间的视频，同时保证角色身份一致性（演示中给出的最长单个视频为1分49秒）。</p>
+<p>支持各种语言的交谈与唱歌（演示中包括普通话、广东话、英语、日语、韩语</p>
+<p>支持不同画风（照片、传统绘画、漫画、3D渲染、AI数字人）<br><img src="/../asset_generativediffusion/19.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://szhowardhuang.github.io/2024/03/03/generativeDiffusion/" data-id="clto3ikk60004fgmjhp5778ng" data-title="生成扩散模型综述" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-self-RAG" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/02/self-RAG/" class="article-date">
+  <time class="dt-published" datetime="2024-03-02T02:00:16.000Z" itemprop="datePublished">2024-03-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/03/02/self-RAG/">self-RAG如何革新工业LLMs</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>让我们面对现实吧 - 原始的RAG非常愚蠢。无法保证返回的回答是相关的。了解使用Self-RAG如何显著的提供帮助。</p>
+<p>大型语言模型（LLMs）已经准备好彻底改变各个行业。让我们以金融领域为例，LLMs可以用来研究大量文件，并在短时间内找到趋势，而且成本只是分析师完成同样任务的一小部分。但是这里有个问题——你得到的答案往往只是部分和不完整的。举个例子，假设你有一份包含公司X过去15年年度收入的文件，但是分散在不同的部分。在下面所示的标准检索增强生成（RAG）架构中，通常会检索前k个文件，或选择固定上下文长度内的文件。</p>
+<p><img src="/../asset_selfrag/01.png"></p>
+<p>然而，这可能会有几个问题。一个问题是前k个文档中可能不包含所有的答案 - 例如，可能只对应于最近的5年或10年。另一个问题是，在文档片段和提示之间计算相似度并不总是产生相关的上下文。在这种情况下，你可能会得到一个错误的答案。</p>
+<p>一个真正的问题是，你开发了一个在你测试的简单情况下运行良好的基本RAG应用程序，但当你将这个原型展示给利益相关者并且他们提出一些非常规的问题时，它就会失败</p>
+<p>这就是self RAG发挥作用的地方！作者们开发了一种巧妙的方法，通过对经过微调的语言模型（Llama2–7B和13B）输出特殊标记[检索]、[无检索]、[相关]、[不相关]、[不支持&#x2F;矛盾]、[部分支持]、[效用]等，来决定一个上下文是否相关&#x2F;不相关，语言模型生成的文本是否得到支持，以及生成的效用。</p>
+<p><img src="/../asset_selfrag/02.png"></p>
+<h3 id="训练self-RAG"><a href="#训练self-RAG" class="headerlink" title="训练self RAG"></a>训练self RAG</h3><p>Self-RAG在一个两个步骤的层次化过程中进行训练。第一步，训练了一个简单的语言模型，用于分类生成的输出（仅prompt或prompt+RAG增强输出），并在末尾添加相关的特殊标记。这个“评价模型”是通过GPT-4的注释进行训练的。具体来说，使用了一种类型特定的指令来提示GPT-4（“给定一条指令，判断从网络上找到一些外部文档是否有助于生成更好的回答。”）。</p>
+<p>在第二步中，生成模型使用标准的下一个标记预测目标来学习生成延续，以及用于检索&#x2F;评价生成结果的特殊标记。不像其他微调或RLHF方法，他们的后续训练可能会影响模型输出并使未来的生成结果带有偏见。通过这种简单的方法，模型只被训练成适当地生成特殊标记，而不改变底层的语言模型！这真是太棒了！</p>
+<h3 id="推理"><a href="#推理" class="headerlink" title="推理"></a>推理</h3><p>对于推理，<a target="_blank" rel="noopener" href="https://github.com/AkariAsai/self-rag">self-RAG存储库</a> 建议使用 <a target="_blank" rel="noopener" href="https://github.com/vllm-project/vllm">vllm</a> 一个用于LLM推理的库。</p>
+<p>您可以按照以下方式加载库并进行查询：</p>
+<pre><code>from vllm import LLM, SamplingParams
+model = LLM(&quot;selfrag/selfrag_llama2_7b&quot;, download_dir=&quot;/gscratch/h2lab/akari/model_cache&quot;, dtype=&quot;half&quot;)
+sampling_params = SamplingParams(temperature=0.0, top_p=1.0, max_tokens=100, skip_special_tokens=False)
+
+def format_prompt(input, paragraph=None):
+    prompt = &quot;### Instruction:\n&#123;0&#125;\n\n### Response:\n&quot;.format(input)
+    if paragraph is not None:
+        prompt += &quot;[Retrieval]&lt;paragraph&gt;&#123;0&#125;&lt;/paragraph&gt;&quot;.format(paragraph)
+    return prompt
+
+query_1 = &quot;Leave odd one out: twitter, instagram, whatsapp.&quot;
+query_2 = &quot;Can you tell me the difference between llamas and alpacas?&quot;
+queries = [query_1, query_2]
+# for a query that doesn&#39;t require retrieval
+preds = model.generate([format_prompt(query) for query in queries], sampling_params)
+for pred in preds:
+    print(&quot;Model prediction: &#123;0&#125;&quot;.format(pred.outputs[0].text))
+</code></pre>
+<p>对于需要检索的查询，您可以按照下面的示例提供必要的信息作为字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">paragraph=&quot;&quot;&quot;Llamas range from 200 to 350 lbs., while alpacas weigh in at 100 to 175 lbs.&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">def format_prompt_p(input, paragraph=paragraph):</span><br><span class="line">  prompt = &quot;### Instruction:\n&#123;0&#125;\n\n### Response:\n&quot;.format(input)</span><br><span class="line">  if paragraph is not None:</span><br><span class="line">    prompt += &quot;[Retrieval]&lt;paragraph&gt;&#123;0&#125;&lt;/paragraph&gt;&quot;.format(paragraph)</span><br><span class="line">  return prompt</span><br><span class="line"></span><br><span class="line">query_1 = &quot;Leave odd one out: twitter, instagram, whatsapp.&quot;</span><br><span class="line">query_2 = &quot;Can you tell me the differences between llamas and alpacas?&quot;</span><br><span class="line">queries = [query_1, query_2]</span><br><span class="line"></span><br><span class="line"># for a query that doesn&#x27;t require retrieval</span><br><span class="line">preds = model.generate([format_prompt_p(query) for query in queries], sampling_params)</span><br><span class="line">for pred in preds:</span><br><span class="line">  print(&quot;Model prediction: &#123;0&#125;&quot;.format(pred.outputs[0].text))</span><br></pre></td></tr></table></figure>
+<pre><code>[Irrelevant]Whatsapp is the odd one out.
+[No Retrieval]Twitter and Instagram are both social media platforms, 
+while Whatsapp is a messaging app.[Utility:5]
+
+[Relevant]Llamas are larger than alpacas, with males weighing up to 350 pounds.
+[Partially supported][Utility:5]
+</code></pre>
+<p>在上面的例子中，对于第一个查询（与social media platforms有关），段落上下文是无关的，如检索结果开头的[Irrelevant]标记所示。然而，对于第二个查询（与llamas and alpacas有关），外部上下文是相关的。正如您所看到的，它在生成的上下文中包含了这些信息，由[Relevant]标记标记。</p>
+<p>但在下面的例子中，上下文“I like Avocado。”与提示无关。如下所示，模型预测对于两个查询都开始为[Irrelevant]，并且只使用内部信息来回答提示。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">paragraph=&quot;&quot;&quot;I like Avocado.&quot;&quot;&quot;</span><br><span class="line">def format_prompt_p(input, paragraph=paragraph):</span><br><span class="line">  prompt = &quot;### Instruction:\n&#123;0&#125;\n\n### Response:\n&quot;.format(input)</span><br><span class="line">  if paragraph is not None:</span><br><span class="line">    prompt += &quot;[Retrieval]&lt;paragraph&gt;&#123;0&#125;&lt;/paragraph&gt;&quot;.format(paragraph)</span><br><span class="line">  return prompt</span><br><span class="line"></span><br><span class="line">query_1 = &quot;Leave odd one out: twitter, instagram, whatsapp.&quot;</span><br><span class="line">query_2 = &quot;Can you tell me the differences between llamas and alpacas?&quot;</span><br><span class="line">queries = [query_1, query_2]</span><br><span class="line"></span><br><span class="line"># for a query that doesn&#x27;t require retrieval</span><br><span class="line">preds = model.generate([format_prompt_p(query) for query in queries], sampling_params)</span><br><span class="line">for pred in preds:</span><br><span class="line">  print(&quot;Model prediction: &#123;0&#125;&quot;.format(pred.outputs[0].text))</span><br></pre></td></tr></table></figure>
+<pre><code>Model prediction: [Irrelevant]Twitter is the odd one out.[Utility:5]
+
+[Irrelevant]Sure![Continue to Use Evidence]
+Alpacas are a much smaller than llamas.
+They are also bred specifically for their fiber.[Utility:5]
+</code></pre>
+<h3 id="另外"><a href="#另外" class="headerlink" title="另外"></a>另外</h3><p>Self RAG相对于普通的LLM有几个优点。</p>
+<ul>
+<li>自适应通道检索：通过这种方式，LLM可以持续检索上下文，直到找到所有相关的上下文（当然是在上下文窗口内）。</li>
+<li>更相关的检索：很多时候，嵌入模型在检索相关上并不是最好的。Self RAG可能通过相关&#x2F;不相关的特殊标记来解决这个问题。</li>
+<li>超越其他类似模型：Self-RAG超越其他类似模型，并且在许多任务中令人惊讶地超越了ChatGPT。如果使用ChatGPT未经训练的数据进行比较，例如更多专有的工业数据，将会很有趣。</li>
+<li>不改变基础语言模型：对我来说，这是一个巨大的升级销售点——因为我们知道微调和强化学习很容易导致偏见模型。自我RAG似乎通过添加特殊标记来解决这个问题，同时保持文本生成方式不变。</li>
+</ul>
+<p>尽管还有改进的空间，但在处理固定上下文长度方面还有一些问题。这可能通过在Self-RAG中添加摘要组件来实现。另一个令人兴奋的方向是OpenAI最近发布的上下文长度窗口的增加 - GPT-4 128k上下文窗口更新。然而，正如论坛中提到的，这个上下文窗口代表输入长度，而输出限制仍然是4k个标记。</p>
+<p>RAG代表着行业在数据上应用LLMs的一种最令人兴奋的方式，以产生真正的业务影响。然而，对于语言模型的RAG特定调优还不够多。我对这个领域未来的改进感到兴奋。</p>
+<p>推理代码在这个GitHub仓库中：<br><a target="_blank" rel="noopener" href="https://github.com/skandavivek/self-RAG">https://github.com/skandavivek/self-RAG</a></p>
+<h3 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h3><p><a target="_blank" rel="noopener" href="https://towardsdatascience.com/how-self-rag-could-revolutionize-industrial-llms-b33d9f810264">https://towardsdatascience.com/how-self-rag-could-revolutionize-industrial-llms-b33d9f810264</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://szhowardhuang.github.io/2024/03/02/self-RAG/" data-id="clto3ikkb000dfgmj34f5e9ri" data-title="self-RAG如何革新工业LLMs" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-sora" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/01/sora/" class="article-date">
+  <time class="dt-published" datetime="2024-03-01T15:00:16.000Z" itemprop="datePublished">2024-03-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/03/01/sora/">OpenAI Sora视频生成模型技术报告</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="报告总结"><a href="#报告总结" class="headerlink" title="报告总结"></a>报告总结</h4><p>不管是在视频的保真度、长度、稳定性、一致性、分辨率、文字理解等方面，Sora都做到了SOTA（当前最优）。</p>
+<p>技术细节写得比较泛（防止别人模仿）大概就是用视觉块编码（visual patch）的方式，把不同格式的视频统一编码成了用transformer架构能够训练的embeding，然后引入类似diffusion的unet的方式做在降维和升维的过程中做加噪和去噪，然后把模型做得足够大，大到能够出现涌现能力。</p>
+<p>简单来说，在别家做视频模型的时候还是基于“小”模型的思路（基于上一帧预测下一帧，并且用文字或者笔刷遮罩做约束）的时候，OpenAI则是用做“大”模型的思路做视频生成——准备足够大量的视频，用多模态模型给视频做标注，把不同格式的视频编码成统一的视觉块嵌入，然后用足够大的网络架构+足够大的训练批次（batch size）+ 足够强的算力，让模型对足够多的训练集做全局拟合（理解），在模型更好地还原细节的同时让模型出现智能涌现能力——例如在一定程度上理解真实世界的物理影响和因果关系。</p>
+<p>最让人期待（不安）的是，这个视频生成模型仿佛只是OpenAI世界模型（理解和模拟真实世界的各种复杂因果关系的通用模型）路上点亮的一个成就，而不是终点。</p>
+<h4 id="Sora发布的潜在影响"><a href="#Sora发布的潜在影响" class="headerlink" title="Sora发布的潜在影响"></a>Sora发布的潜在影响</h4><p>C端 &#x2F; 对于普通人</p>
+<p>这或许是独立创作者最好的年代，Sora发布之后，文案、音效、视频AI生成的可用工具都已齐备，一个人可以无痛carry一个短片，好故事将价值千金，有才华的人更难被埋没。但是从另一个角度将，创作门槛降低之后故事的竞争将异常激烈。</p>
+<p>以vision pro为代表的XR产业将再次获得助力——内容匮乏将不再是问题。</p>
+<p>目前当红的短视频推荐的形态可能会发生改变——从系统根据用户喜好推荐短视频，变成针对性生成短视频？或者说，同一个短视频在不同的用户对可以有不同的（实时）微调版本？</p>
+<p>B端 &#x2F; 对于商业公司</p>
+<p>所有做AI视频生成的公司将面临第一波危机，但是危中有机。因为OpenAI证明了用大模型的思路做视频是可行的，那么他们需要做的只是证明我也可以用大模型做视频。参考chatGPT火了之后做大语言模型的公司反而更多了而不是更少。</p>
+<p>AI三维生成的公司将面临第二波冲击，由于多目重建技术的存在，视频生成和3D生成的界限是模糊的。所以3D生成可能要重新考虑当前技术路线的合理性和商业叙事逻辑。</p>
+<p>虽然OpenAI没有明说，但是Sora需要的算力不会小，所以显卡公司会迎来新的一波利好，但是不一定利好英伟达。因为现在算力越来越呈现基础设施的特征，而基础设施是各个国家的命脉，即便不考虑禁运，我国不会是唯一一个要求算力自主可控的国家，甚至每个大厂都开始想自己搞显卡或者AI专用算力卡（参考google、特斯拉、openAI、阿里），所以算力领域的竞争者会越来越多。</p>
+<h3 id="报告具体内容"><a href="#报告具体内容" class="headerlink" title="报告具体内容"></a>报告具体内容</h3><p>技术报告地址：<a target="_blank" rel="noopener" href="https://openai.com/research/video-generation-models-as-world-simulators">https://openai.com/research/video-generation-models-as-world-simulators</a></p>
+<p>OpenAI 探索了视频数据生成模型的大规模训练。具体来说，研究人员在可变持续时间、分辨率和宽高比的视频和图像上联合训练了一个文本条件扩散模型。作者利用对视频和图像潜在代码的时空补丁进行操作的 transformer 架构，其最大的模型 Sora 能够生成长达一分钟的高质量视频。<br>OpenAI 认为，新展示的结果表明，扩展视频生成模型是构建物理世界通用模拟器的一条有前途的途径。</p>
+<p>OpenAI 在技术报告中重点展示了：（1）将所有类型的视觉数据转化为统一表示，从而能够大规模训练生成模型的方法；以及（2）对 Sora 的能力和局限性进行定性评估。</p>
+<p>令人遗憾的是，OpenAI 的报告不包含模型和训练的细节。<br>最近一段时间，视频生成是 AI 领域的重要方向，先前的许多工作研究了视频数据的生成建模方向，包括循环网络、生成对抗网络、自回归 transformer 和扩散模型。这些工作通常关注一小类视觉数据、较短的视频或固定大小的视频。</p>
+<p>与之不同的是，OpenAI 的 Sora 是视觉数据的通用模型，它可以生成不同时长、长宽比和分辨率的视频和图像，而且最多可以输出长达一分钟的高清视频。</p>
+<h4 id="视觉数据转为-Patches"><a href="#视觉数据转为-Patches" class="headerlink" title="视觉数据转为 Patches"></a>视觉数据转为 Patches</h4><p>大型语言模型通过在互联网规模的数据上进行训练，获得了出色的通用能力中，OpenAI 从这一点汲取了灵感。LLM 得以确立新范式，部分得益于创新了 token 使用的方法。研究人员们巧妙地将文本的多种模态 —— 代码、数学和各种自然语言统一了起来。</p>
+<p>在这项工作中，OpenAI 考虑了生成视觉数据的模型如何继承这种方法的好处。大型语言模型有文本 token，而 Sora 有视觉 patches。此前的研究已经证明 patches 是视觉数据模型的有效表示。OpenAI 发现 patches 是训练生成各种类型视频和图像的模型的可扩展且有效的表示。</p>
+<p>在更高层面上，OpenAI 首先将视频压缩到较低维的潜在空间，然后将表示分解为时空 patches，从而将视频转换为 patches。<br><img src="/../asset_sora/01.png"></p>
+<h4 id="视频压缩网络"><a href="#视频压缩网络" class="headerlink" title="视频压缩网络"></a>视频压缩网络</h4><p>OpenAI 训练了一个降低视觉数据维度的网络。该网络将原始视频作为输入，并输出在时间和空间上压缩的潜在表示。Sora 在这个压缩的潜在空间中接受训练，而后生成视频。OpenAI 还训练了相应的解码器模型，将生成的潜在表示映射回像素空间。</p>
+<h4 id="时空潜在-patches"><a href="#时空潜在-patches" class="headerlink" title="时空潜在 patches"></a>时空潜在 patches</h4><p>给定一个压缩的输入视频，OpenAI 提取一系列时空 patches，充当 Transformer 的 tokens。该方案也适用于图像，因为图像可视为单帧视频。OpenAI 基于 patches 的表示使 Sora 能够对不同分辨率、持续时间和长宽比的视频和图像进行训练。在推理时，OpenAI 可以通过在适当大小的网格中排列随机初始化的 patches 来控制生成视频的大小。</p>
+<h4 id="扩展Transformer用于视频生成"><a href="#扩展Transformer用于视频生成" class="headerlink" title="扩展Transformer用于视频生成"></a>扩展Transformer用于视频生成</h4><p>Sora是一个扩散模型；给定输入的噪声块（和像文本提示这样的条件信息），它被训练来预测原始的“干净”块。重要的是，Sora是一个扩散变换器。变换器在包括语言建模、计算机视觉和图像生成等多个领域展现了显著的扩展属性。<br><img src="/../asset_sora/02.png"></p>
+<p>在这项工作中，我们发现扩散变换器作为视频模型也能有效地扩展。下面，我们展示了训练进展过程中，使用固定种子和输入的视频样本比较。随着训练计算量的增加，样本质量显著提高。<br><img src="/../asset_sora/03.png"></p>
+<h4 id="可变持续时间、分辨率、宽高比"><a href="#可变持续时间、分辨率、宽高比" class="headerlink" title="可变持续时间、分辨率、宽高比"></a>可变持续时间、分辨率、宽高比</h4><p>过去在图像和视频生成中的方法通常会将视频调整大小、裁剪或剪辑到一个标准尺寸——例如，4秒长的视频，分辨率为256x256。我们发现，直接在数据的原始尺寸上进行训练可以带来几个好处。</p>
+<h5 id="采样灵活性"><a href="#采样灵活性" class="headerlink" title="采样灵活性"></a>采样灵活性</h5><p>Sora可以采样宽屏1920x1080p视频、竖屏1080x1920视频以及介于两者之间的所有格式。这使得Sora能够直接按照不同设备的原生宽高比创建内容。它还允许我们在使用同一模型生成全分辨率内容之前，快速原型化较小尺寸的内容。</p>
+<p><img src="/../asset_sora/04.png"></p>
+<h5 id="改进的构图和画面组成"><a href="#改进的构图和画面组成" class="headerlink" title="改进的构图和画面组成"></a>改进的构图和画面组成</h5><p>我们通过实证发现，在视频的原始宽高比上进行训练可以改善构图和取景。我们将Sora与一个版本的模型进行了比较，该模型将所有训练视频裁剪成正方形，这是训练生成模型时的常见做法。在正方形裁剪上训练的模型（左侧）有时会生成主体只部分出现在视野中的视频。相比之下，来自Sora的视频（右侧）具有改善的取景。<br><img src="/../asset_sora/05.png"></p>
+<h4 id="语言理解"><a href="#语言理解" class="headerlink" title="语言理解"></a>语言理解</h4><p>训练文本到视频生成系统需要大量带有相应文字标题的视频。我们将在DALL·E 3中引入的重新标注技术应用到视频上。我们首先训练一个高度描述性的标注模型，然后使用它为我们训练集中的所有视频生成文字标题。我们发现，在高度描述性的视频标题上进行训练可以提高文本的准确性以及视频的整体质量。</p>
+<p>类似于DALL·E 3，我们也利用GPT将用户的简短提示转换成更长的详细说明，然后发送给视频模型。这使得Sora能够生成高质量的视频，准确地遵循用户的提示。</p>
+<p><img src="/../asset_sora/06.png"></p>
+<h4 id="使用图片和视频进行提示"><a href="#使用图片和视频进行提示" class="headerlink" title="使用图片和视频进行提示"></a>使用图片和视频进行提示</h4><p>上述结果以及我们的登录页面展示了文本到视频的样本。但是Sora也可以通过其他输入进行提示，例如预先存在的图片或视频。这项能力使得Sora能够执行广泛的图像和视频编辑任务——创建完美循环的视频，为静态图像添加动画，向前或向后延长视频的时间等。</p>
+<h4 id="视频到视频编辑"><a href="#视频到视频编辑" class="headerlink" title="视频到视频编辑"></a>视频到视频编辑</h4><p>扩散模型使得从文本提示编辑图像和视频的方法层出不穷。下面我们将其中一种方法，SDEdit，应用于Sora。这项技术使得Sora能够零次学习地转换输入视频的风格和环境。<br><img src="/../asset_sora/07.png"></p>
+<h4 id="连接视频"><a href="#连接视频" class="headerlink" title="连接视频"></a>连接视频</h4><p>我们还可以使用Sora在两个输入视频之间逐渐插值，创建在完全不同主题和场景构成的视频之间的无缝过渡。在下面的例子中，中间的视频在左右两边对应视频之间进行插值。<br><img src="/../asset_sora/08.png"></p>
+<h4 id="图像生成能力"><a href="#图像生成能力" class="headerlink" title="图像生成能力"></a>图像生成能力</h4><p>Sora也能够生成图像。我们通过在具有一个帧时间范围的空间网格中排列高斯噪声块来实现这一点。该模型可以生成不同大小的图像——分辨率最高可达2048x2048。<br><img src="/../asset_sora/09.png"><br>A snowy mountain village with cozy cabins and a northern lights display, high detail and photorealistic dslr, 50mm f&#x2F;1.2</p>
+<p>一个雪山村庄，有着舒适的小木屋和北极光展示，高清晰度和逼真的数码单反相机，50mm f&#x2F;1.2镜头拍摄。</p>
+<h4 id="涌现的模拟能力"><a href="#涌现的模拟能力" class="headerlink" title="涌现的模拟能力"></a>涌现的模拟能力</h4><p>我们发现，当在大规模上训练时，视频模型展现出许多有趣的新兴能力。这些能力使得Sora能够模拟现实世界中人类、动物和环境的某些方面。这些属性并没有任何针对3D、物体等的明确归纳偏见——它们纯粹是规模效应的现象。</p>
+<p>3D一致性。Sora能够生成具有动态相机运动的视频。随着相机的移动和旋转，人物和场景元素在三维空间中保持一致地移动。</p>
+<p>长距离一致性和物体恒存性。对于视频生成系统来说，一个重大挑战是在采样长视频时保持时间上的连贯性。我们发现，尽管不总是如此，Sora通常能够有效地建模短距离和长距离依赖关系。例如，我们的模型即使在人、动物和物体被遮挡或离开画面时，也能持续保持它们的存在。同样，它能在单个样本中生成同一角色的多个镜头，并在整个视频中保持其外观。</p>
+<p>与世界互动。Sora有时可以模拟一些简单的动作来影响世界的状态。例如，画家可以在画布上留下随时间持续存在的新笔触，或者一个人可以吃一个汉堡并留下咬痕。</p>
+<p>模拟数字世界。Sora也能够模拟人工过程，一个例子是视频游戏。Sora可以在同时控制《我的世界》中的玩家采用基本策略的同时，还能以高保真度渲染世界及其动态。通过用提到“我的世界”的字幕提示Sora，可以零次尝试地引发这些能力。</p>
+<p>Sora作为一个模拟器目前展现出许多限制。例如，它并没有准确地模拟许多基本互动的物理效应，比如玻璃破碎。其他互动，比如吃食物，不总是产生正确的物体状态变化。我们在我们的登录页面列举了模型的其他常见故障模式，比如在长时间样本中发展的不连贯性或物体的自发出现。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://szhowardhuang.github.io/2024/03/01/sora/" data-id="clto3ikkb000efgmj4kwx4wqs" data-title="OpenAI Sora视频生成模型技术报告" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-digital-human-2" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/02/27/digital-human-2/" class="article-date">
+  <time class="dt-published" datetime="2024-02-27T15:00:16.000Z" itemprop="datePublished">2024-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/02/27/digital-human-2/">如何设计一个数字人续篇 --- Video Retalking 模型篇</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="环境安装"><a href="#环境安装" class="headerlink" title="环境安装"></a>环境安装</h3><pre><code>git clone https://github.com/vinthony/video-retalking.git
+cd video-retalking
+conda create -n video_retalking python=3.8
+conda activate video_retalking
+
+conda install ffmpeg
+</code></pre>
+<p>win10安装cuda11.1， cuda各版本可以共存。通常你现有N卡驱动会很新，所以安装cuda11.1时，不要安装N卡驱动。</p>
+<p>where nvcc，可以看到路径<br><img src="/../asset_digitalhuman2/01.png"></p>
+<p>我们修改环境变量，将cuda11.1的目录添加到PATH中。<br>主要是C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\bin;<br>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\libnvvp这两个变量；<br>先建立cuda11.1 和 cuda12.1的环境变量，再建立CUDA_PATH的环境变量，以后根据需要修改这个变量，选择不同的CUDA版本路径。</p>
+<p><img src="/../asset_digitalhuman2/02.png"></p>
+<p>修改PATH环境变量如下图</p>
+<p><img src="/../asset_digitalhuman2/03.png"></p>
+<pre><code>pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 -f https://download.pytorch.org/whl/torch_stable.html
+
+pip install -r requirements.txt
+</code></pre>
+<p>清华源会出现tb-nightly的错误，因为在tsinghua镜像库中没有tb-nightly</p>
+<p>备注：tb-nightly 是一个 Python 包，它是 TensorFlow 的 TensorBoard 的夜间版本（nightly version）。TensorBoard 是一个用于可视化和监控 TensorFlow 训练过程和模型的工具。TensorBoard 提供了一组交互式的仪表板，可以显示训练过程中的指标、损失函数、模型结构图、梯度直方图等信息。它可以帮助您理解和调试 TensorFlow 模型，以及优化模型的性能。</p>
+<p>pip临时使用阿里源</p>
+<pre><code>pip install -i https://mirrors.aliyun.com/pypi/simple basicsr==1.4.2
+</code></pre>
+<p>安装cmake</p>
+<p>然后继续 pip install -r requirements.txt</p>
+<p>环境安装完成</p>
+<h3 id="模型下载"><a href="#模型下载" class="headerlink" title="模型下载"></a>模型下载</h3><p>下载<a target="_blank" rel="noopener" href="https://drive.google.com/drive/folders/18rhjMpxK8LVVxf7PI6XwOidt8Vouv_H0?usp=share_link">预训练模型</a>，放到checkpoints目录下,这个下载链接没有放GFPGANv1.4模型，可以去<a target="_blank" rel="noopener" href="https://github.com/TencentARC/GFPGAN/releases/download/v1.3.0/GFPGANv1.4.pth">此处</a>下载然后放到checkpoints目录下</p>
+<p>GFPGAN1.4人脸超分效果最好</p>
+<p>修改inference.py的 GFPGANer的model_path参数为checkpoints&#x2F;GFPGANv1.4.pth，如下：</p>
+<pre><code>restorer = GFPGANer(model_path=&#39;checkpoints/GFPGANv1.4.pth&#39;, upscale=1, arch=&#39;clean&#39;, channel_multiplier=2, bg_upsampler=None)
+</code></pre>
+<p>模型如果不好下载，可以去百度云盘下载：<br>链接：<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1GTccvI8QUTQOhHrRnYeeAQ">https://pan.baidu.com/s/1GTccvI8QUTQOhHrRnYeeAQ</a><br>提取码：9l0u </p>
+<h3 id="推理"><a href="#推理" class="headerlink" title="推理"></a>推理</h3><pre><code>python3 inference.py --face examples/face/1.mp4 --audio examples/audio/1.wav --outfile results/1_1.mp4
+</code></pre>
+<p>–exp_img ：预定义的表情模板。默认为“neutral”。您可以选择“smile”或图像路径。</p>
+<p>–up_face ：您可以选择“surprise”或“angry”来修改脸上的表情，参考<a target="_blank" rel="noopener" href="https://github.com/donydchen/ganimation_replicate">GANimation</a>。</p>
+<p>注意： 1.mp4的分辨率要正方形，用FFMPEG处理一下</p>
+<pre><code>ffmpeg -i 6.mp4 -vf crop=720:720:0:0 7.mp4
+corp： w h x y， 裁剪的宽、高、起始横坐标、起始纵坐标（左上角为0，0）。
+</code></pre>
+<p>生成的视频文件已经配上口型，画质有点模糊，可以用GFPGAN1.4做整个画面的超分。<br>方法如下：</p>
+<h4 id="视频转图片流"><a href="#视频转图片流" class="headerlink" title="视频转图片流"></a>视频转图片流</h4><pre><code>ffmpeg -i 1_4.mp4  image%03d.png
+</code></pre>
+<h4 id="将图片流进行超分"><a href="#将图片流进行超分" class="headerlink" title="将图片流进行超分"></a>将图片流进行超分</h4><pre><code>git clone https://github.com/TencentARC/GFPGAN.git
+
+cd GFPGAN
+
+pip install realesrgan
+
+python inference_gfpgan.py -i inputs/whole_imgs -o results -v 1.4 -s 1
+
+-h                   show this help
+-i input             Input image or folder. Default: inputs/whole_imgs
+-o output            Output folder. Default: results
+-v version           GFPGAN model version. Option: 1 | 1.2 | 1.3. Default: 1.3
+-s upscale           The final upsampling scale of the image. Default: 2
+-bg_upsampler        background upsampler. Default: realesrgan
+-bg_tile             Tile size for background sampler, 0 for no tile during testing. Default: 400
+-suffix              Suffix of the restored faces
+-only_center_face    Only restore the center face
+-aligned             Input are aligned faces
+-ext                 Image extension. Options: auto | jpg | png, auto means using the same extension as inputs. Default: auto
+</code></pre>
+<h4 id="将图片流合成视频"><a href="#将图片流合成视频" class="headerlink" title="将图片流合成视频"></a>将图片流合成视频</h4><pre><code>ffmpeg -framerate 30 -i image%03d.png -b:v 575k gfpganwoa.mp4
+</code></pre>
+<p>视频码率属性 -b:v ， 具体码率要参考生成的原视频</p>
+<p>如有必要，可以把两个视频横向合并，便于对比画质，合成视频的音频只会用左边视频的音频</p>
+<pre><code>ffmpeg -i left.mp4 -i right.mp4 -filter_complex hstack output.mp4
+</code></pre>
+<p>如果要重新合成音频，如下：</p>
+<pre><code>ffmpeg -i input.mp4 -i 3.wav -vcodec copy -acodec aac -map 0:v:0 -map 1:a:0 output.mp4
+
+-map 0:v:0 选择了第0个输入文件（视频输入）的第0个轨道。
+–map 1:a:0 选择了第1个输入文件（音频输入）的第0个轨道。
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://szhowardhuang.github.io/2024/02/27/digital-human-2/" data-id="clto3ikk00000fgmj0b8n4i3k" data-title="如何设计一个数字人续篇 --- Video Retalking 模型篇" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-digital-human" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/02/22/digital-human/" class="article-date">
+  <time class="dt-published" datetime="2024-02-22T15:00:16.000Z" itemprop="datePublished">2024-02-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/02/22/digital-human/">如何设计一个数字人 --- 3D模型篇</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>下面我就以制作一个数字人卖货视频为例</p>
+<p>首先介绍一下将会用到的 AI 工具。</p>
+<ol>
+<li><p>ChatGPT: 在制作数字人的过程中，ChatGPT 可以用于设定数字人的性格、生成演讲文本、回答技术问题等。</p>
+</li>
+<li><p>MetaHuman Creator: 这是一款由 Epic Games 开发的三维人物建模软件，可以通过对头部、身体等部位个性化的调整，实现高度逼真的数字人三维建模。</p>
+</li>
+<li><p>微软语音合成助手，由微软公司开发，用于语音识别与合成，可以将 ChatGPT 生成的文本内容转化为数字人所需要的自然语音输出。</p>
+</li>
+<li><p>Audio2Face: 由英伟达公司开发的一款表情驱动技术软件，可以将音频的语调、音量等信息转化为数字人的面部表情，从而使数字人的表现更加生动真实</p>
+</li>
+<li><p>UE5: Epic Games 开发的一款高级游戏引擎，可以提供实时渲染、动态光照、体积雾等功能，可用于打造更加真实的数字人场景。</p>
+</li>
+</ol>
+<p>下面是制作一个数字人卖货视频的大概流程:</p>
+<p>AI人物设定和内容生成 一 3D建模 一 AI语音生成 一 AI表情驱动 一 AI场景搭建</p>
+<p>接下来让我为你具体介绍每一部分的流程。</p>
+<h3 id="AI人物设定和内容生成"><a href="#AI人物设定和内容生成" class="headerlink" title="AI人物设定和内容生成"></a>AI人物设定和内容生成</h3><p>人物设定是制作数字人的第一步，这里我们可以使用 ChatGPT 来进行人物设定，为数字人定制其个性化特征和语言风格等。</p>
+<p><img src="/../asset_digitalhuman/003.png"></p>
+<p>生成售卖文案</p>
+<p><img src="/../asset_digitalhuman/004.png"></p>
+<h3 id="3D建模"><a href="#3D建模" class="headerlink" title="3D建模"></a>3D建模</h3><p>登录 MetaHuman Creator 进行 3D 建模<br>进入 MetaHuman Creator <a target="_blank" rel="noopener" href="https://metahuman.unrealengine.com/mhc">https://metahuman.unrealengine.com/mhc</a> 在预设数字人中选择一个人物模型，结合chatgpt的描述进行个性化调整，如头发、服饰、发型等。</p>
+<p><img src="/../asset_digitalhuman/005.png"></p>
+<p>调整后如下图：</p>
+<p><img src="/../asset_digitalhuman/006.png"><br>此模型会存在云端，后续从UE5导入此模型。</p>
+<h3 id="AI语音生成"><a href="#AI语音生成" class="headerlink" title="AI语音生成"></a>AI语音生成</h3><p>使用语音合成助手，将 ChatGPT 生成的文本内容转化为数字人所需要的自然语音输出。<br>这里用小白兔AI工具包里面的微软语音合成把文本转成语音，语音文件会自动下载到本地。</p>
+<p><img src="/../asset_digitalhuman/007.png"></p>
+<p>微软语音合成需要用到Microsoft Azure API，需要注册Azure账号，并申请语音合成服务。</p>
+<p><img src="/../asset_digitalhuman/008.png"><br>把密钥和区域填到小白兔AI里面</p>
+<p>注：Microsoft Azure 是微软的公用云端服务平台，首先得有个 Microsoft 账号，然后再基于这个 Microsoft 账号开通 Microsoft Azure 帐户。<br>Microsoft Azure收费模式</p>
+<table>
+<thead>
+<tr>
+<th>服务</th>
+<th>免费额度</th>
+<th>超出免费额度</th>
+<th>并发请求数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>文本转语音</td>
+<td>每月50万字符</td>
+<td>16美元&#x2F;100万字符</td>
+<td>-</td>
+</tr>
+</tbody></table>
+<p>Microsoft Azure支持通过国内的 Visa 卡申请。</p>
+<p>后面讲一下如何开通 Azure 帐户</p>
+<h3 id="AI表情驱动"><a href="#AI表情驱动" class="headerlink" title="AI表情驱动"></a>AI表情驱动</h3><p>Audio2Face是由英伟达公司开发的一款表情驱动技术软件，可以将音频的语调、音量等信息转化为数字人的面部表情，从而使数字人的表现更加生动真实。<br>我们将微软语音助手生成的语音转成WAV格式，并导入到Audio2Face中，进行表情驱动。</p>
+<p>去nvidia官网下载Audio2Face标准版 <a target="_blank" rel="noopener" href="https://www.nvidia.com/en-us/omniverse/apps/audio2face/">https://www.nvidia.com/en-us/omniverse/apps/audio2face/</a></p>
+<p>打开audio2face，如下图设置，确认可以说话动嘴。<br><img src="/../asset_digitalhuman/010.png"><br>然后存项目到本地</p>
+<h3 id="AI场景搭建"><a href="#AI场景搭建" class="headerlink" title="AI场景搭建"></a>AI场景搭建</h3><p>先安装UE5，下载地址 <a target="_blank" rel="noopener" href="https://www.unrealengine.com/en-US/download/">https://www.unrealengine.com/en-US/download/</a></p>
+<p>然后下载MetaHuman示例项目 </p>
+<p><img src="/../asset_digitalhuman/011.png"></p>
+<p>打开此工程，点击窗口，选择Quixel Bridge</p>
+<p><img src="/../asset_digitalhuman/012.png"></p>
+<p>出现如下界面，My MetaHuman 的模型就是之前MetaHuman Creator生成的模型，点击 add按钮，会把这个模型导入到UE5的工程里面。 下载模型的时间很长，耐心等。</p>
+<p><img src="/../asset_digitalhuman/013.png"><br>然后可以在UE5里面使用你导入的模型，因为我修改的模型和示例工程的模型一致，所以UE5会直接替换掉。</p>
+<p>然后设置Omniverse livelink，让UE5和Audio2Face连接起来，让数字人可以和你说话。</p>
+<p>首先把Audio2Face的插件拷贝到UE5的Plugins文件夹下，Audio2Face的插件路径一般是 user目录下面的AppData目录下面</p>
+<p><img src="/../asset_digitalhuman/017.png"></p>
+<p>拷贝到UE5安装目录</p>
+<p><img src="/../asset_digitalhuman/018.png"></p>
+<p>打开UE5的插件，选择Nvidia</p>
+<p><img src="/../asset_digitalhuman/015.png"></p>
+<p>使能 NVIDIA Omniverse ACE</p>
+<p><img src="/../asset_digitalhuman/016.png"></p>
+<p>打开UE5的窗口，选择 虚拟制片 - Live Link，点击「启动 Live Link」</p>
+<p><img src="/../asset_digitalhuman/014.png"></p>
+<p>添加源 NVIDIA Omniverse Live Link，点击 OK<br><img src="/../asset_digitalhuman/019.png"></p>
+<p>点击Audio2face的stage - audio2face - StreamLivelink， 勾选 Activate</p>
+<p><img src="/../asset_digitalhuman/020.png"></p>
+<p>点击audio2face的wave Play按钮，让数字人开始说话。</p>
+<p>之后参考youtube视频，调整audio2face的模型参数，让数字人更加动人。</p>
+<p>最后，修改UE5的场景，调整场景的光照、音效、材质，让场景更加生动。</p>
+<p>教程结束，祝你玩得开心！</p>
+<h2 id="附注"><a href="#附注" class="headerlink" title="附注"></a>附注</h2><h3 id="注册Azure账号"><a href="#注册Azure账号" class="headerlink" title="注册Azure账号"></a>注册Azure账号</h3><p>网页 <a target="_blank" rel="noopener" href="https://signup.azure.com/signup">https://signup.azure.com/signup</a></p>
+<p>进入网页之后，先登陆 Microsoft 账号。</p>
+<p>填写个人信息<br><img src="/../asset_digitalhuman/azure_signup_1.jpg"></p>
+<p>填写卡信息用于身份验证，点击「注册」<br><img src="/../asset_digitalhuman/azure_signup_2.jpg"></p>
+<p>创建 Azure 订阅, Azure 订阅主要就是决定如何计费，一般是有「免费使用版」和 「即用即付」两种选择。</p>
+<p>如果是刚注册 Azure 确实是可以选择「免费使用版」的，但是只能使用 30 天，30 天之后还是得转为「即用即付」才可以继续使用。</p>
+<p>所以我建议直接选「即用即付」订阅，也是享有同等的免费额度。从注册 Azure 开始，Microsoft 翻译可以拥有 12 个月的免费额度，12 个月之后就没有了，想要继续使用需要收费。但是 Microsoft 语音合成目前是每个月都有免费额度，没有 12 个月的限制。（当然，前提是 Microsoft 不改变免费规则）</p>
+<p>进入「订阅页面」<a target="_blank" rel="noopener" href="https://portal.azure.com/?quickstart=True#view/Microsoft_Azure_Billing/SubscriptionsBlade">https://portal.azure.com/?quickstart=True#view/Microsoft_Azure_Billing/SubscriptionsBlade</a> ，点击「添加」，点击「即用即付」下方的「选择产品&#x2F;服务」</p>
+<p><img src="/../asset_digitalhuman/azure_subscription_1.jpg"></p>
+<p>选中「我同意…」、「我愿意…」，点击「下一步」</p>
+<p><img src="/../asset_digitalhuman/azure_subscription_2.jpg"></p>
+<p>之前注册的时候应该已经填写过卡信息了，这里会默认选中，然后点击「下一步」</p>
+<p><img src="/../asset_digitalhuman/azure_subscription_3.jpg"></p>
+<p>然后这里选择「没有任何技术支持…」，点击「注册」</p>
+<p><img src="/../asset_digitalhuman/azure_subscription_4.jpg"></p>
+<p>创建资源组, 进入 「资源组页面」 <a target="_blank" rel="noopener" href="https://portal.azure.com/?quickstart=True#view/HubsExtension/BrowseResourceGroups">https://portal.azure.com/?quickstart=True#view/HubsExtension/BrowseResourceGroups</a> ，点击「创建」</p>
+<p><img src="/../asset_digitalhuman/azure_resource_1.jpg"></p>
+<ul>
+<li>订阅选刚才创建好的订阅，默认应该就一个</li>
+<li>资源组可以直接命名为 Bob</li>
+<li>区域可以选离自己地理位置近的，例如在中国就选 East Aisa 就行</li>
+<li>然后点击「查看+创建」<br><img src="/../asset_digitalhuman/azure_resource_2.jpg"></li>
+</ul>
+<p>点击「创建」<br><img src="/../asset_digitalhuman/azure_resource_3.jpg"></p>
+<p>如下所示即为创建成功<br><img src="/../asset_digitalhuman/azure_resource_4.jpg"></p>
+<p>创建语音服务资源, 进入「Azure AI services | 语音服务 」页面 <a target="_blank" rel="noopener" href="https://portal.azure.com/#view/Microsoft_Azure_ProjectOxford/CognitiveServicesHub/~/SpeechServices">https://portal.azure.com/#view/Microsoft_Azure_ProjectOxford/CognitiveServicesHub/~/SpeechServices</a> ，点击「创建」<br><img src="/../asset_digitalhuman/009.png"></p>
+<ul>
+<li>订阅选刚才创建好的订阅</li>
+<li>资源组选刚才创建好的资源组</li>
+<li>区域可以选离自己地理位置近的，选跟前面创建资源组一样的就行，例如在中国就选 East Aisa 就行</li>
+<li>名称这一栏随便取名，但是不能重名，所以输入和我一样的应该会报错，随便输入不一样的就行，由数字、字母和横线组成即可</li>
+<li>定价层选中「Free F0」</li>
+<li>然后点击「审阅并创建」<br><img src="/../asset_digitalhuman/azure_tts_open_2.jpg"></li>
+</ul>
+<p>点击创建<br><img src="/../asset_digitalhuman/azure_tts_open_3.jpg"></p>
+<p>如下所示即为创建成功<br><img src="/../asset_digitalhuman/azure_tts_open_4.jpg"></p>
+<p>获取秘钥, 进入「认知服务 | 语音服务 」页面 <a target="_blank" rel="noopener" href="https://portal.azure.com/#view/Microsoft_Azure_ProjectOxford/CognitiveServicesHub/~/SpeechServices">https://portal.azure.com/#view/Microsoft_Azure_ProjectOxford/CognitiveServicesHub/~/SpeechServices</a> ，应该能看到你刚才创建语音服务资源，点击进入详情<br><img src="/../asset_digitalhuman/azure_tts_secret_1.jpg"></p>
+<p>选中「密钥和终结点」，如下图所示即为需要的秘钥<br><img src="/../asset_digitalhuman/azure_tts_secret_2.jpg"></p>
+<p>填写秘钥<br>在 小白兔AI 的 设置 &gt; 微软付费订阅 中，将刚才获取到的秘钥填写到对应位置即可。</p>
+<p>微软视素的文档可以看看， <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/azure/ai-services/speech-service/how-to-speech-synthesis-viseme">https://learn.microsoft.com/zh-cn/azure/ai-services/speech-service/how-to-speech-synthesis-viseme</a></p>
+<h3 id="FFMPEG"><a href="#FFMPEG" class="headerlink" title="FFMPEG"></a>FFMPEG</h3><h4 id="使用FFmpeg将MP3文件转换成WAVE格式，你可以使用以下命令："><a href="#使用FFmpeg将MP3文件转换成WAVE格式，你可以使用以下命令：" class="headerlink" title="使用FFmpeg将MP3文件转换成WAVE格式，你可以使用以下命令："></a>使用FFmpeg将MP3文件转换成WAVE格式，你可以使用以下命令：</h4><pre><code>ffmpeg -i input.mp3 -ar 16000 output.wav
+</code></pre>
+<p>-i input.mp3 指定输入文件，其中 input.mp3 是你的源MP3文件的名称。</p>
+<p>-ar 16000 指定了输出文件的采样率为16000 Hz。</p>
+<h4 id="录屏视频截取，使用FFmpeg截取视频文件的一部分，你可以通过指定开始时间（-ss-参数）和持续时间（-t-参数）或结束时间（-to-参数）来完成。以下是一些常见的使用场景和相应的命令示例："><a href="#录屏视频截取，使用FFmpeg截取视频文件的一部分，你可以通过指定开始时间（-ss-参数）和持续时间（-t-参数）或结束时间（-to-参数）来完成。以下是一些常见的使用场景和相应的命令示例：" class="headerlink" title="录屏视频截取，使用FFmpeg截取视频文件的一部分，你可以通过指定开始时间（-ss 参数）和持续时间（-t 参数）或结束时间（-to 参数）来完成。以下是一些常见的使用场景和相应的命令示例："></a>录屏视频截取，使用FFmpeg截取视频文件的一部分，你可以通过指定开始时间（-ss 参数）和持续时间（-t 参数）或结束时间（-to 参数）来完成。以下是一些常见的使用场景和相应的命令示例：</h4><h5 id="使用-ss-和-t-参数"><a href="#使用-ss-和-t-参数" class="headerlink" title="使用 -ss 和 -t 参数"></a>使用 -ss 和 -t 参数</h5><p>在这个例子中，-ss 指定了开始截取的时间点，-t 指定了从开始点后要截取的持续时间。</p>
+<pre><code>ffmpeg -i input.mp4 -ss 00:00:10 -t 00:00:20 -c copy output.mp4
+</code></pre>
+<p>input.mp4 是源视频文件。<br>-ss 00:00:10 表示从视频的第10秒开始截取。<br>-t 00:00:20 表示截取从开始点算起20秒的视频内容。<br>-c copy 表示使用“复制”模式，这样可以避免重新编码视频和音频流，加快处理速度并保持原有质量。<br>output.mp4 是输出的视频文件。</p>
+<h5 id="使用-ss-和-to-参数"><a href="#使用-ss-和-to-参数" class="headerlink" title="使用 -ss 和 -to 参数"></a>使用 -ss 和 -to 参数</h5><p>与上面的例子不同，-to 参数指定的是截取的结束时间点，而不是持续时间。</p>
+<pre><code>ffmpeg -i input.mp4 -ss 00:00:10 -to 00:00:30 -c copy output.mp4
+</code></pre>
+<p>-to 00:00:30 表示截取到视频的第30秒为止。</p>
+<h4 id="音画不同步，画面延迟大约1秒，用FFMPEG调整，相对视频对音频时间戳进行偏移："><a href="#音画不同步，画面延迟大约1秒，用FFMPEG调整，相对视频对音频时间戳进行偏移：" class="headerlink" title="音画不同步，画面延迟大约1秒，用FFMPEG调整，相对视频对音频时间戳进行偏移："></a>音画不同步，画面延迟大约1秒，用FFMPEG调整，相对视频对音频时间戳进行偏移：</h4><p>音频相对于视频移后时间00:00:01.000</p>
+<pre><code>ffmpeg -y -itsoffset 00:00:01.000 -i out.mp4 -i out.mp4 -map 0:a -map 1:v -vcodec copy -acodec copy -f mp4 -threads 2 -v warning out.sync.mp4
+</code></pre>
+<p>-y 可覆盖，如果文件已存在强制替换；</p>
+<p>-itsoffset offset 设置以秒为基准的时间偏移，该选项影响所有后面的输入文件。该偏移被加到输入文件的时戳，定义一个正偏移意味着相应的流被延迟了 offset秒。 [-]hh:mm:ss[.xxx]的格式也支持</p>
+<p>-i 输入，后面是空格，紧跟着就是输入视频文件</p>
+<p>-f fmt 强迫采用格式fmt</p>
+<p>-v：调试信息级别（quiet、panic、fatal、error、warning、info、verbose、debug）</p>
+<p>-vcodec copy 和 -acodec copy表示所要使用的视频和音频的编码格式，这里指定为copy表示原样拷贝</p>
+<p>-map file_number:stream_type[:stream_number]    选择媒体流语法</p>
+<p>这有一些特别流符号的说明：</p>
+<p>1、-map 0 选择第一个文件的所有流</p>
+<p>2、-map i:v 从文件序号i(index)中获取所有视频流， -map i:a 获取所有音频流，-map i:v 获取所有视频流，-map i:s 获取所有字幕流等等。</p>
+<p>3、特殊参数-an,-vn,-sn分别排除所有的音频，视频，字幕流。</p>
+<h4 id="播放验证"><a href="#播放验证" class="headerlink" title="播放验证"></a>播放验证</h4><pre><code>ffplay out.sync.mp4
+</code></pre>
+<h3 id="如何定制数字人的人脸"><a href="#如何定制数字人的人脸" class="headerlink" title="如何定制数字人的人脸"></a>如何定制数字人的人脸</h3><p>用polycam扫描人脸</p>
+<p>导出GLTF</p>
+<p>打开blender，导入GLTF，删除多余部分，选中，按X键删除， 然后merge mesh</p>
+<p>导出FBX，path mode选择copy，并点击旁边的按钮；object选择Animate和mesh；Geometry选择face；disable Bake Animation；然后点击export，保存为.fbx文件<br><img src="/../asset_digitalhuman/021.png"></p>
+<p>到UE5，新建项目，影视和现场活动 - 空白<br><img src="/../asset_digitalhuman/023.png"></p>
+<p>把fbx文件拖到UE5内容窗口，导入.fbx文件</p>
+<p><img src="/../asset_digitalhuman/024.png"></p>
+<p>导入后，双击material，调整material，添加常量节点</p>
+<p><img src="/../asset_digitalhuman/025.png"></p>
+<p>调整后，如下图</p>
+<p><img src="/../asset_digitalhuman/026.png"></p>
+<p>MetaHuman Plugin安装, 在Epic商城安装<br><a target="_blank" rel="noopener" href="https://www.unrealengine.com/marketplace/en-US/product/metahuman-plugin#">https://www.unrealengine.com/marketplace/en-US/product/metahuman-plugin#</a></p>
+<p>打开插件菜单，enable metahuman plugin</p>
+<p>在内容窗口右键，选择metahuman本体</p>
+<p><img src="/../asset_digitalhuman/027.png"></p>
+<p>双击这个本体，进入编辑窗口，导入mesh</p>
+<p><img src="/../asset_digitalhuman/028.png"></p>
+<p>调整人脸的位置， 快捷键 W&#x2F;R&#x2F;E ， 设置viewport的FOV到20</p>
+<p><img src="/../asset_digitalhuman/029.png"></p>
+<p>打开提升帧，选择自动追踪</p>
+<p>点击metahuman本体解算</p>
+<p>点击body，选择一个体型</p>
+<p>点击Mesh to Metahuman，如下图</p>
+<p><img src="/../asset_digitalhuman/030.png"></p>
+<p>进入Quilel Bridge，选择metahuman - my metahuman， 选择你新建立的本体，启动MHC</p>
+<p><img src="/../asset_digitalhuman/031.png"></p>
+<p>进入metahuman后，调整人物各部分</p>
+<p><img src="/../asset_digitalhuman/022.png"></p>
+<p>结束，后续在UE5项目导入你定制的人脸即可。</p>
+<h3 id="参考视频"><a href="#参考视频" class="headerlink" title="参考视频"></a>参考视频</h3><p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=HEFIvFnUfpw">Audio2Face to MetaHuman | How to Animate MetaHuman using Audio2Face Live Link</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=2tGPx0Athvk">Importing a Metahuman into Unreal Engine 5 (simplified way) </a></p>
+<p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=xFk_WU32igA">How to Use Mesh to Metahuman (From Scan to Metahuman)</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://szhowardhuang.github.io/2024/02/22/digital-human/" data-id="clto3ikk70005fgmjfchx76no" data-title="如何设计一个数字人 --- 3D模型篇" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-lagent_sft" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/02/01/lagent_sft/" class="article-date">
+  <time class="dt-published" datetime="2024-02-01T13:00:16.000Z" itemprop="datePublished">2024-02-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/02/01/lagent_sft/">微调Lagent的实践</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>InternLM的Lagent是智能代理的一个框架，近几日实践了智能代理调用MM yolo进行图像类识别的任务，特写此文作为记录。</p>
+<h3 id="环境安装"><a href="#环境安装" class="headerlink" title="环境安装"></a>环境安装</h3><pre><code>conda create --name xtuner0.1.9 --clone=/root/share/conda_envs/internlm-base
+conda activate xtuner0.1.9
+git clone -b v0.1.9 https://gitee.com/internlm/xtuner
+cd xtuner
+pip install -e &#39;.[all]&#39;
+</code></pre>
+<h3 id="基座模型"><a href="#基座模型" class="headerlink" title="基座模型"></a>基座模型</h3><p>用InternLM chat 7B基座模型，下载huggingface格式的模型，放到&#x2F;root&#x2F;ft-msagent目录下。</p>
+<h3 id="数据集："><a href="#数据集：" class="headerlink" title="数据集："></a>数据集：</h3><p>去魔搭下载魔搭通用agent数据集：   </p>
+<pre><code>apt install git-lfs
+git clone https://www.modelscope.cn/datasets/iic/ms_agent.git
+</code></pre>
+<p>打开train_agent_react.jsonl ， 搜索图像识别，发现 image_recognition , ImageRecognitionAPI, image_classifier 字段</p>
+<p>需要修改 ImageRecognitionAPI 为 ImageRecognition，<br>修改 image_recognition 为 ImageRecognition，<br>修改 image_classifier 为 ImageClassifier，    </p>
+<p>用sed直接修改    </p>
+<pre><code>sed -i &#39;s/ImageRecognitionAPI/ImageRecognition/g&#39; train_agent_react.jsonl
+sed -i &#39;s/image_recognition/ImageRecognition/g&#39; train_agent_react.jsonl
+sed -i &#39;s/image_classifier/ImageClassifier/g&#39; train_agent_react.jsonl
+</code></pre>
+<p>可以看一下是否修改成功 </p>
+<pre><code>grep ImageClassifier train_agent_react.jsonl
+grep ImageRecognition train_agent_react.jsonl
+</code></pre>
+<p>修改配置文件 &#x2F;root&#x2F;ft-msagent&#x2F;internlm_7b_qlora_msagent_react_e3_gpu8_copy.py<br><img src="/../asset_lagentsft/sft001.png"><br>看到这里你一定要疑问，为什么不把 data_path 指向 本地刚刚git clone下来的数据集路径呢？<br>其实是因为lagent有bug，会把本地数据集当作json格式的客户定制数据集，导致出错。<br>所以用一个work around的方法，就是先让lagent跑通，下载数据集到cache目录，然后进入lagent目录，再修改数据集文件。</p>
+<p>先进入ft-msagent目录，运行</p>
+<pre><code>xtuner train internlm_7b_qlora_msagent_react_e3_gpu8_copy.py --deepspeed deepspeed_zero2
+</code></pre>
+<p>跑一次train，不需要跑完，进入train就可以 CTRL+C 关掉</p>
+<p>然后</p>
+<pre><code>cd ~/.cache/modelscope/hub/datasets/iic/ms_agent/master/data_files 
+</code></pre>
+<p><img src="/../asset_lagentsft/sft003.png"></p>
+<p>修改数据集文件 f0d878b6a17a5cec981643649ea383cc , 这个文件名具体看你们自己的环境，会变化的。</p>
+<pre><code>sed -i &#39;s/ImageRecognitionAPI/ImageRecognition/g&#39; f0d878b6a17a5cec981643649ea383cc
+sed -i &#39;s/image_recognition/ImageRecognition/g&#39; f0d878b6a17a5cec981643649ea383cc
+sed -i &#39;s/image_classifier/ImageClassifier/g&#39; f0d878b6a17a5cec981643649ea383cc
+</code></pre>
+<p>再进入ft-msagent目录，运行</p>
+<pre><code>xtuner train internlm_7b_qlora_msagent_react_e3_gpu8_copy.py --deepspeed deepspeed_zero2
+</code></pre>
+<p><img src="/../asset_lagentsft/sft002.png"><br>可以看到reusing dataset，然后开始训练。<br><img src="/../asset_lagentsft/sft004.png"><br>如果训练一个epoch想停掉，可以按CTRL+C，下次想继续训练，要看一下last_checkpoint文件，把最后一个checkpoint的路径复制到命令行参数里。如下：</p>
+<pre><code>xtuner train internlm_7b_qlora_msagent_react_e3_gpu8_copy.py --deepspeed deepspeed_zero2 --resume /root/ft-msagent/work_dirs/internlm_7b_qlora_msagent_react_e3_gpu8_copy/epoch_2.pth
+</code></pre>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>为了避免后续重复以上数据集繁琐操作，我在魔搭上创建了一个数据集，大家可以直接用这个数据集 szhowardhuang&#x2F;msagent_lite 。</p>
+<p><a target="_blank" rel="noopener" href="https://modelscope.cn/datasets/szhowardhuang/msagent_lite">https://modelscope.cn/datasets/szhowardhuang/msagent_lite</a></p>
+<p>配置文件修改如下，拷贝即可使用：</p>
+<pre><code># Copyright (c) OpenMMLab. All rights reserved.
+import torch
+from bitsandbytes.optim import PagedAdamW32bit
+from mmengine.dataset import DefaultSampler
+from mmengine.hooks import (CheckpointHook, DistSamplerSeedHook, IterTimerHook,
+                            LoggerHook, ParamSchedulerHook)
+from mmengine.optim import AmpOptimWrapper, CosineAnnealingLR
+from modelscope.msdatasets import MsDataset
+from peft import LoraConfig
+from transformers import (AutoModelForCausalLM, AutoTokenizer,
+                        BitsAndBytesConfig)
+
+from xtuner.dataset import process_ms_dataset
+from xtuner.dataset.collate_fns import default_collate_fn
+from xtuner.dataset.map_fns import (msagent_react_map_fn,
+                                    template_map_fn_factory)
+from xtuner.engine import DatasetInfoHook, EvaluateChatHook
+from xtuner.model import SupervisedFinetune
+from xtuner.utils import PROMPT_TEMPLATE
+
+
+#######################################################################
+#                          PART 1  Settings                           #
+#######################################################################
+# Model
+pretrained_model_name_or_path = &#39;/root/ft-msagent/internlm-chat-7b&#39;
+
+# Data
+data_path = &#39;szhowardhuang/msagent_lite&#39;
+prompt_template = PROMPT_TEMPLATE.default
+max_length = 2048
+pack_to_max_length = False
+
+# Scheduler &amp; Optimizer
+batch_size = 4  # per_device
+accumulative_counts = 1
+dataloader_num_workers = 2
+max_epochs = 3
+optim_type = PagedAdamW32bit
+lr = 2e-4
+betas = (0.9, 0.999)
+weight_decay = 0
+max_norm = 1  # grad clip
+
+# Evaluate the generation performance during the training
+evaluation_freq = 500
+SYSTEM = (
+    &#39;你是一个可以调用外部工具的助手，可以使用的工具包括：\n&#39;
+    &quot;&#123;&#123;\'ImageRecognition\': \'用来进行图像识别的API。\\n"
+        '当你需要对于一个图片进行识别时，可以使用这个API。\\n'
+        "输入应该是一张图片文件的路径，或者是图片的URL。\\n\\n\',"
+        "\'ImageClassifier\': \"用来进行图像分类的API，\\n"
+        "当你需要对于一个图片进行分类时，可以使用这个API。\\n"
+        "输入应该是一张图片文件的路径，或者是图片的URL。\\n\"&#125;&#125;\n&quot;
+    &#39;如果使用工具请遵循以下格式回复：\n```\n&#39;
+    &#39;Thought:思考你当前步骤需要解决什么问题，是否需要使用工具\n&#39;
+    &quot;Action:工具名称，你的工具必须从 [[\&#39;ImageRecognition\&#39;, \&#39;ImageClassifier\&#39;]] 选择&quot;
+    &#39;\nAction Input:工具输入参数\n```\n工具返回按照以下格式回复：\n&#39;
+    &#39;```\nResponse:调用工具后的结果\n```&#39;
+    &#39;\n如果你已经知道了答案，或者你不需要工具，请遵循以下格式回复\n```&#39;
+    &#39;\nThought:给出最终答案的思考过程\nFinal Answer:最终答案\n```\n开始!\n&#39;)
+evaluation_inputs = [&#39;识别图片中的物体类别？&#39;]
+
+#######################################################################
+#                      PART 2  Model &amp; Tokenizer                      #
+#######################################################################
+tokenizer = dict(
+    type=AutoTokenizer.from_pretrained,
+    pretrained_model_name_or_path=pretrained_model_name_or_path,
+    trust_remote_code=True,
+    padding_side=&#39;right&#39;)
+
+model = dict(
+    type=SupervisedFinetune,
+    llm=dict(
+        type=AutoModelForCausalLM.from_pretrained,
+        pretrained_model_name_or_path=pretrained_model_name_or_path,
+        trust_remote_code=True,
+        torch_dtype=torch.float16,
+        quantization_config=dict(
+            type=BitsAndBytesConfig,
+            load_in_4bit=True,
+            load_in_8bit=False,
+            llm_int8_threshold=6.0,
+            llm_int8_has_fp16_weight=False,
+            bnb_4bit_compute_dtype=torch.float16,
+            bnb_4bit_use_double_quant=True,
+            bnb_4bit_quant_type=&#39;nf4&#39;)),
+    lora=dict(
+        type=LoraConfig,
+        r=64,
+        lora_alpha=16,
+        lora_dropout=0.1,
+        bias=&#39;none&#39;,
+        task_type=&#39;CAUSAL_LM&#39;))
+
+#######################################################################
+#                      PART 3  Dataset &amp; Dataloader                   #
+#######################################################################
+train_dataset = dict(
+    type=process_ms_dataset,
+    dataset=dict(type=MsDataset.load, dataset_name=data_path, split=&#39;train&#39;),
+    tokenizer=tokenizer,
+    max_length=max_length,
+    dataset_map_fn=msagent_react_map_fn,
+    template_map_fn=dict(
+        type=template_map_fn_factory, template=prompt_template),
+    remove_unused_columns=True,
+    shuffle_before_pack=True,
+    pack_to_max_length=pack_to_max_length)
+
+train_dataloader = dict(
+    batch_size=batch_size,
+    num_workers=dataloader_num_workers,
+    dataset=train_dataset,
+    sampler=dict(type=DefaultSampler, shuffle=True),
+    collate_fn=dict(type=default_collate_fn))
+
+#######################################################################
+#                    PART 4  Scheduler &amp; Optimizer                    #
+#######################################################################
+# optimizer
+optim_wrapper = dict(
+    type=AmpOptimWrapper,
+    optimizer=dict(
+        type=optim_type, lr=lr, betas=betas, weight_decay=weight_decay),
+    clip_grad=dict(max_norm=max_norm, error_if_nonfinite=False),
+    accumulative_counts=accumulative_counts,
+    loss_scale=&#39;dynamic&#39;,
+    dtype=&#39;float16&#39;)
+
+# learning policy
+# More information: https://github.com/open-mmlab/mmengine/blob/main/docs/en/tutorials/param_scheduler.md  # noqa: E501
+param_scheduler = dict(
+    type=CosineAnnealingLR,
+    eta_min=0.0,
+    by_epoch=True,
+    T_max=max_epochs,
+    convert_to_iter_based=True)
+
+# train, val, test setting
+train_cfg = dict(by_epoch=True, max_epochs=max_epochs, val_interval=1)
+
+#######################################################################
+#                           PART 5  Runtime                           #
+#######################################################################
+# Log the dialogue periodically during the training process, optional
+custom_hooks = [
+    dict(type=DatasetInfoHook, tokenizer=tokenizer),
+    dict(
+        type=EvaluateChatHook,
+        tokenizer=tokenizer,
+        every_n_iters=evaluation_freq,
+        evaluation_inputs=evaluation_inputs,
+        system=SYSTEM,
+        prompt_template=prompt_template)
+]
+
+# configure default hooks
+default_hooks = dict(
+    # record the time of every iteration.
+    timer=dict(type=IterTimerHook),
+    # print log every 100 iterations.
+    logger=dict(type=LoggerHook, interval=10),
+    # enable the parameter scheduler.
+    param_scheduler=dict(type=ParamSchedulerHook),
+    # save checkpoint per epoch.
+    checkpoint=dict(type=CheckpointHook, interval=1),
+    # set sampler seed in distributed evrionment.
+    sampler_seed=dict(type=DistSamplerSeedHook),
+)
+
+# configure environment
+env_cfg = dict(
+    # whether to enable cudnn benchmark
+    cudnn_benchmark=False,
+    # set multi process parameters
+    mp_cfg=dict(mp_start_method=&#39;fork&#39;, opencv_num_threads=0),
+    # set distributed parameters
+    dist_cfg=dict(backend=&#39;nccl&#39;),
+)
+
+# set visualizer
+visualizer = None
+
+# set log level
+log_level = &#39;INFO&#39;
+
+# load from which checkpoint
+load_from = None
+
+# whether to resume training from the loaded checkpoint
+resume = False
+
+# Defaults to use random seed and disable `deterministic`
+randomness = dict(seed=None, deterministic=False)
+</code></pre>
+<h3 id="模型转换"><a href="#模型转换" class="headerlink" title="模型转换"></a>模型转换</h3><p>将PTH模型转换成HuggingFace模型，即生成Adapter文件夹, hf文件夹即为我们平时所理解的所谓 “LoRA模型文件”<br>    mkdir hf<br>    export MKL_SERVICE_FORCE_INTEL&#x3D;1<br>    xtuner convert pth_to_hf internlm_7b_qlora_msagent_react_e3_gpu8_copy.py .&#x2F;work_dirs&#x2F;internlm_7b_qlora_msagent_react_e3_gpu8_copy&#x2F;epoch_2.pth .&#x2F;hf</p>
+<h3 id="模型测试"><a href="#模型测试" class="headerlink" title="模型测试"></a>模型测试</h3><p>先下载并安装VisionAgent（即lagent）<br>    <a target="_blank" rel="noopener" href="https://github.com/szhowardhuang/VisionAgent.git">https://github.com/szhowardhuang/VisionAgent.git</a><br>    cd VisionAgent<br>    git checkout a93162536f04679ace6572365a1884e584b4cb03<br>    pip install -e .<br>然后安装 mmdetection<br>    pip install -U openmim<br>    mim install mmengine<br>    mim install “mmcv&gt;&#x3D;2.0.0”<br>    mim install mmdet<br>注释掉 &#x2F;root&#x2F;xtuner019&#x2F;xtuner&#x2F;xtuner&#x2F;tools&#x2F;chat.py 的139行<br><img src="/../asset_lagentsft/sft005.png"></p>
+<pre><code>export SERPER_API_KEY=abcdefg
+xtuner chat ./internlm-chat-7b --adapter hf --lagent
+</code></pre>
+<h3 id="将-HuggingFace-adapter-合并到大语言模型"><a href="#将-HuggingFace-adapter-合并到大语言模型" class="headerlink" title="将 HuggingFace adapter 合并到大语言模型"></a>将 HuggingFace adapter 合并到大语言模型</h3><pre><code>xtuner convert merge ./internlm-chat-7b ./hf ./merged --max-shard-size 2GB
+</code></pre>
+<h3 id="用VisionAgent测试合并后的模型"><a href="#用VisionAgent测试合并后的模型" class="headerlink" title="用VisionAgent测试合并后的模型"></a>用VisionAgent测试合并后的模型</h3><p>修改一下 &#x2F;root&#x2F;code&#x2F;VisionAgent&#x2F;examples&#x2F;react_web_demo.py的92行<br><img src="/../asset_lagentsft/sft006.png"><br>    pip install modelscope&#x3D;&#x3D;1.9.5<br>    pip install transformers&#x3D;&#x3D;4.35.2<br>    pip install streamlit&#x3D;&#x3D;1.24.0<br>    pip install sentencepiece&#x3D;&#x3D;0.1.99<br>    pip install accelerate&#x3D;&#x3D;0.24.1<br>    streamlit run &#x2F;root&#x2F;code&#x2F;lagent&#x2F;examples&#x2F;react_web_demo.py –server.address 127.0.0.1 –server.port 6006</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://szhowardhuang.github.io/2024/02/01/lagent_sft/" data-id="clto3ikk80007fgmjedzc19jg" data-title="微调Lagent的实践" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">weiter &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/03/">March 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/02/">February 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">January 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/03/12/ollama/">ollama使用方法</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/11/make-million-llm/">使用Python从头开始构建一个百万参数的LLM</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/08/springboot-music/">用VSCode实践一个Spring Boot项目</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/07/mysql5_7_21-cmd-install/">命令行安装MySQL 5.7.21</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/03/generativeDiffusion/">生成扩散模型综述</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 Howard Huang<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
