@@ -1,18 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-  <meta charset="utf-8">
-  
-  
-  <title>如何设计一个数字人 --- 3D模型篇 | 嵌入式老兵博客</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="下面我就以制作一个数字人卖货视频为例 首先介绍一下将会用到的 AI 工具。  ChatGPT: 在制作数字人的过程中，ChatGPT 可以用于设定数字人的性格、生成演讲文本、回答技术问题等。  MetaHuman Creator: 这是一款由 Epic Games 开发的三维人物建模软件，可以通过对头部、身体等部位个性化的调整，实现高度逼真的数字人三维建模。  微软语音合成助手，由微软公司开发，用">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"szhowardhuang.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="下面我就以制作一个数字人卖货视频为例 首先介绍一下将会用到的 AI 工具。  ChatGPT: 在制作数字人的过程中，ChatGPT 可以用于设定数字人的性格、生成演讲文本、回答技术问题等。  MetaHuman Creator: 这是一款由 Epic Games 开发的三维人物建模软件，可以通过对头部、身体等部位个性化的调整，实现高度逼真的数字人三维建模。  微软语音合成助手，由微软公司开发，用">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何设计一个数字人 --- 3D模型篇">
 <meta property="og:url" content="https://szhowardhuang.github.io/2024/02/22/digital-human/index.html">
 <meta property="og:site_name" content="嵌入式老兵博客">
 <meta property="og:description" content="下面我就以制作一个数字人卖货视频为例 首先介绍一下将会用到的 AI 工具。  ChatGPT: 在制作数字人的过程中，ChatGPT 可以用于设定数字人的性格、生成演讲文本、回答技术问题等。  MetaHuman Creator: 这是一款由 Epic Games 开发的三维人物建模软件，可以通过对头部、身体等部位个性化的调整，实现高度逼真的数字人三维建模。  微软语音合成助手，由微软公司开发，用">
-<meta property="og:locale">
+<meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://szhowardhuang.github.io/asset_digitalhuman/003.png">
 <meta property="og:image" content="https://szhowardhuang.github.io/asset_digitalhuman/004.png">
 <meta property="og:image" content="https://szhowardhuang.github.io/asset_digitalhuman/005.png">
@@ -62,83 +75,199 @@
 <meta property="article:author" content="Howard Huang">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://szhowardhuang.github.io/asset_digitalhuman/003.png">
-  
-    <link rel="alternate" href="/atom.xml" title="嵌入式老兵博客" type="application/atom+xml">
-  
-  
-    <link rel="shortcut icon" href="/favicon.png">
-  
-  
-  
-<link rel="stylesheet" href="/css/style.css">
 
-  
-    
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
 
-  
-  
-<meta name="generator" content="Hexo 7.1.1"></head>
+<link rel="canonical" href="https://szhowardhuang.github.io/2024/02/22/digital-human/">
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">嵌入式老兵博客</a>
-      </h1>
-      
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://szhowardhuang.github.io/2024/02/22/digital-human/","path":"2024/02/22/digital-human/","title":"如何设计一个数字人 --- 3D模型篇"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>如何设计一个数字人 --- 3D模型篇 | 嵌入式老兵博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">嵌入式老兵博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
         
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-        
-          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
-        
-        <a class="nav-icon nav-search-btn" title="Suche"><span class="fa fa-search"></span></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://szhowardhuang.github.io"></form>
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#AI%E4%BA%BA%E7%89%A9%E8%AE%BE%E5%AE%9A%E5%92%8C%E5%86%85%E5%AE%B9%E7%94%9F%E6%88%90"><span class="nav-number">1.</span> <span class="nav-text">AI人物设定和内容生成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3D%E5%BB%BA%E6%A8%A1"><span class="nav-number">2.</span> <span class="nav-text">3D建模</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AI%E8%AF%AD%E9%9F%B3%E7%94%9F%E6%88%90"><span class="nav-number">3.</span> <span class="nav-text">AI语音生成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AI%E8%A1%A8%E6%83%85%E9%A9%B1%E5%8A%A8"><span class="nav-number">4.</span> <span class="nav-text">AI表情驱动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AI%E5%9C%BA%E6%99%AF%E6%90%AD%E5%BB%BA"><span class="nav-number">5.</span> <span class="nav-text">AI场景搭建</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E6%B3%A8"><span class="nav-number"></span> <span class="nav-text">附注</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E5%86%8CAzure%E8%B4%A6%E5%8F%B7"><span class="nav-number">1.</span> <span class="nav-text">注册Azure账号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FFMPEG"><span class="nav-number">2.</span> <span class="nav-text">FFMPEG</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8FFmpeg%E5%B0%86MP3%E6%96%87%E4%BB%B6%E8%BD%AC%E6%8D%A2%E6%88%90WAVE%E6%A0%BC%E5%BC%8F%EF%BC%8C%E4%BD%A0%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8%E4%BB%A5%E4%B8%8B%E5%91%BD%E4%BB%A4%EF%BC%9A"><span class="nav-number">2.1.</span> <span class="nav-text">使用FFmpeg将MP3文件转换成WAVE格式，你可以使用以下命令：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BD%95%E5%B1%8F%E8%A7%86%E9%A2%91%E6%88%AA%E5%8F%96%EF%BC%8C%E4%BD%BF%E7%94%A8FFmpeg%E6%88%AA%E5%8F%96%E8%A7%86%E9%A2%91%E6%96%87%E4%BB%B6%E7%9A%84%E4%B8%80%E9%83%A8%E5%88%86%EF%BC%8C%E4%BD%A0%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87%E6%8C%87%E5%AE%9A%E5%BC%80%E5%A7%8B%E6%97%B6%E9%97%B4%EF%BC%88-ss-%E5%8F%82%E6%95%B0%EF%BC%89%E5%92%8C%E6%8C%81%E7%BB%AD%E6%97%B6%E9%97%B4%EF%BC%88-t-%E5%8F%82%E6%95%B0%EF%BC%89%E6%88%96%E7%BB%93%E6%9D%9F%E6%97%B6%E9%97%B4%EF%BC%88-to-%E5%8F%82%E6%95%B0%EF%BC%89%E6%9D%A5%E5%AE%8C%E6%88%90%E3%80%82%E4%BB%A5%E4%B8%8B%E6%98%AF%E4%B8%80%E4%BA%9B%E5%B8%B8%E8%A7%81%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E7%9B%B8%E5%BA%94%E7%9A%84%E5%91%BD%E4%BB%A4%E7%A4%BA%E4%BE%8B%EF%BC%9A"><span class="nav-number">2.2.</span> <span class="nav-text">录屏视频截取，使用FFmpeg截取视频文件的一部分，你可以通过指定开始时间（-ss 参数）和持续时间（-t 参数）或结束时间（-to 参数）来完成。以下是一些常见的使用场景和相应的命令示例：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-ss-%E5%92%8C-t-%E5%8F%82%E6%95%B0"><span class="nav-number">2.2.1.</span> <span class="nav-text">使用 -ss 和 -t 参数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-ss-%E5%92%8C-to-%E5%8F%82%E6%95%B0"><span class="nav-number">2.2.2.</span> <span class="nav-text">使用 -ss 和 -to 参数</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9F%B3%E7%94%BB%E4%B8%8D%E5%90%8C%E6%AD%A5%EF%BC%8C%E7%94%BB%E9%9D%A2%E5%BB%B6%E8%BF%9F%E5%A4%A7%E7%BA%A61%E7%A7%92%EF%BC%8C%E7%94%A8FFMPEG%E8%B0%83%E6%95%B4%EF%BC%8C%E7%9B%B8%E5%AF%B9%E8%A7%86%E9%A2%91%E5%AF%B9%E9%9F%B3%E9%A2%91%E6%97%B6%E9%97%B4%E6%88%B3%E8%BF%9B%E8%A1%8C%E5%81%8F%E7%A7%BB%EF%BC%9A"><span class="nav-number">2.3.</span> <span class="nav-text">音画不同步，画面延迟大约1秒，用FFMPEG调整，相对视频对音频时间戳进行偏移：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%92%AD%E6%94%BE%E9%AA%8C%E8%AF%81"><span class="nav-number">2.4.</span> <span class="nav-text">播放验证</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%AE%9A%E5%88%B6%E6%95%B0%E5%AD%97%E4%BA%BA%E7%9A%84%E4%BA%BA%E8%84%B8"><span class="nav-number">3.</span> <span class="nav-text">如何定制数字人的人脸</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%A7%86%E9%A2%91"><span class="nav-number">4.</span> <span class="nav-text">参考视频</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Howard Huang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
       </div>
     </div>
-  </div>
-</header>
 
-      <div class="outer">
-        <section id="main"><article id="post-digital-human" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/02/22/digital-human/" class="article-date">
-  <time class="dt-published" datetime="2024-02-22T15:00:16.000Z" itemprop="datePublished">2024-02-22</time>
-</a>
     
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="p-name article-title" itemprop="headline name">
-      如何设计一个数字人 --- 3D模型篇
-    </h1>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
   
 
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/02/22/digital-human/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="如何设计一个数字人 --- 3D模型篇 | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          如何设计一个数字人 --- 3D模型篇
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-02-22 23:00:16" itemprop="dateCreated datePublished" datetime="2024-02-22T23:00:16+08:00">2024-02-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-02-23 22:08:16" itemprop="dateModified" datetime="2024-02-23T22:08:16+08:00">2024-02-23</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>5.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>10 分钟</span>
+    </span>
+</div>
+
+        </div>
       </header>
+
     
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>下面我就以制作一个数字人卖货视频为例</p>
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>下面我就以制作一个数字人卖货视频为例</p>
 <p>首先介绍一下将会用到的 AI 工具。</p>
 <ol>
 <li><p>ChatGPT: 在制作数字人的过程中，ChatGPT 可以用于设定数字人的性格、生成演讲文本、回答技术问题等。</p>
@@ -315,134 +444,124 @@
 <p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=2tGPx0Athvk">Importing a Metahuman into Unreal Engine 5 (simplified way) </a></p>
 <p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=xFk_WU32igA">How to Use Mesh to Metahuman (From Scan to Metahuman)</a></p>
 
-      
     </div>
-    <footer class="article-footer">
-      <a data-url="https://szhowardhuang.github.io/2024/02/22/digital-human/" data-id="clto3ikk70005fgmjfchx76no" data-title="如何设计一个数字人 --- 3D模型篇" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
-      
-      
-      
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/02/01/lagent_sft/" rel="prev" title="微调Lagent的实践">
+                  <i class="fa fa-angle-left"></i> 微调Lagent的实践
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/02/27/digital-human-2/" rel="next" title="如何设计一个数字人续篇 --- Video Retalking 模型篇">
+                  如何设计一个数字人续篇 --- Video Retalking 模型篇 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
     </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Howard Huang</span>
   </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2024/02/27/digital-human-2/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Neuer</strong>
-      <div class="article-nav-title">
-        
-          如何设计一个数字人续篇 --- Video Retalking 模型篇
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2024/02/01/lagent_sft/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Älter</strong>
-      <div class="article-nav-title">微调Lagent的实践</div>
-    </a>
-  
-</nav>
-
-  
-</article>
-
-
-</section>
-        
-          <aside id="sidebar">
-  
-    
-
-  
-    
-
-  
-    
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archiv</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/03/">March 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/02/">February 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">January 2024</a></li></ul>
-    </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">110k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:20</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动-->
   </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">letzter Beitrag</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2024/03/12/ollama/">ollama使用方法</a>
-          </li>
-        
-          <li>
-            <a href="/2024/03/11/make-million-llm/">使用Python从头开始构建一个百万参数的LLM</a>
-          </li>
-        
-          <li>
-            <a href="/2024/03/08/springboot-music/">用VSCode实践一个Spring Boot项目</a>
-          </li>
-        
-          <li>
-            <a href="/2024/03/07/mysql5_7_21-cmd-install/">命令行安装MySQL 5.7.21</a>
-          </li>
-        
-          <li>
-            <a href="/2024/03/03/generativeDiffusion/">生成扩散模型综述</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      
-      &copy; 2024 Howard Huang<br>
-      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
 
     </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
-
-
-<script src="/js/jquery-3.6.4.min.js"></script>
-
-
+  </footer>
 
   
-<script src="/fancybox/jquery.fancybox.min.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
   </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
 </body>
 </html>
