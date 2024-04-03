@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"szhowardhuang.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Single Sign-On (SSO) is an authentication process that allows users to access multiple applications with a single login. This is accomplished using a central authentication server that stores the user">
+<meta property="og:type" content="article">
+<meta property="og:title" content="单点登录（SSO）工作原理">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/03/27/sso/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="Single Sign-On (SSO) is an authentication process that allows users to access multiple applications with a single login. This is accomplished using a central authentication server that stores the user">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_sso/01.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_sso/02.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_sso/03.webp">
+<meta property="article:published_time" content="2024-03-27T02:52:45.197Z">
+<meta property="article:modified_time" content="2024-03-27T02:52:45.197Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://szhowardhuang.github.io/asset_sso/01.webp">
+
+
+<link rel="canonical" href="https://szhowardhuang.github.io/2024/03/27/sso/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://szhowardhuang.github.io/2024/03/27/sso/","path":"2024/03/27/sso/","title":"单点登录（SSO）工作原理"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>单点登录（SSO）工作原理 | 嵌入式老兵博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">嵌入式老兵博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#SSO-%E7%BB%84%E6%88%90"><span class="nav-number">1.</span> <span class="nav-text">SSO 组成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SSO-%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">SSO 工作流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95%E7%9A%84%E5%A5%BD%E5%A4%84"><span class="nav-number">3.</span> <span class="nav-text">单点登录的好处</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-number">4.</span> <span class="nav-text">单点登录的类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%E9%80%82%E5%BD%93%E7%9A%84-SSO-%E5%8D%8F%E8%AE%AE"><span class="nav-number">5.</span> <span class="nav-text">如何选择适当的 SSO 协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SSO-%E5%AE%9E%E6%96%BD"><span class="nav-number">6.</span> <span class="nav-text">SSO 实施</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Howard Huang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/03/27/sso/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="单点登录（SSO）工作原理 | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          单点登录（SSO）工作原理
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-03-27 10:52:45" itemprop="dateCreated datePublished" datetime="2024-03-27T10:52:45+08:00">2024-03-27</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>9.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>17 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Single Sign-On (SSO) is an authentication process that allows users to access multiple applications with a single login. This is accomplished using a central authentication server that stores the user’s credentials and verifies them for each application.</p>
+<p>单点登录（SSO）是一种身份验证过程，允许用户使用单个登录访问多个应用程序。这是通过使用一个中央身份验证服务器来实现的，该服务器存储用户的凭据并为每个应用程序进行验证。</p>
+<p>The idea of SSO is not new in the Cloud era. The on-premises identity solutions that enabled businesses to safely link their PCs, networks, and servers in the middle to late 1990s are the source of SSO technology. Around this time, companies started using specialized systems to handle user IDs, such as Lightweight Directory Access Protocol (LDAP) and Microsoft Active Directory (AD). After that, they used on-premises SSO or Web Access Management (WAM) products to protect access.</p>
+<p>SSO 的概念在云时代并不新鲜。在 20 世纪 90 年代中后期，使企业能够安全地将其个人电脑、网络和服务器连接起来的本地身份解决方案是 SSO 技术的来源。在此期间，公司开始使用专门的系统来处理用户 ID，例如轻量级目录访问协议（LDAP）和 Microsoft Active Directory（AD）。之后，他们使用本地 SSO 或 Web 访问管理（WAM）产品来保护访问。</p>
+<h2 id="SSO-组成"><a href="#SSO-组成" class="headerlink" title="SSO 组成"></a>SSO 组成</h2><ul>
+<li><p>Identity Provider (IdP): This is the central authentication server. It’s where you enter your credentials and get verified. Think of it as a high-security building entrance.<br>身份提供者（IdP）：这是中央认证服务器。这是您输入凭据并进行验证的地方。将其视为高安全性建筑入口。</p>
+</li>
+<li><p>Service Provider (SP): These individual applications rely on SSO for user login. Your work email, project management tool, and CRM platform can all be SPs. Imagine these as individual offices within the secure building.<br>服务提供商（SP）：这些个别应用程序依赖 SSO 进行用户登录。您的工作电子邮件、项目管理工具和 CRM 平台都可以是 SP。将其想象为安全建筑内的个别办公室。</p>
+</li>
+<li><p>SSO Server: This is the bridge between the IdP and SPs. It handles the communication and securely transmits authentication tokens between them. Think of it as a secure hallway connecting the entrance to the various offices.<br>SSO 服务器：这是 IdP 和 SP 之间的桥梁。它处理通信并安全地传输身份验证令牌。将其视为连接入口和各个办公室的安全走廊。</p>
+</li>
+</ul>
+<h2 id="SSO-工作流程"><a href="#SSO-工作流程" class="headerlink" title="SSO 工作流程"></a>SSO 工作流程</h2><p>Google and other services are excellent examples of how SSO works. Let’s take the example of trying to access Trello using your Google account. You don’t need to create a new user account on Trello and remember a new set of usernames&#x2F;passwords.<br>谷歌和其他服务是单点登录(SSO)运作的绝佳例子。以使用谷歌账户访问 Trello 为例。您无需在 Trello 上创建新的用户账户并记住一组新的用户名&#x2F;密码。</p>
+<p>For example, when you try to log in to Trello with your Google account, it redirects you to the central service hosted on accounts.google.com. Here, you will see a sign-in form to input your credentials. If the authentication process is successful, Google redirects you to Trello, where you can gain access where you are automatically signed in.<br>例如，当您尝试使用 Google 账户登录 Trello 时，它会将您重定向到托管在 accounts.google.com 上的中央服务。在这里，您将看到一个登录表单，输入您的凭据。如果身份验证过程成功，Google 会将您重定向到 Trello，您将自动登录并获得访问权限。</p>
+<p>如果您想使用 Google 账户访问 Trello，以下是所需的步骤：</p>
+<ul>
+<li><p>User requests access: Use the Trello login web page and select Google account as a login method.<br>用户请求访问：使用 Trello 登录网页，并选择 Google 账户作为登录方式。</p>
+</li>
+<li><p>Redirection to IdP: Trello redirects the user to the Google login page.<br>重定向到 IdP：Trello 将用户重定向到 Google 登录页面。</p>
+</li>
+<li><p>Login page served: The user is served with the Google login page.<br>登录页面已提供：用户被提供了谷歌登录页面。</p>
+</li>
+<li><p>Credentials entered: The user enters their Google credentials.<br>输入的凭据：用户输入他们的谷歌凭据。</p>
+</li>
+<li><p>SSO Server verification: Google sends authentication info to the SSO Authorization server<br>SSO 服务器验证：谷歌将认证信息发送给 SSO 授权服务器</p>
+</li>
+<li><p>Authentication at IdP: The Authorization server returns the auth token (SAML) if the credentials are valid.<br>在 IdP 上进行身份验证：如果凭证有效，授权服务器将返回授权令牌（SAML）。</p>
+</li>
+<li><p>Access granted: Google sends the auth token to the Trello<br>授权已授予：Google 将认证令牌发送给 Trello</p>
+</li>
+<li><p>Validate token: In the last step, Trello sends the token to the Google Authorization server to validate it<br>验证令牌：在最后一步中，Trello 将令牌发送给 Google 授权服务器以进行验证</p>
+</li>
+<li><p>Token valid: If the token is valid, Trello will allow access to the user and store the session for future interactions<br>令牌有效：如果令牌有效，Trello 将允许用户访问并存储会话以供将来交互使用</p>
+</li>
+</ul>
+<p><img src="/../asset_sso/01.webp"></p>
+<h2 id="单点登录的好处"><a href="#单点登录的好处" class="headerlink" title="单点登录的好处"></a>单点登录的好处</h2><p>单点登录有多个好处，即：</p>
+<ul>
+<li><p>Improved user experience: Users do not need to remember multiple usernames and passwords.<br>改进的用户体验：用户不需要记住多个用户名和密码。</p>
+</li>
+<li><p>Increased security: Users are less likely to reuse passwords across applications.<br>增加安全性：用户更不太可能在不同应用程序中重复使用密码。</p>
+</li>
+<li><p>Simplified user access auditing: Ensuring the appropriate individuals have access to resources and sensitive data can be challenging. SSO solutions can configure user access permissions according to their role, department, and seniority level.<br>简化用户访问审计：确保适当的人员可以访问资源和敏感数据可能具有挑战性。SSO 解决方案可以根据用户的角色、部门和资历级别配置用户访问权限。</p>
+</li>
+</ul>
+<h2 id="单点登录的类型"><a href="#单点登录的类型" class="headerlink" title="单点登录的类型"></a>单点登录的类型</h2><p>与 SSO 一起工作，您应该了解不同的标准和协议。一些常见的协议类型包括：</p>
+<ul>
+<li><p>SAML: This is the most common type of SSO. It uses the SAML protocol to exchange authentication information between the SSO server and applications.<br>SAML：这是最常见的单点登录类型。它使用 SAML 协议在单点登录服务器和应用程序之间交换身份验证信息。</p>
+</li>
+<li><p>Open Authorization (OAuth) 2.0): It provides delegated access to server resources on behalf of a resource owner. It specifies how tokens are transferred, allowing a user’s identity to be authenticated by an IDP and the credentials to be used to access APIs.<br>开放授权（OAuth）2.0：它代表资源所有者提供对服务器资源的委托访问。它规定了令牌的传输方式，允许用户的身份由 IDP 进行验证，并使用凭据访问 API。</p>
+</li>
+<li><p>Open ID Connect (OIDC) is a newer type of SSO based on OAuth 2.0. It is a more straightforward protocol than SAML and more accessible to integrate with web applications.<br>Open ID Connect（OIDC）是基于 OAuth 2.0 的一种较新的单点登录（SSO）类型。它是比 SAML 更直接的协议，更容易与 Web 应用程序集成。</p>
+</li>
+</ul>
+<p>要了解更多关于 OAuth 2.0 的信息，请查看以下<a target="_blank" rel="noopener" href="https://newsletter.techworld-with-milan.com/i/138606726/how-does-oauth-work">链接</a>。请注意，您也可以在 <a target="_blank" rel="noopener" href="https://learning.postman.com/docs/sending-requests/authorization/oauth-20/">Postman 中使用 OAuth 2.0</a>。</p>
+<p><img src="/../asset_sso/02.webp"></p>
+<p>一些其他的 SSO 类型，如 Kerberos 和智能卡认证，使用较少。</p>
+<ul>
+<li><p>Kerberos allows users to obtain service tickets from the KDC using their credentials. These tickets are then presented to applications for access, eliminating the need for repeated logins. However, Kerberos relies on shared secrets between the KDC and all participants, making it less suitable for internet-facing SSO due to security concerns like compromised servers exposing credentials.<br>Kerberos 允许用户使用他们的凭据从 KDC 获取服务票据。然后将这些票据提供给应用程序以进行访问，从而消除了重复登录的需要。然而，Kerberos 依赖于 KDC 和所有参与者之间的共享密钥，这使得它不太适合面向互联网的 SSO，因为存在安全问题，比如受损的服务器暴露凭据。</p>
+</li>
+<li><p>A smart card that holds an identity works with the SSO system (like a lock) to grant access to applications (doors) without needing separate logins for each. It adds a physical element to the authentication process, making it more resistant to unauthorized access. Yet, the user must physically carry it.<br>一张持有身份信息的智能卡与 SSO 系统（类似于锁）配合使用，可以在不需要单独登录的情况下，为应用程序（门）提供访问权限。它为认证过程增加了物理元素，使其更加抵抗未经授权的访问。然而，用户必须亲自携带它。</p>
+</li>
+</ul>
+<h2 id="如何选择适当的-SSO-协议"><a href="#如何选择适当的-SSO-协议" class="headerlink" title="如何选择适当的 SSO 协议"></a>如何选择适当的 SSO 协议</h2><p>在选择适当的协议时，应考虑以下因素：</p>
+<ul>
+<li><p>Enterprise vs. consumer applications: SAML is often preferred for enterprise applications due to its extensive support and integration capabilities with enterprise identity providers and complex authentication scenarios. OAuth 2.0 and OIDC are more suited for consumer-facing applications, offering flexibility and compatibility with mobile and web applications.<br>企业与消费者应用：由于 SAML 在与企业身份提供者和复杂认证场景的支持和集成能力方面非常强大，因此在企业应用中通常更受青睐。而 OAuth 2.0 和 OIDC 更适用于面向消费者的应用，提供了与移动和 Web 应用的灵活性和兼容性。</p>
+</li>
+<li><p>Authorization vs. authentication: If your primary need is authentication (verifying user identity), SAML or OIDC are your go-to options. OIDC, built on top of OAuth 2.0, provides an additional identity layer over OAuth’s authorization capabilities. Use OAuth 2.0 when your application needs to request access to user resources without exposing user passwords.<br>授权与认证：如果您的主要需求是认证（验证用户身份），SAML 或 OIDC 是您的首选选项。OIDC 是建立在 OAuth 2.0 之上的，为 OAuth 的授权能力提供了额外的身份层。当您的应用程序需要请求访问用户资源而不暴露用户密码时，请使用 OAuth 2.0。</p>
+</li>
+<li><p>Evaluate application and platform compatibility: Check the SSO protocols’ compatibility with your existing infrastructure and the applications you plan to integrate. Some legacy or enterprise systems might support SAML more broadly, while modern applications often favor OAuth 2.0 and OIDC because they are API-friendly.<br>评估应用程序和平台的兼容性：检查 SSO 协议与您现有基础设施和计划集成的应用程序的兼容性。一些传统或企业系统可能更广泛地支持 SAML，而现代应用程序通常更喜欢 OAuth 2.0 和 OIDC，因为它们对 API 友好。</p>
+</li>
+<li><p>Consider the user experience: OIDC and OAuth 2.0’s modern, token-based approach can offer a smoother and more integrated user experience, especially for web and mobile applications.<br>考虑用户体验：OIDC 和 OAuth 2.0 的现代、基于令牌的方法可以为 Web 和移动应用提供更流畅、更集成的用户体验。</p>
+</li>
+<li><p>Future-proofing: Consider the future direction of your application ecosystem. Are you moving towards cloud-based services, APIs, and mobile apps? OAuth 2.0 and OIDC may offer more flexibility and are generally considered more forward-looking in cloud and mobile services.<br>未来保护：考虑您的应用生态系统的未来方向。您是否正在转向基于云的服务、API 和移动应用？OAuth 2.0 和 OIDC 可能提供更多的灵活性，并且在云和移动服务中通常被认为更具前瞻性。</p>
+</li>
+<li><p>Compliance and regulatory requirements: Ensure the chosen protocol meets any specific regulatory requirements relevant to your industry, such as GDPR, HIPAA, or others that may dictate specific security or privacy standards.<br>合规和监管要求：确保所选择的协议符合与您所在行业相关的任何特定监管要求，例如 GDPR、HIPAA 或其他可能规定特定安全或隐私标准的要求。</p>
+</li>
+</ul>
+<h2 id="SSO-实施"><a href="#SSO-实施" class="headerlink" title="SSO 实施"></a>SSO 实施</h2><p>市场上有许多产品可用于 SSO</p>
+<ul>
+<li><p>Microsoft Entra ID (formerly known as a Microsoft Active Directory). Ideal for organizations already invested in the Microsoft ecosystem, it offers seamless integration with Office 365, Dynamics CRM, and other Microsoft services. It’s known for its robust security features and comprehensive management capabilities.<br>Microsoft Entra ID（以前称为 Microsoft Active Directory）。适用于已经投资于 Microsoft 生态系统的组织，它与 Office 365、Dynamics CRM 和其他 Microsoft 服务无缝集成。它以其强大的安全功能和全面的管理能力而闻名。</p>
+</li>
+<li><p>Okta is a popular cloud-based SSO solution known for its ease of use, scalability, and wide range of application integrations. It’s a strong option for organizations seeking a comprehensive identity and access management (IAM) platform.<br>Okta 是一种流行的基于云的单点登录（SSO）解决方案，以其易用性、可扩展性和广泛的应用集成而闻名。对于寻求全面身份和访问管理（IAM）平台的组织来说，它是一个强大的选择。</p>
+</li>
+<li><p>Ping Identity. Known for its flexibility, Ping Identity caters to enterprises with complex security requirements. It offers strong mobile and API security options, making it suitable for organizations needing high levels of customization and security.<br>Ping Identity。以其灵活性而闻名，适用于具有复杂安全需求的企业。它提供强大的移动和 API 安全选项，适用于需要高度定制和安全性的组织。</p>
+</li>
+<li><p>OneLogin. With a focus on simplicity and integration, OneLogin offers a straightforward SSO solution that works well for small to medium-sized businesses. It provides real-time threat detection and AI-powered authentication for enhanced security.<br>OneLogin。专注于简单性和集成性，OneLogin 提供了一个适用于中小型企业的直接 SSO 解决方案。它提供实时威胁检测和 AI 驱动的身份验证，以增强安全性。</p>
+</li>
+<li><p>Auth0 is favored for its developer-friendly approach. It provides powerful customization options, making it a go-to for organizations that must tailor their authentication flows. It supports a wide range of programming languages and frameworks.<br>Auth0 因其开发者友好的方法而备受青睐。它提供强大的定制选项，使其成为那些必须定制其身份验证流程的组织的首选。它支持广泛的编程语言和框架。</p>
+</li>
+</ul>
+<p><img src="/../asset_sso/03.webp"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://medium.com/@techworldwithmilan/how-does-single-sign-on-sso-work-31ffa1afcc63">https://medium.com/@techworldwithmilan/how-does-single-sign-on-sso-work-31ffa1afcc63</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/03/27/coding-for-next/" rel="prev" title="编码是一个值得学习的技能吗？">
+                  <i class="fa fa-angle-left"></i> 编码是一个值得学习的技能吗？
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/03/31/graph-rag/" rel="next" title="从传统的 RAG 到图形 RAG">
+                  从传统的 RAG 到图形 RAG <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Howard Huang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">148k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:30</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动-->
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

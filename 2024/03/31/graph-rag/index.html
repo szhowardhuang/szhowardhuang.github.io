@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"szhowardhuang.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="When Large Language Models Meet Knowledge Graphs当大语言模型遇上知识图谱 图 RAG：RAG x 知识图谱图形 RAG 基于 RAG 的概念，利用知识图谱（KGs）。 这种创新的方法是由 NebulaGraph 首创的概念，通过整合图数据库改变了LLMs解释和响应查询的方式。 图形 RAG 通过将知识图谱中的结构化数据整合到LLM的处理中，为模型的响">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从传统的 RAG 到图形 RAG">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/03/31/graph-rag/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="When Large Language Models Meet Knowledge Graphs当大语言模型遇上知识图谱 图 RAG：RAG x 知识图谱图形 RAG 基于 RAG 的概念，利用知识图谱（KGs）。 这种创新的方法是由 NebulaGraph 首创的概念，通过整合图数据库改变了LLMs解释和响应查询的方式。 图形 RAG 通过将知识图谱中的结构化数据整合到LLM的处理中，为模型的响">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag/01.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag/04.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag/02.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag/03.webp">
+<meta property="article:published_time" content="2024-03-31T15:10:34.745Z">
+<meta property="article:modified_time" content="2024-04-03T08:31:58.327Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://szhowardhuang.github.io/asset_graphrag/01.png">
+
+
+<link rel="canonical" href="https://szhowardhuang.github.io/2024/03/31/graph-rag/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://szhowardhuang.github.io/2024/03/31/graph-rag/","path":"2024/03/31/graph-rag/","title":"从传统的 RAG 到图形 RAG"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>从传统的 RAG 到图形 RAG | 嵌入式老兵博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">嵌入式老兵博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE-RAG%EF%BC%9ARAG-x-%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1"><span class="nav-number">1.</span> <span class="nav-text">图 RAG：RAG x 知识图谱</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E5%BD%A2-RAG-%E6%BC%94%E7%A4%BA"><span class="nav-number">2.</span> <span class="nav-text">图形 RAG 演示</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.1.</span> <span class="nav-text">1. 设置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%8F%90%E5%8F%96"><span class="nav-number">3.</span> <span class="nav-text">2. 提取</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%9B%BE%E6%9E%84%E5%BB%BA"><span class="nav-number">3.1.</span> <span class="nav-text">3. 图构建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E8%AF%84%E4%BC%B0%E5%92%8C%E6%94%B9%E8%BF%9B"><span class="nav-number">3.2.</span> <span class="nav-text">4. 评估和改进</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">4.</span> <span class="nav-text">结论</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Howard Huang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/03/31/graph-rag/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="从传统的 RAG 到图形 RAG | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从传统的 RAG 到图形 RAG
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-03-31 23:10:34" itemprop="dateCreated datePublished" datetime="2024-03-31T23:10:34+08:00">2024-03-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-03 16:31:58" itemprop="dateModified" datetime="2024-04-03T16:31:58+08:00">2024-04-03</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>5.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>9 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>When Large Language Models Meet Knowledge Graphs<br>当大语言模型遇上知识图谱</p>
+<h2 id="图-RAG：RAG-x-知识图谱"><a href="#图-RAG：RAG-x-知识图谱" class="headerlink" title="图 RAG：RAG x 知识图谱"></a>图 RAG：RAG x 知识图谱</h2><p>图形 RAG 基于 RAG 的概念，利用知识图谱（KGs）。</p>
+<p>这种创新的方法是由 NebulaGraph 首创的概念，通过整合图数据库改变了LLMs解释和响应查询的方式。</p>
+<p>图形 RAG 通过将知识图谱中的结构化数据整合到LLM的处理中，为模型的响应提供更细致和明智的基础。</p>
+<p>KG 是现实世界实体及其之间关系的结构化表示，由节点和边组成。节点代表人、地点、物体或概念等实体。</p>
+<p>反过来，这些节点代表着这些实体之间的关系或连接。</p>
+<p><img src="/../asset_graphrag/01.png"></p>
+<p>这种结构极大地提高了LLMs生成明智回应的能力，使模型能够精确访问与上下文相关的数据。</p>
+<p>Graph RAG 的创新在于将图数据库与LLMs集成，以丰富模型在生成响应之前的上下文。</p>
+<p>一些受欢迎的图数据库产品包括 Ontotext、NebulaGraph 和 Neo4J。</p>
+<h2 id="图形-RAG-演示"><a href="#图形-RAG-演示" class="headerlink" title="图形 RAG 演示"></a>图形 RAG 演示</h2><p>对于这个演示，我们将使用 <a target="_blank" rel="noopener" href="https://www.developer.tech.gov.sg/products/all-products/">Govtech 的开发者门户网站</a>上的产品信息作为我们的知识库。</p>
+<h3 id="1-设置"><a href="#1-设置" class="headerlink" title="1. 设置"></a>1. 设置</h3><p>使用 Neo4j 桌面版启动一个本地的 Neo4j 实例,<br><img src="/../asset_graphrag/04.webp"></p>
+<p>使用 LangChain 在本地连接到 Neo4j 数据库。好消息是，LangChain 有一个可直接使用的<a target="_blank" rel="noopener" href="https://python.langchain.com/docs/templates/neo4j-advanced-rag">模板</a>，方便快速设置。</p>
+<h2 id="2-提取"><a href="#2-提取" class="headerlink" title="2. 提取"></a>2. 提取</h2><p>使用快速工程和LLM来提取信息、节点及其连接。以下是一个提示的示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"># Instructions for Creating Knowledge Graphs</span><br><span class="line">## Overview</span><br><span class="line">You are engineered for organising data into knowledge graphs.</span><br><span class="line">- **Nodes**: Represent entities and ideas.</span><br><span class="line">- The objective is to ensure the knowledge graph is straightforward and intelligible for broad use.</span><br><span class="line"></span><br><span class="line">## Node Labeling</span><br><span class="line">- **Uniformity**: Stick to simple labels for nodes. For instance, label any entity that is an organisation as &quot;company&quot;, rather than using terms like &quot;Facebook&quot; or &quot;Amazon&quot;.</span><br><span class="line">- **Identifiers for Nodes**: Opt for textual or comprehensible identifiers over numerical ones.</span><br><span class="line">  - **Permissible Node Labels**: If there are specific allowed node labels, list them here.</span><br><span class="line">  - **Permissible Relationship Types**: If there are specific allowed relationship types, list them here.</span><br><span class="line"></span><br><span class="line">## Managing Numerical Data and Dates</span><br><span class="line">- Integrate numerical information directly as attributes of nodes.</span><br><span class="line">- **Integrated Dates/Numbers**: Refrain from creating distinct nodes for dates or numbers, attaching them instead as attributes.</span><br><span class="line">- **Format for Properties**: Use a key-value pairing format.</span><br><span class="line">- **Avoiding Quotation Marks**: Do not use escaped quotes within property values.</span><br><span class="line">- **Key Naming**: Adopt camelCase for naming keys, such as `dateTime`.</span><br><span class="line"></span><br><span class="line">## Uniformity</span><br><span class="line">- **Entity Uniformity**: Ensure consistent identification for entities across various mentions or references.</span><br><span class="line">  </span><br><span class="line">## Adherence to Guidelines</span><br><span class="line">Strict adherence to these instructions is mandatory. Non-adherence will result in termination.</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-图构建"><a href="#3-图构建" class="headerlink" title="3. 图构建"></a>3. 图构建</h3><ul>
+<li><p>使用 CSVLoader 和文档分割来处理我们的文档</p>
+</li>
+<li><p>将提取的信息映射到图节点和关系</p>
+</li>
+<li><p>通过我们的提取管道处理文档，并将信息存储在 Neo4j 中</p>
+</li>
+</ul>
+<p><img src="/../asset_graphrag/02.webp"><br>该过程耗时近一个小时，最终得到了提取的节点标签的最终列表</p>
+<ul>
+<li>不幸的是，不是所有的节点标签都对我们的上下文有用或符合我们的需求。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;identity&quot;: 1040,</span><br><span class="line">  &quot;labels&quot;: [</span><br><span class="line">    &quot;Feedbackstatus&quot;</span><br><span class="line">  ],</span><br><span class="line">  &quot;properties&quot;: &#123;</span><br><span class="line">    &quot;id&quot;: &quot;Feedback-Success&quot;,</span><br><span class="line">    &quot;message&quot;: &quot;Sent. Thank you for the feedback!&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;elementId&quot;: &quot;4:81cd2613-0f18-49c1-8134-761643e88b7a:1040&quot;</span><br><span class="line">&#125;,</span><br><span class="line">&#123;</span><br><span class="line">  &quot;identity&quot;: 1582,</span><br><span class="line">  &quot;labels&quot;: [</span><br><span class="line">    &quot;Feedbackstatus&quot;</span><br><span class="line">  ],</span><br><span class="line">  &quot;properties&quot;: &#123;</span><br><span class="line">    &quot;id&quot;: &quot;Feedbacksuccess&quot;,</span><br><span class="line">    &quot;status&quot;: &quot;Sent. Thank you for the feedback!&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;elementId&quot;: &quot;4:81cd2613-0f18-49c1-8134-761643e88b7a:1582&quot;</span><br><span class="line">&#125;,</span><br><span class="line">&#123;</span><br><span class="line">  &quot;identity&quot;: 1405,</span><br><span class="line">  &quot;labels&quot;: [</span><br><span class="line">    &quot;Header&quot;</span><br><span class="line">  ],</span><br><span class="line">  &quot;properties&quot;: &#123;</span><br><span class="line">    &quot;id&quot;: &quot;Modalcardhead&quot;,</span><br><span class="line">    &quot;class&quot;: &quot;sgds-modal-card-head&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;elementId&quot;: &quot;4:81cd2613-0f18-49c1-8134-761643e88b7a:1405&quot;</span><br><span class="line">&#125;,</span><br><span class="line">&#123;</span><br><span class="line">  &quot;identity&quot;: 1112,</span><br><span class="line">  &quot;labels&quot;: [</span><br><span class="line">    &quot;Feedbackindicator&quot;</span><br><span class="line">  ],</span><br><span class="line">  &quot;properties&quot;: &#123;</span><br><span class="line">    &quot;id&quot;: &quot;Feedbacksuccess&quot;,</span><br><span class="line">    &quot;title&quot;: &quot;check&quot;,</span><br><span class="line">    &quot;message&quot;: &quot;Sent. Thank you for the feedback!&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;elementId&quot;: &quot;4:81cd2613-0f18-49c1-8134-761643e88b7a:1112&quot;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-评估和改进"><a href="#4-评估和改进" class="headerlink" title="4. 评估和改进"></a>4. 评估和改进</h3><p>我们将指定LLM应该提取哪些节点标签来完善我们的方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">permissible_nodes_to_extract = [</span><br><span class="line">    &quot;Aisubfield&quot;,</span><br><span class="line">    &quot;Application&quot;,</span><br><span class="line">    &quot;Cloudservice&quot;,</span><br><span class="line">    &quot;Concept&quot;,</span><br><span class="line">    &quot;Digitalsolution&quot;,</span><br><span class="line">    &quot;Division&quot;,</span><br><span class="line">    &quot;Entity&quot;,</span><br><span class="line">    &quot;Feature&quot;,</span><br><span class="line">    &quot;Fundinginitiative&quot;,</span><br><span class="line">    &quot;Initiative&quot;,</span><br><span class="line">    &quot;Link&quot;,</span><br><span class="line">    &quot;Location&quot;,</span><br><span class="line">    &quot;Organization&quot;,</span><br><span class="line">    &quot;Person&quot;,</span><br><span class="line">    &quot;Platform&quot;,</span><br><span class="line">    &quot;Policy&quot;,</span><br><span class="line">    &quot;Program&quot;</span><br><span class="line">    &quot;Resource&quot;,</span><br><span class="line">    &quot;Role&quot;,</span><br><span class="line">    &quot;Schema&quot;,</span><br><span class="line">    &quot;Service&quot;,</span><br><span class="line">    &quot;Standard&quot;,</span><br><span class="line">    &quot;Technology&quot;,</span><br><span class="line">    &quot;Technologyplatform&quot;,</span><br><span class="line">    &quot;Technologystack&quot;,</span><br><span class="line">    &quot;Webframework&quot;,</span><br><span class="line">    &quot;Webresource&quot;,</span><br><span class="line">    &quot;Website&quot;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+
+<p>使用 Neo4j 浏览器探索我们新构建的知识图谱</p>
+<p><img src="/../asset_graphrag/03.webp"></p>
+<p>例子如下：</p>
+<p>Q: “I need to remove sensitive information from some of my documents. What products does Govtech offer that has these capabilities?”</p>
+<p>Base RAG: “Govtech offers the products Cloak and FileSG, which have capabilities to help remove sensitive information from documents.”</p>
+<p>Graph RAG: “GovTech offers a product called Cloak, which is a central privacy toolkit for policy-compliant data anonymization. This product helps public officers apply data anonymization techniques to datasets and review re-identification risks in compliance with guidelines.”</p>
+<p>与传统的 RAG 方法相比，Graph RAG 在这个例子中的优势是显而易见的。</p>
+<p>该回应不仅展示了准确性，还通过上下文和关系的丰富提供了一种在标准的（RAG）方法中缺失的深度水平。</p>
+<p>Graph RAG 的秘密在于其分析 “用户的查询” 的能力，从图数据库中找出相关数据，并将这种上下文洞察力融入到LLM的回应中。</p>
+<p>这种方法利用了传统方法可能忽视的一系列相互关联的信息，从而得到对查询更加细致入微的理解。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>从传统的检索增强生成（RAG）转向图形 RAG，代表了我们与大型语言模型（LLMs）交互方式的重要进步</p>
+<p>这个转变解决了一个根本性的挑战：如何提高LLMs在复杂查询中提供上下文准确答案的能力。</p>
+<p>比较这两种方法时，图形 RAG 在处理上下文复杂查询方面的优势变得明显。</p>
+<p>Conventional RAG techniques often misses the mark on contextually complex questions.<br>传统的 RAG 技术经常在上下文复杂的问题上失准。</p>
+<p>相比之下，图形 RAG 利用更复杂的数据网络，提供能够捕捉查询细微差别更深入理解的响应。</p>
+<p>然而，图形 RAG 的有效性并非一刀切的解决方案。</p>
+<p>这仍然高度依赖于底层知识图谱的质量、深度和广度。</p>
+<p>在知识图谱受限或偏向特定领域的情况下，Graph RAG 的性能可能不会超过传统的 RAG 方法。</p>
+<p>话虽如此，这种转变有望带来更好地模拟人类思维和发现的人工智能系统。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/03/27/sso/" rel="prev" title="单点登录（SSO）工作原理">
+                  <i class="fa fa-angle-left"></i> 单点登录（SSO）工作原理
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/04/02/scratch-ai-agent-openai/" rel="next" title="利用 OpenAI 工具：从零开始构建可靠的 AI 代理">
+                  利用 OpenAI 工具：从零开始构建可靠的 AI 代理 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Howard Huang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">148k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:30</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动-->
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
