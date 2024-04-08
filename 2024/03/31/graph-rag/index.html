@@ -30,8 +30,11 @@
 <meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag/04.webp">
 <meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag/02.webp">
 <meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag/03.webp">
-<meta property="article:published_time" content="2024-03-31T15:10:34.745Z">
-<meta property="article:modified_time" content="2024-04-03T08:31:58.327Z">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag/05.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag/06.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag/07.png">
+<meta property="article:published_time" content="2024-03-31T15:26:28.000Z">
+<meta property="article:modified_time" content="2024-04-08T12:26:56.821Z">
 <meta property="article:author" content="Howard Huang">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://szhowardhuang.github.io/asset_graphrag/01.png">
@@ -116,7 +119,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE-RAG%EF%BC%9ARAG-x-%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1"><span class="nav-number">1.</span> <span class="nav-text">图 RAG：RAG x 知识图谱</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E5%BD%A2-RAG-%E6%BC%94%E7%A4%BA"><span class="nav-number">2.</span> <span class="nav-text">图形 RAG 演示</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.1.</span> <span class="nav-text">1. 设置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%8F%90%E5%8F%96"><span class="nav-number">3.</span> <span class="nav-text">2. 提取</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%9B%BE%E6%9E%84%E5%BB%BA"><span class="nav-number">3.1.</span> <span class="nav-text">3. 图构建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E8%AF%84%E4%BC%B0%E5%92%8C%E6%94%B9%E8%BF%9B"><span class="nav-number">3.2.</span> <span class="nav-text">4. 评估和改进</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">4.</span> <span class="nav-text">结论</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE-RAG%EF%BC%9ARAG-x-%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1"><span class="nav-number">1.</span> <span class="nav-text">图 RAG：RAG x 知识图谱</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E5%BD%A2-RAG-%E6%BC%94%E7%A4%BA"><span class="nav-number">2.</span> <span class="nav-text">图形 RAG 演示</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.1.</span> <span class="nav-text">1. 设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%8F%90%E5%8F%96"><span class="nav-number">2.2.</span> <span class="nav-text">2. 提取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%9B%BE%E6%9E%84%E5%BB%BA"><span class="nav-number">2.3.</span> <span class="nav-text">3. 图构建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E8%AF%84%E4%BC%B0%E5%92%8C%E6%94%B9%E8%BF%9B"><span class="nav-number">2.4.</span> <span class="nav-text">4. 评估和改进</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-Neo4j-%E5%92%8C-Langchain-%E4%BB%8E-Bhagavad-Gita-Treatise-PDF-%E5%BC%80%E5%8F%91%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1"><span class="nav-number">3.</span> <span class="nav-text">使用 Neo4j 和 Langchain 从 Bhagavad Gita Treatise PDF 开发基本知识图谱</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%BA%93"><span class="nav-number">3.1.</span> <span class="nav-text">安装库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E-PDF-%E4%B8%AD%E6%8F%90%E5%8F%96%E6%96%87%E6%9C%AC%EF%BC%9A"><span class="nav-number">3.2.</span> <span class="nav-text">从 PDF 中提取文本：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86%E6%96%87%E6%9C%AC%E6%8B%86%E5%88%86%E4%B8%BA%E5%9D%97%EF%BC%9A"><span class="nav-number">3.3.</span> <span class="nav-text">将文本拆分为块：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%90%91%E9%87%8F%E5%AD%98%E5%82%A8%EF%BC%8C%E5%9C%A8-Neo4j-%E4%B8%AD%E5%B5%8C%E5%85%A5%E5%92%8C%E5%AD%98%E5%82%A8%EF%BC%9A"><span class="nav-number">3.4.</span> <span class="nav-text">创建一个向量存储，在 Neo4j 中嵌入和存储：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E5%85%B3%E7%B3%BB%EF%BC%9A"><span class="nav-number">3.5.</span> <span class="nav-text">构建关系：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E7%AD%94%EF%BC%9A"><span class="nav-number">3.6.</span> <span class="nav-text">问答：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">4.</span> <span class="nav-text">结论</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -129,7 +132,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-count">23</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -186,14 +189,14 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2024-03-31 23:10:34" itemprop="dateCreated datePublished" datetime="2024-03-31T23:10:34+08:00">2024-03-31</time>
+      <time title="创建时间：2024-03-31 23:26:28" itemprop="dateCreated datePublished" datetime="2024-03-31T23:26:28+08:00">2024-03-31</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-04-03 16:31:58" itemprop="dateModified" datetime="2024-04-03T16:31:58+08:00">2024-04-03</time>
+      <time title="修改时间：2024-04-08 20:26:56" itemprop="dateModified" datetime="2024-04-08T20:26:56+08:00">2024-04-08</time>
     </span>
 
   
@@ -210,14 +213,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>5.1k</span>
+      <span>9k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>9 分钟</span>
+      <span>16 分钟</span>
     </span>
 </div>
 
@@ -240,7 +243,7 @@
 <h2 id="图形-RAG-演示"><a href="#图形-RAG-演示" class="headerlink" title="图形 RAG 演示"></a>图形 RAG 演示</h2><p>对于这个演示，我们将使用 <a target="_blank" rel="noopener" href="https://www.developer.tech.gov.sg/products/all-products/">Govtech 的开发者门户网站</a>上的产品信息作为我们的知识库。</p>
 <h3 id="1-设置"><a href="#1-设置" class="headerlink" title="1. 设置"></a>1. 设置</h3><p>使用 Neo4j 桌面版启动一个本地的 Neo4j 实例,<br><img src="/../asset_graphrag/04.webp"></p>
 <p>使用 LangChain 在本地连接到 Neo4j 数据库。好消息是，LangChain 有一个可直接使用的<a target="_blank" rel="noopener" href="https://python.langchain.com/docs/templates/neo4j-advanced-rag">模板</a>，方便快速设置。</p>
-<h2 id="2-提取"><a href="#2-提取" class="headerlink" title="2. 提取"></a>2. 提取</h2><p>使用快速工程和LLM来提取信息、节点及其连接。以下是一个提示的示例：</p>
+<h3 id="2-提取"><a href="#2-提取" class="headerlink" title="2. 提取"></a>2. 提取</h3><p>使用快速工程和LLM来提取信息、节点及其连接。以下是一个提示的示例：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"># Instructions for Creating Knowledge Graphs</span><br><span class="line">## Overview</span><br><span class="line">You are engineered for organising data into knowledge graphs.</span><br><span class="line">- **Nodes**: Represent entities and ideas.</span><br><span class="line">- The objective is to ensure the knowledge graph is straightforward and intelligible for broad use.</span><br><span class="line"></span><br><span class="line">## Node Labeling</span><br><span class="line">- **Uniformity**: Stick to simple labels for nodes. For instance, label any entity that is an organisation as &quot;company&quot;, rather than using terms like &quot;Facebook&quot; or &quot;Amazon&quot;.</span><br><span class="line">- **Identifiers for Nodes**: Opt for textual or comprehensible identifiers over numerical ones.</span><br><span class="line">  - **Permissible Node Labels**: If there are specific allowed node labels, list them here.</span><br><span class="line">  - **Permissible Relationship Types**: If there are specific allowed relationship types, list them here.</span><br><span class="line"></span><br><span class="line">## Managing Numerical Data and Dates</span><br><span class="line">- Integrate numerical information directly as attributes of nodes.</span><br><span class="line">- **Integrated Dates/Numbers**: Refrain from creating distinct nodes for dates or numbers, attaching them instead as attributes.</span><br><span class="line">- **Format for Properties**: Use a key-value pairing format.</span><br><span class="line">- **Avoiding Quotation Marks**: Do not use escaped quotes within property values.</span><br><span class="line">- **Key Naming**: Adopt camelCase for naming keys, such as `dateTime`.</span><br><span class="line"></span><br><span class="line">## Uniformity</span><br><span class="line">- **Entity Uniformity**: Ensure consistent identification for entities across various mentions or references.</span><br><span class="line">  </span><br><span class="line">## Adherence to Guidelines</span><br><span class="line">Strict adherence to these instructions is mandatory. Non-adherence will result in termination.</span><br></pre></td></tr></table></figure>
 
 <h3 id="3-图构建"><a href="#3-图构建" class="headerlink" title="3. 图构建"></a>3. 图构建</h3><ul>
@@ -271,6 +274,44 @@
 <p>该回应不仅展示了准确性，还通过上下文和关系的丰富提供了一种在标准的（RAG）方法中缺失的深度水平。</p>
 <p>Graph RAG 的秘密在于其分析 “用户的查询” 的能力，从图数据库中找出相关数据，并将这种上下文洞察力融入到LLM的回应中。</p>
 <p>这种方法利用了传统方法可能忽视的一系列相互关联的信息，从而得到对查询更加细致入微的理解。</p>
+<h2 id="使用-Neo4j-和-Langchain-从-Bhagavad-Gita-Treatise-PDF-开发基本知识图谱"><a href="#使用-Neo4j-和-Langchain-从-Bhagavad-Gita-Treatise-PDF-开发基本知识图谱" class="headerlink" title="使用 Neo4j 和 Langchain 从 Bhagavad Gita Treatise PDF 开发基本知识图谱"></a>使用 Neo4j 和 Langchain 从 Bhagavad Gita Treatise PDF 开发基本知识图谱</h2><p>让我们逐步演示一下如何使用著名的《薄伽梵歌》来创建基本知识图谱。这篇由斯里·斯瓦米·悉瓦南达 （Sri Swami Sivananda） 撰写的文本充满了丰富的信息，我们可以用知识图谱来组织这些信息。我们将使用 Neo4j（帮助我们管理和构建图形）和 Langchain（帮助我们处理文本）。</p>
+<p>首先，使用 <a target="_blank" rel="noopener" href="https://neo4j.com/cloud/aura-free/">Neo4j</a> 创建一个免费帐户。在此示例中，我们将使用free版本，它允许创建一个实例。</p>
+<p><img src="/../asset_graphrag/05.png"></p>
+<p>凭据文件将包含以下详细信息，您需要在后续代码中使用这些详细信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">NEO4J_URI=value</span><br><span class="line">NEO4J_USERNAME=neo4j</span><br><span class="line">NEO4J_PASSWORD=创建Neo4j账号时给的密码</span><br><span class="line">AURA_INSTANCEID=value</span><br><span class="line">AURA_INSTANCENAME=Instance01</span><br></pre></td></tr></table></figure>
+<p>现在让我们创建知识图谱。</p>
+<h3 id="安装库"><a href="#安装库" class="headerlink" title="安装库"></a>安装库</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">from dotenv import load_dotenv</span><br><span class="line">import os</span><br><span class="line"></span><br><span class="line"># Common data processing</span><br><span class="line">import textwrap</span><br><span class="line"></span><br><span class="line"># Langchain</span><br><span class="line">from langchain_community.graphs import Neo4jGraph</span><br><span class="line">from langchain_community.vectorstores import Neo4jVector</span><br><span class="line">from langchain.text_splitter import RecursiveCharacterTextSplitter</span><br><span class="line">from langchain.chains import RetrievalQAWithSourcesChain</span><br><span class="line">from langchain.llms import OpenAI</span><br><span class="line">from langchain.embeddings import OpenAIEmbeddings</span><br><span class="line">from langchain.document_loaders import PyPDFLoader</span><br></pre></td></tr></table></figure>
+
+<h3 id="从-PDF-中提取文本："><a href="#从-PDF-中提取文本：" class="headerlink" title="从 PDF 中提取文本："></a>从 PDF 中提取文本：</h3><p>加载 PDF 文件并将其页面拆分为可管理的文本块。我们利用 langchain 库中的 PyPDFLoader 模块来完成这项任务。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Load PDF file</span><br><span class="line">loader = PyPDFLoader(&quot;path/to/your/pdf/file.pdf&quot;)</span><br><span class="line">pages = loader.load_and_split()</span><br></pre></td></tr></table></figure>
+<h3 id="将文本拆分为块："><a href="#将文本拆分为块：" class="headerlink" title="将文本拆分为块："></a>将文本拆分为块：</h3><p>接下来，我们将提取的文本拆分为更小的块，以便于进一步处理。langchain 中的 RecursiveCharacterTextSplitter 类用于此目的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Split pages into chunks</span><br><span class="line">text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)</span><br><span class="line">chunks = text_splitter.split_documents(pages)</span><br></pre></td></tr></table></figure>
+
+<h3 id="创建一个向量存储，在-Neo4j-中嵌入和存储："><a href="#创建一个向量存储，在-Neo4j-中嵌入和存储：" class="headerlink" title="创建一个向量存储，在 Neo4j 中嵌入和存储："></a>创建一个向量存储，在 Neo4j 中嵌入和存储：</h3><p>我们创建一个 Neo4jVector 对象来存储文本块的嵌入到 Neo4j 图形数据库中。这使我们能够在以后有效地检索和操作嵌入。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"># Warning control</span><br><span class="line">import warnings</span><br><span class="line">warnings.filterwarnings(&quot;ignore&quot;)</span><br><span class="line"></span><br><span class="line"># Load from environment from the credentials file</span><br><span class="line">load_dotenv(&#x27;.env&#x27;, override=True)</span><br><span class="line">NEO4J_URI = os.getenv(&#x27;NEO4J_URI&#x27;) </span><br><span class="line"></span><br><span class="line">NEO4J_USERNAME = os.getenv(&#x27;NEO4J_USERNAME&#x27;)</span><br><span class="line"></span><br><span class="line">NEO4J_PASSWORD = os.getenv(&#x27;NEO4J_PASSWORD&#x27;)</span><br><span class="line"></span><br><span class="line">NEO4J_DATABASE = os.getenv(&#x27;NEO4J_DATABASE&#x27;) or &#x27;neo4j&#x27;</span><br><span class="line">NEO4J_DATABASE = &#x27;neo4j&#x27;</span><br><span class="line"># Global constants</span><br><span class="line">VECTOR_INDEX_NAME = &#x27;pdf_chunks&#x27;</span><br><span class="line">VECTOR_NODE_LABEL = &#x27;Chunk&#x27;</span><br><span class="line">VECTOR_SOURCE_PROPERTY = &#x27;text&#x27;</span><br><span class="line">VECTOR_EMBEDDING_PROPERTY = &#x27;textEmbedding&#x27;</span><br><span class="line"></span><br><span class="line">kg = Neo4jGraph(</span><br><span class="line">    url=NEO4J_URI, username=NEO4J_USERNAME, password=NEO4J_PASSWORD, database=NEO4J_DATABASE</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># Create Neo4j vector store</span><br><span class="line">neo4j_vector_store = Neo4jVector.from_documents(</span><br><span class="line">    embedding=OpenAIEmbeddings(),</span><br><span class="line">    documents=chunks,</span><br><span class="line">    url=NEO4J_URI,</span><br><span class="line">    username=NEO4J_USERNAME,</span><br><span class="line">    password=NEO4J_PASSWORD,</span><br><span class="line">    index_name=VECTOR_INDEX_NAME,</span><br><span class="line">    text_node_property=VECTOR_SOURCE_PROPERTY,</span><br><span class="line">    embedding_node_property=VECTOR_EMBEDDING_PROPERTY,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h3 id="构建关系："><a href="#构建关系：" class="headerlink" title="构建关系："></a>构建关系：</h3><p>我们在图形中的块之间建立关系，指示它们的顺序以及它们与父 PDF 文档的关联。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"># Create a PDF node</span><br><span class="line">cypher = &quot;&quot;&quot;</span><br><span class="line">MERGE (p:PDF &#123;name: $pdfName&#125;)</span><br><span class="line">RETURN p</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">kg.query(cypher, params=&#123;&#x27;pdfName&#x27;: &quot;path/to/your/pdf/file.pdf&quot;&#125;)</span><br><span class="line"></span><br><span class="line"># Connect chunks to their parent PDF with a PART_OF relationship</span><br><span class="line">cypher = &quot;&quot;&quot;</span><br><span class="line">MATCH (c:Chunk), (p:PDF)</span><br><span class="line">WHERE p.name = $pdfName</span><br><span class="line">MERGE (c)-[newRelationship:PART_OF]-&gt;(p)</span><br><span class="line">RETURN count(newRelationship)</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">kg.query(cypher, params=&#123;&#x27;pdfName&#x27;: &quot;path/to/your/pdf/file.pdf&quot;&#125;)</span><br><span class="line"></span><br><span class="line"># Create a NEXT relationship between subsequent chunks</span><br><span class="line">cypher = &quot;&quot;&quot;</span><br><span class="line">MATCH (c1:Chunk), (c2:Chunk)</span><br><span class="line">WHERE c1.chunkSeqId = c2.chunkSeqId - 1</span><br><span class="line">MERGE (c1)-[r:NEXT]-&gt;(c2)</span><br><span class="line">RETURN count(r)</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">kg.query(cypher)</span><br></pre></td></tr></table></figure>
+
+<h3 id="问答："><a href="#问答：" class="headerlink" title="问答："></a>问答：</h3><p>最后，我们可以利用构建的知识图谱来执行问答任务。我们从矢量存储中创建一个检索器和一个聊天机器人问答链，以根据 PDF 文档的内容回答问题。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># Create a retriever from the vector store</span><br><span class="line">retriever = neo4j_vector_store.as_retriever()</span><br><span class="line"></span><br><span class="line"># Create a chatbot Question &amp; Answer chain from the retriever</span><br><span class="line">chain = RetrievalQAWithSourcesChain.from_chain_type(</span><br><span class="line">    OpenAI(temperature=0), </span><br><span class="line">    chain_type=&quot;stuff&quot;,</span><br><span class="line">    retriever=retriever</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"># Ask a question</span><br><span class="line">question = &quot;What is the main topic of this PDF document?&quot;</span><br><span class="line">answer = chain(</span><br><span class="line">    &#123;&quot;question&quot;: question&#125;,</span><br><span class="line">    return_only_outputs=True,</span><br><span class="line">)</span><br><span class="line">print(textwrap.fill(answer[&quot;answer&quot;]))</span><br></pre></td></tr></table></figure>
+
+<p>以下是一些查询，用于检查neo4j的数据</p>
+<p>节点数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Returns the node count</span><br><span class="line">kg.query(&quot;&quot;&quot;</span><br><span class="line">         MATCH (n)</span><br><span class="line">         RETURN count(n) as nodeCount</span><br><span class="line">         &quot;&quot;&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>打印架构</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kg.refresh_schema()</span><br><span class="line">print(kg.schema)</span><br></pre></td></tr></table></figure>
+
+<p>显示索引</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kg.query(&quot;SHOW INDEXES&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>示例输出</p>
+<p>Neo4j 仪表板<br><img src="/../asset_graphrag/06.png"></p>
+<p>Q&amp;A 输出</p>
+<p><img src="/../asset_graphrag/07.png"></p>
 <h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>从传统的检索增强生成（RAG）转向图形 RAG，代表了我们与大型语言模型（LLMs）交互方式的重要进步</p>
 <p>这个转变解决了一个根本性的挑战：如何提高LLMs在复杂查询中提供上下文准确答案的能力。</p>
 <p>比较这两种方法时，图形 RAG 在处理上下文复杂查询方面的优势变得明显。</p>
@@ -293,8 +334,8 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2024/03/27/sso/" rel="prev" title="单点登录（SSO）工作原理">
-                  <i class="fa fa-angle-left"></i> 单点登录（SSO）工作原理
+                <a href="/2024/03/26/coding-for-next/" rel="prev" title="编码是一个值得学习的技能吗？">
+                  <i class="fa fa-angle-left"></i> 编码是一个值得学习的技能吗？
                 </a>
             </div>
             <div class="post-nav-item">
@@ -331,13 +372,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">148k</span>
+    <span title="站点总字数">159k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">4:30</span>
+    <span title="站点阅读时长">4:49</span>
   </span>
 </div>
 <div class="busuanzi-count">

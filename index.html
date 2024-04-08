@@ -119,7 +119,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-count">23</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -137,6 +137,141 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/04/04/langchain-chess/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/04/04/langchain-chess/" class="post-title-link" itemprop="url">使用LangChain最新的结构化输出功能构建国际象棋代理</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-04-04 17:16:15" itemprop="dateCreated datePublished" datetime="2024-04-04T17:16:15+08:00">2024-04-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-06 23:50:32" itemprop="dateModified" datetime="2024-04-06T23:50:32+08:00">2024-04-06</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>6.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>11 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>LangChain最近添加了一个API来返回结构化输出。它使用每个 LLM 提供商的函数调用功能。要使用它，您只需为所需的输出定义一个 pydantic 模型。</p>
+<p>结构化输出是构建大型系统的关键，其中各个部分使用 JSON 相互通信。有点类似于 Web 应用程序的后端 API 和前端如何进行通信。</p>
+<p>使用 LangChain 的结构化输出功能来构建一个国际象棋代理并使其与 Stockfish 下棋。方法如下。</p>
+<p>pip install -U python-dotenv langchain-openai chess</p>
+<p>首先，我需要定义我的国际象棋代理将输出什么。在与 Stockfish 的比赛中，我的代理应该至少输出其下一步行动，给定的输入包含棋盘状态、游戏中的行动历史记录以及对计划下一步行动有用的其他数据。</p>
+<p>我决定将国际象棋代理的下一步棋定义为包含该棋步的 pydantic 类，以及解释该棋步的推理。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">from langchain_openai import ChatOpenAI</span><br><span class="line">import chess</span><br><span class="line">import chess.engine</span><br><span class="line">from langchain_core.pydantic_v1 import BaseModel, Field</span><br><span class="line">from dotenv import load_dotenv</span><br><span class="line">import os</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">load_dotenv()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class NextMove(BaseModel):</span><br><span class="line">    move: str = Field(..., description=&quot;Best next move to win the chess game. It should be in Standard Algebraic Notation. Always plan 5 moves ahead before deciding the best next move.&quot;)</span><br><span class="line">    reasoning: str = Field(..., description=&quot;Reasoning explaining why the move is the best&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">model = ChatOpenAI(model=&quot;gpt-4&quot;)</span><br><span class="line">chess_agent = model.with_structured_output(NextMove)</span><br></pre></td></tr></table></figure>
+<p>接下来，我需要定义我将使用的 Stockfish 引擎的版本。<br>我还在 play_game() 函数中定义了游戏的逻辑。<br>我添加了短期记忆，以便国际象棋代理可以记住过去的比赛，并有可能利用这些知识来提高水平。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"># Initialize a chess board and the chess engine</span><br><span class="line">engine = chess.engine.SimpleEngine.popen_uci(r&quot;F:\stockfish\stockfish\stockfish-windows-x86-64-avx2.exe&quot;)</span><br><span class="line"></span><br><span class="line"># Configure Stockfish to a specific skill level, e.g., 10</span><br><span class="line">engine.configure(&#123;&quot;Skill Level&quot;: 0&#125;)</span><br><span class="line"></span><br><span class="line">file_path = os.path.expanduser(&#x27;~\\learning_chess.txt&#x27;)</span><br><span class="line">try:</span><br><span class="line">    with open(file_path, &#x27;r&#x27;) as file:</span><br><span class="line">        past_game_performance = file.read()</span><br><span class="line">except FileNotFoundError:</span><br><span class="line">    print(f&quot;The file &#123;file_path&#125; does not exist. Creating a new one.&quot;)</span><br><span class="line">    with open(file_path, &#x27;w&#x27;) as file:</span><br><span class="line">        file.write(&quot;Initial content\n&quot;)</span><br><span class="line">        past_game_performance = &quot;Initial content\n&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def play_game():</span><br><span class="line">    moves = []  # Variable to store the list of moves</span><br><span class="line">    board = chess.Board()</span><br><span class="line"></span><br><span class="line">    def get_agent_move(board):</span><br><span class="line">        feedback = &quot;&quot;</span><br><span class="line">        while True:</span><br><span class="line"></span><br><span class="line">            prompt = f&quot;&quot;&quot;Current board: &#123;board&#125;\nMove history: &#123;moves&#125;</span><br><span class="line">            Choose the next move for black in UCI format. The available legal moves are &#123;list(board.legal_moves)&#125;.</span><br><span class="line">            The move you select should be among the legal moves in UCI format like this:&#x27;Move.from_uci(&#x27;g7g5&#x27;)&#x27; &#123;feedback&#125; Only reply with the move and nothing else.</span><br><span class="line">            Take into your past performance against stockfish: &#123;past_game_performance&#125;&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">            # No streaming</span><br><span class="line">            response = chess_agent.invoke(prompt)</span><br><span class="line"></span><br><span class="line">            next_move = response.move</span><br><span class="line"></span><br><span class="line">            try:</span><br><span class="line">                move = chess.Move.from_uci(next_move)</span><br><span class="line"></span><br><span class="line">                if move in board.legal_moves:</span><br><span class="line">                    return move</span><br><span class="line">                else:</span><br><span class="line">                    feedback = f&quot;Agent&#x27;s generated move &#123;move&#125; is not valid currently.&quot;</span><br><span class="line">            except:</span><br><span class="line">                feedback = &quot;Failed to parse the Agent&#x27;s generated move. Retrying...&quot;</span><br><span class="line"></span><br><span class="line">    while not board.is_game_over():</span><br><span class="line">        if board.turn:  # True for white&#x27;s turn, False for black&#x27;s turn</span><br><span class="line">            result = engine.play(board, chess.engine.Limit(time=2.0))</span><br><span class="line">            board.push(result.move)</span><br><span class="line">            moves.append(result.move.uci())  # Store UCI move in the list</span><br><span class="line">        else:</span><br><span class="line">            move = get_agent_move(board)</span><br><span class="line">            board.push(move)</span><br><span class="line">            moves.append(move.uci())  # Store UCI move in the list</span><br><span class="line">        print(board)</span><br><span class="line">        print(&quot;\n\n&quot;)</span><br><span class="line"></span><br><span class="line">    # Check the result of the game</span><br><span class="line">    winner = &quot;&quot;</span><br><span class="line">    if board.is_checkmate():</span><br><span class="line">        if board.turn:</span><br><span class="line">            winner = &quot;Black&quot;</span><br><span class="line">        else:</span><br><span class="line">            winner = &quot;White&quot;</span><br><span class="line">    elif board.is_stalemate() or board.is_insufficient_material() or board.is_seventyfive_moves() or board.is_fivefold_repetition() or board.is_variant_draw():</span><br><span class="line">        winner = &quot;Draw&quot;</span><br><span class="line"></span><br><span class="line">    # Write the result in the short term memory</span><br><span class="line">    with open(file_path, &#x27;a&#x27;) as file:</span><br><span class="line">        file.write(f&quot;\n&#123;&#x27; &#x27;.join(moves)&#125; =&gt; Winner: &#123;&#x27;AI Agent&#x27; if winner == &#x27;Black&#x27; else &#x27;Stockfish&#x27;&#125;&quot;)</span><br><span class="line"></span><br><span class="line">    if winner == &quot;Black&quot;:</span><br><span class="line">        return &quot;Agent wins by checkmate.&quot;</span><br><span class="line">    elif winner == &quot;White&quot;:</span><br><span class="line">        return &quot;Stockfish wins by checkmate.&quot;</span><br><span class="line">    else:</span><br><span class="line">        return &quot;The game is a draw.&quot;</span><br></pre></td></tr></table></figure>
+<p>在提供的代码片段中，我概述了基于 GPT-4 的自定义 AI 代理与 Stockfish 国际象棋引擎之间国际象棋游戏的设置和执行。以下是代码各段中发生的情况的细分：</p>
+<ul>
+<li><p>初始化国际象棋引擎：使用该chess.engine.SimpleEngine方法初始化 Stockfish 国际象棋引擎，指定系统上安装的 Stockfish 可执行文件的路径。</p>
+</li>
+<li><p>配置Stockfish技能等级：通过该 engine.configure 方法将Stockfish引擎的技能等级设置为0 。这部分有一个错误；要将技能等级设置为 10，则应{“Skill Level”: 10}改为{“Skill Level”: 0}。</p>
+</li>
+<li><p>读取过去的游戏表现：过去游戏的表现是从learning_chess.txt文本文件加载。该信息用于告知人工智能代理在游戏过程中的决策。</p>
+</li>
+<li><p>玩游戏函数：该函数封装了AI代理和Stockfish引擎之间下棋的逻辑。它在一个名为 moves 的列表中跟踪游戏期间所做的动作moves，并利用一个chess.Board()对象来管理游戏状态。</p>
+</li>
+<li><p>获取代理移动函数：在该play_game函数中，有一个嵌套函数get_agent_move，旨在确定 AI 代理的下一步移动。它生成一个提示，包括当前棋盘状态、走棋历史和合法走棋，然后等待国际象棋代理（假设是 LLM 或类似的 AI 模型）的响应。该响应被解析并验证为合法的国际象棋棋步。</p>
+</li>
+<li><p>游戏循环：游戏以循环方式进行，其中 Stockfish 在其回合中进行移动（白色），而 AI 代理在其回合中进行移动（黑色）。由于将死、平局或其他平局情况，将进行移动直至游戏结束。</p>
+</li>
+<li><p>确定并记录游戏结果：游戏结束时，根据游戏的最终状态确定结果。此结果将附加到learning_chess.txt文件中，用最新的游戏动作和结果更新人工智能代理的“短期记忆”。</p>
+</li>
+<li><p>返回游戏结果：最后，该函数返回一条字符串消息，指示 AI 代理是否获胜、Stockfish 获胜，或者游戏是否以平局结束。</p>
+</li>
+</ul>
+<p>然后我决定比赛 3 次，看看 GPT-4 能否在国际象棋方面有所改进并击败 Stockfish 16。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"># Number of games to play</span><br><span class="line">n_games = 3</span><br><span class="line"></span><br><span class="line"># Initialize a dictionary to store the results</span><br><span class="line">results = &#123;&quot;Agent wins&quot;: 0, &quot;Stockfish wins&quot;: 0, &quot;Draw&quot;: 0&#125;</span><br><span class="line"></span><br><span class="line"># Run the game n times</span><br><span class="line">for i in range(n_games):</span><br><span class="line">    # print(f&quot;Starting game &#123;i+1&#125;...&quot;)</span><br><span class="line">    result = play_game()</span><br><span class="line">    print(result)</span><br><span class="line"></span><br><span class="line">    # Update the results dictionary based on the outcome of the game</span><br><span class="line">    if &quot;Agent wins&quot; in result:</span><br><span class="line">        results[&quot;Agent wins&quot;] += 1</span><br><span class="line">    elif &quot;Stockfish wins&quot; in result:</span><br><span class="line">        results[&quot;Stockfish wins&quot;] += 1</span><br><span class="line">    else:</span><br><span class="line">        results[&quot;Draw&quot;] += 1</span><br><span class="line"></span><br><span class="line">    # print(f&quot;Game &#123;i+1&#125; finished.\n\n&quot;)</span><br><span class="line"></span><br><span class="line"># Print the final results</span><br><span class="line">print(&quot;Final results after playing&quot;, n_games, &quot;games:&quot;)</span><br><span class="line">print(&quot;Agent won:&quot;, results[&quot;Agent wins&quot;], &quot;games&quot;)</span><br><span class="line">print(&quot;Stockfish won:&quot;, results[&quot;Stockfish wins&quot;], &quot;games&quot;)</span><br><span class="line">print(&quot;Draw:&quot;, results[&quot;Draw&quot;], &quot;games&quot;)</span><br></pre></td></tr></table></figure>
+<p>开始比赛：</p>
+<p><img src="/../asset_chessopenai/01.png"></p>
+<p><a href="/../asset_chessopenai/chess_record.txt">比赛记录文本</a></p>
+<p>g1f3 e7e5 d2d4 e5d4 d1d4 g8f6 e2e4 b8c6 d4d3 d7d5 e4e5 f6e4 c1e3 f8e7 b1c3 e4c3 d3c3 c6e5 c3e5 f7f6 e5d4 e8g8 d4d2 c8f5 a1d1 f5e4 f3d4 e4g6 f1d3 f8f7 d3e2 d8d7 d4f3 d7e6 f3d4 e6e5 c2c4 e5e4 f2f3 e4f3 e2f3 e7d6 f3d5 d6f4 e3f4 g6d3 d2d3 g8h8 h1f1 f7f8 f4c7 f8g8 f1f3 g7g6 d4e6 g8g7 f3f6 g7g8 d3d4 g8g7 e1d2 g7f7 f6f7 h8g8 e6c5 a8f8 d4g7 &#x3D;&gt; Winner: Stockfish</p>
+<p>在尝试了几种策略之后，我得出的结论是 GPT-4 不可能成为国际象棋中的 Stockfish 引擎。</p>
+<p>该实验揭示了几个关键点：</p>
+<ul>
+<li><p>专业化与泛化： Stockfish 在国际象棋方面的专业化使其比 GPT-4 等更通用的 AI 模型更具优势，这强调了特定于任务的编程在某些领域仍然具有显着优势。</p>
+</li>
+<li><p>人工智能学习和适应：利用过去的游戏表现来指导未来的决策是迈向更具适应性的人工智能系统的一步。尽管 GPT-4 没有超越 Stockfish，但结合过去结果的学习方法对于能够随着时间的推移学习和进化的 AI 的发展至关重要。</p>
+</li>
+<li><p>AI模型之间的协作： GPT-4和LangChain的结构化输出的实验预示着不同AI技术协同工作以解决复杂问题的未来。将专用引擎与通用模型集成可以产生利用两种方法优势的创新解决方案。</p>
+</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://medium.com/ai-advances/can-gpt-4-beat-the-stockfish-engine-lets-use-langchain-to-find-out-0b25133ed563">https://medium.com/ai-advances/can-gpt-4-beat-the-stockfish-engine-lets-use-langchain-to-find-out-0b25133ed563</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -176,7 +311,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2024-04-03 11:13:43 / 修改时间：14:07:42" itemprop="dateCreated datePublished" datetime="2024-04-03T11:13:43+08:00">2024-04-03</time>
+      <time title="创建时间：2024-04-03 11:26:28 / 修改时间：21:26:28" itemprop="dateCreated datePublished" datetime="2024-04-03T11:26:28+08:00">2024-04-03</time>
     </span>
 
   
@@ -277,14 +412,14 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2024-04-02 20:33:06" itemprop="dateCreated datePublished" datetime="2024-04-02T20:33:06+08:00">2024-04-02</time>
+      <time title="创建时间：2024-04-02 20:26:28" itemprop="dateCreated datePublished" datetime="2024-04-02T20:26:28+08:00">2024-04-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-04-03 19:24:04" itemprop="dateModified" datetime="2024-04-03T19:24:04+08:00">2024-04-03</time>
+      <time title="修改时间：2024-04-03 21:26:28" itemprop="dateModified" datetime="2024-04-03T21:26:28+08:00">2024-04-03</time>
     </span>
 
   
@@ -467,14 +602,14 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2024-03-31 23:10:34" itemprop="dateCreated datePublished" datetime="2024-03-31T23:10:34+08:00">2024-03-31</time>
+      <time title="创建时间：2024-03-31 23:26:28" itemprop="dateCreated datePublished" datetime="2024-03-31T23:26:28+08:00">2024-03-31</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-04-03 16:31:58" itemprop="dateModified" datetime="2024-04-03T16:31:58+08:00">2024-04-03</time>
+      <time title="修改时间：2024-04-08 20:26:56" itemprop="dateModified" datetime="2024-04-08T20:26:56+08:00">2024-04-08</time>
     </span>
 
   
@@ -484,14 +619,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>5.1k</span>
+      <span>9k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>9 分钟</span>
+      <span>16 分钟</span>
     </span>
 </div>
 
@@ -515,7 +650,7 @@
 <h2 id="图形-RAG-演示"><a href="#图形-RAG-演示" class="headerlink" title="图形 RAG 演示"></a>图形 RAG 演示</h2><p>对于这个演示，我们将使用 <a target="_blank" rel="noopener" href="https://www.developer.tech.gov.sg/products/all-products/">Govtech 的开发者门户网站</a>上的产品信息作为我们的知识库。</p>
 <h3 id="1-设置"><a href="#1-设置" class="headerlink" title="1. 设置"></a>1. 设置</h3><p>使用 Neo4j 桌面版启动一个本地的 Neo4j 实例,<br><img src="/../asset_graphrag/04.webp"></p>
 <p>使用 LangChain 在本地连接到 Neo4j 数据库。好消息是，LangChain 有一个可直接使用的<a target="_blank" rel="noopener" href="https://python.langchain.com/docs/templates/neo4j-advanced-rag">模板</a>，方便快速设置。</p>
-<h2 id="2-提取"><a href="#2-提取" class="headerlink" title="2. 提取"></a>2. 提取</h2><p>使用快速工程和LLM来提取信息、节点及其连接。以下是一个提示的示例：</p>
+<h3 id="2-提取"><a href="#2-提取" class="headerlink" title="2. 提取"></a>2. 提取</h3><p>使用快速工程和LLM来提取信息、节点及其连接。以下是一个提示的示例：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"># Instructions for Creating Knowledge Graphs</span><br><span class="line">## Overview</span><br><span class="line">You are engineered for organising data into knowledge graphs.</span><br><span class="line">- **Nodes**: Represent entities and ideas.</span><br><span class="line">- The objective is to ensure the knowledge graph is straightforward and intelligible for broad use.</span><br><span class="line"></span><br><span class="line">## Node Labeling</span><br><span class="line">- **Uniformity**: Stick to simple labels for nodes. For instance, label any entity that is an organisation as &quot;company&quot;, rather than using terms like &quot;Facebook&quot; or &quot;Amazon&quot;.</span><br><span class="line">- **Identifiers for Nodes**: Opt for textual or comprehensible identifiers over numerical ones.</span><br><span class="line">  - **Permissible Node Labels**: If there are specific allowed node labels, list them here.</span><br><span class="line">  - **Permissible Relationship Types**: If there are specific allowed relationship types, list them here.</span><br><span class="line"></span><br><span class="line">## Managing Numerical Data and Dates</span><br><span class="line">- Integrate numerical information directly as attributes of nodes.</span><br><span class="line">- **Integrated Dates/Numbers**: Refrain from creating distinct nodes for dates or numbers, attaching them instead as attributes.</span><br><span class="line">- **Format for Properties**: Use a key-value pairing format.</span><br><span class="line">- **Avoiding Quotation Marks**: Do not use escaped quotes within property values.</span><br><span class="line">- **Key Naming**: Adopt camelCase for naming keys, such as `dateTime`.</span><br><span class="line"></span><br><span class="line">## Uniformity</span><br><span class="line">- **Entity Uniformity**: Ensure consistent identification for entities across various mentions or references.</span><br><span class="line">  </span><br><span class="line">## Adherence to Guidelines</span><br><span class="line">Strict adherence to these instructions is mandatory. Non-adherence will result in termination.</span><br></pre></td></tr></table></figure>
 
 <h3 id="3-图构建"><a href="#3-图构建" class="headerlink" title="3. 图构建"></a>3. 图构建</h3><ul>
@@ -546,6 +681,44 @@
 <p>该回应不仅展示了准确性，还通过上下文和关系的丰富提供了一种在标准的（RAG）方法中缺失的深度水平。</p>
 <p>Graph RAG 的秘密在于其分析 “用户的查询” 的能力，从图数据库中找出相关数据，并将这种上下文洞察力融入到LLM的回应中。</p>
 <p>这种方法利用了传统方法可能忽视的一系列相互关联的信息，从而得到对查询更加细致入微的理解。</p>
+<h2 id="使用-Neo4j-和-Langchain-从-Bhagavad-Gita-Treatise-PDF-开发基本知识图谱"><a href="#使用-Neo4j-和-Langchain-从-Bhagavad-Gita-Treatise-PDF-开发基本知识图谱" class="headerlink" title="使用 Neo4j 和 Langchain 从 Bhagavad Gita Treatise PDF 开发基本知识图谱"></a>使用 Neo4j 和 Langchain 从 Bhagavad Gita Treatise PDF 开发基本知识图谱</h2><p>让我们逐步演示一下如何使用著名的《薄伽梵歌》来创建基本知识图谱。这篇由斯里·斯瓦米·悉瓦南达 （Sri Swami Sivananda） 撰写的文本充满了丰富的信息，我们可以用知识图谱来组织这些信息。我们将使用 Neo4j（帮助我们管理和构建图形）和 Langchain（帮助我们处理文本）。</p>
+<p>首先，使用 <a target="_blank" rel="noopener" href="https://neo4j.com/cloud/aura-free/">Neo4j</a> 创建一个免费帐户。在此示例中，我们将使用free版本，它允许创建一个实例。</p>
+<p><img src="/../asset_graphrag/05.png"></p>
+<p>凭据文件将包含以下详细信息，您需要在后续代码中使用这些详细信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">NEO4J_URI=value</span><br><span class="line">NEO4J_USERNAME=neo4j</span><br><span class="line">NEO4J_PASSWORD=创建Neo4j账号时给的密码</span><br><span class="line">AURA_INSTANCEID=value</span><br><span class="line">AURA_INSTANCENAME=Instance01</span><br></pre></td></tr></table></figure>
+<p>现在让我们创建知识图谱。</p>
+<h3 id="安装库"><a href="#安装库" class="headerlink" title="安装库"></a>安装库</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">from dotenv import load_dotenv</span><br><span class="line">import os</span><br><span class="line"></span><br><span class="line"># Common data processing</span><br><span class="line">import textwrap</span><br><span class="line"></span><br><span class="line"># Langchain</span><br><span class="line">from langchain_community.graphs import Neo4jGraph</span><br><span class="line">from langchain_community.vectorstores import Neo4jVector</span><br><span class="line">from langchain.text_splitter import RecursiveCharacterTextSplitter</span><br><span class="line">from langchain.chains import RetrievalQAWithSourcesChain</span><br><span class="line">from langchain.llms import OpenAI</span><br><span class="line">from langchain.embeddings import OpenAIEmbeddings</span><br><span class="line">from langchain.document_loaders import PyPDFLoader</span><br></pre></td></tr></table></figure>
+
+<h3 id="从-PDF-中提取文本："><a href="#从-PDF-中提取文本：" class="headerlink" title="从 PDF 中提取文本："></a>从 PDF 中提取文本：</h3><p>加载 PDF 文件并将其页面拆分为可管理的文本块。我们利用 langchain 库中的 PyPDFLoader 模块来完成这项任务。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Load PDF file</span><br><span class="line">loader = PyPDFLoader(&quot;path/to/your/pdf/file.pdf&quot;)</span><br><span class="line">pages = loader.load_and_split()</span><br></pre></td></tr></table></figure>
+<h3 id="将文本拆分为块："><a href="#将文本拆分为块：" class="headerlink" title="将文本拆分为块："></a>将文本拆分为块：</h3><p>接下来，我们将提取的文本拆分为更小的块，以便于进一步处理。langchain 中的 RecursiveCharacterTextSplitter 类用于此目的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Split pages into chunks</span><br><span class="line">text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)</span><br><span class="line">chunks = text_splitter.split_documents(pages)</span><br></pre></td></tr></table></figure>
+
+<h3 id="创建一个向量存储，在-Neo4j-中嵌入和存储："><a href="#创建一个向量存储，在-Neo4j-中嵌入和存储：" class="headerlink" title="创建一个向量存储，在 Neo4j 中嵌入和存储："></a>创建一个向量存储，在 Neo4j 中嵌入和存储：</h3><p>我们创建一个 Neo4jVector 对象来存储文本块的嵌入到 Neo4j 图形数据库中。这使我们能够在以后有效地检索和操作嵌入。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"># Warning control</span><br><span class="line">import warnings</span><br><span class="line">warnings.filterwarnings(&quot;ignore&quot;)</span><br><span class="line"></span><br><span class="line"># Load from environment from the credentials file</span><br><span class="line">load_dotenv(&#x27;.env&#x27;, override=True)</span><br><span class="line">NEO4J_URI = os.getenv(&#x27;NEO4J_URI&#x27;) </span><br><span class="line"></span><br><span class="line">NEO4J_USERNAME = os.getenv(&#x27;NEO4J_USERNAME&#x27;)</span><br><span class="line"></span><br><span class="line">NEO4J_PASSWORD = os.getenv(&#x27;NEO4J_PASSWORD&#x27;)</span><br><span class="line"></span><br><span class="line">NEO4J_DATABASE = os.getenv(&#x27;NEO4J_DATABASE&#x27;) or &#x27;neo4j&#x27;</span><br><span class="line">NEO4J_DATABASE = &#x27;neo4j&#x27;</span><br><span class="line"># Global constants</span><br><span class="line">VECTOR_INDEX_NAME = &#x27;pdf_chunks&#x27;</span><br><span class="line">VECTOR_NODE_LABEL = &#x27;Chunk&#x27;</span><br><span class="line">VECTOR_SOURCE_PROPERTY = &#x27;text&#x27;</span><br><span class="line">VECTOR_EMBEDDING_PROPERTY = &#x27;textEmbedding&#x27;</span><br><span class="line"></span><br><span class="line">kg = Neo4jGraph(</span><br><span class="line">    url=NEO4J_URI, username=NEO4J_USERNAME, password=NEO4J_PASSWORD, database=NEO4J_DATABASE</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># Create Neo4j vector store</span><br><span class="line">neo4j_vector_store = Neo4jVector.from_documents(</span><br><span class="line">    embedding=OpenAIEmbeddings(),</span><br><span class="line">    documents=chunks,</span><br><span class="line">    url=NEO4J_URI,</span><br><span class="line">    username=NEO4J_USERNAME,</span><br><span class="line">    password=NEO4J_PASSWORD,</span><br><span class="line">    index_name=VECTOR_INDEX_NAME,</span><br><span class="line">    text_node_property=VECTOR_SOURCE_PROPERTY,</span><br><span class="line">    embedding_node_property=VECTOR_EMBEDDING_PROPERTY,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h3 id="构建关系："><a href="#构建关系：" class="headerlink" title="构建关系："></a>构建关系：</h3><p>我们在图形中的块之间建立关系，指示它们的顺序以及它们与父 PDF 文档的关联。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"># Create a PDF node</span><br><span class="line">cypher = &quot;&quot;&quot;</span><br><span class="line">MERGE (p:PDF &#123;name: $pdfName&#125;)</span><br><span class="line">RETURN p</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">kg.query(cypher, params=&#123;&#x27;pdfName&#x27;: &quot;path/to/your/pdf/file.pdf&quot;&#125;)</span><br><span class="line"></span><br><span class="line"># Connect chunks to their parent PDF with a PART_OF relationship</span><br><span class="line">cypher = &quot;&quot;&quot;</span><br><span class="line">MATCH (c:Chunk), (p:PDF)</span><br><span class="line">WHERE p.name = $pdfName</span><br><span class="line">MERGE (c)-[newRelationship:PART_OF]-&gt;(p)</span><br><span class="line">RETURN count(newRelationship)</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">kg.query(cypher, params=&#123;&#x27;pdfName&#x27;: &quot;path/to/your/pdf/file.pdf&quot;&#125;)</span><br><span class="line"></span><br><span class="line"># Create a NEXT relationship between subsequent chunks</span><br><span class="line">cypher = &quot;&quot;&quot;</span><br><span class="line">MATCH (c1:Chunk), (c2:Chunk)</span><br><span class="line">WHERE c1.chunkSeqId = c2.chunkSeqId - 1</span><br><span class="line">MERGE (c1)-[r:NEXT]-&gt;(c2)</span><br><span class="line">RETURN count(r)</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">kg.query(cypher)</span><br></pre></td></tr></table></figure>
+
+<h3 id="问答："><a href="#问答：" class="headerlink" title="问答："></a>问答：</h3><p>最后，我们可以利用构建的知识图谱来执行问答任务。我们从矢量存储中创建一个检索器和一个聊天机器人问答链，以根据 PDF 文档的内容回答问题。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># Create a retriever from the vector store</span><br><span class="line">retriever = neo4j_vector_store.as_retriever()</span><br><span class="line"></span><br><span class="line"># Create a chatbot Question &amp; Answer chain from the retriever</span><br><span class="line">chain = RetrievalQAWithSourcesChain.from_chain_type(</span><br><span class="line">    OpenAI(temperature=0), </span><br><span class="line">    chain_type=&quot;stuff&quot;,</span><br><span class="line">    retriever=retriever</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"># Ask a question</span><br><span class="line">question = &quot;What is the main topic of this PDF document?&quot;</span><br><span class="line">answer = chain(</span><br><span class="line">    &#123;&quot;question&quot;: question&#125;,</span><br><span class="line">    return_only_outputs=True,</span><br><span class="line">)</span><br><span class="line">print(textwrap.fill(answer[&quot;answer&quot;]))</span><br></pre></td></tr></table></figure>
+
+<p>以下是一些查询，用于检查neo4j的数据</p>
+<p>节点数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Returns the node count</span><br><span class="line">kg.query(&quot;&quot;&quot;</span><br><span class="line">         MATCH (n)</span><br><span class="line">         RETURN count(n) as nodeCount</span><br><span class="line">         &quot;&quot;&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>打印架构</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kg.refresh_schema()</span><br><span class="line">print(kg.schema)</span><br></pre></td></tr></table></figure>
+
+<p>显示索引</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kg.query(&quot;SHOW INDEXES&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>示例输出</p>
+<p>Neo4j 仪表板<br><img src="/../asset_graphrag/06.png"></p>
+<p>Q&amp;A 输出</p>
+<p><img src="/../asset_graphrag/07.png"></p>
 <h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>从传统的检索增强生成（RAG）转向图形 RAG，代表了我们与大型语言模型（LLMs）交互方式的重要进步</p>
 <p>这个转变解决了一个根本性的挑战：如何提高LLMs在复杂查询中提供上下文准确答案的能力。</p>
 <p>比较这两种方法时，图形 RAG 在处理上下文复杂查询方面的优势变得明显。</p>
@@ -581,7 +754,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/03/27/sso/">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/03/26/coding-for-next/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -599,7 +772,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/03/27/sso/" class="post-title-link" itemprop="url">单点登录（SSO）工作原理</a>
+          <a href="/2024/03/26/coding-for-next/" class="post-title-link" itemprop="url">编码是一个值得学习的技能吗？</a>
         </h2>
 
         <div class="post-meta-container">
@@ -609,8 +782,119 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2024-03-27 10:52:45" itemprop="dateCreated datePublished" datetime="2024-03-27T10:52:45+08:00">2024-03-27</time>
+      <time title="创建时间：2024-03-26 22:42:45 / 修改时间：22:57:25" itemprop="dateCreated datePublished" datetime="2024-03-26T22:42:45+08:00">2024-03-26</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>许多在 50 年前出现的技术都遵循了两种轨迹之一：要么随着时代的发展而进化，要么消失在人们的视野中。一个例子是 1938 年推出的第一台可编程机械计算机。由于内存限制和庞大的重量，很难想象今天我们的家庭或工作场所会容纳这样的设备。</p>
+<p>事实上，有许多科技先驱对计算机的未来及其与人类的互动进行了推测。这种做法并不新鲜 - 它有着悠久的历史，持续至今，并预计将持续到未来。塑造未来的前景总是吸引我们，引发支持者和反对者之间的无休止辩论。</p>
+<p>以下是 NVIDIA 首席执行官 Jensen Huang 在题为“谁将塑造人工智能的未来？”的活动上的发言</p>
+<p>“It’s going to sound completely opposite of what people feel. You probably recall over the course of the last 10–15 years, almost everybody who sits on a stage like this would tell you it is vital that your children learn computer science … everybody should learn how to program. In fact, it’s almost exactly the opposite. It is our job to create computing technology such that nobody has to program and that the programming language is human. Everybody in the world is now a programmer. This is the miracle of artificial intelligence”</p>
+<p>我不完全同意 Jensen（至少最初不同意），因为学习编程本身就是一种揭示基本解决方案的方式，直到我们能够开发专注于解决实际业务场景的代码行。我的意思是，编程就像学习任何其他学科或学科一样，培养了我们在决策中的判断力。仅仅通过指示 ChatGPT 来构建整个移动应用程序是具有挑战性的。它可能能够做到，但是在不知道它应该遵循的逻辑顺序的情况下理解整个代码将会很困难。此外，该过程可能存在偏见，并可能在途中遇到错误。</p>
+<p>就像其他科学、技术或学科一样，编程将不可避免地受到人工智能的影响，但仍然需要开发人员继续构建更多和更优秀的模型或软件，比如 NVIDIA 销售的那些。</p>
+<p>对于 90%的人来说，由于人工智能工程师和提示工程师的团队在所有这些代码行后面工作，提示将变得越来越用户友好，最终优化我们与之交互的聊天界面，无论我们使用 ChatGPT、Gemini、Claude 3、Copilot等等。重点是，虽然主要角色（人工智能）似乎似乎做了一切，但实际上在我们看到的屏幕后面，有人类开发人员通过代码继续投入时间和知识。</p>
+<p>Jensen的言论指出了一个基本观念：从学习过程到实施（可能只需要一个提示），人工智能在编程中的角色正处于转变之中。山姆·奥特曼在多次采访中强调，编程在未来仍将保持其重要性，但形式将与我们今天习惯的不同。这种变化主要是由于人工智能在这个领域中作为进步的催化剂的作用。</p>
+<p>另一方面，有人声称，像 Stability AI 的首席执行官兼联合创始人 Emad Mostaque 一样的声音认为，在大约 5 年内，我们所熟知的程序员可能不再存在。</p>
+<p>对于那些渴望涉足编程的人来说，这可能是一个令人畏惧和不确定的情况。然而，现实情况是，未来大部分的代码开发可能会由人工智能而不是人类编写的代码驱动。这让我产生了以下的问题：</p>
+<pre><code>编程语言的目标之一不就是以更易于理解和使用的方式发展，从而使更多的人能够通过编码来创造解决方案吗？
+</code></pre>
+<p><img src="/../asset_coding/01.webp"></p>
+<p>回顾历史，特别是 20 世纪 50 年代，我们可以看到编程语言复杂且需要广泛的专业知识才能掌握。然而，随着时间的推移，这种进入门槛逐渐变得更加容易接触，使得编码变得更加包容和吸引人。</p>
+<p>如今我们通过人工智能助手获取代码。因此，许多非程序员或初学者可能正在以与过去完全不同的方式创建他们的第一行代码。然而，就功能而言，他们有潜力达到相同的解决方案或目标。</p>
+<p>我们所熟知的编程在未来 3 到 5 年内不太可能消失，但是我们中的一些人可能会想知道 20 年后会发生什么。我们还会继续编码吗？对此，我会质疑到那时我们是否还会使用计算机。</p>
+<h2 id="接下来的抽象层"><a href="#接下来的抽象层" class="headerlink" title="接下来的抽象层"></a>接下来的抽象层</h2><p>在标准计算机中，我们通常会遇到软件层和硬件层。这两个层之间的通信是通过所谓的机器语言来实现的，通常以二进制系统表示，这对人类来说可能很复杂。通过对体系结构的详细研究，可以明显看出，抽象和复杂性的元素与每个抽象层有不同程度的关联。随着时间的推移，这些层积累起来，给我们带来了现代计算机，大大提高了人与机器之间的通信便利性，使我们能够使用更简单的指令执行各种任务。</p>
+<p><img src="/../asset_coding/02.webp"></p>
+<p>AI 助手的概念将是一个额外的层次，它将被添加到图表的顶部。这代表了人类更容易与计算机进行交流的机会。目前，多模态在捕捉我们想要提供的尽可能多的信息方面发挥着重要作用（音频、图像、文本），这些信息被 AI 用作启动生成接近我们期望的回应的提示。</p>
+<p>在这个意义上，现在我们正在经历一波代码 AI 助手的浪潮，比如 GitHub Copilot，CodiumAI，AWS Code Whisperer，Tabnine，它们无疑正在改变人们编写代码的方式。</p>
+<p>然而，尽管人工智能似乎会让程序员黯然失色，但现实是许多当前的模型仍然容易出错。此外，对于聊天机器人的回应缺乏控制。一个例子是最近谷歌 Gemini 引起轰动的事件，它拒绝生成白人的图像，并过分强调包容性。</p>
+<p>如果您经常使用人工智能来生成代码，您可能已经注意到，由于其复杂性或项目所需的代码量，一次性生成高质量代码自然是一项挑战。</p>
+<p>现在，事实是人工智能是一个很棒的编码助手，它将帮助我们更快地编写和调试代码，但如果我们期望它能够自己从零开始构建软件，它的能力仍然有限。不可避免地，它将在未来这样做，也许比我们预期的要早，但这是否意味着我们应该停止学习编程呢？</p>
+<p>当然不是。</p>
+<p>AI 艺术并没有阻止这个领域的爱好者进行绘画、绘图或创作。同样地，AI 不会使程序员过时，而是代表编码中的接下来的一层抽象，使人与机器之间的交互更加顺畅。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://medium.com/artificial-corner/nvidia-ceo-advises-against-learning-to-code-is-coding-still-a-worthwhile-skill-to-learn-704f091a8078">https://medium.com/artificial-corner/nvidia-ceo-advises-against-learning-to-code-is-coding-still-a-worthwhile-skill-to-learn-704f091a8078</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/03/26/sso/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/03/26/sso/" class="post-title-link" itemprop="url">单点登录（SSO）工作原理</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-03-26 22:00:30 / 修改时间：22:56:17" itemprop="dateCreated datePublished" datetime="2024-03-26T22:00:30+08:00">2024-03-26</time>
     </span>
 
   
@@ -757,115 +1041,6 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/03/27/coding-for-next/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Howard Huang">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/03/27/coding-for-next/" class="post-title-link" itemprop="url">编码是一个值得学习的技能吗？</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-03-27 10:52:45" itemprop="dateCreated datePublished" datetime="2024-03-27T10:52:45+08:00">2024-03-27</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>2.6k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>5 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>许多在 50 年前出现的技术都遵循了两种轨迹之一：要么随着时代的发展而进化，要么消失在人们的视野中。一个例子是 1938 年推出的第一台可编程机械计算机。由于内存限制和庞大的重量，很难想象今天我们的家庭或工作场所会容纳这样的设备。</p>
-<p>事实上，有许多科技先驱对计算机的未来及其与人类的互动进行了推测。这种做法并不新鲜 - 它有着悠久的历史，持续至今，并预计将持续到未来。塑造未来的前景总是吸引我们，引发支持者和反对者之间的无休止辩论。</p>
-<p>以下是 NVIDIA 首席执行官 Jensen Huang 在题为“谁将塑造人工智能的未来？”的活动上的发言</p>
-<p>“It’s going to sound completely opposite of what people feel. You probably recall over the course of the last 10–15 years, almost everybody who sits on a stage like this would tell you it is vital that your children learn computer science … everybody should learn how to program. In fact, it’s almost exactly the opposite. It is our job to create computing technology such that nobody has to program and that the programming language is human. Everybody in the world is now a programmer. This is the miracle of artificial intelligence”</p>
-<p>我不完全同意 Jensen（至少最初不同意），因为学习编程本身就是一种揭示基本解决方案的方式，直到我们能够开发专注于解决实际业务场景的代码行。我的意思是，编程就像学习任何其他学科或学科一样，培养了我们在决策中的判断力。仅仅通过指示 ChatGPT 来构建整个移动应用程序是具有挑战性的。它可能能够做到，但是在不知道它应该遵循的逻辑顺序的情况下理解整个代码将会很困难。此外，该过程可能存在偏见，并可能在途中遇到错误。</p>
-<p>就像其他科学、技术或学科一样，编程将不可避免地受到人工智能的影响，但仍然需要开发人员继续构建更多和更优秀的模型或软件，比如 NVIDIA 销售的那些。</p>
-<p>对于 90%的人来说，由于人工智能工程师和提示工程师的团队在所有这些代码行后面工作，提示将变得越来越用户友好，最终优化我们与之交互的聊天界面，无论我们使用 ChatGPT、Gemini、Claude 3、Copilot等等。重点是，虽然主要角色（人工智能）似乎似乎做了一切，但实际上在我们看到的屏幕后面，有人类开发人员通过代码继续投入时间和知识。</p>
-<p>Jensen的言论指出了一个基本观念：从学习过程到实施（可能只需要一个提示），人工智能在编程中的角色正处于转变之中。山姆·奥特曼在多次采访中强调，编程在未来仍将保持其重要性，但形式将与我们今天习惯的不同。这种变化主要是由于人工智能在这个领域中作为进步的催化剂的作用。</p>
-<p>另一方面，有人声称，像 Stability AI 的首席执行官兼联合创始人 Emad Mostaque 一样的声音认为，在大约 5 年内，我们所熟知的程序员可能不再存在。</p>
-<p>对于那些渴望涉足编程的人来说，这可能是一个令人畏惧和不确定的情况。然而，现实情况是，未来大部分的代码开发可能会由人工智能而不是人类编写的代码驱动。这让我产生了以下的问题：</p>
-<pre><code>编程语言的目标之一不就是以更易于理解和使用的方式发展，从而使更多的人能够通过编码来创造解决方案吗？
-</code></pre>
-<p><img src="/../asset_coding/01.webp"></p>
-<p>回顾历史，特别是 20 世纪 50 年代，我们可以看到编程语言复杂且需要广泛的专业知识才能掌握。然而，随着时间的推移，这种进入门槛逐渐变得更加容易接触，使得编码变得更加包容和吸引人。</p>
-<p>如今我们通过人工智能助手获取代码。因此，许多非程序员或初学者可能正在以与过去完全不同的方式创建他们的第一行代码。然而，就功能而言，他们有潜力达到相同的解决方案或目标。</p>
-<p>我们所熟知的编程在未来 3 到 5 年内不太可能消失，但是我们中的一些人可能会想知道 20 年后会发生什么。我们还会继续编码吗？对此，我会质疑到那时我们是否还会使用计算机。</p>
-<h2 id="接下来的抽象层"><a href="#接下来的抽象层" class="headerlink" title="接下来的抽象层"></a>接下来的抽象层</h2><p>在标准计算机中，我们通常会遇到软件层和硬件层。这两个层之间的通信是通过所谓的机器语言来实现的，通常以二进制系统表示，这对人类来说可能很复杂。通过对体系结构的详细研究，可以明显看出，抽象和复杂性的元素与每个抽象层有不同程度的关联。随着时间的推移，这些层积累起来，给我们带来了现代计算机，大大提高了人与机器之间的通信便利性，使我们能够使用更简单的指令执行各种任务。</p>
-<p><img src="/../asset_coding/02.webp"></p>
-<p>AI 助手的概念将是一个额外的层次，它将被添加到图表的顶部。这代表了人类更容易与计算机进行交流的机会。目前，多模态在捕捉我们想要提供的尽可能多的信息方面发挥着重要作用（音频、图像、文本），这些信息被 AI 用作启动生成接近我们期望的回应的提示。</p>
-<p>在这个意义上，现在我们正在经历一波代码 AI 助手的浪潮，比如 GitHub Copilot，CodiumAI，AWS Code Whisperer，Tabnine，它们无疑正在改变人们编写代码的方式。</p>
-<p>然而，尽管人工智能似乎会让程序员黯然失色，但现实是许多当前的模型仍然容易出错。此外，对于聊天机器人的回应缺乏控制。一个例子是最近谷歌 Gemini 引起轰动的事件，它拒绝生成白人的图像，并过分强调包容性。</p>
-<p>如果您经常使用人工智能来生成代码，您可能已经注意到，由于其复杂性或项目所需的代码量，一次性生成高质量代码自然是一项挑战。</p>
-<p>现在，事实是人工智能是一个很棒的编码助手，它将帮助我们更快地编写和调试代码，但如果我们期望它能够自己从零开始构建软件，它的能力仍然有限。不可避免地，它将在未来这样做，也许比我们预期的要早，但这是否意味着我们应该停止学习编程呢？</p>
-<p>当然不是。</p>
-<p>AI 艺术并没有阻止这个领域的爱好者进行绘画、绘图或创作。同样地，AI 不会使程序员过时，而是代表编码中的接下来的一层抽象，使人与机器之间的交互更加顺畅。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://medium.com/artificial-corner/nvidia-ceo-advises-against-learning-to-code-is-coding-still-a-worthwhile-skill-to-learn-704f091a8078">https://medium.com/artificial-corner/nvidia-ceo-advises-against-learning-to-code-is-coding-still-a-worthwhile-skill-to-learn-704f091a8078</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/03/20/electron-vue-chatgpt/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -895,14 +1070,14 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2024-03-20 19:02:43" itemprop="dateCreated datePublished" datetime="2024-03-20T19:02:43+08:00">2024-03-20</time>
+      <time title="创建时间：2024-03-20 20:32:57" itemprop="dateCreated datePublished" datetime="2024-03-20T20:32:57+08:00">2024-03-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-03-26 14:06:33" itemprop="dateModified" datetime="2024-03-26T14:06:33+08:00">2024-03-26</time>
+      <time title="修改时间：2024-03-30 21:25:18" itemprop="dateModified" datetime="2024-03-30T21:25:18+08:00">2024-03-30</time>
     </span>
 
   
@@ -912,14 +1087,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.6k</span>
+      <span>2k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>3 分钟</span>
+      <span>4 分钟</span>
     </span>
 </div>
 
@@ -938,6 +1113,19 @@
 <p><img src="/../asset_electronvuechatgpt/03.png"></p>
 <p>不停的询问，调试代码，把chatgpt当作一个编程助手，效率还是不错。UI界面做完后，就该做功能了。</p>
 <h2 id="添加功能"><a href="#添加功能" class="headerlink" title="添加功能"></a>添加功能</h2><p>把python功能代码发给chatgpt，然后问chatgpt怎么办，根据他的说法不停的问，同时告诉他我想用的electron框架，chatgpt就会生成代码，然后不停的问，调试。整体工作量大概3~4天就完成整个工具，我记得当初做python工具用了2周。</p>
+<h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><p>虽然chatgpt帮忙很多，但是不可避免要调试。 render进程用浏览器developer tools调试，不特别讲。<br>调试electron主进程需要讲一下，</p>
+<p>在一个electron 应用中有且只有一个主进程。调试主进程的方式也用浏览器来进行debugger</p>
+<ul>
+<li><p>使用 –inspect&#x3D;[port] 来设置一个运行端口，比如在vscode package.json中配置如下脚本：</p>
+<p>“electron:serve”: “vue-cli-service electron:serve –inspect&#x3D;5858”</p>
+</li>
+<li><p>在终端输入 npm run electron:serve</p>
+</li>
+<li><p>浏览器输入： chrome:&#x2F;&#x2F;inspect，配置Discover network targets的端口为上述端口(5858)，点击下方inspect</p>
+</li>
+<li><p>点击inspect之后就会弹出一个调试主进程的浏览器窗口，就可以在这个窗口中去debugger当前electron应用的主进程了。如下：进入Sources标签，ctrl+p输入main.js或者其它js，输入断点可以debug</p>
+</li>
+</ul>
 <h2 id="体会"><a href="#体会" class="headerlink" title="体会"></a>体会</h2><p>大模型确实改变了软件行业，编程语言已经不成为开发软件的门槛，软件工程师具备软件思想，熟悉编程语言的基本逻辑，基本语法甚至不是太熟悉也可以开发软件。 而且效率还是很高的. 主要节省时间在于不需要 </p>
 <ul>
 <li>上网大量搜索并挑选答案, </li>
@@ -1742,128 +1930,6 @@ public class DemoApplication &#123;
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/03/07/mysql5_7_21-cmd-install/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Howard Huang">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/03/07/mysql5_7_21-cmd-install/" class="post-title-link" itemprop="url">命令行安装MySQL 5.7.21</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-03-07 10:49:42" itemprop="dateCreated datePublished" datetime="2024-03-07T10:49:42+08:00">2024-03-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-03-08 16:31:07" itemprop="dateModified" datetime="2024-03-08T16:31:07+08:00">2024-03-08</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.2k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="下载MySQL安装包"><a href="#下载MySQL安装包" class="headerlink" title="下载MySQL安装包"></a>下载MySQL安装包</h2><p>从MySQL官网下载MySQL 5.7.21的安装包，下载地址：<a target="_blank" rel="noopener" href="https://downloads.mysql.com/archives/community/">https://downloads.mysql.com/archives/community/</a></p>
-<h2 id="解压安装包"><a href="#解压安装包" class="headerlink" title="解压安装包"></a>解压安装包</h2><p>将下载好的安装包解压到指定目录，如：<code>D:\mysql-5.7.21-winx64</code></p>
-<h2 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h2><p>打开系统环境变量编辑器，如：<code>控制面板 -&gt; 系统 -&gt; 系统设置 -&gt; 高级系统设置 -&gt; 环境变量</code></p>
-<p>在系统变量中找到<code>Path</code>，双击编辑，在弹出的编辑框中将<code>D:\mysql-5.7.21-winx64\bin</code>添加到变量值末尾，并点击确定。</p>
-<h2 id="启动MySQL服务"><a href="#启动MySQL服务" class="headerlink" title="启动MySQL服务"></a>启动MySQL服务</h2><p>用管理员身份打开命令行，在命令行中输入<code>mysqld --install</code>，回车，等待服务启动完成。</p>
-<p>因为5.7以上版本中，D:\mysql-5.7.21-winx64\目录下没有data文件夹，需要在窗口输入<code>mysqld --initialize-insecure --user=mysql</code>，回车，等待初始化完成。</p>
-<p>创建完成data后，再输入<code>mysqld –install</code>，然后按回车键</p>
-<p>在命令行中输入<code>net start mysql</code>，回车，如果出现<code>The MySQL Server service is starting.</code>字样，则表示服务启动成功。启动服务器</p>
-<h2 id="登录MySQL"><a href="#登录MySQL" class="headerlink" title="登录MySQL"></a>登录MySQL</h2><p>在命令行中输入<code>mysql -u root -p</code>，回车，因为没有设置登录密码，所以什么都不用输入，直接按回车键即可，即可登录MySQL。</p>
-<p>设置密码<br><code>update mysql.user set authentication_string = password(&quot;your_password&quot;) where user = &quot;root&quot;;</code></p>
-<p>刷新权限：<code>flush privileges;</code></p>
-<p>退出MySQL：<code>exit;</code></p>
-<h2 id="卸载MySQL"><a href="#卸载MySQL" class="headerlink" title="卸载MySQL"></a>卸载MySQL</h2><p>在命令行中输入<code>mysqld --remove</code>，回车，等待服务停止，然后输入<code>sc delete MySQL</code>，回车，即可卸载MySQL。</p>
-<h2 id="workbench安装使用"><a href="#workbench安装使用" class="headerlink" title="workbench安装使用"></a>workbench安装使用</h2><p>workbench是MySQL的图形化管理工具，可以用来管理MySQL数据库。<br>我下载了较低的版本的workbench： mysql-workbench-community-6.3.3-winx64.msi</p>
-<p>安装后，打开workbench，出现以下界面：</p>
-<p><img src="/../asset_mysql/01.png"></p>
-<p>双击 Local Instance 连接到本地的 MySQL 实例，输入 root 密码，点击 Connect 连接成功。然后出现以下界面</p>
-<p><img src="/../asset_mysql/02.png"></p>
-<p>点击上图中的 New Schema 新建数据库，输入数据库名称tp_music，选择编码方式utf-8,点击 Create 即可。</p>
-<p><img src="/../asset_mysql/03.png">  </p>
-<p>tp_music创建成功后，右键单击 Tables –&gt; Create table,新建表，输入表名称，点击 Create 即可。</p>
-<p><img src="/../asset_mysql/04.png">  </p>
-<p><img src="/../asset_mysql/05.png">  </p>
-<p>构建数据库最终如下图</p>
-<p><img src="/../asset_mysql/06.png">  </p>
-<p>导入本地数据库(Server栏里Data Import)</p>
-<ul>
-<li>选择导入文件的路径</li>
-<li>Start Import</li>
-<li>刷新查看结果</li>
-</ul>
-<p><img src="/../asset_mysql/07.png">  </p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1887,13 +1953,13 @@ public class DemoApplication &#123;
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">148k</span>
+    <span title="站点总字数">159k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">4:30</span>
+    <span title="站点阅读时长">4:49</span>
   </span>
 </div>
 <div class="busuanzi-count">

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"szhowardhuang.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="LangChain最近添加了一个API来返回结构化输出。它使用每个 LLM 提供商的函数调用功能。要使用它，您只需为所需的输出定义一个 pydantic 模型。 结构化输出是构建大型系统的关键，其中各个部分使用 JSON 相互通信。有点类似于 Web 应用程序的后端 API 和前端如何进行通信。 使用 LangChain 的结构化输出功能来构建一个国际象棋代理并使其与 Stockfish 下棋。方">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用LangChain最新的结构化输出功能构建国际象棋代理">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/04/04/langchain-chess/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="LangChain最近添加了一个API来返回结构化输出。它使用每个 LLM 提供商的函数调用功能。要使用它，您只需为所需的输出定义一个 pydantic 模型。 结构化输出是构建大型系统的关键，其中各个部分使用 JSON 相互通信。有点类似于 Web 应用程序的后端 API 和前端如何进行通信。 使用 LangChain 的结构化输出功能来构建一个国际象棋代理并使其与 Stockfish 下棋。方">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_chessopenai/01.png">
+<meta property="article:published_time" content="2024-04-04T09:16:15.537Z">
+<meta property="article:modified_time" content="2024-04-06T15:50:32.405Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://szhowardhuang.github.io/asset_chessopenai/01.png">
+
+
+<link rel="canonical" href="https://szhowardhuang.github.io/2024/04/04/langchain-chess/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://szhowardhuang.github.io/2024/04/04/langchain-chess/","path":"2024/04/04/langchain-chess/","title":"使用LangChain最新的结构化输出功能构建国际象棋代理"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>使用LangChain最新的结构化输出功能构建国际象棋代理 | 嵌入式老兵博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">嵌入式老兵博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">1.</span> <span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Howard Huang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/04/04/langchain-chess/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="使用LangChain最新的结构化输出功能构建国际象棋代理 | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用LangChain最新的结构化输出功能构建国际象棋代理
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-04-04 17:16:15" itemprop="dateCreated datePublished" datetime="2024-04-04T17:16:15+08:00">2024-04-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-06 23:50:32" itemprop="dateModified" datetime="2024-04-06T23:50:32+08:00">2024-04-06</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>6.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>11 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>LangChain最近添加了一个API来返回结构化输出。它使用每个 LLM 提供商的函数调用功能。要使用它，您只需为所需的输出定义一个 pydantic 模型。</p>
+<p>结构化输出是构建大型系统的关键，其中各个部分使用 JSON 相互通信。有点类似于 Web 应用程序的后端 API 和前端如何进行通信。</p>
+<p>使用 LangChain 的结构化输出功能来构建一个国际象棋代理并使其与 Stockfish 下棋。方法如下。</p>
+<p>pip install -U python-dotenv langchain-openai chess</p>
+<p>首先，我需要定义我的国际象棋代理将输出什么。在与 Stockfish 的比赛中，我的代理应该至少输出其下一步行动，给定的输入包含棋盘状态、游戏中的行动历史记录以及对计划下一步行动有用的其他数据。</p>
+<p>我决定将国际象棋代理的下一步棋定义为包含该棋步的 pydantic 类，以及解释该棋步的推理。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">from langchain_openai import ChatOpenAI</span><br><span class="line">import chess</span><br><span class="line">import chess.engine</span><br><span class="line">from langchain_core.pydantic_v1 import BaseModel, Field</span><br><span class="line">from dotenv import load_dotenv</span><br><span class="line">import os</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">load_dotenv()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class NextMove(BaseModel):</span><br><span class="line">    move: str = Field(..., description=&quot;Best next move to win the chess game. It should be in Standard Algebraic Notation. Always plan 5 moves ahead before deciding the best next move.&quot;)</span><br><span class="line">    reasoning: str = Field(..., description=&quot;Reasoning explaining why the move is the best&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">model = ChatOpenAI(model=&quot;gpt-4&quot;)</span><br><span class="line">chess_agent = model.with_structured_output(NextMove)</span><br></pre></td></tr></table></figure>
+<p>接下来，我需要定义我将使用的 Stockfish 引擎的版本。<br>我还在 play_game() 函数中定义了游戏的逻辑。<br>我添加了短期记忆，以便国际象棋代理可以记住过去的比赛，并有可能利用这些知识来提高水平。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"># Initialize a chess board and the chess engine</span><br><span class="line">engine = chess.engine.SimpleEngine.popen_uci(r&quot;F:\stockfish\stockfish\stockfish-windows-x86-64-avx2.exe&quot;)</span><br><span class="line"></span><br><span class="line"># Configure Stockfish to a specific skill level, e.g., 10</span><br><span class="line">engine.configure(&#123;&quot;Skill Level&quot;: 0&#125;)</span><br><span class="line"></span><br><span class="line">file_path = os.path.expanduser(&#x27;~\\learning_chess.txt&#x27;)</span><br><span class="line">try:</span><br><span class="line">    with open(file_path, &#x27;r&#x27;) as file:</span><br><span class="line">        past_game_performance = file.read()</span><br><span class="line">except FileNotFoundError:</span><br><span class="line">    print(f&quot;The file &#123;file_path&#125; does not exist. Creating a new one.&quot;)</span><br><span class="line">    with open(file_path, &#x27;w&#x27;) as file:</span><br><span class="line">        file.write(&quot;Initial content\n&quot;)</span><br><span class="line">        past_game_performance = &quot;Initial content\n&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def play_game():</span><br><span class="line">    moves = []  # Variable to store the list of moves</span><br><span class="line">    board = chess.Board()</span><br><span class="line"></span><br><span class="line">    def get_agent_move(board):</span><br><span class="line">        feedback = &quot;&quot;</span><br><span class="line">        while True:</span><br><span class="line"></span><br><span class="line">            prompt = f&quot;&quot;&quot;Current board: &#123;board&#125;\nMove history: &#123;moves&#125;</span><br><span class="line">            Choose the next move for black in UCI format. The available legal moves are &#123;list(board.legal_moves)&#125;.</span><br><span class="line">            The move you select should be among the legal moves in UCI format like this:&#x27;Move.from_uci(&#x27;g7g5&#x27;)&#x27; &#123;feedback&#125; Only reply with the move and nothing else.</span><br><span class="line">            Take into your past performance against stockfish: &#123;past_game_performance&#125;&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">            # No streaming</span><br><span class="line">            response = chess_agent.invoke(prompt)</span><br><span class="line"></span><br><span class="line">            next_move = response.move</span><br><span class="line"></span><br><span class="line">            try:</span><br><span class="line">                move = chess.Move.from_uci(next_move)</span><br><span class="line"></span><br><span class="line">                if move in board.legal_moves:</span><br><span class="line">                    return move</span><br><span class="line">                else:</span><br><span class="line">                    feedback = f&quot;Agent&#x27;s generated move &#123;move&#125; is not valid currently.&quot;</span><br><span class="line">            except:</span><br><span class="line">                feedback = &quot;Failed to parse the Agent&#x27;s generated move. Retrying...&quot;</span><br><span class="line"></span><br><span class="line">    while not board.is_game_over():</span><br><span class="line">        if board.turn:  # True for white&#x27;s turn, False for black&#x27;s turn</span><br><span class="line">            result = engine.play(board, chess.engine.Limit(time=2.0))</span><br><span class="line">            board.push(result.move)</span><br><span class="line">            moves.append(result.move.uci())  # Store UCI move in the list</span><br><span class="line">        else:</span><br><span class="line">            move = get_agent_move(board)</span><br><span class="line">            board.push(move)</span><br><span class="line">            moves.append(move.uci())  # Store UCI move in the list</span><br><span class="line">        print(board)</span><br><span class="line">        print(&quot;\n\n&quot;)</span><br><span class="line"></span><br><span class="line">    # Check the result of the game</span><br><span class="line">    winner = &quot;&quot;</span><br><span class="line">    if board.is_checkmate():</span><br><span class="line">        if board.turn:</span><br><span class="line">            winner = &quot;Black&quot;</span><br><span class="line">        else:</span><br><span class="line">            winner = &quot;White&quot;</span><br><span class="line">    elif board.is_stalemate() or board.is_insufficient_material() or board.is_seventyfive_moves() or board.is_fivefold_repetition() or board.is_variant_draw():</span><br><span class="line">        winner = &quot;Draw&quot;</span><br><span class="line"></span><br><span class="line">    # Write the result in the short term memory</span><br><span class="line">    with open(file_path, &#x27;a&#x27;) as file:</span><br><span class="line">        file.write(f&quot;\n&#123;&#x27; &#x27;.join(moves)&#125; =&gt; Winner: &#123;&#x27;AI Agent&#x27; if winner == &#x27;Black&#x27; else &#x27;Stockfish&#x27;&#125;&quot;)</span><br><span class="line"></span><br><span class="line">    if winner == &quot;Black&quot;:</span><br><span class="line">        return &quot;Agent wins by checkmate.&quot;</span><br><span class="line">    elif winner == &quot;White&quot;:</span><br><span class="line">        return &quot;Stockfish wins by checkmate.&quot;</span><br><span class="line">    else:</span><br><span class="line">        return &quot;The game is a draw.&quot;</span><br></pre></td></tr></table></figure>
+<p>在提供的代码片段中，我概述了基于 GPT-4 的自定义 AI 代理与 Stockfish 国际象棋引擎之间国际象棋游戏的设置和执行。以下是代码各段中发生的情况的细分：</p>
+<ul>
+<li><p>初始化国际象棋引擎：使用该chess.engine.SimpleEngine方法初始化 Stockfish 国际象棋引擎，指定系统上安装的 Stockfish 可执行文件的路径。</p>
+</li>
+<li><p>配置Stockfish技能等级：通过该 engine.configure 方法将Stockfish引擎的技能等级设置为0 。这部分有一个错误；要将技能等级设置为 10，则应{“Skill Level”: 10}改为{“Skill Level”: 0}。</p>
+</li>
+<li><p>读取过去的游戏表现：过去游戏的表现是从learning_chess.txt文本文件加载。该信息用于告知人工智能代理在游戏过程中的决策。</p>
+</li>
+<li><p>玩游戏函数：该函数封装了AI代理和Stockfish引擎之间下棋的逻辑。它在一个名为 moves 的列表中跟踪游戏期间所做的动作moves，并利用一个chess.Board()对象来管理游戏状态。</p>
+</li>
+<li><p>获取代理移动函数：在该play_game函数中，有一个嵌套函数get_agent_move，旨在确定 AI 代理的下一步移动。它生成一个提示，包括当前棋盘状态、走棋历史和合法走棋，然后等待国际象棋代理（假设是 LLM 或类似的 AI 模型）的响应。该响应被解析并验证为合法的国际象棋棋步。</p>
+</li>
+<li><p>游戏循环：游戏以循环方式进行，其中 Stockfish 在其回合中进行移动（白色），而 AI 代理在其回合中进行移动（黑色）。由于将死、平局或其他平局情况，将进行移动直至游戏结束。</p>
+</li>
+<li><p>确定并记录游戏结果：游戏结束时，根据游戏的最终状态确定结果。此结果将附加到learning_chess.txt文件中，用最新的游戏动作和结果更新人工智能代理的“短期记忆”。</p>
+</li>
+<li><p>返回游戏结果：最后，该函数返回一条字符串消息，指示 AI 代理是否获胜、Stockfish 获胜，或者游戏是否以平局结束。</p>
+</li>
+</ul>
+<p>然后我决定比赛 3 次，看看 GPT-4 能否在国际象棋方面有所改进并击败 Stockfish 16。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"># Number of games to play</span><br><span class="line">n_games = 3</span><br><span class="line"></span><br><span class="line"># Initialize a dictionary to store the results</span><br><span class="line">results = &#123;&quot;Agent wins&quot;: 0, &quot;Stockfish wins&quot;: 0, &quot;Draw&quot;: 0&#125;</span><br><span class="line"></span><br><span class="line"># Run the game n times</span><br><span class="line">for i in range(n_games):</span><br><span class="line">    # print(f&quot;Starting game &#123;i+1&#125;...&quot;)</span><br><span class="line">    result = play_game()</span><br><span class="line">    print(result)</span><br><span class="line"></span><br><span class="line">    # Update the results dictionary based on the outcome of the game</span><br><span class="line">    if &quot;Agent wins&quot; in result:</span><br><span class="line">        results[&quot;Agent wins&quot;] += 1</span><br><span class="line">    elif &quot;Stockfish wins&quot; in result:</span><br><span class="line">        results[&quot;Stockfish wins&quot;] += 1</span><br><span class="line">    else:</span><br><span class="line">        results[&quot;Draw&quot;] += 1</span><br><span class="line"></span><br><span class="line">    # print(f&quot;Game &#123;i+1&#125; finished.\n\n&quot;)</span><br><span class="line"></span><br><span class="line"># Print the final results</span><br><span class="line">print(&quot;Final results after playing&quot;, n_games, &quot;games:&quot;)</span><br><span class="line">print(&quot;Agent won:&quot;, results[&quot;Agent wins&quot;], &quot;games&quot;)</span><br><span class="line">print(&quot;Stockfish won:&quot;, results[&quot;Stockfish wins&quot;], &quot;games&quot;)</span><br><span class="line">print(&quot;Draw:&quot;, results[&quot;Draw&quot;], &quot;games&quot;)</span><br></pre></td></tr></table></figure>
+<p>开始比赛：</p>
+<p><img src="/../asset_chessopenai/01.png"></p>
+<p><a href="/../asset_chessopenai/chess_record.txt">比赛记录文本</a></p>
+<p>g1f3 e7e5 d2d4 e5d4 d1d4 g8f6 e2e4 b8c6 d4d3 d7d5 e4e5 f6e4 c1e3 f8e7 b1c3 e4c3 d3c3 c6e5 c3e5 f7f6 e5d4 e8g8 d4d2 c8f5 a1d1 f5e4 f3d4 e4g6 f1d3 f8f7 d3e2 d8d7 d4f3 d7e6 f3d4 e6e5 c2c4 e5e4 f2f3 e4f3 e2f3 e7d6 f3d5 d6f4 e3f4 g6d3 d2d3 g8h8 h1f1 f7f8 f4c7 f8g8 f1f3 g7g6 d4e6 g8g7 f3f6 g7g8 d3d4 g8g7 e1d2 g7f7 f6f7 h8g8 e6c5 a8f8 d4g7 &#x3D;&gt; Winner: Stockfish</p>
+<p>在尝试了几种策略之后，我得出的结论是 GPT-4 不可能成为国际象棋中的 Stockfish 引擎。</p>
+<p>该实验揭示了几个关键点：</p>
+<ul>
+<li><p>专业化与泛化： Stockfish 在国际象棋方面的专业化使其比 GPT-4 等更通用的 AI 模型更具优势，这强调了特定于任务的编程在某些领域仍然具有显着优势。</p>
+</li>
+<li><p>人工智能学习和适应：利用过去的游戏表现来指导未来的决策是迈向更具适应性的人工智能系统的一步。尽管 GPT-4 没有超越 Stockfish，但结合过去结果的学习方法对于能够随着时间的推移学习和进化的 AI 的发展至关重要。</p>
+</li>
+<li><p>AI模型之间的协作： GPT-4和LangChain的结构化输出的实验预示着不同AI技术协同工作以解决复杂问题的未来。将专用引擎与通用模型集成可以产生利用两种方法优势的创新解决方案。</p>
+</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://medium.com/ai-advances/can-gpt-4-beat-the-stockfish-engine-lets-use-langchain-to-find-out-0b25133ed563">https://medium.com/ai-advances/can-gpt-4-beat-the-stockfish-engine-lets-use-langchain-to-find-out-0b25133ed563</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/04/03/AirLLM-on-4G/" rel="prev" title="如何在单个 4GB GPU 上运行 70B LLM">
+                  <i class="fa fa-angle-left"></i> 如何在单个 4GB GPU 上运行 70B LLM
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Howard Huang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">159k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:49</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动-->
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
