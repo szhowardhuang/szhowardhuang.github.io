@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"szhowardhuang.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文将分为两部分。在这一部分中，我们将探讨一些强化学习的基本理论，同时使用 PyTorch 的 REINFORCE 方法玩 Flappy Bird 游戏。 在下一部分中，我们将研究更复杂的 RL 算法，例如 Advantage Actor Critic （A2C） 和当前最先进的算法 PPO 强化学习强化学习是一种机器学习方法，专注于通过与环境的交互来学习行为策略，旨在实现特定目标或最大化绩效指标">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通过游戏深入了解强化学习">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/04/09/reinforce-learing-game/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="本文将分为两部分。在这一部分中，我们将探讨一些强化学习的基本理论，同时使用 PyTorch 的 REINFORCE 方法玩 Flappy Bird 游戏。 在下一部分中，我们将研究更复杂的 RL 算法，例如 Advantage Actor Critic （A2C） 和当前最先进的算法 PPO 强化学习强化学习是一种机器学习方法，专注于通过与环境的交互来学习行为策略，旨在实现特定目标或最大化绩效指标">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_reinforcelearinggame/01.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_reinforcelearinggame/02.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_reinforcelearinggame/03.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_reinforcelearinggame/04.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_reinforcelearinggame/05.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_reinforcelearinggame/06.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_reinforcelearinggame/07.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_reinforcelearinggame/08.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_reinforcelearinggame/09.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_reinforcelearinggame/10.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_reinforcelearinggame/11.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_reinforcelearinggame/12.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_reinforcelearinggame/13.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_reinforcelearinggame/14.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_reinforcelearinggame/15.webp">
+<meta property="article:published_time" content="2024-04-09T13:11:59.000Z">
+<meta property="article:modified_time" content="2024-04-11T08:04:42.509Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://szhowardhuang.github.io/asset_reinforcelearinggame/01.webp">
+
+
+<link rel="canonical" href="https://szhowardhuang.github.io/2024/04/09/reinforce-learing-game/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://szhowardhuang.github.io/2024/04/09/reinforce-learing-game/","path":"2024/04/09/reinforce-learing-game/","title":"通过游戏深入了解强化学习"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>通过游戏深入了解强化学习 | 嵌入式老兵博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">嵌入式老兵博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.</span> <span class="nav-text">强化学习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83"><span class="nav-number">2.</span> <span class="nav-text">环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">代理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A5%96%E5%8A%B1"><span class="nav-number">4.</span> <span class="nav-text">奖励</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%80%BC%E5%87%BD%E6%95%B0"><span class="nav-number">5.</span> <span class="nav-text">值函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Q-%E5%87%BD%E6%95%B0"><span class="nav-number">6.</span> <span class="nav-text">Q 函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%AD%96%E7%95%A5%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">7.</span> <span class="nav-text">基于策略的方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%BA%E5%8C%96"><span class="nav-number">8.</span> <span class="nav-text">强化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%BA%E5%8C%96%E6%AD%A5%E9%AA%A4"><span class="nav-number">9.</span> <span class="nav-text">强化步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">10.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BirdAgent-%E8%AE%AD%E7%BB%83"><span class="nav-number">11.</span> <span class="nav-text">BirdAgent &amp; 训练</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">12.</span> <span class="nav-text">结论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">13.</span> <span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Howard Huang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/04/09/reinforce-learing-game/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="通过游戏深入了解强化学习 | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          通过游戏深入了解强化学习
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-04-09 21:11:59" itemprop="dateCreated datePublished" datetime="2024-04-09T21:11:59+08:00">2024-04-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-11 16:04:42" itemprop="dateModified" datetime="2024-04-11T16:04:42+08:00">2024-04-11</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>6.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>12 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>本文将分为两部分。在这一部分中，我们将探讨一些强化学习的基本理论，同时使用 PyTorch 的 REINFORCE 方法玩 <a target="_blank" rel="noopener" href="https://flappybird.io/">Flappy Bird</a> 游戏。</p>
+<p>在下一部分中，我们将研究更复杂的 RL 算法，例如 Advantage Actor Critic （A2C） 和当前最先进的算法 PPO</p>
+<h2 id="强化学习"><a href="#强化学习" class="headerlink" title="强化学习"></a>强化学习</h2><p>强化学习是一种机器学习方法，专注于通过与环境的交互来学习行为策略，旨在实现特定目标或最大化绩效指标。它由三个主要元素组成：环境、代理和奖励。</p>
+<p><img src="/../asset_reinforcelearinggame/01.webp"></p>
+<ul>
+<li>代理从环境接收状态 （s_t）</li>
+<li>根据该状态，代理向环境提供操作 （a_t）</li>
+<li>环境进入新状态 （s_t+1），并向代理提供一些奖励 （r_t+1）</li>
+</ul>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>环境是与代理交互的系统。它定义了代理可能遇到的所有可能状态、在这些状态下可以采取的操作以及这些操作的结果。</p>
+<p>环境通过提供新的状态和奖励信息来响应智能体的行为，这些信息用于指导智能体的学习过程。环境定义以下信息：</p>
+<ul>
+<li>操作空间：定义代理可能执行的一组操作</li>
+<li>观察空间：定义代理可以观察的所有可能状态。这些状态提供代理决定其下一步操作所需的信息。状态空间可以是有限的，也可以是无限的，可以是连续的，也可以是离散的</li>
+<li>奖励功能： 奖励功能提供对代理行为的即时评估（奖励），指导代理学习如何调整其策略以获得更高的总奖励。</li>
+<li>转换动态： 转换动态描述了在给定的当前状态和采取特定操作后环境移动到新状态的概率。</li>
+</ul>
+<h2 id="代理"><a href="#代理" class="headerlink" title="代理"></a>代理</h2><p>在强化学习中，代理是指可以观察环境、做出决策和执行操作的实体。代理的目标是学习一种策略，这是一种在给定环境状态下选择最佳行动的方法，以便最大化获得的长期回报。</p>
+<h2 id="奖励"><a href="#奖励" class="headerlink" title="奖励"></a>奖励</h2><p>奖励是指导代理学习过程的关键信号，提供有关其行为的反馈。这些奖励，无论是积极的还是消极的，都有助于代理了解其行为在实现目标方面的后果。</p>
+<p>代理的主要目标是通过学习策略来选择各种状态下的最佳行动，从而随着时间的推移最大化其总回报。</p>
+<p><img src="/../asset_reinforcelearinggame/02.webp"></p>
+<p>Gt 是时间步长 t 的总奖励（也称为回报）。它被定义为从时间步长 t 到过程结束 （T） 的奖励总和。此外，我们对每个奖励都应用折扣率 γ。该因素决定了未来奖励在时间步长 t 处对总奖励的贡献程度。</p>
+<p>贴现率γ是介于 0 和 1 之间的值。以 0.95 为例，预计在更遥远的将来获得的奖励 Rt 乘以一个较小的数字 0.95^（t-1）。</p>
+<p>这是因为达到未来某个状态的概率相对较低，因此，它提供的奖励应该较小才能被认为是合理的。</p>
+<p><img src="/../asset_reinforcelearinggame/03.webp"></p>
+<p>这是一个计算奖励的简单示例。“蛇”和“目标”的图像分别代表初始状态和最终状态。我们现在有两条可能实现目标的途径：</p>
+<p>路径1：直上，然后向右走到目标</p>
+<p>路径 2：向右走，然后向上走到果阿l</p>
+<p>当贴现率 γ &#x3D; 1 时</p>
+<ul>
+<li>R（路径 1） &#x3D; 2 + γ（-3） + γ²（0） + γ³（1） &#x3D; 0</li>
+<li>R（路径 2） &#x3D; 1+ γ（0） + γ²（3） + γ³（0） &#x3D; 4</li>
+</ul>
+<p>我们可以看到有不同的轨迹（路径）可以达到目标，但每个轨迹都可能导致非常不同的回报（0 和 4）。因此，找到最大化总奖励的最佳轨迹是强化学习 （RL） 的目标。</p>
+<p>轨迹： 轨迹（通常表示为 τ）描述了代理所经历的特定状态、操作和奖励序列。例如：τ &#x3D; （s₀， a₀， r₁， s₁， a₁， r₂， s₂， a₂， …， s_T， a_T， r_T+1， s_T+1）</p>
+<h2 id="值函数"><a href="#值函数" class="headerlink" title="值函数"></a>值函数</h2><p>为了定义我们的状态有多好，我们必须有一个函数来确定它，这就是值函数。</p>
+<p>从本质上讲，此函数估计处于该状态的预期回报。它让人感受到在特定状态下，遵循特定策略（代理遵循的一种策略）所能带来的长期效益。</p>
+<p><img src="/../asset_reinforcelearinggame/04.webp"></p>
+<p>上面定义的值函数可以重新表述为<a target="_blank" rel="noopener" href="https://huggingface.co/learn/deep-rl-course/unit2/bellman-equation">贝尔曼方程</a>的形式，以提高我们计算其值的能力。这允许我们以递归方式计算状态值。</p>
+<p><img src="/../asset_reinforcelearinggame/05.webp"></p>
+<p>在值函数中，转移概率 P（a ，s→s′） 的期望值用于解释在相同状态 （s） 下采取相同操作 （a） 的结果（状态 s′）可能会变化的实际场景。</p>
+<p>符号 π 表示代理的策略，其中 π（a | s） 表示代理在状态 s 中选择操作 a 的概率。</p>
+<p>看一个例子：<br><img src="/../asset_reinforcelearinggame/06.webp"></p>
+<p>（r 表示从一种状态过渡到另一种状态获得的即时奖励，例如 s1 -&gt; s3，奖励 &#x3D; 3）</p>
+<p>在此场景中，我们有四种状态：s1 作为起始状态，s2、s3 和 s4 作为结束状态。可以选择两个动作，“左”或“右”，每个动作在这些状态之间都有自己的一组转换概率。</p>
+<p>不同的策略下状态 1 的值：</p>
+<ul>
+<li>V（π &#x3D; 始终向左） &#x3D; 0.5 * 2 + 0.5 * 4 &#x3D; 3</li>
+<li>V（π &#x3D; 始终向右） &#x3D; 0.33 * 3 + 0.67 * 4 &#x3D; 3.67</li>
+<li>V（π &#x3D; 50% 左，50% 右） &#x3D; 0.5 * V（左） + 0.5 * V（右） &#x3D; 3.335<br>此示例考虑了转换概率（例如，action &#x3D; right：33% 到 s3,67% 到 s4），突出了转换的随机性，即相同的操作并不能保证每次都获得相同的结果。</li>
+</ul>
+<p>一个更复杂的例子：<br><img src="/../asset_reinforcelearinggame/07.webp"></p>
+<p>为简单起见，在此示例中，我们将忽略转换概率，代理只能选择在开始时执行“向上”或“向下”操作。对于后续状态，代理始终向右。</p>
+<p>（S1 为起始状态，S6 为终末状态，终末状态值 &#x3D; 0）</p>
+<p>对于 π &#x3D; 始终向上，γ &#x3D; 1</p>
+<ul>
+<li>V（s6） &#x3D; 0</li>
+<li>V（s3） &#x3D; V（s5） &#x3D; 10 + γV（s6） &#x3D; 10</li>
+<li>V（s2） &#x3D; 2+ γV（s3） &#x3D; 12</li>
+<li>V（s4） &#x3D; 4+ γV（s5） &#x3D; 14</li>
+<li>V（s1） &#x3D; 1 + γV（s2） &#x3D; 13</li>
+</ul>
+<p>对于π &#x3D;（50% 上升，50% 下降），γ &#x3D; 1</p>
+<ul>
+<li>V（s6） &#x3D; 0</li>
+<li>V（s3） &#x3D; V（s5） &#x3D; 10 + γV（s6） &#x3D; 10</li>
+<li>V（s2） &#x3D; 2+ γV（s3） &#x3D; 12</li>
+<li>V（s4） &#x3D; 4+ γV（s5） &#x3D; 14</li>
+<li>V（s1） &#x3D; （1 + γV（s2）） * 0.5 + （2 + γV（s4）） * 0.5 &#x3D; 9.5</li>
+</ul>
+<h2 id="Q-函数"><a href="#Q-函数" class="headerlink" title="Q 函数"></a>Q 函数</h2><p>在实践中，如果所有状态的值都是已知的，我们可以通过确保代理在每个时间片移动到具有最高值的状态来最大化累积奖励。</p>
+<p>但是，由于计算状态值需要了解转移概率，而转移概率通常是未知的。因此，使用状态-动作函数（Q 函数）成为更好的选择。</p>
+<p>由于 Q 值可以直接从经验中学习，因此无需知道环境的转换概率。</p>
+<p><img src="/../asset_reinforcelearinggame/08.webp"></p>
+<p>Q 函数或 action-value 函数，定义了在策略 π 下的状态 s 中执行操作 a 的值。Q 函数和值函数之间的区别在于，Q 函数指定确定性动作的值，因此无需计算给定策略 π（a∣s） 的动作概率。</p>
+<p><img src="/../asset_reinforcelearinggame/09.webp"></p>
+<p>值函数也可以看作是所有可能操作 a 的 Q 函数的总和。</p>
+<p><img src="/../asset_reinforcelearinggame/10.webp"><br>上式中的Q*（s， a）是最优Q函数</p>
+<p>在像 Q-learning 这样基于价值的方法中，始终为每个状态选择具有最高 Q 值的行动的策略确保了总奖励的自动最大化。</p>
+<p>但是，当动作空间非常大或连续时，计算所有可能的 Q 值以确定每个状态的最佳动作变得不切实际。</p>
+<h2 id="基于策略的方法"><a href="#基于策略的方法" class="headerlink" title="基于策略的方法"></a>基于策略的方法</h2><p><img src="/../asset_reinforcelearinggame/11.webp"><br>强化学习中基于策略的方法，直接参数化和优化代理选择行动所遵循的策略，而无需明确计算作为中间函数的价值函数（基于价值的方法）。</p>
+<p>该策略，用 π（a∣s;θ），是一个将状态映射到动作概率分布的函数，其中 θ 表示策略的参数（例如，神经网络的权重）。</p>
+<h2 id="强化"><a href="#强化" class="headerlink" title="强化"></a>强化</h2><p>REINFORCETE是一种优化策略的策略梯度方法。它通过估计相对于策略参数的预期回报梯度，然后使用梯度下降来调整这些参数来做到这一点。<br><img src="/../asset_reinforcelearinggame/12.webp"></p>
+<p>梯度刻度与回报 （R（τ）） 成正比，回报表示所采取的行动的质量。同时，梯度本身由采取该行动的概率的对数表示。</p>
+<p>这种方法旨在增加产生高回报的行动的概率，并降低导致低回报的行动的概率。</p>
+<h2 id="强化步骤"><a href="#强化步骤" class="headerlink" title="强化步骤"></a>强化步骤</h2><p>在 REINFORCE 方法中，有必要使用真实样本计算回报。此外，实施还需要通过<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Monte_Carlo_method">蒙特卡洛方法</a>获得的完整轨迹。</p>
+<ul>
+<li>使用随机权重初始化网络。</li>
+<li>执行 N 次完整过程，收集它们的轨迹（s、a、r、s’）</li>
+<li>计算每个时间步长的返回值。</li>
+<li>计算损失函数 L &#x3D; -R（τ）logπ（a|s）</li>
+<li>更新模型权重</li>
+</ul>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>在我们的第一个实现中，我们使用 Gym 环境来玩 FlappyBird 游戏。</p>
+<p><img src="/../asset_reinforcelearinggame/13.webp"></p>
+<p>在开始之前，了解环境的细节非常重要。在实施之前，请确保每次都通读<a target="_blank" rel="noopener" href="https://github.com/markub3327/flappy-bird-gymnasium">文档</a>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">import os</span><br><span class="line">os.environ[&quot;KMP_DUPLICATE_LIB_OK&quot;]=&quot;TRUE&quot;  # 如果遇到KMP_DUPLICATE_LIB 就服用此行</span><br><span class="line">import torch</span><br><span class="line">import torch.nn as nn</span><br><span class="line">import torch.optim as optim</span><br><span class="line">import torch.nn.functional as F</span><br><span class="line"></span><br><span class="line">import numpy as np</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line">import gymnasium as gym</span><br><span class="line">import flappy_bird_gymnasium</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">def make_env(env_id):</span><br><span class="line">    def wrapped_env():</span><br><span class="line">        env = gym.make(env_id, render_mode=&#x27;rgb_array&#x27;)</span><br><span class="line">        # could add some environment wrapper</span><br><span class="line">        return env</span><br><span class="line">    return wrapped_env</span><br><span class="line"></span><br><span class="line">env_id = &#x27;FlappyBird-v0&#x27;</span><br><span class="line">env = make_env(env_id)()</span><br><span class="line">obs, _ = env.reset()</span><br><span class="line">image = env.render()</span><br><span class="line"></span><br><span class="line">plt.imshow(image)</span><br><span class="line">plt.axis(&#x27;off&#x27;)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/../asset_reinforcelearinggame/14.webp"></p>
+<p>观测由一个 1D 阵列组成，该阵列由 LIDAR 传感器收集 180 个数据点。代理可以采取两种可能的操作：0 表示不执行任何操作，1 表示拍打。</p>
+<p><img src="/../asset_reinforcelearinggame/15.webp"></p>
+<h2 id="BirdAgent-训练"><a href="#BirdAgent-训练" class="headerlink" title="BirdAgent &amp; 训练"></a>BirdAgent &amp; 训练</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class BirdPolicy(nn.Module):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        super(BirdPolicy, self).__init__()</span><br><span class="line">        self.fc1 = nn.Linear(180, 128)  </span><br><span class="line">        self.relu = nn.ReLU()  </span><br><span class="line">        self.fc2 = nn.Linear(128, 2)  </span><br><span class="line">        self.softmax = nn.Softmax(dim=-1) </span><br><span class="line"></span><br><span class="line">    def forward(self, x):</span><br><span class="line">        x = self.relu(self.fc1(x))</span><br><span class="line">        x = self.fc2(x)</span><br><span class="line">        return self.softmax(x)</span><br></pre></td></tr></table></figure>
+
+<p>代理主要负责根据环境提供的状态做出决策。它返回一个概率分布，表示选择每个可能操作的可能性。</p>
+<p>因此，动作数（表示为 n_action）等于环境的动作空间，即 2。</p>
+<p>最后，这里是训练循环~~ </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">def REINFORCE(env, episodes, policy, device, optimizer):</span><br><span class="line">    for episode in range(episodes):</span><br><span class="line">        obs, _ = env.reset()</span><br><span class="line">        log_probs = []</span><br><span class="line">        rewards = []</span><br><span class="line">        done = False</span><br><span class="line">        </span><br><span class="line">        while not done:</span><br><span class="line">            # Add batch dimension</span><br><span class="line">            obs = torch.FloatTensor(obs).unsqueeze(0).to(device) </span><br><span class="line">            probs = policy(obs)</span><br><span class="line">            action = torch.distributions.Categorical(probs).sample()</span><br><span class="line">            log_prob = torch.log(probs.squeeze(0)[action])</span><br><span class="line">            obs, reward, done, _, info = env.step(action.item())</span><br><span class="line">            log_probs.append(log_prob)</span><br><span class="line">            rewards.append(reward)</span><br><span class="line">        Return = []</span><br><span class="line">        Gt = 0</span><br><span class="line"></span><br><span class="line">        for reward in rewards[::-1]:</span><br><span class="line">            # bellman equation</span><br><span class="line">            # computed from back to front</span><br><span class="line">            Gt = reward + 0.99 * Gt</span><br><span class="line">            Return.insert(0, Gt)</span><br><span class="line">        </span><br><span class="line">        Return = torch.tensor(Return).to(device)</span><br><span class="line">        policy_loss = []</span><br><span class="line">        for log_prob, Q in zip(log_probs, Return):</span><br><span class="line">            # compute policy gradient</span><br><span class="line">            policy_loss.append(-log_prob * Q)</span><br><span class="line">            </span><br><span class="line">        policy_loss = torch.cat(policy_loss).mean()</span><br><span class="line">        optimizer.zero_grad()</span><br><span class="line">        policy_loss.backward()</span><br><span class="line">        optimizer.step()</span><br><span class="line">            </span><br><span class="line">        if episode % 200 == 0:</span><br><span class="line">            print(f&#x27;Episode &#123;episode+1&#125;, Total Reward: &#123;sum(rewards)&#125;&#x27;)</span><br><span class="line">            torch.save(policy.state_dict(), f&quot;./weight_epoch.pt&quot;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">device = &quot;cuda&quot; if torch.cuda.is_available() else &quot;cpu&quot;</span><br><span class="line">policy = BirdPolicy().to(device) </span><br><span class="line">optimizer = optim.Adam(policy.parameters(), lr=1e-4)</span><br><span class="line"></span><br><span class="line"># train for 20000 iterations</span><br><span class="line">REINFORCE(env, 20000, policy, device, optimizer)</span><br></pre></td></tr></table></figure>
+
+<p>训练完了以后，可以推理一下训练出来的模型。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">def INFERENCE(env, policy, device):</span><br><span class="line"></span><br><span class="line">    obs, _ = env.reset()</span><br><span class="line"></span><br><span class="line">    done = False</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    policy.load_state_dict(torch.load(f&quot;./weight_epoch.pt&quot;, map_location=torch.device(&#x27;cpu&#x27;)))</span><br><span class="line">    # 如果模型是CUDA训练出来的，推理用CPU，需要添加 map_location=torch.device(&#x27;cpu&#x27;) 来适配</span><br><span class="line">    policy.eval()</span><br><span class="line">    while not done:</span><br><span class="line">        obs = torch.FloatTensor(obs).unsqueeze(0).to(device)</span><br><span class="line">        probs = policy(obs)</span><br><span class="line">        action = torch.distributions.Categorical(probs).sample()</span><br><span class="line">        obs, reward, done, _, info = env.step(action.item())</span><br></pre></td></tr></table></figure>
+
+<p>修改以下代码就可以看到图像：</p>
+<pre><code># env = gym.make(env_id, render_mode=&#39;rgb_array&#39;)
+env = gym.make(env_id, render_mode=&#39;human&#39;)
+</code></pre>
+<p>修改以下代码就可以推理：</p>
+<pre><code># REINFORCE(env, 20000, policy, device, optimizer)
+INFERENCE(env, policy, device)
+</code></pre>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>在本文中，我简要介绍了强化学习的基本原理，包括值函数、Q 函数等。我还从策略梯度方法中引入了 REINFORCE 算法，并用它来玩 Flappy Bird 游戏。</p>
+<p>在下一部分中，我将介绍另外两种策略梯度方法，A2C 和 PPO，并在两个游戏中实现它们：<a target="_blank" rel="noopener" href="https://gymnasium.farama.org/environments/box2d/car_racing/">赛车</a>和<a target="_blank" rel="noopener" href="https://github.com/linyiLYi/snake-ai">贪吃蛇游戏</a>。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://levelup.gitconnected.com/mastering-game-worlds-a-deep-dive-into-reinforcement-learning-5acccad89a18">https://levelup.gitconnected.com/mastering-game-worlds-a-deep-dive-into-reinforcement-learning-5acccad89a18</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/04/04/langchain-chess/" rel="prev" title="使用LangChain最新的结构化输出功能构建国际象棋代理">
+                  <i class="fa fa-angle-left"></i> 使用LangChain最新的结构化输出功能构建国际象棋代理
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/04/11/pytorch-file-info/" rel="next" title="Pytorch格式 .pt .pth .bin .onnx 解释">
+                  Pytorch格式 .pt .pth .bin .onnx 解释 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Howard Huang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">170k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">5:10</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动-->
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
