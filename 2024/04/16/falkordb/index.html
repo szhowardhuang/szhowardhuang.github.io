@@ -19,27 +19,27 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"szhowardhuang.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="历经2周的InternLM实战训练营，我收获颇丰。 本次训练营的主要内容是：  书生·浦语大模型全链路开源体系 书生·浦语大模型 Demo 基于 InternLM 和 LangChain 搭建知识库 XTuner 大模型单卡低成本微调实战 LMDeploy 大模型量化部署实践 OpenCompass 大模型评测  我将每一课的内容和作业都发布在GitHub上，欢迎大家参与讨论和学习。 课程内容第1">
+    <meta name="description" content="在选择适合您的 RAG 应用程序的正确知识图时，需要考虑许多因素。图数据库应该轻量且具有较低的延迟，以实现更高的性能。查询语言应该足够表达性，以支持复杂的图遍历进行模式匹配。图形理想情况下还应设计为具有较低的内存占用量 — 这样可以节省长期资源开销。 考虑到上述因素，我发现知识图谱 FalkorDB 是一个轻量级且高性能的图形框架，适用于构建人工智能应用程序。以下是原因： 低延迟FalkorDB">
 <meta property="og:type" content="article">
-<meta property="og:title" content="书生-浦语实战训练营">
-<meta property="og:url" content="https://szhowardhuang.github.io/2024/01/28/InternLm-training/index.html">
+<meta property="og:title" content="FalkorDB 知识图谱 for RAG">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/04/16/falkordb/index.html">
 <meta property="og:site_name" content="嵌入式老兵博客">
-<meta property="og:description" content="历经2周的InternLM实战训练营，我收获颇丰。 本次训练营的主要内容是：  书生·浦语大模型全链路开源体系 书生·浦语大模型 Demo 基于 InternLM 和 LangChain 搭建知识库 XTuner 大模型单卡低成本微调实战 LMDeploy 大模型量化部署实践 OpenCompass 大模型评测  我将每一课的内容和作业都发布在GitHub上，欢迎大家参与讨论和学习。 课程内容第1">
+<meta property="og:description" content="在选择适合您的 RAG 应用程序的正确知识图时，需要考虑许多因素。图数据库应该轻量且具有较低的延迟，以实现更高的性能。查询语言应该足够表达性，以支持复杂的图遍历进行模式匹配。图形理想情况下还应设计为具有较低的内存占用量 — 这样可以节省长期资源开销。 考虑到上述因素，我发现知识图谱 FalkorDB 是一个轻量级且高性能的图形框架，适用于构建人工智能应用程序。以下是原因： 低延迟FalkorDB">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-01-28T15:00:16.000Z">
-<meta property="article:modified_time" content="2024-01-29T13:59:29.000Z">
+<meta property="article:published_time" content="2024-04-16T11:56:22.237Z">
+<meta property="article:modified_time" content="2024-04-16T12:09:09.991Z">
 <meta property="article:author" content="Howard Huang">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://szhowardhuang.github.io/2024/01/28/InternLm-training/">
+<link rel="canonical" href="https://szhowardhuang.github.io/2024/04/16/falkordb/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://szhowardhuang.github.io/2024/01/28/InternLm-training/","path":"2024/01/28/InternLm-training/","title":"书生-浦语实战训练营"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://szhowardhuang.github.io/2024/04/16/falkordb/","path":"2024/04/16/falkordb/","title":"FalkorDB 知识图谱 for RAG"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>书生-浦语实战训练营 | 嵌入式老兵博客</title>
+<title>FalkorDB 知识图谱 for RAG | 嵌入式老兵博客</title>
   
 
 
@@ -111,7 +111,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%BE%E7%A8%8B%E5%86%85%E5%AE%B9"><span class="nav-number">1.</span> <span class="nav-text">课程内容</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC1%E8%AF%BE"><span class="nav-number">1.0.1.</span> <span class="nav-text">第1课</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC2%E8%AF%BE"><span class="nav-number">1.0.2.</span> <span class="nav-text">第2课</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC3%E8%AF%BE"><span class="nav-number">1.0.3.</span> <span class="nav-text">第3课</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC4%E8%AF%BE"><span class="nav-number">1.0.4.</span> <span class="nav-text">第4课</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC5%E8%AF%BE"><span class="nav-number">1.0.5.</span> <span class="nav-text">第5课</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC6%E8%AF%BE"><span class="nav-number">1.0.6.</span> <span class="nav-text">第6课</span></a></li></ol></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%8E%E5%BB%B6%E8%BF%9F"><span class="nav-number">1.</span> <span class="nav-text">低延迟</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E6%95%88%E5%86%85%E5%AD%98%E5%88%A9%E7%94%A8%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">高效内存利用的分布式架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A2%9E%E5%BC%BA%E6%A3%80%E7%B4%A2%E7%9A%84%E5%90%91%E9%87%8F%E7%B4%A2%E5%BC%95%E6%94%AF%E6%8C%81"><span class="nav-number">3.</span> <span class="nav-text">增强检索的向量索引支持</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%AF%E6%8C%81-AI-%E6%A1%86%E6%9E%B6"><span class="nav-number">4.</span> <span class="nav-text">支持 AI 框架</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E4%BA%92%E5%BC%8F%E5%9B%BE%E6%B5%8F%E8%A7%88%E5%99%A8"><span class="nav-number">5.</span> <span class="nav-text">交互式图浏览器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -152,7 +152,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/01/28/InternLm-training/">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/04/16/falkordb/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -165,12 +165,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="书生-浦语实战训练营 | 嵌入式老兵博客">
+      <meta itemprop="name" content="FalkorDB 知识图谱 for RAG | 嵌入式老兵博客">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          书生-浦语实战训练营
+          FalkorDB 知识图谱 for RAG
         </h1>
 
         <div class="post-meta-container">
@@ -180,15 +180,9 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2024-01-28 23:00:16" itemprop="dateCreated datePublished" datetime="2024-01-28T23:00:16+08:00">2024-01-28</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-01-29 21:59:29" itemprop="dateModified" datetime="2024-01-29T21:59:29+08:00">2024-01-29</time>
+      <time title="创建时间：2024-04-16 19:56:22 / 修改时间：20:09:09" itemprop="dateCreated datePublished" datetime="2024-04-16T19:56:22+08:00">2024-04-16</time>
     </span>
 
   
@@ -205,7 +199,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.1k</span>
+      <span>923</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -222,24 +216,15 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>历经2周的InternLM实战训练营，我收获颇丰。</p>
-<p>本次训练营的主要内容是：</p>
-<ul>
-<li>书生·浦语大模型全链路开源体系</li>
-<li>书生·浦语大模型 Demo</li>
-<li>基于 InternLM 和 LangChain 搭建知识库</li>
-<li>XTuner 大模型单卡低成本微调实战</li>
-<li>LMDeploy 大模型量化部署实践</li>
-<li>OpenCompass 大模型评测</li>
-</ul>
-<p>我将每一课的内容和作业都发布在GitHub上，欢迎大家参与讨论和学习。</p>
-<h2 id="课程内容"><a href="#课程内容" class="headerlink" title="课程内容"></a>课程内容</h2><h4 id="第1课"><a href="#第1课" class="headerlink" title="第1课"></a>第1课</h4><p>笔记 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/36#discussioncomment-8013121">https://github.com/InternLM/tutorial/discussions/36#discussioncomment-8013121</a></p>
-<h4 id="第2课"><a href="#第2课" class="headerlink" title="第2课"></a>第2课</h4><p>笔记 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/37#discussioncomment-8035063">https://github.com/InternLM/tutorial/discussions/37#discussioncomment-8035063</a>	<br>作业 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/92#discussioncomment-8035219">https://github.com/InternLM/tutorial/discussions/92#discussioncomment-8035219</a></p>
-<h4 id="第3课"><a href="#第3课" class="headerlink" title="第3课"></a>第3课</h4><p>笔记 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/38#discussioncomment-8061447">https://github.com/InternLM/tutorial/discussions/38#discussioncomment-8061447</a>	<br>作业 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/93#discussioncomment-8081121">https://github.com/InternLM/tutorial/discussions/93#discussioncomment-8081121</a></p>
-<h4 id="第4课"><a href="#第4课" class="headerlink" title="第4课"></a>第4课</h4><p>笔记 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/39#discussioncomment-8108951">https://github.com/InternLM/tutorial/discussions/39#discussioncomment-8108951</a>	<br>作业 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/94#discussioncomment-8116585">https://github.com/InternLM/tutorial/discussions/94#discussioncomment-8116585</a></p>
-<h4 id="第5课"><a href="#第5课" class="headerlink" title="第5课"></a>第5课</h4><p>笔记 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/40#discussioncomment-8122800">https://github.com/InternLM/tutorial/discussions/40#discussioncomment-8122800</a>	<br>作业 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/95#discussioncomment-8122839">https://github.com/InternLM/tutorial/discussions/95#discussioncomment-8122839</a></p>
-<h4 id="第6课"><a href="#第6课" class="headerlink" title="第6课"></a>第6课</h4><p>笔记 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/41#discussioncomment-8217329">https://github.com/InternLM/tutorial/discussions/41#discussioncomment-8217329</a>	<br>作业 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/96#discussioncomment-8217311">https://github.com/InternLM/tutorial/discussions/96#discussioncomment-8217311</a></p>
-<p>后续还要在通用算力平台实践一把，欢迎大家关注！</p>
+    <div class="post-body" itemprop="articleBody"><p>在选择适合您的 RAG 应用程序的正确知识图时，需要考虑许多因素。图数据库应该轻量且具有较低的延迟，以实现更高的性能。查询语言应该足够表达性，以支持复杂的图遍历进行模式匹配。图形理想情况下还应设计为具有较低的内存占用量 — 这样可以节省长期资源开销。</p>
+<p>考虑到上述因素，我发现知识图谱 FalkorDB 是一个轻量级且高性能的图形框架，适用于构建人工智能应用程序。以下是原因：</p>
+<h3 id="低延迟"><a href="#低延迟" class="headerlink" title="低延迟"></a>低延迟</h3><p>FalkorDB 旨在为复杂的图遍历提供快速的查询执行。它构建在其前身 RedisGraph 之上，利用内存处理技术加快查询执行速度。通过将相关数据保留在内存中，可以减少与磁盘 I&#x2F;O 操作相关的延迟。</p>
+<h3 id="高效内存利用的分布式架构"><a href="#高效内存利用的分布式架构" class="headerlink" title="高效内存利用的分布式架构"></a>高效内存利用的分布式架构</h3><p>FalkorDB 允许创建<a target="_blank" rel="noopener" href="https://www.falkordb.com/scale-out/">多个读取副本</a>，实现数据集和图形在各个服务器之间的分布。用户可以创建与主数据库同步的数据库副本。这使我们能够将读取查询（在副本上运行）与写入查询（在主数据库上运行）分开。</p>
+<p>这种方法优化了读写操作路由到适当副本的过程，确保操作的高吞吐量和较低的延迟。</p>
+<h3 id="增强检索的向量索引支持"><a href="#增强检索的向量索引支持" class="headerlink" title="增强检索的向量索引支持"></a>增强检索的向量索引支持</h3><p>这允许将数据存储为高维嵌入，从而使用户能够使用相似性搜索找到实体 — 节点和边。这样，用户的响应可以扩展到还包括与输入查询在语义上相似的数据。</p>
+<h3 id="支持-AI-框架"><a href="#支持-AI-框架" class="headerlink" title="支持 AI 框架"></a>支持 AI 框架</h3><p>FalkorDB 提供支持和文档，用于处理 AI 框架，如 LangChain 和 LLamaIndex。通过将其与LLM连接，可以直接使用模块来创建图索引和查询引擎对象。这些集成为用户提供了一个全面的工具包，用于构建像检索增强生成（RAG）管道这样的高级 AI 应用程序。</p>
+<h3 id="交互式图浏览器"><a href="#交互式图浏览器" class="headerlink" title="交互式图浏览器"></a>交互式图浏览器</h3><p>FalkorDB 配备了图浏览器，允许交互式查看和查询图形。您可以在<a target="_blank" rel="noopener" href="https://github.com/FalkorDB/falkordb-browser">这里</a>查看 FalkorDB 图浏览器。用户可以通过单击节点和边，展开或折叠子图，并放大或缩小以聚焦特定感兴趣的区域来浏览图形。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>FalkorDB 的内存处理技术和高效的内存利用率，相较于采用基于磁盘存储方法的图形，有助于更快地执行查询并减少延迟。对各种人工智能框架的支持和文档为构建人工智能应用程序增添了其稳健性。<br>这些特性使得 FalkorDB 成为构建可扩展和高性能 RAG 应用程序的极佳选择。基于知识图的 RAG 模型有望通过生成更准确、信息丰富和连贯的响应来彻底改变自然语言处理领域。</p>
 
     </div>
 
@@ -253,14 +238,11 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2024/01/19/make-react/" rel="prev" title="构建 ReAct AI 代理">
-                  <i class="fa fa-angle-left"></i> 构建 ReAct AI 代理
+                <a href="/2024/04/12/autogenstudio-mistral/" rel="prev" title="用AutoGen Studio 与本地 Mistral AI 模型来实践生成式AI代理">
+                  <i class="fa fa-angle-left"></i> 用AutoGen Studio 与本地 Mistral AI 模型来实践生成式AI代理
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2024/02/01/lagent_sft/" rel="next" title="微调Lagent的实践">
-                  微调Lagent的实践 <i class="fa fa-angle-right"></i>
-                </a>
             </div>
           </div>
     </footer>

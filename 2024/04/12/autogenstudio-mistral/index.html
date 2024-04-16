@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"szhowardhuang.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="AutoGen 是由 Microsoft 开发的框架，旨在简化多代理应用程序的开发，特别是在编排 LLM 代理方面。 多智能体应用程序涉及多个 LLM 或多模式智能体或实体在整个工作流程中相互交互以实现特定目标或任务的系统。这些代理可以是 LLM 代理、检索代理或其他能够做出独立决策、函数调用或执行操作的代理。 在本文中，我们将重点介绍AutoGen Studio直观的无代码平台与本地集成的Mis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用AutoGen Studio 与本地 Mistral AI 模型来实践生成式AI代理">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/04/12/autogenstudio-mistral/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="AutoGen 是由 Microsoft 开发的框架，旨在简化多代理应用程序的开发，特别是在编排 LLM 代理方面。 多智能体应用程序涉及多个 LLM 或多模式智能体或实体在整个工作流程中相互交互以实现特定目标或任务的系统。这些代理可以是 LLM 代理、检索代理或其他能够做出独立决策、函数调用或执行操作的代理。 在本文中，我们将重点介绍AutoGen Studio直观的无代码平台与本地集成的Mis">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_autogenmistral/01.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_autogenmistral/06.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_autogenmistral/07.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_autogenmistral/08.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_autogenmistral/09.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_autogenmistral/02.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_autogenmistral/03.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_autogenmistral/04.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_autogenmistral/05.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_autogenmistral/10.webp">
+<meta property="article:published_time" content="2024-04-12T12:20:13.000Z">
+<meta property="article:modified_time" content="2024-04-15T03:20:13.000Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://szhowardhuang.github.io/asset_autogenmistral/01.png">
+
+
+<link rel="canonical" href="https://szhowardhuang.github.io/2024/04/12/autogenstudio-mistral/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://szhowardhuang.github.io/2024/04/12/autogenstudio-mistral/","path":"2024/04/12/autogenstudio-mistral/","title":"用AutoGen Studio 与本地 Mistral AI 模型来实践生成式AI代理"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>用AutoGen Studio 与本地 Mistral AI 模型来实践生成式AI代理 | 嵌入式老兵博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">嵌入式老兵博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">环境安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85autogen-studio"><span class="nav-number">1.1.</span> <span class="nav-text">安装autogen studio</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85mistral"><span class="nav-number">1.2.</span> <span class="nav-text">安装mistral</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C-Mistral-%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">运行 Mistral 模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C-Autogen-Studio"><span class="nav-number">3.</span> <span class="nav-text">运行 Autogen Studio</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%80%E8%83%BD"><span class="nav-number">3.1.</span> <span class="nav-text">技能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.2.</span> <span class="nav-text">模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%90%86"><span class="nav-number">3.3.</span> <span class="nav-text">代理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E6%B5%81"><span class="nav-number">3.4.</span> <span class="nav-text">工作流</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-AutoGen-%E5%92%8C-Mistral-AI-%E8%BF%9B%E8%A1%8C%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%BC%96%E6%8E%92%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">使用 AutoGen 和 Mistral AI 进行工作流编排：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E9%85%8D%E7%BD%AE"><span class="nav-number">4.1.</span> <span class="nav-text">模型配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%90%86%E9%85%8D%E7%BD%AE"><span class="nav-number">4.2.</span> <span class="nav-text">代理配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%B7%A5%E4%BD%9C%E6%B5%81"><span class="nav-number">4.3.</span> <span class="nav-text">创建工作流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E5%B9%B6%E8%BF%90%E8%A1%8C%E4%BC%9A%E8%AF%9D"><span class="nav-number">4.4.</span> <span class="nav-text">建立并运行会话</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">5.</span> <span class="nav-text">结论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Howard Huang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/04/12/autogenstudio-mistral/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="用AutoGen Studio 与本地 Mistral AI 模型来实践生成式AI代理 | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          用AutoGen Studio 与本地 Mistral AI 模型来实践生成式AI代理
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-04-12 20:20:13" itemprop="dateCreated datePublished" datetime="2024-04-12T20:20:13+08:00">2024-04-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-15 11:20:13" itemprop="dateModified" datetime="2024-04-15T11:20:13+08:00">2024-04-15</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>AutoGen 是由 Microsoft 开发的框架，旨在简化多代理应用程序的开发，特别是在编排 LLM 代理方面。</p>
+<p>多智能体应用程序涉及多个 LLM 或多模式智能体或实体在整个工作流程中相互交互以实现特定目标或任务的系统。这些代理可以是 LLM 代理、检索代理或其他能够做出独立决策、函数调用或执行操作的代理。</p>
+<p>在本文中，我们将重点介绍AutoGen Studio直观的无代码平台与本地集成的Mistral AI模型的融合。这种组合不仅仅是为了让人工智能更容易应用;它还涉及促进我们如何在许多现实生活中的行业工作流程中与不同的生成式 AI 代理进行交互、部署并从中受益。</p>
+<p><img src="/../asset_autogenmistral/01.png"></p>
+<h2 id="环境安装"><a href="#环境安装" class="headerlink" title="环境安装"></a>环境安装</h2><h3 id="安装autogen-studio"><a href="#安装autogen-studio" class="headerlink" title="安装autogen studio"></a>安装autogen studio</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install autogenstudio</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="安装mistral"><a href="#安装mistral" class="headerlink" title="安装mistral"></a>安装mistral</h3><p>先安装ollama</p>
+<ul>
+<li><p>Ollama 是一个提供对大型语言模型的访问的平台。安装 Ollama 是第一步，因为它是运行 Mistral 模型的环境。它允许您自定义和创建自己的模型或运行现有模型，如 Llama 2、Code Llama 和 Mistral。您可以在此处下载ollama： <a target="_blank" rel="noopener" href="https://ollama.ai/">https://ollama.ai/</a> ， 选择download，选择linux版本，因为mistral 7B需要24GB 显卡，我没有，只能去云端的linux机器上安装ollama。</p>
+</li>
+<li><p>运行 Ollama Mistral：按照以下命令从 Ollama 平台启动 Mistral 模型，使其准备好处理请求。此命令初始化用于设置模型、加载必要数据以及启动将处理查询处理的服务的进程。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ollama run mistral</span><br></pre></td></tr></table></figure>
+<p>如果说没有ollama app，就起一个console，执行 ollama serve，然后在另外一个console执行ollama run mistral。执行完测试一下mistral，就可以把两个进程都杀掉了。</p>
+</li>
+<li><p>安装 LiteLLM：LiteLLM 库是一个工具，它有助于从 http 端点运行语言模型。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install litellm --upgrade</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装 Gunicorn：Gunicorn 是用于 UNIX 系统的 Python WSGI HTTP 服务器，用于运行 Python Web 应用程序。它是运行 LiteLLM 代理的先决条件，它允许您向语言模型发出本地 HTTP 请求。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install gunicorn</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="运行-Mistral-模型"><a href="#运行-Mistral-模型" class="headerlink" title="运行 Mistral 模型"></a>运行 Mistral 模型</h2><p>使用 Ollama&#x2F;Mistral 模型运行 LiteLLM：此步骤实际上初始化模型并使其准备好运行。此命令告诉 LiteLLM 使用 Ollama 提供的 Mistral 模型。它为交互准备模型，允许您开始进行查询和接收响应。</p>
+<p>在此过程结束时，本地 Mistral 模型从 0.0.0.0：4000 开始，有 1 个工作线程。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">litellm --model ollama/mistral</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="运行-Autogen-Studio"><a href="#运行-Autogen-Studio" class="headerlink" title="运行 Autogen Studio"></a>运行 Autogen Studio</h2><p>通过在终端中输入以下内容来运行 Web UI：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">autogenstudio ui --port 6006</span><br></pre></td></tr></table></figure>
+
+<p>AutoGen Studio 提供了一个简化且用户友好的界面，有助于创建和管理多代理 AI 应用程序。该界面分为几个部分，包括技能、模型、代理和工作流，每个部分在应用程序开发中都发挥着不可或缺的作用。</p>
+<h3 id="技能"><a href="#技能" class="headerlink" title="技能"></a>技能</h3><p>在“技能”部分中，用户可以开发和存储代理将用于解决任务的 Python 函数。它是一个编程环境，在其中定义和优化应用程序的功能。<br><img src="/../asset_autogenmistral/06.png"></p>
+<h3 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h3><p>在模型部分，用户可以配置和管理 AI 模型，包括 GPT-4 和其他本地或自定义模型。</p>
+<p>用户可以设置 Mistral AI 等模型，表明工作室支持本地 AI 模型集成和管理。这种灵活性允许使用强大的模型，如 OpenAI 的 GPT-4，以及为特定任务量身定制的专有或专用模型。<br><img src="/../asset_autogenmistral/07.png"></p>
+<h3 id="代理"><a href="#代理" class="headerlink" title="代理"></a>代理</h3><p>“代理”部分设计用于配置可重用代理。用户可以创建和定义各种代理的角色，例如本地助理、主要代理和用户代理，协调它们在应用工作流中的交互方式。<br><img src="/../asset_autogenmistral/08.png"></p>
+<h3 id="工作流"><a href="#工作流" class="headerlink" title="工作流"></a>工作流</h3><p>“工作流”部分是奇迹发生的地方。用户可以设计复杂的工作流，以定义系统如何处理任务。这是所有组件聚集在一起的地方：技能提供逻辑，模型提供 AI 的智能，代理对任务采取行动，工作流将所有组件连接到一个连贯的系统中。<br><img src="/../asset_autogenmistral/09.png"></p>
+<h2 id="使用-AutoGen-和-Mistral-AI-进行工作流编排："><a href="#使用-AutoGen-和-Mistral-AI-进行工作流编排：" class="headerlink" title="使用 AutoGen 和 Mistral AI 进行工作流编排："></a>使用 AutoGen 和 Mistral AI 进行工作流编排：</h2><p>在我们想要编写一个 Python 脚本来绘制正弦波并将其保存为“sine_wave.png”文件的情况下，AutoGen 和 Mistral AI 可以一起使用来创建简化的工作流程。AutoGen Studio 用作构建和管理多智能体应用程序的接口，而 Mistral AI 则通过其本地模型提供处理能力。</p>
+<p>下面是使用这两个平台的功能进行编排的工作方式：</p>
+<h3 id="模型配置"><a href="#模型配置" class="headerlink" title="模型配置"></a>模型配置</h3><p>在 AutoGen Studio 中设置了一个名为“mistral local model”的模型，用于与 Mistral AI 进行交互。<br>模型的 API 端点将配置为运行 Mistral AI 的本地服务器地址（例如，<a href="http://0.0.0.0:4000）。">http://0.0.0.0:4000）。</a><br>此设置允许 AutoGen Studio 将数据发送到 Mistral AI 模型并接收处理后的结果。</p>
+<p><img src="/../asset_autogenmistral/02.png"></p>
+<p>因为我们有 LiteLLM 代理服务器的 URL <a href="http://0.0.0.0:4000，可以在">http://0.0.0.0:4000，可以在</a> AutoGen 中使用它，就像使用 OpenAI 或基于云的代理服务器一样。</p>
+<p>由于在本地运行此代理服务器，因此不需要 API 密钥。此外，由于模型是在运行 LiteLLM 命令时设置的，因此不需要在 AutoGen 中配置模型名称。但是，model type和api key是 A​​utoGen 中配置的必填字段，因此我们在其中放置虚拟值 NotRequired ，如上图所示。</p>
+<h3 id="代理配置"><a href="#代理配置" class="headerlink" title="代理配置"></a>代理配置</h3><p>我们可以新建一个代理，也可以直接修改primary_assistant的Model，设定到之前定义的mistral local model<br><img src="/../asset_autogenmistral/03.png"></p>
+<h3 id="创建工作流"><a href="#创建工作流" class="headerlink" title="创建工作流"></a>创建工作流</h3><ul>
+<li>在AutoGen Studio中，将启动一个新的工作流，指定用于生成正弦波图像的特定任务。</li>
+<li>我们使用名称配置工作流，例如“local mistral Agent Workflow”。</li>
+<li>工作流规范包括发送方和接收方代理，其中“userproxy”可以是发起请求的发送方，“primary_assistant”是处理请求并提供输出的接收方。</li>
+<li>userproxy代理的角色将与用户交互并执行primary_assistant生成的代码。如果代码中有任何错误，将错误发送给primary_assistant代理。</li>
+<li>primary_assistant代理由本地 Mistral AI 模型授权，它将在我们的场景中生成代码。如果错误，根据userproxy代理发送的执行错误信息重新调整代码。</li>
+</ul>
+<p><img src="/../asset_autogenmistral/04.png"></p>
+<h3 id="建立并运行会话"><a href="#建立并运行会话" class="headerlink" title="建立并运行会话"></a>建立并运行会话</h3><p>在playground新建一个session，</p>
+<p><img src="/../asset_autogenmistral/05.png"></p>
+<ul>
+<li>之后在AutoGen Studio的“Playground”界面中，用户通过选择“Local mistral Agent Workflow”来启动一个新会话。</li>
+<li>用户输入“write a python script to plot a sine wave and save it to disc as a pngfile sina_wave.png”请求。</li>
+<li>请求由userproxy代理发送到primary_assistant代理，该代理利用 Mistral AI 模型。它生成 Python 脚本，userproxy代理执行代码。如果发生错误，则将其发送回primary_assistant代理。primary_assistant代理重新调整代码并将其发送回userproxy代理，直到代码正常工作并创建正弦波图像。</li>
+</ul>
+<p><img src="/../asset_autogenmistral/10.webp"></p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>AutoGen Studio 与本地 Mistral AI 模型一起展示了在编排 GenAI 代理工作流程方面的重大进展。这种架构有利于 AutoGen Studio 的直观设计和 Mistral AI 的出色性能，构建一个多智能体能够做出贡献的环境。</p>
+<p>将 AutoGen Studio 与本地 Mistral AI 模型结合使用的优势：</p>
+<ul>
+<li>易于集成：本地 Mistral AI 模型可以轻松集成到 AutoGen Studio 中，从而简化了将不同 LLM 模型整合到一个部署中的过程，从而简化了开发过程。</li>
+<li>定制和灵活性：开发人员可以定制 AI 模型以满足特定要求，提供完全适合单个项目不同需求的定制解决方案。</li>
+<li>增强的性能：使用 AutoGen 在本地运行 AI 模型可减少延迟并缩短响应时间，这对于实时应用程序和敏感工作流至关重要。</li>
+<li>数据隐私和安全：AI 模型的本地执行可以完全控制数据，这是无法暴露给外部环境的敏感或专有信息的关键因素。</li>
+<li>成本效益：通过最大限度地减少对基于云的 AI 服务的依赖，组织可以显著降低与数据传输和 LLM API 使用相关的成本。</li>
+<li>离线功能：本地 Mistral AI 模型确保系统即使在没有互联网连接的情况下也能保持运行，从而实现 AI 驱动解决方案的离线功能。</li>
+<li>使用 UI 构建复杂的 AI 工作流：用户可以利用AutoGen Studio的无代码界面来可视化和管理整个过程，轻松制作精心设计的人工智能驱动的工作流程。</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://towardsdatascience.com/no-code-genai-agents-workflow-orchestration-autogen-studio-with-local-mistral-ai-model-7566546a16d9">https://towardsdatascience.com/no-code-genai-agents-workflow-orchestration-autogen-studio-with-local-mistral-ai-model-7566546a16d9</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/04/11/pytorch-file-info/" rel="prev" title="Pytorch格式 .pt .pth .bin .onnx 解释">
+                  <i class="fa fa-angle-left"></i> Pytorch格式 .pt .pth .bin .onnx 解释
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/04/16/falkordb/" rel="next" title="FalkorDB 知识图谱 for RAG">
+                  FalkorDB 知识图谱 for RAG <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Howard Huang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">175k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">5:18</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动-->
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

@@ -119,7 +119,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-count">27</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -137,6 +137,259 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/04/16/falkordb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/04/16/falkordb/" class="post-title-link" itemprop="url">FalkorDB 知识图谱 for RAG</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-04-16 19:56:22 / 修改时间：20:09:09" itemprop="dateCreated datePublished" datetime="2024-04-16T19:56:22+08:00">2024-04-16</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>923</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>在选择适合您的 RAG 应用程序的正确知识图时，需要考虑许多因素。图数据库应该轻量且具有较低的延迟，以实现更高的性能。查询语言应该足够表达性，以支持复杂的图遍历进行模式匹配。图形理想情况下还应设计为具有较低的内存占用量 — 这样可以节省长期资源开销。</p>
+<p>考虑到上述因素，我发现知识图谱 FalkorDB 是一个轻量级且高性能的图形框架，适用于构建人工智能应用程序。以下是原因：</p>
+<h3 id="低延迟"><a href="#低延迟" class="headerlink" title="低延迟"></a>低延迟</h3><p>FalkorDB 旨在为复杂的图遍历提供快速的查询执行。它构建在其前身 RedisGraph 之上，利用内存处理技术加快查询执行速度。通过将相关数据保留在内存中，可以减少与磁盘 I&#x2F;O 操作相关的延迟。</p>
+<h3 id="高效内存利用的分布式架构"><a href="#高效内存利用的分布式架构" class="headerlink" title="高效内存利用的分布式架构"></a>高效内存利用的分布式架构</h3><p>FalkorDB 允许创建<a target="_blank" rel="noopener" href="https://www.falkordb.com/scale-out/">多个读取副本</a>，实现数据集和图形在各个服务器之间的分布。用户可以创建与主数据库同步的数据库副本。这使我们能够将读取查询（在副本上运行）与写入查询（在主数据库上运行）分开。</p>
+<p>这种方法优化了读写操作路由到适当副本的过程，确保操作的高吞吐量和较低的延迟。</p>
+<h3 id="增强检索的向量索引支持"><a href="#增强检索的向量索引支持" class="headerlink" title="增强检索的向量索引支持"></a>增强检索的向量索引支持</h3><p>这允许将数据存储为高维嵌入，从而使用户能够使用相似性搜索找到实体 — 节点和边。这样，用户的响应可以扩展到还包括与输入查询在语义上相似的数据。</p>
+<h3 id="支持-AI-框架"><a href="#支持-AI-框架" class="headerlink" title="支持 AI 框架"></a>支持 AI 框架</h3><p>FalkorDB 提供支持和文档，用于处理 AI 框架，如 LangChain 和 LLamaIndex。通过将其与LLM连接，可以直接使用模块来创建图索引和查询引擎对象。这些集成为用户提供了一个全面的工具包，用于构建像检索增强生成（RAG）管道这样的高级 AI 应用程序。</p>
+<h3 id="交互式图浏览器"><a href="#交互式图浏览器" class="headerlink" title="交互式图浏览器"></a>交互式图浏览器</h3><p>FalkorDB 配备了图浏览器，允许交互式查看和查询图形。您可以在<a target="_blank" rel="noopener" href="https://github.com/FalkorDB/falkordb-browser">这里</a>查看 FalkorDB 图浏览器。用户可以通过单击节点和边，展开或折叠子图，并放大或缩小以聚焦特定感兴趣的区域来浏览图形。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>FalkorDB 的内存处理技术和高效的内存利用率，相较于采用基于磁盘存储方法的图形，有助于更快地执行查询并减少延迟。对各种人工智能框架的支持和文档为构建人工智能应用程序增添了其稳健性。<br>这些特性使得 FalkorDB 成为构建可扩展和高性能 RAG 应用程序的极佳选择。基于知识图的 RAG 模型有望通过生成更准确、信息丰富和连贯的响应来彻底改变自然语言处理领域。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/04/12/autogenstudio-mistral/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/04/12/autogenstudio-mistral/" class="post-title-link" itemprop="url">用AutoGen Studio 与本地 Mistral AI 模型来实践生成式AI代理</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-04-12 20:20:13" itemprop="dateCreated datePublished" datetime="2024-04-12T20:20:13+08:00">2024-04-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-15 11:20:13" itemprop="dateModified" datetime="2024-04-15T11:20:13+08:00">2024-04-15</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>AutoGen 是由 Microsoft 开发的框架，旨在简化多代理应用程序的开发，特别是在编排 LLM 代理方面。</p>
+<p>多智能体应用程序涉及多个 LLM 或多模式智能体或实体在整个工作流程中相互交互以实现特定目标或任务的系统。这些代理可以是 LLM 代理、检索代理或其他能够做出独立决策、函数调用或执行操作的代理。</p>
+<p>在本文中，我们将重点介绍AutoGen Studio直观的无代码平台与本地集成的Mistral AI模型的融合。这种组合不仅仅是为了让人工智能更容易应用;它还涉及促进我们如何在许多现实生活中的行业工作流程中与不同的生成式 AI 代理进行交互、部署并从中受益。</p>
+<p><img src="/../asset_autogenmistral/01.png"></p>
+<h2 id="环境安装"><a href="#环境安装" class="headerlink" title="环境安装"></a>环境安装</h2><h3 id="安装autogen-studio"><a href="#安装autogen-studio" class="headerlink" title="安装autogen studio"></a>安装autogen studio</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install autogenstudio</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="安装mistral"><a href="#安装mistral" class="headerlink" title="安装mistral"></a>安装mistral</h3><p>先安装ollama</p>
+<ul>
+<li><p>Ollama 是一个提供对大型语言模型的访问的平台。安装 Ollama 是第一步，因为它是运行 Mistral 模型的环境。它允许您自定义和创建自己的模型或运行现有模型，如 Llama 2、Code Llama 和 Mistral。您可以在此处下载ollama： <a target="_blank" rel="noopener" href="https://ollama.ai/">https://ollama.ai/</a> ， 选择download，选择linux版本，因为mistral 7B需要24GB 显卡，我没有，只能去云端的linux机器上安装ollama。</p>
+</li>
+<li><p>运行 Ollama Mistral：按照以下命令从 Ollama 平台启动 Mistral 模型，使其准备好处理请求。此命令初始化用于设置模型、加载必要数据以及启动将处理查询处理的服务的进程。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ollama run mistral</span><br></pre></td></tr></table></figure>
+<p>如果说没有ollama app，就起一个console，执行 ollama serve，然后在另外一个console执行ollama run mistral。执行完测试一下mistral，就可以把两个进程都杀掉了。</p>
+</li>
+<li><p>安装 LiteLLM：LiteLLM 库是一个工具，它有助于从 http 端点运行语言模型。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install litellm --upgrade</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装 Gunicorn：Gunicorn 是用于 UNIX 系统的 Python WSGI HTTP 服务器，用于运行 Python Web 应用程序。它是运行 LiteLLM 代理的先决条件，它允许您向语言模型发出本地 HTTP 请求。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install gunicorn</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="运行-Mistral-模型"><a href="#运行-Mistral-模型" class="headerlink" title="运行 Mistral 模型"></a>运行 Mistral 模型</h2><p>使用 Ollama&#x2F;Mistral 模型运行 LiteLLM：此步骤实际上初始化模型并使其准备好运行。此命令告诉 LiteLLM 使用 Ollama 提供的 Mistral 模型。它为交互准备模型，允许您开始进行查询和接收响应。</p>
+<p>在此过程结束时，本地 Mistral 模型从 0.0.0.0：4000 开始，有 1 个工作线程。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">litellm --model ollama/mistral</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="运行-Autogen-Studio"><a href="#运行-Autogen-Studio" class="headerlink" title="运行 Autogen Studio"></a>运行 Autogen Studio</h2><p>通过在终端中输入以下内容来运行 Web UI：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">autogenstudio ui --port 6006</span><br></pre></td></tr></table></figure>
+
+<p>AutoGen Studio 提供了一个简化且用户友好的界面，有助于创建和管理多代理 AI 应用程序。该界面分为几个部分，包括技能、模型、代理和工作流，每个部分在应用程序开发中都发挥着不可或缺的作用。</p>
+<h3 id="技能"><a href="#技能" class="headerlink" title="技能"></a>技能</h3><p>在“技能”部分中，用户可以开发和存储代理将用于解决任务的 Python 函数。它是一个编程环境，在其中定义和优化应用程序的功能。<br><img src="/../asset_autogenmistral/06.png"></p>
+<h3 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h3><p>在模型部分，用户可以配置和管理 AI 模型，包括 GPT-4 和其他本地或自定义模型。</p>
+<p>用户可以设置 Mistral AI 等模型，表明工作室支持本地 AI 模型集成和管理。这种灵活性允许使用强大的模型，如 OpenAI 的 GPT-4，以及为特定任务量身定制的专有或专用模型。<br><img src="/../asset_autogenmistral/07.png"></p>
+<h3 id="代理"><a href="#代理" class="headerlink" title="代理"></a>代理</h3><p>“代理”部分设计用于配置可重用代理。用户可以创建和定义各种代理的角色，例如本地助理、主要代理和用户代理，协调它们在应用工作流中的交互方式。<br><img src="/../asset_autogenmistral/08.png"></p>
+<h3 id="工作流"><a href="#工作流" class="headerlink" title="工作流"></a>工作流</h3><p>“工作流”部分是奇迹发生的地方。用户可以设计复杂的工作流，以定义系统如何处理任务。这是所有组件聚集在一起的地方：技能提供逻辑，模型提供 AI 的智能，代理对任务采取行动，工作流将所有组件连接到一个连贯的系统中。<br><img src="/../asset_autogenmistral/09.png"></p>
+<h2 id="使用-AutoGen-和-Mistral-AI-进行工作流编排："><a href="#使用-AutoGen-和-Mistral-AI-进行工作流编排：" class="headerlink" title="使用 AutoGen 和 Mistral AI 进行工作流编排："></a>使用 AutoGen 和 Mistral AI 进行工作流编排：</h2><p>在我们想要编写一个 Python 脚本来绘制正弦波并将其保存为“sine_wave.png”文件的情况下，AutoGen 和 Mistral AI 可以一起使用来创建简化的工作流程。AutoGen Studio 用作构建和管理多智能体应用程序的接口，而 Mistral AI 则通过其本地模型提供处理能力。</p>
+<p>下面是使用这两个平台的功能进行编排的工作方式：</p>
+<h3 id="模型配置"><a href="#模型配置" class="headerlink" title="模型配置"></a>模型配置</h3><p>在 AutoGen Studio 中设置了一个名为“mistral local model”的模型，用于与 Mistral AI 进行交互。<br>模型的 API 端点将配置为运行 Mistral AI 的本地服务器地址（例如，<a href="http://0.0.0.0:4000）。">http://0.0.0.0:4000）。</a><br>此设置允许 AutoGen Studio 将数据发送到 Mistral AI 模型并接收处理后的结果。</p>
+<p><img src="/../asset_autogenmistral/02.png"></p>
+<p>因为我们有 LiteLLM 代理服务器的 URL <a href="http://0.0.0.0:4000，可以在">http://0.0.0.0:4000，可以在</a> AutoGen 中使用它，就像使用 OpenAI 或基于云的代理服务器一样。</p>
+<p>由于在本地运行此代理服务器，因此不需要 API 密钥。此外，由于模型是在运行 LiteLLM 命令时设置的，因此不需要在 AutoGen 中配置模型名称。但是，model type和api key是 A​​utoGen 中配置的必填字段，因此我们在其中放置虚拟值 NotRequired ，如上图所示。</p>
+<h3 id="代理配置"><a href="#代理配置" class="headerlink" title="代理配置"></a>代理配置</h3><p>我们可以新建一个代理，也可以直接修改primary_assistant的Model，设定到之前定义的mistral local model<br><img src="/../asset_autogenmistral/03.png"></p>
+<h3 id="创建工作流"><a href="#创建工作流" class="headerlink" title="创建工作流"></a>创建工作流</h3><ul>
+<li>在AutoGen Studio中，将启动一个新的工作流，指定用于生成正弦波图像的特定任务。</li>
+<li>我们使用名称配置工作流，例如“local mistral Agent Workflow”。</li>
+<li>工作流规范包括发送方和接收方代理，其中“userproxy”可以是发起请求的发送方，“primary_assistant”是处理请求并提供输出的接收方。</li>
+<li>userproxy代理的角色将与用户交互并执行primary_assistant生成的代码。如果代码中有任何错误，将错误发送给primary_assistant代理。</li>
+<li>primary_assistant代理由本地 Mistral AI 模型授权，它将在我们的场景中生成代码。如果错误，根据userproxy代理发送的执行错误信息重新调整代码。</li>
+</ul>
+<p><img src="/../asset_autogenmistral/04.png"></p>
+<h3 id="建立并运行会话"><a href="#建立并运行会话" class="headerlink" title="建立并运行会话"></a>建立并运行会话</h3><p>在playground新建一个session，</p>
+<p><img src="/../asset_autogenmistral/05.png"></p>
+<ul>
+<li>之后在AutoGen Studio的“Playground”界面中，用户通过选择“Local mistral Agent Workflow”来启动一个新会话。</li>
+<li>用户输入“write a python script to plot a sine wave and save it to disc as a pngfile sina_wave.png”请求。</li>
+<li>请求由userproxy代理发送到primary_assistant代理，该代理利用 Mistral AI 模型。它生成 Python 脚本，userproxy代理执行代码。如果发生错误，则将其发送回primary_assistant代理。primary_assistant代理重新调整代码并将其发送回userproxy代理，直到代码正常工作并创建正弦波图像。</li>
+</ul>
+<p><img src="/../asset_autogenmistral/10.webp"></p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>AutoGen Studio 与本地 Mistral AI 模型一起展示了在编排 GenAI 代理工作流程方面的重大进展。这种架构有利于 AutoGen Studio 的直观设计和 Mistral AI 的出色性能，构建一个多智能体能够做出贡献的环境。</p>
+<p>将 AutoGen Studio 与本地 Mistral AI 模型结合使用的优势：</p>
+<ul>
+<li>易于集成：本地 Mistral AI 模型可以轻松集成到 AutoGen Studio 中，从而简化了将不同 LLM 模型整合到一个部署中的过程，从而简化了开发过程。</li>
+<li>定制和灵活性：开发人员可以定制 AI 模型以满足特定要求，提供完全适合单个项目不同需求的定制解决方案。</li>
+<li>增强的性能：使用 AutoGen 在本地运行 AI 模型可减少延迟并缩短响应时间，这对于实时应用程序和敏感工作流至关重要。</li>
+<li>数据隐私和安全：AI 模型的本地执行可以完全控制数据，这是无法暴露给外部环境的敏感或专有信息的关键因素。</li>
+<li>成本效益：通过最大限度地减少对基于云的 AI 服务的依赖，组织可以显著降低与数据传输和 LLM API 使用相关的成本。</li>
+<li>离线功能：本地 Mistral AI 模型确保系统即使在没有互联网连接的情况下也能保持运行，从而实现 AI 驱动解决方案的离线功能。</li>
+<li>使用 UI 构建复杂的 AI 工作流：用户可以利用AutoGen Studio的无代码界面来可视化和管理整个过程，轻松制作精心设计的人工智能驱动的工作流程。</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://towardsdatascience.com/no-code-genai-agents-workflow-orchestration-autogen-studio-with-local-mistral-ai-model-7566546a16d9">https://towardsdatascience.com/no-code-genai-agents-workflow-orchestration-autogen-studio-with-local-mistral-ai-model-7566546a16d9</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1548,226 +1801,6 @@ INFERENCE(env, policy, device)
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/03/20/electron-vue-chatgpt/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Howard Huang">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/03/20/electron-vue-chatgpt/" class="post-title-link" itemprop="url">用chatgpt零基础开发electron+vue桌面应用</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-03-20 20:32:57" itemprop="dateCreated datePublished" datetime="2024-03-20T20:32:57+08:00">2024-03-20</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-03-30 21:25:18" itemprop="dateModified" datetime="2024-03-30T21:25:18+08:00">2024-03-30</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>2k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>4 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>最近在想了解前端vue，但是不想学习vue，所以就让chatgpt来写代码。实际例子是找一个python实现的工具来porting，因为涉及到OS，所以使用chatgpt来开发electron+vue桌面应用。</p>
-<h2 id="先做一个vue的UI"><a href="#先做一个vue的UI" class="headerlink" title="先做一个vue的UI"></a>先做一个vue的UI</h2><p>把vue的架子搭建好，然后把UI图发给chatgpt。<br><img src="/../asset_electronvuechatgpt/01.png"></p>
-<p>把图片传给它，然后chatgpt生成代码<br><img src="/../asset_electronvuechatgpt/02.png"></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div id=&quot;menu-bar&quot;&gt;</span><br><span class="line">    &lt;ul&gt;</span><br><span class="line">      &lt;li&gt;&lt;a href=&quot;#file&quot;&gt;File&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">      &lt;li&gt;&lt;a href=&quot;#operate&quot;&gt;Operate&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">      &lt;li&gt;&lt;a href=&quot;#config&quot;&gt;Config&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">    &lt;/ul&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">  name: &#x27;MenuBar&#x27;</span><br><span class="line">  // You can add your JavaScript here</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line">#menu-bar &#123;</span><br><span class="line">  background-color: #8B0000; /* Dark red color */</span><br><span class="line">  color: white;</span><br><span class="line">  padding: 10px 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#menu-bar ul &#123;</span><br><span class="line">  list-style-type: none;</span><br><span class="line">  margin: 0;</span><br><span class="line">  padding: 0;</span><br><span class="line">  overflow: hidden;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#menu-bar li &#123;</span><br><span class="line">  float: left;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#menu-bar li a &#123;</span><br><span class="line">  display: block;</span><br><span class="line">  color: white;</span><br><span class="line">  text-align: center;</span><br><span class="line">  padding: 14px 16px;</span><br><span class="line">  text-decoration: none;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/* Change the link color to #9d2b2b on hover */</span><br><span class="line">#menu-bar li a:hover &#123;</span><br><span class="line">  background-color: #9d2b2b;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
-<p>发现issue，需要修改一下。问chatgpt</p>
-<p><img src="/../asset_electronvuechatgpt/03.png"></p>
-<p>不停的询问，调试代码，把chatgpt当作一个编程助手，效率还是不错。UI界面做完后，就该做功能了。</p>
-<h2 id="添加功能"><a href="#添加功能" class="headerlink" title="添加功能"></a>添加功能</h2><p>把python功能代码发给chatgpt，然后问chatgpt怎么办，根据他的说法不停的问，同时告诉他我想用的electron框架，chatgpt就会生成代码，然后不停的问，调试。整体工作量大概3~4天就完成整个工具，我记得当初做python工具用了2周。</p>
-<h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><p>虽然chatgpt帮忙很多，但是不可避免要调试。 render进程用浏览器developer tools调试，不特别讲。<br>调试electron主进程需要讲一下，</p>
-<p>在一个electron 应用中有且只有一个主进程。调试主进程的方式也用浏览器来进行debugger</p>
-<ul>
-<li><p>使用 –inspect&#x3D;[port] 来设置一个运行端口，比如在vscode package.json中配置如下脚本：</p>
-<p>“electron:serve”: “vue-cli-service electron:serve –inspect&#x3D;5858”</p>
-</li>
-<li><p>在终端输入 npm run electron:serve</p>
-</li>
-<li><p>浏览器输入： chrome:&#x2F;&#x2F;inspect，配置Discover network targets的端口为上述端口(5858)，点击下方inspect</p>
-</li>
-<li><p>点击inspect之后就会弹出一个调试主进程的浏览器窗口，就可以在这个窗口中去debugger当前electron应用的主进程了。如下：进入Sources标签，ctrl+p输入main.js或者其它js，输入断点可以debug</p>
-</li>
-</ul>
-<h2 id="体会"><a href="#体会" class="headerlink" title="体会"></a>体会</h2><p>大模型确实改变了软件行业，编程语言已经不成为开发软件的门槛，软件工程师具备软件思想，熟悉编程语言的基本逻辑，基本语法甚至不是太熟悉也可以开发软件。 而且效率还是很高的. 主要节省时间在于不需要 </p>
-<ul>
-<li>上网大量搜索并挑选答案, </li>
-<li>代码组织</li>
-</ul>
-<p>人在这个过程中主要起到：</p>
-<ul>
-<li>构想功能,提出具体步骤, </li>
-<li>根据代码来调试, </li>
-<li>根据调试问题提出新问题给chatgpt解决.</li>
-</ul>
-<p>整体上来讲chatgpt起到编程手册和代码库的作用.大模型作为软件工程师的助手，大大降低了开发难度，提高效率。以后不使用大模型的软件工程师，被使用大模型的软件工程师淘汰是肯定的。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/03/12/ollama/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Howard Huang">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/03/12/ollama/" class="post-title-link" itemprop="url">ollama使用方法</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2024-03-12 11:49:50 / 修改时间：15:41:44" itemprop="dateCreated datePublished" datetime="2024-03-12T11:49:50+08:00">2024-03-12</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>591</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Ollama 终于可以在 Windows 上运行了</p>
-<h2 id="下载-Ollma-安装文件"><a href="#下载-Ollma-安装文件" class="headerlink" title="下载 Ollma 安装文件"></a>下载 Ollma 安装文件</h2><p>访问 <a target="_blank" rel="noopener" href="https://ollama.com/download%EF%BC%8C%E9%80%89%E6%8B%A9">https://ollama.com/download，选择</a> Windows，单击 “Download for Windows (Preview)” 进行下载。</p>
-<h2 id="安装-Ollama"><a href="#安装-Ollama" class="headerlink" title="安装 Ollama"></a>安装 Ollama</h2><p>双击下载的 “OllamaSetup.exe”，直接安装就可以了。安装完以后，ollama app后台进程会自动运行。</p>
-<h2 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h2><p>Ollama 下载的模型模型保存在 C 盘，如果想更改默认路径的话，可以通过设置 OLLAMA_MODELS 进行修改。</p>
-<p>OLLAMA_MODELS：F:\OllamaCache</p>
-<p>Ollama 默认提供 OpenAI 的兼容 API，默认端口是 11434，默认只可以通过 localhost 进行访问，如果想公开访问的话，可以通过设置 OLLAMA_HOST 进行修改。</p>
-<p>OLLAMA_HOST：0.0.0.0</p>
-<p>修改环境变量后，需要去任务管理器杀掉ollama的各个进程或者重启电脑，然后重新打开cmd，set看下环境变量，再重新启动ollama</p>
-<h2 id="使用-Ollama"><a href="#使用-Ollama" class="headerlink" title="使用 Ollama"></a>使用 Ollama</h2><p>访问 <a target="_blank" rel="noopener" href="https://ollama.com/library">https://ollama.com/library</a></p>
-<p>搜索你要使用的模型，主流的模型，比如 llama2、qwen1.5、mixtral 等，Ollama都支持。</p>
-<p>下面以允许 qwen 为例，我们要运行 7b 的模型，</p>
-<p>ollama App在后台已经跑起来的情况下，打开cmd，输入</p>
-<p><code>ollama run qwen:7b</code></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1791,13 +1824,13 @@ INFERENCE(env, policy, device)
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">170k</span>
+    <span title="站点总字数">175k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">5:10</span>
+    <span title="站点阅读时长">5:18</span>
   </span>
 </div>
 <div class="busuanzi-count">

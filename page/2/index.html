@@ -119,7 +119,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-count">27</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -137,6 +137,226 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/03/20/electron-vue-chatgpt/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/03/20/electron-vue-chatgpt/" class="post-title-link" itemprop="url">用chatgpt零基础开发electron+vue桌面应用</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-03-20 20:32:57" itemprop="dateCreated datePublished" datetime="2024-03-20T20:32:57+08:00">2024-03-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-03-30 21:25:18" itemprop="dateModified" datetime="2024-03-30T21:25:18+08:00">2024-03-30</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>最近在想了解前端vue，但是不想学习vue，所以就让chatgpt来写代码。实际例子是找一个python实现的工具来porting，因为涉及到OS，所以使用chatgpt来开发electron+vue桌面应用。</p>
+<h2 id="先做一个vue的UI"><a href="#先做一个vue的UI" class="headerlink" title="先做一个vue的UI"></a>先做一个vue的UI</h2><p>把vue的架子搭建好，然后把UI图发给chatgpt。<br><img src="/../asset_electronvuechatgpt/01.png"></p>
+<p>把图片传给它，然后chatgpt生成代码<br><img src="/../asset_electronvuechatgpt/02.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div id=&quot;menu-bar&quot;&gt;</span><br><span class="line">    &lt;ul&gt;</span><br><span class="line">      &lt;li&gt;&lt;a href=&quot;#file&quot;&gt;File&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">      &lt;li&gt;&lt;a href=&quot;#operate&quot;&gt;Operate&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">      &lt;li&gt;&lt;a href=&quot;#config&quot;&gt;Config&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">    &lt;/ul&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">  name: &#x27;MenuBar&#x27;</span><br><span class="line">  // You can add your JavaScript here</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line">#menu-bar &#123;</span><br><span class="line">  background-color: #8B0000; /* Dark red color */</span><br><span class="line">  color: white;</span><br><span class="line">  padding: 10px 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#menu-bar ul &#123;</span><br><span class="line">  list-style-type: none;</span><br><span class="line">  margin: 0;</span><br><span class="line">  padding: 0;</span><br><span class="line">  overflow: hidden;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#menu-bar li &#123;</span><br><span class="line">  float: left;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#menu-bar li a &#123;</span><br><span class="line">  display: block;</span><br><span class="line">  color: white;</span><br><span class="line">  text-align: center;</span><br><span class="line">  padding: 14px 16px;</span><br><span class="line">  text-decoration: none;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/* Change the link color to #9d2b2b on hover */</span><br><span class="line">#menu-bar li a:hover &#123;</span><br><span class="line">  background-color: #9d2b2b;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+<p>发现issue，需要修改一下。问chatgpt</p>
+<p><img src="/../asset_electronvuechatgpt/03.png"></p>
+<p>不停的询问，调试代码，把chatgpt当作一个编程助手，效率还是不错。UI界面做完后，就该做功能了。</p>
+<h2 id="添加功能"><a href="#添加功能" class="headerlink" title="添加功能"></a>添加功能</h2><p>把python功能代码发给chatgpt，然后问chatgpt怎么办，根据他的说法不停的问，同时告诉他我想用的electron框架，chatgpt就会生成代码，然后不停的问，调试。整体工作量大概3~4天就完成整个工具，我记得当初做python工具用了2周。</p>
+<h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><p>虽然chatgpt帮忙很多，但是不可避免要调试。 render进程用浏览器developer tools调试，不特别讲。<br>调试electron主进程需要讲一下，</p>
+<p>在一个electron 应用中有且只有一个主进程。调试主进程的方式也用浏览器来进行debugger</p>
+<ul>
+<li><p>使用 –inspect&#x3D;[port] 来设置一个运行端口，比如在vscode package.json中配置如下脚本：</p>
+<p>“electron:serve”: “vue-cli-service electron:serve –inspect&#x3D;5858”</p>
+</li>
+<li><p>在终端输入 npm run electron:serve</p>
+</li>
+<li><p>浏览器输入： chrome:&#x2F;&#x2F;inspect，配置Discover network targets的端口为上述端口(5858)，点击下方inspect</p>
+</li>
+<li><p>点击inspect之后就会弹出一个调试主进程的浏览器窗口，就可以在这个窗口中去debugger当前electron应用的主进程了。如下：进入Sources标签，ctrl+p输入main.js或者其它js，输入断点可以debug</p>
+</li>
+</ul>
+<h2 id="体会"><a href="#体会" class="headerlink" title="体会"></a>体会</h2><p>大模型确实改变了软件行业，编程语言已经不成为开发软件的门槛，软件工程师具备软件思想，熟悉编程语言的基本逻辑，基本语法甚至不是太熟悉也可以开发软件。 而且效率还是很高的. 主要节省时间在于不需要 </p>
+<ul>
+<li>上网大量搜索并挑选答案, </li>
+<li>代码组织</li>
+</ul>
+<p>人在这个过程中主要起到：</p>
+<ul>
+<li>构想功能,提出具体步骤, </li>
+<li>根据代码来调试, </li>
+<li>根据调试问题提出新问题给chatgpt解决.</li>
+</ul>
+<p>整体上来讲chatgpt起到编程手册和代码库的作用.大模型作为软件工程师的助手，大大降低了开发难度，提高效率。以后不使用大模型的软件工程师，被使用大模型的软件工程师淘汰是肯定的。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/03/12/ollama/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/03/12/ollama/" class="post-title-link" itemprop="url">ollama使用方法</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-03-12 11:49:50 / 修改时间：15:41:44" itemprop="dateCreated datePublished" datetime="2024-03-12T11:49:50+08:00">2024-03-12</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>591</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>Ollama 终于可以在 Windows 上运行了</p>
+<h2 id="下载-Ollma-安装文件"><a href="#下载-Ollma-安装文件" class="headerlink" title="下载 Ollma 安装文件"></a>下载 Ollma 安装文件</h2><p>访问 <a target="_blank" rel="noopener" href="https://ollama.com/download%EF%BC%8C%E9%80%89%E6%8B%A9">https://ollama.com/download，选择</a> Windows，单击 “Download for Windows (Preview)” 进行下载。</p>
+<h2 id="安装-Ollama"><a href="#安装-Ollama" class="headerlink" title="安装 Ollama"></a>安装 Ollama</h2><p>双击下载的 “OllamaSetup.exe”，直接安装就可以了。安装完以后，ollama app后台进程会自动运行。</p>
+<h2 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h2><p>Ollama 下载的模型模型保存在 C 盘，如果想更改默认路径的话，可以通过设置 OLLAMA_MODELS 进行修改。</p>
+<p>OLLAMA_MODELS：F:\OllamaCache</p>
+<p>Ollama 默认提供 OpenAI 的兼容 API，默认端口是 11434，默认只可以通过 localhost 进行访问，如果想公开访问的话，可以通过设置 OLLAMA_HOST 进行修改。</p>
+<p>OLLAMA_HOST：0.0.0.0</p>
+<p>修改环境变量后，需要去任务管理器杀掉ollama的各个进程或者重启电脑，然后重新打开cmd，set看下环境变量，再重新启动ollama</p>
+<h2 id="使用-Ollama"><a href="#使用-Ollama" class="headerlink" title="使用 Ollama"></a>使用 Ollama</h2><p>访问 <a target="_blank" rel="noopener" href="https://ollama.com/library">https://ollama.com/library</a></p>
+<p>搜索你要使用的模型，主流的模型，比如 llama2、qwen1.5、mixtral 等，Ollama都支持。</p>
+<p>下面以允许 qwen 为例，我们要运行 7b 的模型，</p>
+<p>ollama App在后台已经跑起来的情况下，打开cmd，输入</p>
+<p><code>ollama run qwen:7b</code></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1831,449 +2051,6 @@ python inference_gfpgan.py -i inputs/whole_imgs -o results -v 1.4 -s 1
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/02/01/lagent_sft/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Howard Huang">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/02/01/lagent_sft/" class="post-title-link" itemprop="url">微调Lagent的实践</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2024-02-01 21:00:16 / 修改时间：23:06:12" itemprop="dateCreated datePublished" datetime="2024-02-01T21:00:16+08:00">2024-02-01</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>9.2k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>17 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>InternLM的Lagent是智能代理的一个框架，近几日实践了智能代理调用MM yolo进行图像类识别的任务，特写此文作为记录。</p>
-<h3 id="环境安装"><a href="#环境安装" class="headerlink" title="环境安装"></a>环境安装</h3><pre><code>conda create --name xtuner0.1.9 --clone=/root/share/conda_envs/internlm-base
-conda activate xtuner0.1.9
-git clone -b v0.1.9 https://gitee.com/internlm/xtuner
-cd xtuner
-pip install -e &#39;.[all]&#39;
-</code></pre>
-<h3 id="基座模型"><a href="#基座模型" class="headerlink" title="基座模型"></a>基座模型</h3><p>用InternLM chat 7B基座模型，下载huggingface格式的模型，放到&#x2F;root&#x2F;ft-msagent目录下。</p>
-<h3 id="数据集："><a href="#数据集：" class="headerlink" title="数据集："></a>数据集：</h3><p>去魔搭下载魔搭通用agent数据集：   </p>
-<pre><code>apt install git-lfs
-git clone https://www.modelscope.cn/datasets/iic/ms_agent.git
-</code></pre>
-<p>打开train_agent_react.jsonl ， 搜索图像识别，发现 image_recognition , ImageRecognitionAPI, image_classifier 字段</p>
-<p>需要修改 ImageRecognitionAPI 为 ImageRecognition，<br>修改 image_recognition 为 ImageRecognition，<br>修改 image_classifier 为 ImageClassifier，    </p>
-<p>用sed直接修改    </p>
-<pre><code>sed -i &#39;s/ImageRecognitionAPI/ImageRecognition/g&#39; train_agent_react.jsonl
-sed -i &#39;s/image_recognition/ImageRecognition/g&#39; train_agent_react.jsonl
-sed -i &#39;s/image_classifier/ImageClassifier/g&#39; train_agent_react.jsonl
-</code></pre>
-<p>可以看一下是否修改成功 </p>
-<pre><code>grep ImageClassifier train_agent_react.jsonl
-grep ImageRecognition train_agent_react.jsonl
-</code></pre>
-<p>修改配置文件 &#x2F;root&#x2F;ft-msagent&#x2F;internlm_7b_qlora_msagent_react_e3_gpu8_copy.py<br><img src="/../asset_lagentsft/sft001.png"><br>看到这里你一定要疑问，为什么不把 data_path 指向 本地刚刚git clone下来的数据集路径呢？<br>其实是因为lagent有bug，会把本地数据集当作json格式的客户定制数据集，导致出错。<br>所以用一个work around的方法，就是先让lagent跑通，下载数据集到cache目录，然后进入lagent目录，再修改数据集文件。</p>
-<p>先进入ft-msagent目录，运行</p>
-<pre><code>xtuner train internlm_7b_qlora_msagent_react_e3_gpu8_copy.py --deepspeed deepspeed_zero2
-</code></pre>
-<p>跑一次train，不需要跑完，进入train就可以 CTRL+C 关掉</p>
-<p>然后</p>
-<pre><code>cd ~/.cache/modelscope/hub/datasets/iic/ms_agent/master/data_files 
-</code></pre>
-<p><img src="/../asset_lagentsft/sft003.png"></p>
-<p>修改数据集文件 f0d878b6a17a5cec981643649ea383cc , 这个文件名具体看你们自己的环境，会变化的。</p>
-<pre><code>sed -i &#39;s/ImageRecognitionAPI/ImageRecognition/g&#39; f0d878b6a17a5cec981643649ea383cc
-sed -i &#39;s/image_recognition/ImageRecognition/g&#39; f0d878b6a17a5cec981643649ea383cc
-sed -i &#39;s/image_classifier/ImageClassifier/g&#39; f0d878b6a17a5cec981643649ea383cc
-</code></pre>
-<p>再进入ft-msagent目录，运行</p>
-<pre><code>xtuner train internlm_7b_qlora_msagent_react_e3_gpu8_copy.py --deepspeed deepspeed_zero2
-</code></pre>
-<p><img src="/../asset_lagentsft/sft002.png"><br>可以看到reusing dataset，然后开始训练。<br><img src="/../asset_lagentsft/sft004.png"><br>如果训练一个epoch想停掉，可以按CTRL+C，下次想继续训练，要看一下last_checkpoint文件，把最后一个checkpoint的路径复制到命令行参数里。如下：</p>
-<pre><code>xtuner train internlm_7b_qlora_msagent_react_e3_gpu8_copy.py --deepspeed deepspeed_zero2 --resume /root/ft-msagent/work_dirs/internlm_7b_qlora_msagent_react_e3_gpu8_copy/epoch_2.pth
-</code></pre>
-<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>为了避免后续重复以上数据集繁琐操作，我在魔搭上创建了一个数据集，大家可以直接用这个数据集 szhowardhuang&#x2F;msagent_lite 。</p>
-<p><a target="_blank" rel="noopener" href="https://modelscope.cn/datasets/szhowardhuang/msagent_lite">https://modelscope.cn/datasets/szhowardhuang/msagent_lite</a></p>
-<p>配置文件修改如下，拷贝即可使用：</p>
-<pre><code># Copyright (c) OpenMMLab. All rights reserved.
-import torch
-from bitsandbytes.optim import PagedAdamW32bit
-from mmengine.dataset import DefaultSampler
-from mmengine.hooks import (CheckpointHook, DistSamplerSeedHook, IterTimerHook,
-                            LoggerHook, ParamSchedulerHook)
-from mmengine.optim import AmpOptimWrapper, CosineAnnealingLR
-from modelscope.msdatasets import MsDataset
-from peft import LoraConfig
-from transformers import (AutoModelForCausalLM, AutoTokenizer,
-                        BitsAndBytesConfig)
-
-from xtuner.dataset import process_ms_dataset
-from xtuner.dataset.collate_fns import default_collate_fn
-from xtuner.dataset.map_fns import (msagent_react_map_fn,
-                                    template_map_fn_factory)
-from xtuner.engine import DatasetInfoHook, EvaluateChatHook
-from xtuner.model import SupervisedFinetune
-from xtuner.utils import PROMPT_TEMPLATE
-
-
-#######################################################################
-#                          PART 1  Settings                           #
-#######################################################################
-# Model
-pretrained_model_name_or_path = &#39;/root/ft-msagent/internlm-chat-7b&#39;
-
-# Data
-data_path = &#39;szhowardhuang/msagent_lite&#39;
-prompt_template = PROMPT_TEMPLATE.default
-max_length = 2048
-pack_to_max_length = False
-
-# Scheduler &amp; Optimizer
-batch_size = 4  # per_device
-accumulative_counts = 1
-dataloader_num_workers = 2
-max_epochs = 3
-optim_type = PagedAdamW32bit
-lr = 2e-4
-betas = (0.9, 0.999)
-weight_decay = 0
-max_norm = 1  # grad clip
-
-# Evaluate the generation performance during the training
-evaluation_freq = 500
-SYSTEM = (
-    &#39;你是一个可以调用外部工具的助手，可以使用的工具包括：\n&#39;
-    &quot;&#123;&#123;\'ImageRecognition\': \'用来进行图像识别的API。\\n"
-        '当你需要对于一个图片进行识别时，可以使用这个API。\\n'
-        "输入应该是一张图片文件的路径，或者是图片的URL。\\n\\n\',"
-        "\'ImageClassifier\': \"用来进行图像分类的API，\\n"
-        "当你需要对于一个图片进行分类时，可以使用这个API。\\n"
-        "输入应该是一张图片文件的路径，或者是图片的URL。\\n\"&#125;&#125;\n&quot;
-    &#39;如果使用工具请遵循以下格式回复：\n```\n&#39;
-    &#39;Thought:思考你当前步骤需要解决什么问题，是否需要使用工具\n&#39;
-    &quot;Action:工具名称，你的工具必须从 [[\&#39;ImageRecognition\&#39;, \&#39;ImageClassifier\&#39;]] 选择&quot;
-    &#39;\nAction Input:工具输入参数\n```\n工具返回按照以下格式回复：\n&#39;
-    &#39;```\nResponse:调用工具后的结果\n```&#39;
-    &#39;\n如果你已经知道了答案，或者你不需要工具，请遵循以下格式回复\n```&#39;
-    &#39;\nThought:给出最终答案的思考过程\nFinal Answer:最终答案\n```\n开始!\n&#39;)
-evaluation_inputs = [&#39;识别图片中的物体类别？&#39;]
-
-#######################################################################
-#                      PART 2  Model &amp; Tokenizer                      #
-#######################################################################
-tokenizer = dict(
-    type=AutoTokenizer.from_pretrained,
-    pretrained_model_name_or_path=pretrained_model_name_or_path,
-    trust_remote_code=True,
-    padding_side=&#39;right&#39;)
-
-model = dict(
-    type=SupervisedFinetune,
-    llm=dict(
-        type=AutoModelForCausalLM.from_pretrained,
-        pretrained_model_name_or_path=pretrained_model_name_or_path,
-        trust_remote_code=True,
-        torch_dtype=torch.float16,
-        quantization_config=dict(
-            type=BitsAndBytesConfig,
-            load_in_4bit=True,
-            load_in_8bit=False,
-            llm_int8_threshold=6.0,
-            llm_int8_has_fp16_weight=False,
-            bnb_4bit_compute_dtype=torch.float16,
-            bnb_4bit_use_double_quant=True,
-            bnb_4bit_quant_type=&#39;nf4&#39;)),
-    lora=dict(
-        type=LoraConfig,
-        r=64,
-        lora_alpha=16,
-        lora_dropout=0.1,
-        bias=&#39;none&#39;,
-        task_type=&#39;CAUSAL_LM&#39;))
-
-#######################################################################
-#                      PART 3  Dataset &amp; Dataloader                   #
-#######################################################################
-train_dataset = dict(
-    type=process_ms_dataset,
-    dataset=dict(type=MsDataset.load, dataset_name=data_path, split=&#39;train&#39;),
-    tokenizer=tokenizer,
-    max_length=max_length,
-    dataset_map_fn=msagent_react_map_fn,
-    template_map_fn=dict(
-        type=template_map_fn_factory, template=prompt_template),
-    remove_unused_columns=True,
-    shuffle_before_pack=True,
-    pack_to_max_length=pack_to_max_length)
-
-train_dataloader = dict(
-    batch_size=batch_size,
-    num_workers=dataloader_num_workers,
-    dataset=train_dataset,
-    sampler=dict(type=DefaultSampler, shuffle=True),
-    collate_fn=dict(type=default_collate_fn))
-
-#######################################################################
-#                    PART 4  Scheduler &amp; Optimizer                    #
-#######################################################################
-# optimizer
-optim_wrapper = dict(
-    type=AmpOptimWrapper,
-    optimizer=dict(
-        type=optim_type, lr=lr, betas=betas, weight_decay=weight_decay),
-    clip_grad=dict(max_norm=max_norm, error_if_nonfinite=False),
-    accumulative_counts=accumulative_counts,
-    loss_scale=&#39;dynamic&#39;,
-    dtype=&#39;float16&#39;)
-
-# learning policy
-# More information: https://github.com/open-mmlab/mmengine/blob/main/docs/en/tutorials/param_scheduler.md  # noqa: E501
-param_scheduler = dict(
-    type=CosineAnnealingLR,
-    eta_min=0.0,
-    by_epoch=True,
-    T_max=max_epochs,
-    convert_to_iter_based=True)
-
-# train, val, test setting
-train_cfg = dict(by_epoch=True, max_epochs=max_epochs, val_interval=1)
-
-#######################################################################
-#                           PART 5  Runtime                           #
-#######################################################################
-# Log the dialogue periodically during the training process, optional
-custom_hooks = [
-    dict(type=DatasetInfoHook, tokenizer=tokenizer),
-    dict(
-        type=EvaluateChatHook,
-        tokenizer=tokenizer,
-        every_n_iters=evaluation_freq,
-        evaluation_inputs=evaluation_inputs,
-        system=SYSTEM,
-        prompt_template=prompt_template)
-]
-
-# configure default hooks
-default_hooks = dict(
-    # record the time of every iteration.
-    timer=dict(type=IterTimerHook),
-    # print log every 100 iterations.
-    logger=dict(type=LoggerHook, interval=10),
-    # enable the parameter scheduler.
-    param_scheduler=dict(type=ParamSchedulerHook),
-    # save checkpoint per epoch.
-    checkpoint=dict(type=CheckpointHook, interval=1),
-    # set sampler seed in distributed evrionment.
-    sampler_seed=dict(type=DistSamplerSeedHook),
-)
-
-# configure environment
-env_cfg = dict(
-    # whether to enable cudnn benchmark
-    cudnn_benchmark=False,
-    # set multi process parameters
-    mp_cfg=dict(mp_start_method=&#39;fork&#39;, opencv_num_threads=0),
-    # set distributed parameters
-    dist_cfg=dict(backend=&#39;nccl&#39;),
-)
-
-# set visualizer
-visualizer = None
-
-# set log level
-log_level = &#39;INFO&#39;
-
-# load from which checkpoint
-load_from = None
-
-# whether to resume training from the loaded checkpoint
-resume = False
-
-# Defaults to use random seed and disable `deterministic`
-randomness = dict(seed=None, deterministic=False)
-</code></pre>
-<h3 id="模型转换"><a href="#模型转换" class="headerlink" title="模型转换"></a>模型转换</h3><p>将PTH模型转换成HuggingFace模型，即生成Adapter文件夹, hf文件夹即为我们平时所理解的所谓 “LoRA模型文件”<br>    mkdir hf<br>    export MKL_SERVICE_FORCE_INTEL&#x3D;1<br>    xtuner convert pth_to_hf internlm_7b_qlora_msagent_react_e3_gpu8_copy.py .&#x2F;work_dirs&#x2F;internlm_7b_qlora_msagent_react_e3_gpu8_copy&#x2F;epoch_2.pth .&#x2F;hf</p>
-<h3 id="模型测试"><a href="#模型测试" class="headerlink" title="模型测试"></a>模型测试</h3><p>先下载并安装VisionAgent（即lagent）<br>    <a target="_blank" rel="noopener" href="https://github.com/szhowardhuang/VisionAgent.git">https://github.com/szhowardhuang/VisionAgent.git</a><br>    cd VisionAgent<br>    git checkout a93162536f04679ace6572365a1884e584b4cb03<br>    pip install -e .<br>然后安装 mmdetection<br>    pip install -U openmim<br>    mim install mmengine<br>    mim install “mmcv&gt;&#x3D;2.0.0”<br>    mim install mmdet<br>注释掉 &#x2F;root&#x2F;xtuner019&#x2F;xtuner&#x2F;xtuner&#x2F;tools&#x2F;chat.py 的139行<br><img src="/../asset_lagentsft/sft005.png"></p>
-<pre><code>export SERPER_API_KEY=abcdefg
-xtuner chat ./internlm-chat-7b --adapter hf --lagent
-</code></pre>
-<h3 id="将-HuggingFace-adapter-合并到大语言模型"><a href="#将-HuggingFace-adapter-合并到大语言模型" class="headerlink" title="将 HuggingFace adapter 合并到大语言模型"></a>将 HuggingFace adapter 合并到大语言模型</h3><pre><code>xtuner convert merge ./internlm-chat-7b ./hf ./merged --max-shard-size 2GB
-</code></pre>
-<h3 id="用VisionAgent测试合并后的模型"><a href="#用VisionAgent测试合并后的模型" class="headerlink" title="用VisionAgent测试合并后的模型"></a>用VisionAgent测试合并后的模型</h3><p>修改一下 &#x2F;root&#x2F;code&#x2F;VisionAgent&#x2F;examples&#x2F;react_web_demo.py的92行<br><img src="/../asset_lagentsft/sft006.png"><br>    pip install modelscope&#x3D;&#x3D;1.9.5<br>    pip install transformers&#x3D;&#x3D;4.35.2<br>    pip install streamlit&#x3D;&#x3D;1.24.0<br>    pip install sentencepiece&#x3D;&#x3D;0.1.99<br>    pip install accelerate&#x3D;&#x3D;0.24.1<br>    streamlit run &#x2F;root&#x2F;code&#x2F;lagent&#x2F;examples&#x2F;react_web_demo.py –server.address 127.0.0.1 –server.port 6006</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/01/28/InternLm-training/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Howard Huang">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/01/28/InternLm-training/" class="post-title-link" itemprop="url">书生-浦语实战训练营</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-01-28 23:00:16" itemprop="dateCreated datePublished" datetime="2024-01-28T23:00:16+08:00">2024-01-28</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-01-29 21:59:29" itemprop="dateModified" datetime="2024-01-29T21:59:29+08:00">2024-01-29</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.1k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>历经2周的InternLM实战训练营，我收获颇丰。</p>
-<p>本次训练营的主要内容是：</p>
-<ul>
-<li>书生·浦语大模型全链路开源体系</li>
-<li>书生·浦语大模型 Demo</li>
-<li>基于 InternLM 和 LangChain 搭建知识库</li>
-<li>XTuner 大模型单卡低成本微调实战</li>
-<li>LMDeploy 大模型量化部署实践</li>
-<li>OpenCompass 大模型评测</li>
-</ul>
-<p>我将每一课的内容和作业都发布在GitHub上，欢迎大家参与讨论和学习。</p>
-<h2 id="课程内容"><a href="#课程内容" class="headerlink" title="课程内容"></a>课程内容</h2><h4 id="第1课"><a href="#第1课" class="headerlink" title="第1课"></a>第1课</h4><p>笔记 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/36#discussioncomment-8013121">https://github.com/InternLM/tutorial/discussions/36#discussioncomment-8013121</a></p>
-<h4 id="第2课"><a href="#第2课" class="headerlink" title="第2课"></a>第2课</h4><p>笔记 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/37#discussioncomment-8035063">https://github.com/InternLM/tutorial/discussions/37#discussioncomment-8035063</a>	<br>作业 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/92#discussioncomment-8035219">https://github.com/InternLM/tutorial/discussions/92#discussioncomment-8035219</a></p>
-<h4 id="第3课"><a href="#第3课" class="headerlink" title="第3课"></a>第3课</h4><p>笔记 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/38#discussioncomment-8061447">https://github.com/InternLM/tutorial/discussions/38#discussioncomment-8061447</a>	<br>作业 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/93#discussioncomment-8081121">https://github.com/InternLM/tutorial/discussions/93#discussioncomment-8081121</a></p>
-<h4 id="第4课"><a href="#第4课" class="headerlink" title="第4课"></a>第4课</h4><p>笔记 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/39#discussioncomment-8108951">https://github.com/InternLM/tutorial/discussions/39#discussioncomment-8108951</a>	<br>作业 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/94#discussioncomment-8116585">https://github.com/InternLM/tutorial/discussions/94#discussioncomment-8116585</a></p>
-<h4 id="第5课"><a href="#第5课" class="headerlink" title="第5课"></a>第5课</h4><p>笔记 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/40#discussioncomment-8122800">https://github.com/InternLM/tutorial/discussions/40#discussioncomment-8122800</a>	<br>作业 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/95#discussioncomment-8122839">https://github.com/InternLM/tutorial/discussions/95#discussioncomment-8122839</a></p>
-<h4 id="第6课"><a href="#第6课" class="headerlink" title="第6课"></a>第6课</h4><p>笔记 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/41#discussioncomment-8217329">https://github.com/InternLM/tutorial/discussions/41#discussioncomment-8217329</a>	<br>作业 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/96#discussioncomment-8217311">https://github.com/InternLM/tutorial/discussions/96#discussioncomment-8217311</a></p>
-<p>后续还要在通用算力平台实践一把，欢迎大家关注！</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -2297,13 +2074,13 @@ xtuner chat ./internlm-chat-7b --adapter hf --lagent
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">170k</span>
+    <span title="站点总字数">175k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">5:10</span>
+    <span title="站点阅读时长">5:18</span>
   </span>
 </div>
 <div class="busuanzi-count">
