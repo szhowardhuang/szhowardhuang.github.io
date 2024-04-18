@@ -119,7 +119,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -137,6 +137,183 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/03/26/sso/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/03/26/sso/" class="post-title-link" itemprop="url">单点登录（SSO）工作原理</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-03-26 22:00:30 / 修改时间：22:56:17" itemprop="dateCreated datePublished" datetime="2024-03-26T22:00:30+08:00">2024-03-26</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>9.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>17 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>Single Sign-On (SSO) is an authentication process that allows users to access multiple applications with a single login. This is accomplished using a central authentication server that stores the user’s credentials and verifies them for each application.</p>
+<p>单点登录（SSO）是一种身份验证过程，允许用户使用单个登录访问多个应用程序。这是通过使用一个中央身份验证服务器来实现的，该服务器存储用户的凭据并为每个应用程序进行验证。</p>
+<p>The idea of SSO is not new in the Cloud era. The on-premises identity solutions that enabled businesses to safely link their PCs, networks, and servers in the middle to late 1990s are the source of SSO technology. Around this time, companies started using specialized systems to handle user IDs, such as Lightweight Directory Access Protocol (LDAP) and Microsoft Active Directory (AD). After that, they used on-premises SSO or Web Access Management (WAM) products to protect access.</p>
+<p>SSO 的概念在云时代并不新鲜。在 20 世纪 90 年代中后期，使企业能够安全地将其个人电脑、网络和服务器连接起来的本地身份解决方案是 SSO 技术的来源。在此期间，公司开始使用专门的系统来处理用户 ID，例如轻量级目录访问协议（LDAP）和 Microsoft Active Directory（AD）。之后，他们使用本地 SSO 或 Web 访问管理（WAM）产品来保护访问。</p>
+<h2 id="SSO-组成"><a href="#SSO-组成" class="headerlink" title="SSO 组成"></a>SSO 组成</h2><ul>
+<li><p>Identity Provider (IdP): This is the central authentication server. It’s where you enter your credentials and get verified. Think of it as a high-security building entrance.<br>身份提供者（IdP）：这是中央认证服务器。这是您输入凭据并进行验证的地方。将其视为高安全性建筑入口。</p>
+</li>
+<li><p>Service Provider (SP): These individual applications rely on SSO for user login. Your work email, project management tool, and CRM platform can all be SPs. Imagine these as individual offices within the secure building.<br>服务提供商（SP）：这些个别应用程序依赖 SSO 进行用户登录。您的工作电子邮件、项目管理工具和 CRM 平台都可以是 SP。将其想象为安全建筑内的个别办公室。</p>
+</li>
+<li><p>SSO Server: This is the bridge between the IdP and SPs. It handles the communication and securely transmits authentication tokens between them. Think of it as a secure hallway connecting the entrance to the various offices.<br>SSO 服务器：这是 IdP 和 SP 之间的桥梁。它处理通信并安全地传输身份验证令牌。将其视为连接入口和各个办公室的安全走廊。</p>
+</li>
+</ul>
+<h2 id="SSO-工作流程"><a href="#SSO-工作流程" class="headerlink" title="SSO 工作流程"></a>SSO 工作流程</h2><p>Google and other services are excellent examples of how SSO works. Let’s take the example of trying to access Trello using your Google account. You don’t need to create a new user account on Trello and remember a new set of usernames&#x2F;passwords.<br>谷歌和其他服务是单点登录(SSO)运作的绝佳例子。以使用谷歌账户访问 Trello 为例。您无需在 Trello 上创建新的用户账户并记住一组新的用户名&#x2F;密码。</p>
+<p>For example, when you try to log in to Trello with your Google account, it redirects you to the central service hosted on accounts.google.com. Here, you will see a sign-in form to input your credentials. If the authentication process is successful, Google redirects you to Trello, where you can gain access where you are automatically signed in.<br>例如，当您尝试使用 Google 账户登录 Trello 时，它会将您重定向到托管在 accounts.google.com 上的中央服务。在这里，您将看到一个登录表单，输入您的凭据。如果身份验证过程成功，Google 会将您重定向到 Trello，您将自动登录并获得访问权限。</p>
+<p>如果您想使用 Google 账户访问 Trello，以下是所需的步骤：</p>
+<ul>
+<li><p>User requests access: Use the Trello login web page and select Google account as a login method.<br>用户请求访问：使用 Trello 登录网页，并选择 Google 账户作为登录方式。</p>
+</li>
+<li><p>Redirection to IdP: Trello redirects the user to the Google login page.<br>重定向到 IdP：Trello 将用户重定向到 Google 登录页面。</p>
+</li>
+<li><p>Login page served: The user is served with the Google login page.<br>登录页面已提供：用户被提供了谷歌登录页面。</p>
+</li>
+<li><p>Credentials entered: The user enters their Google credentials.<br>输入的凭据：用户输入他们的谷歌凭据。</p>
+</li>
+<li><p>SSO Server verification: Google sends authentication info to the SSO Authorization server<br>SSO 服务器验证：谷歌将认证信息发送给 SSO 授权服务器</p>
+</li>
+<li><p>Authentication at IdP: The Authorization server returns the auth token (SAML) if the credentials are valid.<br>在 IdP 上进行身份验证：如果凭证有效，授权服务器将返回授权令牌（SAML）。</p>
+</li>
+<li><p>Access granted: Google sends the auth token to the Trello<br>授权已授予：Google 将认证令牌发送给 Trello</p>
+</li>
+<li><p>Validate token: In the last step, Trello sends the token to the Google Authorization server to validate it<br>验证令牌：在最后一步中，Trello 将令牌发送给 Google 授权服务器以进行验证</p>
+</li>
+<li><p>Token valid: If the token is valid, Trello will allow access to the user and store the session for future interactions<br>令牌有效：如果令牌有效，Trello 将允许用户访问并存储会话以供将来交互使用</p>
+</li>
+</ul>
+<p><img src="/../asset_sso/01.webp"></p>
+<h2 id="单点登录的好处"><a href="#单点登录的好处" class="headerlink" title="单点登录的好处"></a>单点登录的好处</h2><p>单点登录有多个好处，即：</p>
+<ul>
+<li><p>Improved user experience: Users do not need to remember multiple usernames and passwords.<br>改进的用户体验：用户不需要记住多个用户名和密码。</p>
+</li>
+<li><p>Increased security: Users are less likely to reuse passwords across applications.<br>增加安全性：用户更不太可能在不同应用程序中重复使用密码。</p>
+</li>
+<li><p>Simplified user access auditing: Ensuring the appropriate individuals have access to resources and sensitive data can be challenging. SSO solutions can configure user access permissions according to their role, department, and seniority level.<br>简化用户访问审计：确保适当的人员可以访问资源和敏感数据可能具有挑战性。SSO 解决方案可以根据用户的角色、部门和资历级别配置用户访问权限。</p>
+</li>
+</ul>
+<h2 id="单点登录的类型"><a href="#单点登录的类型" class="headerlink" title="单点登录的类型"></a>单点登录的类型</h2><p>与 SSO 一起工作，您应该了解不同的标准和协议。一些常见的协议类型包括：</p>
+<ul>
+<li><p>SAML: This is the most common type of SSO. It uses the SAML protocol to exchange authentication information between the SSO server and applications.<br>SAML：这是最常见的单点登录类型。它使用 SAML 协议在单点登录服务器和应用程序之间交换身份验证信息。</p>
+</li>
+<li><p>Open Authorization (OAuth) 2.0): It provides delegated access to server resources on behalf of a resource owner. It specifies how tokens are transferred, allowing a user’s identity to be authenticated by an IDP and the credentials to be used to access APIs.<br>开放授权（OAuth）2.0：它代表资源所有者提供对服务器资源的委托访问。它规定了令牌的传输方式，允许用户的身份由 IDP 进行验证，并使用凭据访问 API。</p>
+</li>
+<li><p>Open ID Connect (OIDC) is a newer type of SSO based on OAuth 2.0. It is a more straightforward protocol than SAML and more accessible to integrate with web applications.<br>Open ID Connect（OIDC）是基于 OAuth 2.0 的一种较新的单点登录（SSO）类型。它是比 SAML 更直接的协议，更容易与 Web 应用程序集成。</p>
+</li>
+</ul>
+<p>要了解更多关于 OAuth 2.0 的信息，请查看以下<a target="_blank" rel="noopener" href="https://newsletter.techworld-with-milan.com/i/138606726/how-does-oauth-work">链接</a>。请注意，您也可以在 <a target="_blank" rel="noopener" href="https://learning.postman.com/docs/sending-requests/authorization/oauth-20/">Postman 中使用 OAuth 2.0</a>。</p>
+<p><img src="/../asset_sso/02.webp"></p>
+<p>一些其他的 SSO 类型，如 Kerberos 和智能卡认证，使用较少。</p>
+<ul>
+<li><p>Kerberos allows users to obtain service tickets from the KDC using their credentials. These tickets are then presented to applications for access, eliminating the need for repeated logins. However, Kerberos relies on shared secrets between the KDC and all participants, making it less suitable for internet-facing SSO due to security concerns like compromised servers exposing credentials.<br>Kerberos 允许用户使用他们的凭据从 KDC 获取服务票据。然后将这些票据提供给应用程序以进行访问，从而消除了重复登录的需要。然而，Kerberos 依赖于 KDC 和所有参与者之间的共享密钥，这使得它不太适合面向互联网的 SSO，因为存在安全问题，比如受损的服务器暴露凭据。</p>
+</li>
+<li><p>A smart card that holds an identity works with the SSO system (like a lock) to grant access to applications (doors) without needing separate logins for each. It adds a physical element to the authentication process, making it more resistant to unauthorized access. Yet, the user must physically carry it.<br>一张持有身份信息的智能卡与 SSO 系统（类似于锁）配合使用，可以在不需要单独登录的情况下，为应用程序（门）提供访问权限。它为认证过程增加了物理元素，使其更加抵抗未经授权的访问。然而，用户必须亲自携带它。</p>
+</li>
+</ul>
+<h2 id="如何选择适当的-SSO-协议"><a href="#如何选择适当的-SSO-协议" class="headerlink" title="如何选择适当的 SSO 协议"></a>如何选择适当的 SSO 协议</h2><p>在选择适当的协议时，应考虑以下因素：</p>
+<ul>
+<li><p>Enterprise vs. consumer applications: SAML is often preferred for enterprise applications due to its extensive support and integration capabilities with enterprise identity providers and complex authentication scenarios. OAuth 2.0 and OIDC are more suited for consumer-facing applications, offering flexibility and compatibility with mobile and web applications.<br>企业与消费者应用：由于 SAML 在与企业身份提供者和复杂认证场景的支持和集成能力方面非常强大，因此在企业应用中通常更受青睐。而 OAuth 2.0 和 OIDC 更适用于面向消费者的应用，提供了与移动和 Web 应用的灵活性和兼容性。</p>
+</li>
+<li><p>Authorization vs. authentication: If your primary need is authentication (verifying user identity), SAML or OIDC are your go-to options. OIDC, built on top of OAuth 2.0, provides an additional identity layer over OAuth’s authorization capabilities. Use OAuth 2.0 when your application needs to request access to user resources without exposing user passwords.<br>授权与认证：如果您的主要需求是认证（验证用户身份），SAML 或 OIDC 是您的首选选项。OIDC 是建立在 OAuth 2.0 之上的，为 OAuth 的授权能力提供了额外的身份层。当您的应用程序需要请求访问用户资源而不暴露用户密码时，请使用 OAuth 2.0。</p>
+</li>
+<li><p>Evaluate application and platform compatibility: Check the SSO protocols’ compatibility with your existing infrastructure and the applications you plan to integrate. Some legacy or enterprise systems might support SAML more broadly, while modern applications often favor OAuth 2.0 and OIDC because they are API-friendly.<br>评估应用程序和平台的兼容性：检查 SSO 协议与您现有基础设施和计划集成的应用程序的兼容性。一些传统或企业系统可能更广泛地支持 SAML，而现代应用程序通常更喜欢 OAuth 2.0 和 OIDC，因为它们对 API 友好。</p>
+</li>
+<li><p>Consider the user experience: OIDC and OAuth 2.0’s modern, token-based approach can offer a smoother and more integrated user experience, especially for web and mobile applications.<br>考虑用户体验：OIDC 和 OAuth 2.0 的现代、基于令牌的方法可以为 Web 和移动应用提供更流畅、更集成的用户体验。</p>
+</li>
+<li><p>Future-proofing: Consider the future direction of your application ecosystem. Are you moving towards cloud-based services, APIs, and mobile apps? OAuth 2.0 and OIDC may offer more flexibility and are generally considered more forward-looking in cloud and mobile services.<br>未来保护：考虑您的应用生态系统的未来方向。您是否正在转向基于云的服务、API 和移动应用？OAuth 2.0 和 OIDC 可能提供更多的灵活性，并且在云和移动服务中通常被认为更具前瞻性。</p>
+</li>
+<li><p>Compliance and regulatory requirements: Ensure the chosen protocol meets any specific regulatory requirements relevant to your industry, such as GDPR, HIPAA, or others that may dictate specific security or privacy standards.<br>合规和监管要求：确保所选择的协议符合与您所在行业相关的任何特定监管要求，例如 GDPR、HIPAA 或其他可能规定特定安全或隐私标准的要求。</p>
+</li>
+</ul>
+<h2 id="SSO-实施"><a href="#SSO-实施" class="headerlink" title="SSO 实施"></a>SSO 实施</h2><p>市场上有许多产品可用于 SSO</p>
+<ul>
+<li><p>Microsoft Entra ID (formerly known as a Microsoft Active Directory). Ideal for organizations already invested in the Microsoft ecosystem, it offers seamless integration with Office 365, Dynamics CRM, and other Microsoft services. It’s known for its robust security features and comprehensive management capabilities.<br>Microsoft Entra ID（以前称为 Microsoft Active Directory）。适用于已经投资于 Microsoft 生态系统的组织，它与 Office 365、Dynamics CRM 和其他 Microsoft 服务无缝集成。它以其强大的安全功能和全面的管理能力而闻名。</p>
+</li>
+<li><p>Okta is a popular cloud-based SSO solution known for its ease of use, scalability, and wide range of application integrations. It’s a strong option for organizations seeking a comprehensive identity and access management (IAM) platform.<br>Okta 是一种流行的基于云的单点登录（SSO）解决方案，以其易用性、可扩展性和广泛的应用集成而闻名。对于寻求全面身份和访问管理（IAM）平台的组织来说，它是一个强大的选择。</p>
+</li>
+<li><p>Ping Identity. Known for its flexibility, Ping Identity caters to enterprises with complex security requirements. It offers strong mobile and API security options, making it suitable for organizations needing high levels of customization and security.<br>Ping Identity。以其灵活性而闻名，适用于具有复杂安全需求的企业。它提供强大的移动和 API 安全选项，适用于需要高度定制和安全性的组织。</p>
+</li>
+<li><p>OneLogin. With a focus on simplicity and integration, OneLogin offers a straightforward SSO solution that works well for small to medium-sized businesses. It provides real-time threat detection and AI-powered authentication for enhanced security.<br>OneLogin。专注于简单性和集成性，OneLogin 提供了一个适用于中小型企业的直接 SSO 解决方案。它提供实时威胁检测和 AI 驱动的身份验证，以增强安全性。</p>
+</li>
+<li><p>Auth0 is favored for its developer-friendly approach. It provides powerful customization options, making it a go-to for organizations that must tailor their authentication flows. It supports a wide range of programming languages and frameworks.<br>Auth0 因其开发者友好的方法而备受青睐。它提供强大的定制选项，使其成为那些必须定制其身份验证流程的组织的首选。它支持广泛的编程语言和框架。</p>
+</li>
+</ul>
+<p><img src="/../asset_sso/03.webp"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://medium.com/@techworldwithmilan/how-does-single-sign-on-sso-work-31ffa1afcc63">https://medium.com/@techworldwithmilan/how-does-single-sign-on-sso-work-31ffa1afcc63</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1785,272 +1962,6 @@ python inference_gfpgan.py -i inputs/whole_imgs -o results -v 1.4 -s 1
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/02/22/digital-human/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Howard Huang">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/02/22/digital-human/" class="post-title-link" itemprop="url">如何设计一个数字人 --- 3D模型篇</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-02-22 23:00:16" itemprop="dateCreated datePublished" datetime="2024-02-22T23:00:16+08:00">2024-02-22</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-02-23 22:08:16" itemprop="dateModified" datetime="2024-02-23T22:08:16+08:00">2024-02-23</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>5.4k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>10 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>下面我就以制作一个数字人卖货视频为例</p>
-<p>首先介绍一下将会用到的 AI 工具。</p>
-<ol>
-<li><p>ChatGPT: 在制作数字人的过程中，ChatGPT 可以用于设定数字人的性格、生成演讲文本、回答技术问题等。</p>
-</li>
-<li><p>MetaHuman Creator: 这是一款由 Epic Games 开发的三维人物建模软件，可以通过对头部、身体等部位个性化的调整，实现高度逼真的数字人三维建模。</p>
-</li>
-<li><p>微软语音合成助手，由微软公司开发，用于语音识别与合成，可以将 ChatGPT 生成的文本内容转化为数字人所需要的自然语音输出。</p>
-</li>
-<li><p>Audio2Face: 由英伟达公司开发的一款表情驱动技术软件，可以将音频的语调、音量等信息转化为数字人的面部表情，从而使数字人的表现更加生动真实</p>
-</li>
-<li><p>UE5: Epic Games 开发的一款高级游戏引擎，可以提供实时渲染、动态光照、体积雾等功能，可用于打造更加真实的数字人场景。</p>
-</li>
-</ol>
-<p>下面是制作一个数字人卖货视频的大概流程:</p>
-<p>AI人物设定和内容生成 一 3D建模 一 AI语音生成 一 AI表情驱动 一 AI场景搭建</p>
-<p>接下来让我为你具体介绍每一部分的流程。</p>
-<h3 id="AI人物设定和内容生成"><a href="#AI人物设定和内容生成" class="headerlink" title="AI人物设定和内容生成"></a>AI人物设定和内容生成</h3><p>人物设定是制作数字人的第一步，这里我们可以使用 ChatGPT 来进行人物设定，为数字人定制其个性化特征和语言风格等。</p>
-<p><img src="/../asset_digitalhuman/003.png"></p>
-<p>生成售卖文案</p>
-<p><img src="/../asset_digitalhuman/004.png"></p>
-<h3 id="3D建模"><a href="#3D建模" class="headerlink" title="3D建模"></a>3D建模</h3><p>登录 MetaHuman Creator 进行 3D 建模<br>进入 MetaHuman Creator <a target="_blank" rel="noopener" href="https://metahuman.unrealengine.com/mhc">https://metahuman.unrealengine.com/mhc</a> 在预设数字人中选择一个人物模型，结合chatgpt的描述进行个性化调整，如头发、服饰、发型等。</p>
-<p><img src="/../asset_digitalhuman/005.png"></p>
-<p>调整后如下图：</p>
-<p><img src="/../asset_digitalhuman/006.png"><br>此模型会存在云端，后续从UE5导入此模型。</p>
-<h3 id="AI语音生成"><a href="#AI语音生成" class="headerlink" title="AI语音生成"></a>AI语音生成</h3><p>使用语音合成助手，将 ChatGPT 生成的文本内容转化为数字人所需要的自然语音输出。<br>这里用小白兔AI工具包里面的微软语音合成把文本转成语音，语音文件会自动下载到本地。</p>
-<p><img src="/../asset_digitalhuman/007.png"></p>
-<p>微软语音合成需要用到Microsoft Azure API，需要注册Azure账号，并申请语音合成服务。</p>
-<p><img src="/../asset_digitalhuman/008.png"><br>把密钥和区域填到小白兔AI里面</p>
-<p>注：Microsoft Azure 是微软的公用云端服务平台，首先得有个 Microsoft 账号，然后再基于这个 Microsoft 账号开通 Microsoft Azure 帐户。<br>Microsoft Azure收费模式</p>
-<table>
-<thead>
-<tr>
-<th>服务</th>
-<th>免费额度</th>
-<th>超出免费额度</th>
-<th>并发请求数</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>文本转语音</td>
-<td>每月50万字符</td>
-<td>16美元&#x2F;100万字符</td>
-<td>-</td>
-</tr>
-</tbody></table>
-<p>Microsoft Azure支持通过国内的 Visa 卡申请。</p>
-<p>后面讲一下如何开通 Azure 帐户</p>
-<h3 id="AI表情驱动"><a href="#AI表情驱动" class="headerlink" title="AI表情驱动"></a>AI表情驱动</h3><p>Audio2Face是由英伟达公司开发的一款表情驱动技术软件，可以将音频的语调、音量等信息转化为数字人的面部表情，从而使数字人的表现更加生动真实。<br>我们将微软语音助手生成的语音转成WAV格式，并导入到Audio2Face中，进行表情驱动。</p>
-<p>去nvidia官网下载Audio2Face标准版 <a target="_blank" rel="noopener" href="https://www.nvidia.com/en-us/omniverse/apps/audio2face/">https://www.nvidia.com/en-us/omniverse/apps/audio2face/</a></p>
-<p>打开audio2face，如下图设置，确认可以说话动嘴。<br><img src="/../asset_digitalhuman/010.png"><br>然后存项目到本地</p>
-<h3 id="AI场景搭建"><a href="#AI场景搭建" class="headerlink" title="AI场景搭建"></a>AI场景搭建</h3><p>先安装UE5，下载地址 <a target="_blank" rel="noopener" href="https://www.unrealengine.com/en-US/download/">https://www.unrealengine.com/en-US/download/</a></p>
-<p>然后下载MetaHuman示例项目 </p>
-<p><img src="/../asset_digitalhuman/011.png"></p>
-<p>打开此工程，点击窗口，选择Quixel Bridge</p>
-<p><img src="/../asset_digitalhuman/012.png"></p>
-<p>出现如下界面，My MetaHuman 的模型就是之前MetaHuman Creator生成的模型，点击 add按钮，会把这个模型导入到UE5的工程里面。 下载模型的时间很长，耐心等。</p>
-<p><img src="/../asset_digitalhuman/013.png"><br>然后可以在UE5里面使用你导入的模型，因为我修改的模型和示例工程的模型一致，所以UE5会直接替换掉。</p>
-<p>然后设置Omniverse livelink，让UE5和Audio2Face连接起来，让数字人可以和你说话。</p>
-<p>首先把Audio2Face的插件拷贝到UE5的Plugins文件夹下，Audio2Face的插件路径一般是 user目录下面的AppData目录下面</p>
-<p><img src="/../asset_digitalhuman/017.png"></p>
-<p>拷贝到UE5安装目录</p>
-<p><img src="/../asset_digitalhuman/018.png"></p>
-<p>打开UE5的插件，选择Nvidia</p>
-<p><img src="/../asset_digitalhuman/015.png"></p>
-<p>使能 NVIDIA Omniverse ACE</p>
-<p><img src="/../asset_digitalhuman/016.png"></p>
-<p>打开UE5的窗口，选择 虚拟制片 - Live Link，点击「启动 Live Link」</p>
-<p><img src="/../asset_digitalhuman/014.png"></p>
-<p>添加源 NVIDIA Omniverse Live Link，点击 OK<br><img src="/../asset_digitalhuman/019.png"></p>
-<p>点击Audio2face的stage - audio2face - StreamLivelink， 勾选 Activate</p>
-<p><img src="/../asset_digitalhuman/020.png"></p>
-<p>点击audio2face的wave Play按钮，让数字人开始说话。</p>
-<p>之后参考youtube视频，调整audio2face的模型参数，让数字人更加动人。</p>
-<p>最后，修改UE5的场景，调整场景的光照、音效、材质，让场景更加生动。</p>
-<p>教程结束，祝你玩得开心！</p>
-<h2 id="附注"><a href="#附注" class="headerlink" title="附注"></a>附注</h2><h3 id="注册Azure账号"><a href="#注册Azure账号" class="headerlink" title="注册Azure账号"></a>注册Azure账号</h3><p>网页 <a target="_blank" rel="noopener" href="https://signup.azure.com/signup">https://signup.azure.com/signup</a></p>
-<p>进入网页之后，先登陆 Microsoft 账号。</p>
-<p>填写个人信息<br><img src="/../asset_digitalhuman/azure_signup_1.jpg"></p>
-<p>填写卡信息用于身份验证，点击「注册」<br><img src="/../asset_digitalhuman/azure_signup_2.jpg"></p>
-<p>创建 Azure 订阅, Azure 订阅主要就是决定如何计费，一般是有「免费使用版」和 「即用即付」两种选择。</p>
-<p>如果是刚注册 Azure 确实是可以选择「免费使用版」的，但是只能使用 30 天，30 天之后还是得转为「即用即付」才可以继续使用。</p>
-<p>所以我建议直接选「即用即付」订阅，也是享有同等的免费额度。从注册 Azure 开始，Microsoft 翻译可以拥有 12 个月的免费额度，12 个月之后就没有了，想要继续使用需要收费。但是 Microsoft 语音合成目前是每个月都有免费额度，没有 12 个月的限制。（当然，前提是 Microsoft 不改变免费规则）</p>
-<p>进入「订阅页面」<a target="_blank" rel="noopener" href="https://portal.azure.com/?quickstart=True#view/Microsoft_Azure_Billing/SubscriptionsBlade">https://portal.azure.com/?quickstart=True#view/Microsoft_Azure_Billing/SubscriptionsBlade</a> ，点击「添加」，点击「即用即付」下方的「选择产品&#x2F;服务」</p>
-<p><img src="/../asset_digitalhuman/azure_subscription_1.jpg"></p>
-<p>选中「我同意…」、「我愿意…」，点击「下一步」</p>
-<p><img src="/../asset_digitalhuman/azure_subscription_2.jpg"></p>
-<p>之前注册的时候应该已经填写过卡信息了，这里会默认选中，然后点击「下一步」</p>
-<p><img src="/../asset_digitalhuman/azure_subscription_3.jpg"></p>
-<p>然后这里选择「没有任何技术支持…」，点击「注册」</p>
-<p><img src="/../asset_digitalhuman/azure_subscription_4.jpg"></p>
-<p>创建资源组, 进入 「资源组页面」 <a target="_blank" rel="noopener" href="https://portal.azure.com/?quickstart=True#view/HubsExtension/BrowseResourceGroups">https://portal.azure.com/?quickstart=True#view/HubsExtension/BrowseResourceGroups</a> ，点击「创建」</p>
-<p><img src="/../asset_digitalhuman/azure_resource_1.jpg"></p>
-<ul>
-<li>订阅选刚才创建好的订阅，默认应该就一个</li>
-<li>资源组可以直接命名为 Bob</li>
-<li>区域可以选离自己地理位置近的，例如在中国就选 East Aisa 就行</li>
-<li>然后点击「查看+创建」<br><img src="/../asset_digitalhuman/azure_resource_2.jpg"></li>
-</ul>
-<p>点击「创建」<br><img src="/../asset_digitalhuman/azure_resource_3.jpg"></p>
-<p>如下所示即为创建成功<br><img src="/../asset_digitalhuman/azure_resource_4.jpg"></p>
-<p>创建语音服务资源, 进入「Azure AI services | 语音服务 」页面 <a target="_blank" rel="noopener" href="https://portal.azure.com/#view/Microsoft_Azure_ProjectOxford/CognitiveServicesHub/~/SpeechServices">https://portal.azure.com/#view/Microsoft_Azure_ProjectOxford/CognitiveServicesHub/~/SpeechServices</a> ，点击「创建」<br><img src="/../asset_digitalhuman/009.png"></p>
-<ul>
-<li>订阅选刚才创建好的订阅</li>
-<li>资源组选刚才创建好的资源组</li>
-<li>区域可以选离自己地理位置近的，选跟前面创建资源组一样的就行，例如在中国就选 East Aisa 就行</li>
-<li>名称这一栏随便取名，但是不能重名，所以输入和我一样的应该会报错，随便输入不一样的就行，由数字、字母和横线组成即可</li>
-<li>定价层选中「Free F0」</li>
-<li>然后点击「审阅并创建」<br><img src="/../asset_digitalhuman/azure_tts_open_2.jpg"></li>
-</ul>
-<p>点击创建<br><img src="/../asset_digitalhuman/azure_tts_open_3.jpg"></p>
-<p>如下所示即为创建成功<br><img src="/../asset_digitalhuman/azure_tts_open_4.jpg"></p>
-<p>获取秘钥, 进入「认知服务 | 语音服务 」页面 <a target="_blank" rel="noopener" href="https://portal.azure.com/#view/Microsoft_Azure_ProjectOxford/CognitiveServicesHub/~/SpeechServices">https://portal.azure.com/#view/Microsoft_Azure_ProjectOxford/CognitiveServicesHub/~/SpeechServices</a> ，应该能看到你刚才创建语音服务资源，点击进入详情<br><img src="/../asset_digitalhuman/azure_tts_secret_1.jpg"></p>
-<p>选中「密钥和终结点」，如下图所示即为需要的秘钥<br><img src="/../asset_digitalhuman/azure_tts_secret_2.jpg"></p>
-<p>填写秘钥<br>在 小白兔AI 的 设置 &gt; 微软付费订阅 中，将刚才获取到的秘钥填写到对应位置即可。</p>
-<p>微软视素的文档可以看看， <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/azure/ai-services/speech-service/how-to-speech-synthesis-viseme">https://learn.microsoft.com/zh-cn/azure/ai-services/speech-service/how-to-speech-synthesis-viseme</a></p>
-<h3 id="FFMPEG"><a href="#FFMPEG" class="headerlink" title="FFMPEG"></a>FFMPEG</h3><h4 id="使用FFmpeg将MP3文件转换成WAVE格式，你可以使用以下命令："><a href="#使用FFmpeg将MP3文件转换成WAVE格式，你可以使用以下命令：" class="headerlink" title="使用FFmpeg将MP3文件转换成WAVE格式，你可以使用以下命令："></a>使用FFmpeg将MP3文件转换成WAVE格式，你可以使用以下命令：</h4><pre><code>ffmpeg -i input.mp3 -ar 16000 output.wav
-</code></pre>
-<p>-i input.mp3 指定输入文件，其中 input.mp3 是你的源MP3文件的名称。</p>
-<p>-ar 16000 指定了输出文件的采样率为16000 Hz。</p>
-<h4 id="录屏视频截取，使用FFmpeg截取视频文件的一部分，你可以通过指定开始时间（-ss-参数）和持续时间（-t-参数）或结束时间（-to-参数）来完成。以下是一些常见的使用场景和相应的命令示例："><a href="#录屏视频截取，使用FFmpeg截取视频文件的一部分，你可以通过指定开始时间（-ss-参数）和持续时间（-t-参数）或结束时间（-to-参数）来完成。以下是一些常见的使用场景和相应的命令示例：" class="headerlink" title="录屏视频截取，使用FFmpeg截取视频文件的一部分，你可以通过指定开始时间（-ss 参数）和持续时间（-t 参数）或结束时间（-to 参数）来完成。以下是一些常见的使用场景和相应的命令示例："></a>录屏视频截取，使用FFmpeg截取视频文件的一部分，你可以通过指定开始时间（-ss 参数）和持续时间（-t 参数）或结束时间（-to 参数）来完成。以下是一些常见的使用场景和相应的命令示例：</h4><h5 id="使用-ss-和-t-参数"><a href="#使用-ss-和-t-参数" class="headerlink" title="使用 -ss 和 -t 参数"></a>使用 -ss 和 -t 参数</h5><p>在这个例子中，-ss 指定了开始截取的时间点，-t 指定了从开始点后要截取的持续时间。</p>
-<pre><code>ffmpeg -i input.mp4 -ss 00:00:10 -t 00:00:20 -c copy output.mp4
-</code></pre>
-<p>input.mp4 是源视频文件。<br>-ss 00:00:10 表示从视频的第10秒开始截取。<br>-t 00:00:20 表示截取从开始点算起20秒的视频内容。<br>-c copy 表示使用“复制”模式，这样可以避免重新编码视频和音频流，加快处理速度并保持原有质量。<br>output.mp4 是输出的视频文件。</p>
-<h5 id="使用-ss-和-to-参数"><a href="#使用-ss-和-to-参数" class="headerlink" title="使用 -ss 和 -to 参数"></a>使用 -ss 和 -to 参数</h5><p>与上面的例子不同，-to 参数指定的是截取的结束时间点，而不是持续时间。</p>
-<pre><code>ffmpeg -i input.mp4 -ss 00:00:10 -to 00:00:30 -c copy output.mp4
-</code></pre>
-<p>-to 00:00:30 表示截取到视频的第30秒为止。</p>
-<h4 id="音画不同步，画面延迟大约1秒，用FFMPEG调整，相对视频对音频时间戳进行偏移："><a href="#音画不同步，画面延迟大约1秒，用FFMPEG调整，相对视频对音频时间戳进行偏移：" class="headerlink" title="音画不同步，画面延迟大约1秒，用FFMPEG调整，相对视频对音频时间戳进行偏移："></a>音画不同步，画面延迟大约1秒，用FFMPEG调整，相对视频对音频时间戳进行偏移：</h4><p>音频相对于视频移后时间00:00:01.000</p>
-<pre><code>ffmpeg -y -itsoffset 00:00:01.000 -i out.mp4 -i out.mp4 -map 0:a -map 1:v -vcodec copy -acodec copy -f mp4 -threads 2 -v warning out.sync.mp4
-</code></pre>
-<p>-y 可覆盖，如果文件已存在强制替换；</p>
-<p>-itsoffset offset 设置以秒为基准的时间偏移，该选项影响所有后面的输入文件。该偏移被加到输入文件的时戳，定义一个正偏移意味着相应的流被延迟了 offset秒。 [-]hh:mm:ss[.xxx]的格式也支持</p>
-<p>-i 输入，后面是空格，紧跟着就是输入视频文件</p>
-<p>-f fmt 强迫采用格式fmt</p>
-<p>-v：调试信息级别（quiet、panic、fatal、error、warning、info、verbose、debug）</p>
-<p>-vcodec copy 和 -acodec copy表示所要使用的视频和音频的编码格式，这里指定为copy表示原样拷贝</p>
-<p>-map file_number:stream_type[:stream_number]    选择媒体流语法</p>
-<p>这有一些特别流符号的说明：</p>
-<p>1、-map 0 选择第一个文件的所有流</p>
-<p>2、-map i:v 从文件序号i(index)中获取所有视频流， -map i:a 获取所有音频流，-map i:v 获取所有视频流，-map i:s 获取所有字幕流等等。</p>
-<p>3、特殊参数-an,-vn,-sn分别排除所有的音频，视频，字幕流。</p>
-<h4 id="播放验证"><a href="#播放验证" class="headerlink" title="播放验证"></a>播放验证</h4><pre><code>ffplay out.sync.mp4
-</code></pre>
-<h3 id="如何定制数字人的人脸"><a href="#如何定制数字人的人脸" class="headerlink" title="如何定制数字人的人脸"></a>如何定制数字人的人脸</h3><p>用polycam扫描人脸</p>
-<p>导出GLTF</p>
-<p>打开blender，导入GLTF，删除多余部分，选中，按X键删除， 然后merge mesh</p>
-<p>导出FBX，path mode选择copy，并点击旁边的按钮；object选择Animate和mesh；Geometry选择face；disable Bake Animation；然后点击export，保存为.fbx文件<br><img src="/../asset_digitalhuman/021.png"></p>
-<p>到UE5，新建项目，影视和现场活动 - 空白<br><img src="/../asset_digitalhuman/023.png"></p>
-<p>把fbx文件拖到UE5内容窗口，导入.fbx文件</p>
-<p><img src="/../asset_digitalhuman/024.png"></p>
-<p>导入后，双击material，调整material，添加常量节点</p>
-<p><img src="/../asset_digitalhuman/025.png"></p>
-<p>调整后，如下图</p>
-<p><img src="/../asset_digitalhuman/026.png"></p>
-<p>MetaHuman Plugin安装, 在Epic商城安装<br><a target="_blank" rel="noopener" href="https://www.unrealengine.com/marketplace/en-US/product/metahuman-plugin#">https://www.unrealengine.com/marketplace/en-US/product/metahuman-plugin#</a></p>
-<p>打开插件菜单，enable metahuman plugin</p>
-<p>在内容窗口右键，选择metahuman本体</p>
-<p><img src="/../asset_digitalhuman/027.png"></p>
-<p>双击这个本体，进入编辑窗口，导入mesh</p>
-<p><img src="/../asset_digitalhuman/028.png"></p>
-<p>调整人脸的位置， 快捷键 W&#x2F;R&#x2F;E ， 设置viewport的FOV到20</p>
-<p><img src="/../asset_digitalhuman/029.png"></p>
-<p>打开提升帧，选择自动追踪</p>
-<p>点击metahuman本体解算</p>
-<p>点击body，选择一个体型</p>
-<p>点击Mesh to Metahuman，如下图</p>
-<p><img src="/../asset_digitalhuman/030.png"></p>
-<p>进入Quilel Bridge，选择metahuman - my metahuman， 选择你新建立的本体，启动MHC</p>
-<p><img src="/../asset_digitalhuman/031.png"></p>
-<p>进入metahuman后，调整人物各部分</p>
-<p><img src="/../asset_digitalhuman/022.png"></p>
-<p>结束，后续在UE5项目导入你定制的人脸即可。</p>
-<h3 id="参考视频"><a href="#参考视频" class="headerlink" title="参考视频"></a>参考视频</h3><p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=HEFIvFnUfpw">Audio2Face to MetaHuman | How to Animate MetaHuman using Audio2Face Live Link</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=2tGPx0Athvk">Importing a Metahuman into Unreal Engine 5 (simplified way) </a></p>
-<p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=xFk_WU32igA">How to Use Mesh to Metahuman (From Scan to Metahuman)</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -2074,13 +1985,13 @@ python inference_gfpgan.py -i inputs/whole_imgs -o results -v 1.4 -s 1
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">175k</span>
+    <span title="站点总字数">190k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">5:18</span>
+    <span title="站点阅读时长">5:45</span>
   </span>
 </div>
 <div class="busuanzi-count">

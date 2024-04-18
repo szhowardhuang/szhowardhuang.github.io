@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"szhowardhuang.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="去年，Google 向所有拥有 Google One 的用户提供了“神奇橡皮擦”。有了神奇橡皮擦，我们可以轻松地从照片中删除不需要的部分。它利用人工智能根据周围环境填充适当的对象，使整体图片看起来更加自然！微信也有这个功能。 这项技术可能看起来像魔术，让您可以随心所欲地更改图像。有些人可能认为这需要大量的数学知识和计算机性能。但实际上，魔术橡皮擦，也被称为“图像修复”，并不太复杂，可以在您自己的计">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用 PyTorch 创建迷你神奇橡皮擦">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/04/17/magic-eraser/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="去年，Google 向所有拥有 Google One 的用户提供了“神奇橡皮擦”。有了神奇橡皮擦，我们可以轻松地从照片中删除不需要的部分。它利用人工智能根据周围环境填充适当的对象，使整体图片看起来更加自然！微信也有这个功能。 这项技术可能看起来像魔术，让您可以随心所欲地更改图像。有些人可能认为这需要大量的数学知识和计算机性能。但实际上，魔术橡皮擦，也被称为“图像修复”，并不太复杂，可以在您自己的计">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_magiceraser/01.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_magiceraser/02.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_magiceraser/03.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_magiceraser/04.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_magiceraser/05.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_magiceraser/06.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_magiceraser/07.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_magiceraser/08.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_magiceraser/09.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_magiceraser/10.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_magiceraser/11.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_magiceraser/12.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_magiceraser/13.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_magiceraser/14.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_magiceraser/15.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_magiceraser/16.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_magiceraser/17.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_magiceraser/18.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_magiceraser/19.webp">
+<meta property="article:published_time" content="2024-04-17T12:16:47.000Z">
+<meta property="article:modified_time" content="2024-04-17T13:18:24.000Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://szhowardhuang.github.io/asset_magiceraser/01.webp">
+
+
+<link rel="canonical" href="https://szhowardhuang.github.io/2024/04/17/magic-eraser/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://szhowardhuang.github.io/2024/04/17/magic-eraser/","path":"2024/04/17/magic-eraser/","title":"使用 PyTorch 创建迷你神奇橡皮擦"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>使用 PyTorch 创建迷你神奇橡皮擦 | 嵌入式老兵博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">嵌入式老兵博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90"><span class="nav-number">1.</span> <span class="nav-text">条件图像生成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E4%BF%AE%E5%A4%8D%E7%9A%84%E6%AD%A5%E9%AA%A4"><span class="nav-number">2.</span> <span class="nav-text">图像修复的步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%81%94%E5%90%88%E8%B0%83%E5%88%B6-GAN"><span class="nav-number">3.</span> <span class="nav-text">联合调制 GAN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86"><span class="nav-number">4.</span> <span class="nav-text">数据预处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84"><span class="nav-number">5.</span> <span class="nav-text">模型架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%90%E9%AB%98-StyleGAN-%E7%9A%84%E5%9B%BE%E5%83%8F%E8%B4%A8%E9%87%8F"><span class="nav-number">6.</span> <span class="nav-text">提高 StyleGAN 的图像质量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E5%99%A8%E5%9D%97"><span class="nav-number">7.</span> <span class="nav-text">生成器块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E5%99%A8"><span class="nav-number">8.</span> <span class="nav-text">生成器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%89%B4%E5%88%AB%E5%99%A8"><span class="nav-number">9.</span> <span class="nav-text">鉴别器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-number">10.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E5%BE%AA%E7%8E%AF%E5%92%8C%E6%87%92%E6%83%B0%E6%AD%A3%E5%88%99%E5%8C%96"><span class="nav-number">11.</span> <span class="nav-text">训练循环和懒惰正则化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#R1-%E6%AD%A3%E5%88%99%E5%8C%96"><span class="nav-number">12.</span> <span class="nav-text">R1 正则化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%AF%E5%BE%84%E9%95%BF%E5%BA%A6%E6%AD%A3%E5%88%99%E5%8C%96"><span class="nav-number">13.</span> <span class="nav-text">路径长度正则化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C"><span class="nav-number">14.</span> <span class="nav-text">结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">15.</span> <span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Howard Huang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/04/17/magic-eraser/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="使用 PyTorch 创建迷你神奇橡皮擦 | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用 PyTorch 创建迷你神奇橡皮擦
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-04-17 20:16:47 / 修改时间：21:18:24" itemprop="dateCreated datePublished" datetime="2024-04-17T20:16:47+08:00">2024-04-17</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>15k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>27 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>去年，Google 向所有拥有 Google One 的用户提供了“神奇橡皮擦”。有了神奇橡皮擦，我们可以轻松地从照片中删除不需要的部分。它利用人工智能根据周围环境填充适当的对象，使整体图片看起来更加自然！微信也有这个功能。</p>
+<p>这项技术可能看起来像魔术，让您可以随心所欲地更改图像。有些人可能认为这需要大量的数学知识和计算机性能。但实际上，魔术橡皮擦，也被称为“图像修复”，并不太复杂，可以在您自己的计算机上完成。</p>
+<p>当今流行的方法包括基于扩散、GANs（生成对抗网络）和注意力机制的模型。在本文中，我将重点介绍基于 GAN 的图像修复方法。</p>
+<h2 id="条件图像生成"><a href="#条件图像生成" class="headerlink" title="条件图像生成"></a>条件图像生成</h2><p>图像生成本质上是让我们的模型产生一个虚假的数据分布 Pmodel(x)。目标是使这个分布尽可能接近真实分布 Pdata(x)，从而生成新的图像。</p>
+<p><img src="/../asset_magiceraser/01.webp"></p>
+<p>在图像修复中，我们的目标是填补图像中缺失的部分。这可以被看作是向图像引入一个“条件”，将我们模型的方法从一般分布 Pmodel(x) 转变为条件分布 Pmodel(x | condition)。</p>
+<p>这个过程类似于常规图像生成，但多了一个将条件纳入我们模型的额外步骤，我稍后会详细讨论。</p>
+<h2 id="图像修复的步骤"><a href="#图像修复的步骤" class="headerlink" title="图像修复的步骤"></a>图像修复的步骤</h2><p><img src="/../asset_magiceraser/02.webp"></p>
+<ul>
+<li>创建一个随机遮罩</li>
+<li>将真实图像与遮罩相结合（遮罩图像）</li>
+<li>把遮罩图像和遮罩作为神经网络的输入，生成假图像</li>
+<li>计算真实图像和假图像之间的相似性（损失）</li>
+</ul>
+<h2 id="联合调制-GAN"><a href="#联合调制-GAN" class="headerlink" title="联合调制 GAN"></a>联合调制 GAN</h2><p>联合调制生成对抗网络，或称 CoModGAN，是一种专为图像补全设计的生成模型。该模型在处理图像中大片缺失区域的任务中特别有效。</p>
+<p>我们可以看到这是一种 GAN（生成对抗网络）模型，这意味着它主要由两部分组成：生成器负责创建图像，鉴别器评估这些图像以确定它们是真实的还是虚假的。</p>
+<p><img src="/../asset_magiceraser/03.webp"><br>有条件图像生成的过程</p>
+<p>让我们关注 CoModGAN 的另一个关键方面：’联合调制’。下面的图像展示了调制的不同方法：（D：解码器，M：映射网络, E：有条件编码器）</p>
+<p><img src="/../asset_magiceraser/04.webp"></p>
+<ul>
+<li>模型 (a) 代表了一种用于生成图像的无条件模型，最初在 StyleGAN 中引入。其关键特征包括调制和映射网络。</li>
+<li>模型 (b) 和 (c) 是编码器-解码器架构的典型示例，其中编码器将图像转换为潜在空间，而解码器重建原始图像。(例如 Pix2Pix，CycleGAN…)</li>
+<li>模型 (d) 基于模型 (b) 和 (c) 的结构，并且还整合了 StyleGAN 的 (a) 映射网络以解开潜在向量 Z。此外，为了更好地控制生成图像的风格，它将 E 和 M 的输出组合作为 D 的额外输入，这就是为什么它被称为共调制。</li>
+</ul>
+<h2 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h2><p>机器学习中的第一步，也是最重要的一步是数据预处理阶段。在这个实现中，我们将使用 CelebA-HQ 数据集和矩形遮罩来训练模型。此外，您也可以使用自由形式的遮罩或创建自己的遮罩</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">def rectangle_mask(shape, min_size=32, max_size=96):</span><br><span class="line">    h, w = shape</span><br><span class="line">    mask = np.zeros([h, w])</span><br><span class="line">    hole_size = random.randint(min_size, max_size)</span><br><span class="line">    hole_size = min(int(w*0.8), int(h*0.8), hole_size)</span><br><span class="line">    x = random.randint(0, w-hole_size-1)</span><br><span class="line">    y = random.randint(0, h-hole_size-1)</span><br><span class="line">    mask[x:x+hole_size, y:y+hole_size] = 1</span><br><span class="line">    return mask.reshape([1, h, w]).astype(np.float32)</span><br><span class="line">    </span><br><span class="line">def random_ff_mask(shape):</span><br><span class="line">    h,w = shape</span><br><span class="line">    mask = np.zeros((h,w))</span><br><span class="line">    num_v = 12+np.random.randint(5)</span><br><span class="line">    </span><br><span class="line">    for i in range(num_v):</span><br><span class="line">        start_x = np.random.randint(w)</span><br><span class="line">        start_y = np.random.randint(h)</span><br><span class="line">        for j in range(1+np.random.randint(5)):</span><br><span class="line">            angle = 0.01+np.random.randint(4)</span><br><span class="line">            if i % 2 == 0:</span><br><span class="line">                angle = 2 * 3.1415926 - angle</span><br><span class="line">            length = 10+np.random.randint(30)</span><br><span class="line">            brush_w = 10+np.random.randint(7)</span><br><span class="line">            end_x = (start_x + length * np.sin(angle)).astype(np.int32)</span><br><span class="line">            end_y = (start_y + length * np.cos(angle)).astype(np.int32)</span><br><span class="line"></span><br><span class="line">            cv2.line(mask, (start_y, start_x), (end_y, end_x), 1.0, brush_w)</span><br><span class="line">            start_x, start_y = end_x, end_y</span><br><span class="line">    return mask.reshape((1,) + mask.shape).astype(np.float32)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">class InpaintData(torch.utils.data.Dataset):</span><br><span class="line">    def __init__(self, path, img_size=[128, 128]):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.file_list = []</span><br><span class="line">        self.img_size = img_size</span><br><span class="line">        self.transforms = transforms.Compose([</span><br><span class="line">            # can put some augmentation here</span><br><span class="line">            transforms.RandomHorizontalFlip(0.5),</span><br><span class="line">            transforms.ToTensor(),</span><br><span class="line">            transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])]</span><br><span class="line">        )</span><br><span class="line">        for file_name in glob(f&#x27;&#123;path&#125;/**/*.jpg&#x27;, recursive=True):</span><br><span class="line">            self.file_list.append(file_name)</span><br><span class="line"></span><br><span class="line">    def __len__(self):</span><br><span class="line">        return len(self.file_list)</span><br><span class="line"></span><br><span class="line">    def __getitem__(self, idx):</span><br><span class="line">        file_name = self.file_list[idx]</span><br><span class="line">        img = Image.open(file_name).convert(&#x27;RGB&#x27;)</span><br><span class="line">        img = transforms.functional.resize(img, self.img_size, Image.BICUBIC)</span><br><span class="line">        img = self.transforms(img)</span><br><span class="line">        mask = rectangle_mask([128, 128])</span><br><span class="line">        return img, mask</span><br><span class="line">      </span><br><span class="line">path = &quot;put your path here!&quot;</span><br><span class="line">dataset = InpaintData(path)</span><br><span class="line">train_data = torch.utils.data.DataLoader(</span><br><span class="line">                    dataset,</span><br><span class="line">                    batch_size=16,</span><br><span class="line">                    shuffle= True,</span><br><span class="line">                    pin_memory=True,</span><br><span class="line">                    drop_last=True)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../asset_magiceraser/05.webp"></p>
+<h2 id="模型架构"><a href="#模型架构" class="headerlink" title="模型架构"></a>模型架构</h2><p><img src="/../asset_magiceraser/06.webp"></p>
+<p>上面的图表显示了 CoModGAN 中生成器的结构，可以分为两个主要组件：编码器网络和解码器网络。编码器相对简单，我们可以轻松地使用深度卷积网络，如 VGG，来对输入进行编码。</p>
+<p>现在，让我们关注解码器部分。正如您所看到的，联合调制结合了来自编码器和映射网络的两个不同潜在向量，并将它们整合到解码器的各个层中，类似于 StyleGAN 中的合成网络。</p>
+<h2 id="提高-StyleGAN-的图像质量"><a href="#提高-StyleGAN-的图像质量" class="headerlink" title="提高 StyleGAN 的图像质量"></a>提高 StyleGAN 的图像质量</h2><p><img src="/../asset_magiceraser/07.webp"><br>上面的图像是由 StyleGAN 生成的；我们可以看到图像的角落存在一些水滴。这种现象从分辨率为 64x64 的所有特征图中开始出现，并在更高分辨率下逐渐变得更加明显。<br><img src="/../asset_magiceraser/08.webp"></p>
+<p>为了解决水滴问题，作者提出了 StyleGAN2（C 和 D），这是 StyleGAN 的修订版本。 他们认为这个问题是由 AdaIN 层引起的，该层分别对每个特征图的均值和方差进行归一化，可能破坏与特征相对大小相关的信息。</p>
+<p><img src="/../asset_magiceraser/09.webp"></p>
+<p>因此，通过去除风格均值，我们可以发现水滴伪影完全消失了。（附：AdaIN 现在直接在 CNN 的权重（w2，…）上运行，而不是在图像 Xi 上运行）</p>
+<p><img src="/../asset_magiceraser/10.webp"><br>StyleGAN 的 Demod 层</p>
+<p>另一个修改涉及将实例归一化（Norm std）替换为 Demod 层。由于归一化的目的是将层的输出恢复到单位标准差，这可以通过直接对层的权重进行归一化来更直接地实现，这被称为“解调”。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">class Conv2DMod(nn.Module):</span><br><span class="line">    def __init__(self, in_channel, out_channel, kernel, demod=True, stride=1):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.kernel = kernel</span><br><span class="line">        self.demod = demod</span><br><span class="line">        self.stride = stride</span><br><span class="line">        self.filters = out_channel</span><br><span class="line">        self.weight = nn.Parameter(torch.randn((out_channel, in_channel, kernel, kernel)))</span><br><span class="line">        nn.init.kaiming_normal_(self.weight, a=0, mode=&#x27;fan_in&#x27;, nonlinearity=&#x27;leaky_relu&#x27;)</span><br><span class="line"></span><br><span class="line">    def _get_same_padding(self, size, kernel, stride, dilation=1):</span><br><span class="line">        return ((size - 1) * (stride - 1) + dilation * (kernel - 1)) // 2</span><br><span class="line"></span><br><span class="line">    def forward(self, x, style):</span><br><span class="line">        &#x27;&#x27;&#x27; </span><br><span class="line">        x: [b, c, h, w]</span><br><span class="line">        style: [b, s_dim]</span><br><span class="line">        </span><br><span class="line">        Style modulation:</span><br><span class="line">        w&#x27; = style * w</span><br><span class="line">        Demodulation: </span><br><span class="line">        w&#x27;&#x27; = w&#x27; / sqrt(x&#x27;**2 + eps) &#x27;&#x27;&#x27;</span><br><span class="line">        </span><br><span class="line">        b, c, h, w = x.shape</span><br><span class="line">        style = style[:, None, :, None, None]</span><br><span class="line">        weight = self.weight[None, :, :, :, :]</span><br><span class="line">        weight = weight * (style + 1)</span><br><span class="line">        </span><br><span class="line">        if self.demod: </span><br><span class="line">            d = torch.rsqrt((weight ** 2).sum(dim=(2, 3, 4), keepdim=True) + 1e-8)</span><br><span class="line">            weight = weight * d</span><br><span class="line">            </span><br><span class="line">        x = x.reshape(1, -1, h, w)</span><br><span class="line">        _, _, *ws = weight.shape</span><br><span class="line">        weight = weight.reshape(b * self.filters, *ws)</span><br><span class="line">        padding = self._get_same_padding(h, self.kernel, self.stride)</span><br><span class="line">        x = F.conv2d(x, weight, padding=padding, groups=b)</span><br><span class="line">        x = x.reshape(-1, self.filters, h, w)</span><br><span class="line">        return x</span><br></pre></td></tr></table></figure>
+
+<h2 id="生成器块"><a href="#生成器块" class="headerlink" title="生成器块"></a>生成器块</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">class EqualLinear(nn.Module):</span><br><span class="line">    def __init__(self, in_dim, out_dim, bias = True, bias_init = 0, lr_mul = 1):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.weight = torch.nn.Parameter(torch.randn([out_dim, in_dim]) / lr_mul)</span><br><span class="line">        self.bias = torch.nn.Parameter(torch.full([out_dim], np.float32(bias_init))) if bias else None</span><br><span class="line">        self.weight_gain = lr_mul / np.sqrt(in_dim)</span><br><span class="line">        self.bias_gain = lr_mul</span><br><span class="line">    </span><br><span class="line">    def forward(self, x):</span><br><span class="line">        w = self.weight * self.weight_gain</span><br><span class="line">        layer = F.linear(x, w, bias = None)</span><br><span class="line">        if self.bias is not None:</span><br><span class="line">            layer = F.linear(x, w, bias = self.bias * self.bias_gain)</span><br><span class="line">        return layer</span><br><span class="line"></span><br><span class="line">class ToRGB(nn.Module):</span><br><span class="line">    def __init__(self, latent_dim, inp_dim):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.style = Linear(latent_dim, inp_dim)</span><br><span class="line">        self.conv = Conv2DMod(inp_dim, 3, 1, demod=False)</span><br><span class="line">        self.upsample = Upsample(scale_factor = 2, mode=&#x27;bilinear&#x27;)</span><br><span class="line">        </span><br><span class="line">    def forward(self, inp, style, prev_rgb = None):</span><br><span class="line">        style = self.style(style)</span><br><span class="line">        out = self.conv(inp, style)</span><br><span class="line">        if prev_rgb is not None:</span><br><span class="line">            prev_rgb = self.upsample(prev_rgb)</span><br><span class="line">            out += prev_rgb</span><br><span class="line">        return out</span><br></pre></td></tr></table></figure>
+
+<p>EqualLinear 用于映射网络中，在训练过程中动态重新调整层的输出。在我的实验中，与常规线性层相比，使用 EqualLinear 在映射网络中并没有显著影响结果。我建议直接使用 torch.nn.Linear。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">class G_encode(nn.Module):</span><br><span class="line">    def __init__(self, in_channel, out_channel, downsample=True):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.downsample = downsample</span><br><span class="line">        self.conv_res = Conv2d(in_channel, out_channel, kernel_size=1, padding=0)</span><br><span class="line">        self.encode = nn.Sequential(</span><br><span class="line">            Conv2d(in_channel, out_channel, kernel_size=3, padding=1),</span><br><span class="line">            LeakyReLU(0.2, inplace=True),</span><br><span class="line">            Conv2d(out_channel, out_channel, kernel_size=3, padding=1),</span><br><span class="line">            LeakyReLU(0.2, inplace=True)</span><br><span class="line">        )  </span><br><span class="line">    def forward(self, x):</span><br><span class="line">        res = self.conv_res(x)</span><br><span class="line">        x = self.encode(x) + res</span><br><span class="line">        if self.downsample:</span><br><span class="line">            x = AvgPool2d(kernel_size=2, stride=2)(x)</span><br><span class="line">        return x</span><br><span class="line">        </span><br><span class="line">class G_decode(nn.Module):</span><br><span class="line">    def __init__(self, latent_dim, in_channel, out_channel, upsample=True):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.upsample = upsample</span><br><span class="line">        self.style1 = Linear(latent_dim, in_channel)</span><br><span class="line">        self.style2 = Linear(latent_dim, out_channel)</span><br><span class="line">        self.noise1 = Conv2d(1, out_channel, 1, padding=1)</span><br><span class="line">        self.noise2 = Conv2d(1, out_channel, 1, padding=1)</span><br><span class="line">        self.conv1 = Conv2DMod(in_channel, out_channel, 3)</span><br><span class="line">        self.conv2 = Conv2DMod(out_channel, out_channel, 3)</span><br><span class="line">        self.to_rgb = ToRGB(latent_dim, out_channel)</span><br><span class="line">        </span><br><span class="line">    def forward(self, x, style, noise, prev_rgb):</span><br><span class="line">        B, C, H, W = x.shape</span><br><span class="line">        if self.upsample:</span><br><span class="line">            x = Upsample(scale_factor=2, mode=&#x27;bilinear&#x27;, align_corners=False)(x)</span><br><span class="line">        noise1 = self.noise1(noise)[:, :, :x.shape[2], :x.shape[3]]</span><br><span class="line">        noise2 = self.noise2(noise)[:, :, :x.shape[2], :x.shape[3]]</span><br><span class="line">        style1 = self.style1(style)</span><br><span class="line">        style2 = self.style2(style)</span><br><span class="line">        </span><br><span class="line">        x = self.conv1(x, style1)</span><br><span class="line">        x = LeakyReLU(0.2, inplace=True)(x + noise1)</span><br><span class="line">        x = self.conv2(x, style2)</span><br><span class="line">        x = LeakyReLU(0.2, inplace=True)(x + noise2)</span><br><span class="line">        rgb = self.to_rgb(x, style, prev_rgb)</span><br><span class="line">        return x, rgb</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../asset_magiceraser/11.webp"><br>不同类型的 GAN 架构</p>
+<p>这里有一些不同选择的 tRGB 和 fRGB 架构。在我的实验中，我使用 (b) 作为主要结构。</p>
+<h2 id="生成器"><a href="#生成器" class="headerlink" title="生成器"></a>生成器</h2><p><img src="/../asset_magiceraser/12.webp"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">class Generator(nn.Module):</span><br><span class="line">    def __init__(self, img_size, latent_dim, style_mlp = 8, lr_mul = 0.1, fmap_min = 16, fmap_max = 512):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.num_layers = int(log2(img_size)-2)</span><br><span class="line">        f_map = [fmap_min * (2 ** i) for i in range(self.num_layers + 1)]</span><br><span class="line">        filters = list(map(lambda x: min(fmap_max, x), f_map))</span><br><span class="line">        init_channel = filters[0]</span><br><span class="line">        self.latent_dim = latent_dim</span><br><span class="line">        self.style_dim = latent_dim + filters[-1]</span><br><span class="line">        self.in_out_channel = zip(filters[:-1], filters[1:])</span><br><span class="line">        self.init_conv = Conv2d(init_channel, init_channel, 3, padding=1)</span><br><span class="line">        </span><br><span class="line">        self.style_mapping =  nn.Sequential()</span><br><span class="line">        self.downs =  nn.ModuleList([])</span><br><span class="line">        self.ups = nn.ModuleList([])</span><br><span class="line">        </span><br><span class="line">        # 4 because image (b, 3, h, w) + mask (b, 1, h, w)</span><br><span class="line">        self.from_rgb = nn.Sequential(</span><br><span class="line">            Conv2d(4, filters[0], 3, padding=1),</span><br><span class="line">            LeakyReLU(0.2, inplace=True)</span><br><span class="line">        )</span><br><span class="line">        # x_global: latent vector of the input image</span><br><span class="line">        self.x_global = nn.Sequential(</span><br><span class="line">            Linear(filters[-1] * 4 * 4, filters[-1]),</span><br><span class="line">            LeakyReLU(0.2, inplace=True)</span><br><span class="line">        )</span><br><span class="line">        # style mapping network</span><br><span class="line">        for _ in range(style_mlp):</span><br><span class="line">            self.style_mapping.extend([EqualLinear(latent_dim, latent_dim, lr_mul), </span><br><span class="line">                                       LeakyReLU(0.2, inplace=True)])</span><br><span class="line">        # Encoder</span><br><span class="line">        for in_channel, out_channel in self.in_out_channel:</span><br><span class="line">            g_block = G_encode(in_channel,out_channel)               </span><br><span class="line">            self.downs.append(g_block)</span><br><span class="line">            </span><br><span class="line">        # Decoder (styleGAN)</span><br><span class="line">        reversed_filters = list(reversed(filters))</span><br><span class="line">        self.in_out_channel = zip(reversed_filters[:-1], reversed_filters[1:])</span><br><span class="line">        for in_channel, out_channel in self.in_out_channel:</span><br><span class="line">            g_block = G_decode(self.style_dim, in_channel, out_channel)            </span><br><span class="line">            self.ups.append(g_block)</span><br><span class="line">        </span><br><span class="line">    def forward(self, img, mask, latents, noise, return_latent=False):</span><br><span class="line">        b, c, h, w = img.shape</span><br><span class="line">        x = torch.cat([1 - mask - 0.5, img * (1- mask)], 1)</span><br><span class="line">        x = self.from_rgb(x)</span><br><span class="line">        for blocks in self.downs:</span><br><span class="line">            x = blocks(x)</span><br><span class="line">            </span><br><span class="line">        rgb = None</span><br><span class="line">        x = x.view(b, -1)</span><br><span class="line">        x_global = self.x_global(x) </span><br><span class="line">        styles = self.style_mapping(F.normalize(latents, dim=1))</span><br><span class="line">        styles = styles.view([-1, b, self.latent_dim])</span><br><span class="line">        x = x.view(b, -1, 4, 4)</span><br><span class="line">        </span><br><span class="line">        for block, style in zip(self.ups, styles):</span><br><span class="line">            # co-modulation</span><br><span class="line">            co_style = torch.cat([x_global, style.squeeze()], 1)</span><br><span class="line">            x, rgb = block(x, co_style, noise, rgb)</span><br><span class="line">            </span><br><span class="line">        raw_out = rgb</span><br><span class="line">        images_out = rgb * mask + img * (1-mask)</span><br><span class="line">        if return_latent:</span><br><span class="line">            return images_out, raw_out, styles</span><br><span class="line">        return images_out, raw_out</span><br></pre></td></tr></table></figure>
+
+<h2 id="鉴别器"><a href="#鉴别器" class="headerlink" title="鉴别器"></a>鉴别器</h2><p><img src="/../asset_magiceraser/13.webp"></p>
+<p>在讨论了生成器之后，现在是时候转向鉴别器了。由于鉴别器的主要作用是区分图像是真实的还是虚假的，任何图像分类模型都可以用作鉴别器。</p>
+<p>在这里，让我们简单地使用类似 VGG 的结构来实现它</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">class D_block(nn.Module):</span><br><span class="line">    def __init__(self, in_channel, out_channel, downsample = True):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.downsample = None</span><br><span class="line">        if downsample:</span><br><span class="line">            self.downsample = Conv2d(out_channel, out_channel, 3, padding = 1, stride = 2)</span><br><span class="line">        self.conv_res = Conv2d(in_channel, out_channel, 1, stride = (2 if downsample else 1))</span><br><span class="line">        self.net = nn.Sequential(</span><br><span class="line">            Conv2d(in_channel, out_channel, 3, padding=1),</span><br><span class="line">            LeakyReLU(0.2, inplace=True),</span><br><span class="line">            Conv2d(out_channel, out_channel, 3, padding=1),</span><br><span class="line">            LeakyReLU(0.2, inplace=True))</span><br><span class="line">        </span><br><span class="line">    def forward(self, x):</span><br><span class="line">        res = self.conv_res(x)</span><br><span class="line">        x = self.net(x)</span><br><span class="line">        if self.downsample is not None:</span><br><span class="line">            x = self.downsample(x)</span><br><span class="line">        x = (x + res) * (1 / math.sqrt(2))</span><br><span class="line">        return x</span><br><span class="line">      </span><br><span class="line">class Discriminator(nn.Module):</span><br><span class="line">    def __init__(self, img_size, fmap_min = 32, fmap_max = 512):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.num_layers = int(log2(img_size)-1)</span><br><span class="line">        f_map = [4] + [fmap_min * (2 ** i) for i in range(self.num_layers)]</span><br><span class="line">        filters = list(map(lambda x: min(fmap_max, x), f_map))</span><br><span class="line">        out_channel = filters[-1]</span><br><span class="line">        </span><br><span class="line">        self.in_out_channel = zip(filters[:-1], filters[1:])</span><br><span class="line">        self.blocks = nn.ModuleList([])</span><br><span class="line">        self.final_conv = Conv2d(out_channel, out_channel, 3, padding=1)</span><br><span class="line">        self.logit = Linear(out_channel * 4 * 4, 1)</span><br><span class="line">        for i, (in_channel, out_channel) in enumerate(self.in_out_channel):</span><br><span class="line">            down_sample = i != (self.num_layers - 1)</span><br><span class="line">            d_block = D_block(in_channel, out_channel, down_sample)</span><br><span class="line">            self.blocks.append(d_block)</span><br><span class="line">   </span><br><span class="line">    def forward(self, img, mask):</span><br><span class="line">        batch_size = img.shape[0]</span><br><span class="line">        x = torch.cat([1 - mask - 0.5, img], 1)</span><br><span class="line">        for block in self.blocks:</span><br><span class="line">            x = block(x)</span><br><span class="line">        x = self.final_conv(x)</span><br><span class="line">        x = x.view(batch_size, -1)</span><br><span class="line">        x = self.logit(x)</span><br><span class="line">        return x</span><br></pre></td></tr></table></figure>
+
+<h2 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h2><p><img src="/../asset_magiceraser/14.webp"><br>条件 GAN 的最小-最大损失</p>
+<ul>
+<li>G：生成器</li>
+<li>D：判别器（输出值介于 0 到 1 之间，假：0，真：1）</li>
+<li>X: 输入图像，形状 [B, C, H, W]</li>
+<li>Y: 掩模，形状 [B, 1, H, W]</li>
+<li>Z: 潜在向量（从高斯分布中随机采样）</li>
+</ul>
+<p>损失函数与经典 GAN 相同，为生成器和鉴别器设定不同的目标，从而在它们之间创建竞争。</p>
+<p>鉴别器试图更好地区分由生成器制作的假图像和真实图像，而生成器的目标是欺骗鉴别器，与鉴别器的做法相反。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">def d_loss_fn(real_pred, fake_pred):</span><br><span class="line">    real_loss = F.softplus(-real_pred)</span><br><span class="line">    fake_loss = F.softplus(fake_pred)</span><br><span class="line">    return real_loss.mean() + fake_loss.mean()</span><br><span class="line">    </span><br><span class="line">def g_loss_fn(fake_pred):</span><br><span class="line">    loss = F.softplus(-fake_pred).mean()</span><br><span class="line">    return loss</span><br></pre></td></tr></table></figure>
+
+<h2 id="训练循环和懒惰正则化"><a href="#训练循环和懒惰正则化" class="headerlink" title="训练循环和懒惰正则化"></a>训练循环和懒惰正则化</h2><p>在 StyleGAN 中，作者采用了两种类型的正则化，即鉴别器的 R1 正则化和生成器的路径长度正则化，用于对两个组件施加约束。</p>
+<p>另外，作者还发现并不需要在每次权重更新时都应用正则化。相反，对鉴别器的正则化每 16 次更新应用一次，对生成器的正则化每 8 次更新应用一次，这被称为“懒惰正则化”。</p>
+<h2 id="R1-正则化"><a href="#R1-正则化" class="headerlink" title="R1 正则化"></a>R1 正则化</h2><p><img src="/../asset_magiceraser/15.webp"><br>R1 正则化仅对真实数据上的梯度进行惩罚，旨在防止鉴别器生成偏离数据流形的非零梯度。</p>
+<p>例如，当生成器产生真实数据分布时，鉴别器在数据流形上的输出等于 0（通常意味着鉴别器无法区分真假数据），梯度惩罚确保鉴别器无法生成非零梯度，否则会导致损失增加。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">def r1_loss_fn(real_pred, real_img):</span><br><span class="line">    grad_real, = autograd.grad(</span><br><span class="line">        outputs=real_pred.sum(), inputs=real_img, create_graph=True</span><br><span class="line">    )</span><br><span class="line">    grad_penalty = grad_real.pow(2).reshape(grad_real.shape[0], -1).sum(1).mean()</span><br><span class="line">    return grad_penalty</span><br></pre></td></tr></table></figure>
+
+<h2 id="路径长度正则化"><a href="#路径长度正则化" class="headerlink" title="路径长度正则化"></a>路径长度正则化</h2><p><img src="/../asset_magiceraser/16.webp"></p>
+<p>路径长度正则化旨在确保当您在潜在空间‘w’（w ~ f(z), f: 映射网络）中进行固定大小的更改时，图像会产生非零且固定幅度的变化。</p>
+<p>我们计算生成器输出相对于‘w’的导数，并将其乘以随机噪声‘y’。在对这个结果应用 L2 范数之后，我们再减去其指数移动平均值‘a’。</p>
+<p>这种正则化可以确保潜在向量 Z 的变化不会导致生成的图像发生剧烈变化。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">def g_path_regularize(fake_img, latents, mean_path_length, decay=0.01):</span><br><span class="line">    noise = torch.randn_like(fake_img) / math.sqrt(</span><br><span class="line">        fake_img.shape[2] * fake_img.shape[3]</span><br><span class="line">    )</span><br><span class="line">    grad, = autograd.grad(</span><br><span class="line">        outputs=(fake_img * noise).sum(), inputs=latents, create_graph=True</span><br><span class="line">    )</span><br><span class="line">    path_lengths = torch.sqrt(grad.pow(2).sum(2).mean(1))</span><br><span class="line">    path_mean = mean_path_length + decay * (path_lengths.mean() - mean_path_length)</span><br><span class="line">    path_penalty = (path_lengths - path_mean).pow(2).mean()</span><br><span class="line">    return path_penalty, path_mean.detach(), path_lengths</span><br></pre></td></tr></table></figure>
+
+<p>最后，这里是 CoModGAN 的训练循环</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">def make_noise(n, latent_dim, device):</span><br><span class="line">    return torch.randn(n, 1, latent_dim).cuda(device)</span><br><span class="line"></span><br><span class="line">def get_g_input(batch, img_size, n_layers, latent_dim, device):</span><br><span class="line">    &#x27;&#x27;&#x27;</span><br><span class="line">    ** style mixing **</span><br><span class="line">    tt = int(torch.rand(()).numpy() * n_layers)</span><br><span class="line">    style1 = torch.tile(make_noise(batch, latent_dim, device), [1, tt, 1])</span><br><span class="line">    style2 = torch.tile(make_noise(batch, latent_dim, device), [1, n_layers - tt, 1])</span><br><span class="line">    styles = torch.cat([style1, style2], dim=1)</span><br><span class="line">    &#x27;&#x27;&#x27;   </span><br><span class="line">    styles = torch.tile(make_noise(batch, latent_dim, device), [1, n_layers, 1])</span><br><span class="line">    noise = torch.FloatTensor(batch, 1, img_size, img_size).uniform_(0., 1.).cuda(device)</span><br><span class="line">    return styles, noise</span><br><span class="line"></span><br><span class="line">def requires_grad(model, flag=True):</span><br><span class="line">    for p in model.parameters():</span><br><span class="line">        p.requires_grad = flag</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"># CoModGAN training Loop</span><br><span class="line">latent_dim = 128</span><br><span class="line">img_size = 128</span><br><span class="line">epochs = 100</span><br><span class="line">num_layers = int(log2(img_size)-1)</span><br><span class="line">d_lazy_reg = 16</span><br><span class="line">g_lazy_reg = 4</span><br><span class="line">mean_path = 0</span><br><span class="line"></span><br><span class="line">device = &quot;cuda&quot; if torch.cuda.is_available() else &quot;cpu&quot;</span><br><span class="line">g_model = Generator(img_size, latent_dim).to(device)</span><br><span class="line">d_model = Discriminator(img_size).to(device)</span><br><span class="line">g_optimizer = torch.optim.Adam(g_model.parameters(), lr=0.0001, betas=(0.5, 0.9))</span><br><span class="line">d_optimizer = torch.optim.Adam(d_model.parameters(), lr=0.0001, betas=(0.5, 0.9))</span><br><span class="line"></span><br><span class="line">for epoch in range(epochs):</span><br><span class="line">    for step, (real_img, mask) in enumerate(train_data):</span><br><span class="line">        B = real_img.size(0)</span><br><span class="line">        real_img = real_img.to(device)</span><br><span class="line">        mask = mask.to(device)</span><br><span class="line">        requires_grad(g_model, False)</span><br><span class="line">        requires_grad(d_model, True)</span><br><span class="line">        </span><br><span class="line">        style, noise = get_g_input(B, img_size, num_layers, latent_dim, device)</span><br><span class="line">        fake_img, _ = g_model(real_img, mask, style, noise)</span><br><span class="line">        fake_pred = d_model(fake_img, mask)</span><br><span class="line">        real_pred = d_model(real_img, mask)</span><br><span class="line">        d_loss = d_loss_fn(real_pred, fake_pred)</span><br><span class="line">        d_model.zero_grad()</span><br><span class="line">        d_loss.backward()</span><br><span class="line">        d_optimizer.step()</span><br><span class="line"></span><br><span class="line">        d_lazy = step % d_lazy_reg == 0</span><br><span class="line">        if d_lazy:</span><br><span class="line">            real_img.requires_grad = True</span><br><span class="line">            real_pred = d_model(real_img, mask)</span><br><span class="line">            r1_loss = r1_loss_fn(real_pred, real_img)</span><br><span class="line"></span><br><span class="line">            d_model.zero_grad()</span><br><span class="line">            (10 / 2 * r1_loss * d_lazy_reg).backward()</span><br><span class="line">            d_optimizer.step()</span><br><span class="line">            </span><br><span class="line">        requires_grad(g_model, True)</span><br><span class="line">        requires_grad(d_model, False)</span><br><span class="line">        style, noise = get_g_input(B, img_size, num_layers, latent_dim, device)</span><br><span class="line">        fake_img, _ = g_model(real_img, mask, style, noise)</span><br><span class="line">        fake_pred = d_model(fake_img, mask)</span><br><span class="line">        g_loss = g_loss_fn(fake_pred)</span><br><span class="line">        g_model.zero_grad()</span><br><span class="line">        g_loss.backward()</span><br><span class="line">        g_optimizer.step()</span><br><span class="line">        g_lazy = step % g_lazy_reg == 0</span><br><span class="line">        </span><br><span class="line">        if g_lazy:</span><br><span class="line">            style, noise = get_g_input(B, img_size, num_layers, latent_dim, device)</span><br><span class="line">            fake_img, _, latent = g_model(real_img, mask, style.requires_grad_(), </span><br><span class="line">                                          noise, return_latent=True)</span><br><span class="line">            path_loss, mean_path_new, path_lengths = g_path_regularize(fake_img, latent, mean_path)</span><br><span class="line">            g_model.zero_grad()</span><br><span class="line">            mean_path = mean_path_new</span><br><span class="line">            pr_loss = 2 * g_lazy_reg * path_loss</span><br><span class="line">            pr_loss.backward()</span><br><span class="line">            g_optimizer.step()</span><br></pre></td></tr></table></figure>
+
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>顶部的图像是由 CoModGAN 生成的，而底部的图像是真实图像数据。</p>
+<p>尽管生成的结果与真实数据之间存在一些小差异，但就生成合理图像而言，我认为 CoModGAN 的表现已经可以接受了</p>
+<p><img src="/../asset_magiceraser/17.webp"></p>
+<p><img src="/../asset_magiceraser/18.webp"></p>
+<p><img src="/../asset_magiceraser/19.webp"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://levelup.gitconnected.com/revealing-the-secrets-of-googles-magic-eraser-fb232c83723b">https://levelup.gitconnected.com/revealing-the-secrets-of-googles-magic-eraser-fb232c83723b</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/04/16/falkordb/" rel="prev" title="FalkorDB 知识图谱 for RAG">
+                  <i class="fa fa-angle-left"></i> FalkorDB 知识图谱 for RAG
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Howard Huang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">190k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">5:45</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动-->
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
