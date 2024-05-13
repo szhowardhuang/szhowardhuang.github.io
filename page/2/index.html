@@ -119,7 +119,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-count">31</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -137,6 +137,196 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/04/02/scratch-ai-agent-openai/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/04/02/scratch-ai-agent-openai/" class="post-title-link" itemprop="url">利用 OpenAI 工具：从零开始构建可靠的 AI 代理</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-04-02 20:26:28" itemprop="dateCreated datePublished" datetime="2024-04-02T20:26:28+08:00">2024-04-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-03 21:26:28" itemprop="dateModified" datetime="2024-04-03T21:26:28+08:00">2024-04-03</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>18k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>32 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>思考人工智能的未来，我脑海中浮现出《钢铁侠》中的贾维斯和《命运》（游戏）中的拉斯普京。在这两个例子中，人工智能充当了一个通过语音控制的接口，提供高级抽象的复杂系统。例如，托尼·斯塔克使用它来管理他的研究、进行计算和运行模拟。甚至 R2D2 也可以响应语音命令，与陌生的计算机系统进行交互，提取数据或与建筑系统进行交互。</p>
+<p>在这些场景中，人工智能使得用户可以与复杂系统进行交互，而无需对其有深入的理解。这可以类比今天大型公司中的企业资源计划（ERP）系统。在大型公司中很少有人完全了解和理解内部 ERP 系统的每个方面。不难想象，在不久的将来，人工智能可能几乎会在与 ERP 系统的每个交互中提供帮助。从最终用户管理客户数据或记录订单，到软件开发人员修复错误或实施新功能，这些交互可能很快就会由熟悉 ERP 系统的人工智能助手来完成。这样的人工智能助手将知道将客户数据输入哪个数据库，以及哪些流程和代码可能与错误相关。</p>
+<p>为了实现这一目标，我们面临着几个挑战和创新。我们需要重新思考流程及其文档化。如今的企业资源计划（ERP）流程是为人类使用而设计的，不同用户有不同的角色，文档是给人类看的，输入掩码是为人类设计的，用户交互旨在直观且无误。对于人工智能（AI）交互，这些方面的设计将会有所不同。我们需要为 AI 交互设定特定的角色，并设计不同的流程，以实现直观且无误的 AI 交互。这在我们与提示信息的工作中已经显现出来。我们认为的明确任务往往并不那么简单明了。</p>
+<h2 id="从概念到现实：构建-AI-代理的基础"><a href="#从概念到现实：构建-AI-代理的基础" class="headerlink" title="从概念到现实：构建 AI 代理的基础"></a>从概念到现实：构建 AI 代理的基础</h2><p>让我们回到代理的概念。代理是能够使用提供的工具执行任务并决策如何使用这些工具的人工智能助手，它们是最终可能实现这样一个系统的构建模块。它们是我们希望将其整合到复杂系统的各个方面的过程组件。但是它们很难可靠地部署（之前在internlm实践lagent就不成功）。在本文中，我将演示如何设计和优化一个能够可靠地与数据库进行交互的代理。</p>
+<p>AI 的未来宏伟愿景令人鼓舞，但实现这一愿景需要采取切实可行的步骤。为了展示我们如何开始构建这种先进 AI 系统的基础，让我们专注于创建一个常见任务的原型代理：“费用跟踪”。这个原型将作为一个具体的例子，展示 AI 如何在高效管理财务交易方面提供帮助，展示 AI 在自动化例行任务方面的潜力，并突出设计与数据库无缝交互的 AI 系统所涉及的挑战和考虑因素。通过从一个具体而易于理解的用例开始，我们可以获得宝贵的见解，为未来更复杂的 AI 代理的开发提供指导。</p>
+<h2 id="本文目的"><a href="#本文目的" class="headerlink" title="本文目的"></a>本文目的</h2><p>本文将为一系列文章奠定基础，旨在开发一个聊天机器人，它可以作为小型企业支持和执行业务流程的唯一交互点，或者作为你个人生活中组织一切需要跟踪的东西的聊天机器人。从数据、例行事务、文件到图片，我们希望能够简单地与我们的助手聊天，让它找出存储和检索数据的位置。</p>
+<p>从 AI 未来的宏伟愿景过渡到实际应用，让我们聚焦于创建一个原型代理。这个代理将作为实现之前讨论的雄心勃勃的目标的基础步骤。我们将着手开发一个“费用跟踪”代理，这是一个简单但至关重要的任务，展示了 AI 如何能够有效地协助管理财务交易。</p>
+<p>这个“费用跟踪”原型不仅展示了人工智能在自动化例行任务方面的潜力，还阐明了设计与数据库无缝交互的人工智能系统所涉及的挑战和考虑因素。通过专注于这个例子，我们可以探索代理设计、输入验证以及将人工智能与现有系统整合的复杂性，为未来更复杂的应用奠定坚实基础。</p>
+<h2 id="实践：测试-OpenAI-工具调用"><a href="#实践：测试-OpenAI-工具调用" class="headerlink" title="实践：测试 OpenAI 工具调用"></a>实践：测试 OpenAI 工具调用</h2><p>为了让我们的原型代理程序运行起来并找出潜在的瓶颈，我们尝试测试 OpenAI 的工具调用功能。从一个基本的费用跟踪示例开始，我们正在构建一个模拟真实应用程序的基础部分。这个阶段涉及创建一个基本模型，并使用 langchain 库的convert_to_openai_tool函数将其转换为 OpenAI 工具模式。此外，我们制作一个 report_tool ，以便我们未来的代理程序可以与结果进行通信，或者突出显示缺失的信息或问题。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">from pydantic.v1 import BaseModel, validator  </span><br><span class="line">from datetime import datetime</span><br><span class="line">from langchain_core.utils.function_calling import convert_to_openai_tool</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">class Expense(BaseModel):    </span><br><span class="line">   description: str    </span><br><span class="line">   net_amount: float    </span><br><span class="line">   gross_amount: float    </span><br><span class="line">   tax_rate: float    </span><br><span class="line">   date: datetime</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Report(BaseModel):</span><br><span class="line">   report: str</span><br><span class="line"></span><br><span class="line">add_expense_tool = convert_to_openai_tool(Expense)</span><br><span class="line">report_tool = convert_to_openai_tool(Report)</span><br></pre></td></tr></table></figure>
+
+<p>数据模型和工具设置好之后，下一步是使用 OpenAI 客户端 SDK 发起一个简单的工具调用。在这个初始测试中，我们故意提供不足的信息给模型，以查看它是否能正确地指示缺失的内容。这种方法不仅测试了代理的功能能力，还测试了它的交互和错误处理能力。</p>
+<h3 id="调用-OpenAI-API"><a href="#调用-OpenAI-API" class="headerlink" title="调用 OpenAI API"></a>调用 OpenAI API</h3><p>现在，我们将使用 OpenAI 客户端 SDK 来发起一个简单的工具调用。在我们的第一个测试中，我们故意提供了不足的信息给模型，以查看它是否能够通知我们缺失的细节。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">from openai import OpenAI  </span><br><span class="line">from langchain_core.utils.function_calling import convert_to_openai_tool  </span><br><span class="line">  </span><br><span class="line">SYSTEM_MESSAGE = &quot;&quot;&quot;You are tasked with completing specific objectives and </span><br><span class="line">must report the outcomes. At your disposal, you have a variety of tools, </span><br><span class="line">each specialized in performing a distinct type of task.  </span><br><span class="line">  </span><br><span class="line">For successful task completion:  </span><br><span class="line">Thought: Consider the task at hand and determine which tool is best suited </span><br><span class="line">based on its capabilities and the nature of the work.  </span><br><span class="line">  </span><br><span class="line">Use the report_tool with an instruction detailing the results of your work.  </span><br><span class="line">If you encounter an issue and cannot complete the task:  </span><br><span class="line">  </span><br><span class="line">Use the report_tool to communicate the challenge or reason for the </span><br><span class="line">task&#x27;s incompletion.  </span><br><span class="line">You will receive feedback based on the outcomes of </span><br><span class="line">each tool&#x27;s task execution or explanations for any tasks that </span><br><span class="line">couldn&#x27;t be completed. This feedback loop is crucial for addressing </span><br><span class="line">and resolving any issues by strategically deploying the available tools.  </span><br><span class="line">&quot;&quot;&quot;  </span><br><span class="line">user_message = &quot;I have spend 5$ on a coffee today please track my expense. The tax rate is 0.2.&quot;</span><br><span class="line">  </span><br><span class="line">client = OpenAI()  </span><br><span class="line">model_name = &quot;gpt-3.5-turbo-0125&quot;  </span><br><span class="line">  </span><br><span class="line">messages = [  </span><br><span class="line">    &#123;&quot;role&quot;:&quot;system&quot;, &quot;content&quot;: SYSTEM_MESSAGE&#125;,  </span><br><span class="line">    &#123;&quot;role&quot;:&quot;user&quot;, &quot;content&quot;: user_message&#125;  </span><br><span class="line">]  </span><br><span class="line">  </span><br><span class="line">response = client.chat.completions.create(  </span><br><span class="line">            model=model_name,  </span><br><span class="line">            messages=messages,  </span><br><span class="line">            tools=[  </span><br><span class="line">                convert_to_openai_tool(Expense),  </span><br><span class="line">                convert_to_openai_tool(ReportTool)]  </span><br><span class="line">        )</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>接下来，我们需要一个新的函数来从响应中读取函数调用的参数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">def parse_function_args(response):</span><br><span class="line">    message = response.choices[0].message</span><br><span class="line">    return json.loads(message.tool_calls[0].function.arguments)</span><br><span class="line"></span><br><span class="line">print(parse_function_args(response))</span><br></pre></td></tr></table></figure>
+<p>输出结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#x27;description&#x27;: &#x27;Coffee&#x27;,</span><br><span class="line"> &#x27;net_amount&#x27;: 5,</span><br><span class="line"> &#x27;gross_amount&#x27;: None,</span><br><span class="line"> &#x27;tax_rate&#x27;: 0.2,</span><br><span class="line"> &#x27;date&#x27;: &#x27;2023-10-06T12:00:00Z&#x27;&#125;</span><br></pre></td></tr></table></figure>
+<p> 正如我们所观察到的，我们在执行过程中遇到了几个问题</p>
+<ul>
+<li><p>The gross_amount is not calculated.  总金额未计算。</p>
+</li>
+<li><p>The date is hallucinated.  日期是幻觉。</p>
+</li>
+</ul>
+<p>考虑到这一点，让我们尝试解决这些问题并优化我们的代理工作流程。</p>
+<h2 id="优化：工具处理流程"><a href="#优化：工具处理流程" class="headerlink" title="优化：工具处理流程"></a>优化：工具处理流程</h2><p>为了优化代理工作流程，我发现将工作流程置于提示工程之上至关重要。虽然微调提示以使代理学会完美使用提供的工具并避免错误可能很诱人，但更明智的做法是首先调整工具和流程。当发生典型错误时，最初的考虑应该是如何基于代码修复它。</p>
+<h3 id="处理缺失信息"><a href="#处理缺失信息" class="headerlink" title="处理缺失信息"></a>处理缺失信息</h3><p>处理缺失信息对于创建强大可靠的代理程序来说是一个重要的课题。在前面的例子中，为代理程序提供像“get_current_date”这样的工具是特定场景下的一种解决方法。然而，我们必须假设在各种情境中都会出现缺失信息，并且不能仅仅依靠提示工程和添加更多工具来防止模型产生缺失信息的幻觉。</p>
+<p>对于这种情况，一个简单的解决方法是修改工具模式，将所有参数视为可选。这种方法确保代理只提交它知道的参数，避免不必要的幻觉。</p>
+<p>因此，让我们来看一下 OpenAI 工具模式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">add_expense_tool = convert_to_openai_tool(Expense)</span><br><span class="line">print(add_expense_tool)</span><br></pre></td></tr></table></figure>
+<p>输出结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#x27;type&#x27;: &#x27;function&#x27;,</span><br><span class="line"> &#x27;function&#x27;: &#123;&#x27;name&#x27;: &#x27;Expense&#x27;,</span><br><span class="line">  &#x27;description&#x27;: &#x27;&#x27;,</span><br><span class="line">  &#x27;parameters&#x27;: &#123;&#x27;type&#x27;: &#x27;object&#x27;,</span><br><span class="line">   &#x27;properties&#x27;: &#123;&#x27;description&#x27;: &#123;&#x27;type&#x27;: &#x27;string&#x27;&#125;,</span><br><span class="line">    &#x27;net_amount&#x27;: &#123;&#x27;type&#x27;: &#x27;number&#x27;&#125;,</span><br><span class="line">    &#x27;gross_amount&#x27;: &#123;&#x27;type&#x27;: &#x27;number&#x27;&#125;,</span><br><span class="line">    &#x27;tax_rate&#x27;: &#123;&#x27;type&#x27;: &#x27;number&#x27;&#125;,</span><br><span class="line">    &#x27;date&#x27;: &#123;&#x27;type&#x27;: &#x27;string&#x27;, &#x27;format&#x27;: &#x27;date-time&#x27;&#125;&#125;,</span><br><span class="line">   &#x27;required&#x27;: [&#x27;description&#x27;,</span><br><span class="line">    &#x27;net_amount&#x27;,</span><br><span class="line">    &#x27;gross_amount&#x27;,</span><br><span class="line">    &#x27;tax_rate&#x27;,</span><br><span class="line">    &#x27;date&#x27;]&#125;&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>正如我们所看到的，我们有一个特殊的键required，我们需要将其移除。以下是您可以通过移除该required键来调整add_expense_tool模式以使参数变为可选的方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">del add_expense_tool[&quot;function&quot;][&quot;parameters&quot;][&quot;required&quot;]</span><br></pre></td></tr></table></figure>
+
+<h3 id="设计工具类"><a href="#设计工具类" class="headerlink" title="设计工具类"></a>设计工具类</h3><p>接下来，我们可以设计一个工具类，最初检查输入参数是否缺失。我们创建这个Tool类有两个方法：.run()，.validate_input()，和一个openai_tool_schema属性，通过删除必需的参数来操作工具模式。此外，我们定义了ToolResult BaseModel，其中包含content字段和success字段，用于每次工具运行的输出对象。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">from pydantic import BaseModel</span><br><span class="line">from typing import Type, Callable, Dict, Any, List</span><br><span class="line"></span><br><span class="line">class ToolResult(BaseModel):  </span><br><span class="line">    content: str  </span><br><span class="line">    success: bool  </span><br><span class="line">  </span><br><span class="line">class Tool(BaseModel):  </span><br><span class="line">    name: str  </span><br><span class="line">    model: Type[BaseModel]  </span><br><span class="line">    function: Callable  </span><br><span class="line">    validate_missing: bool = False  </span><br><span class="line">  </span><br><span class="line">    class Config:  </span><br><span class="line">        arbitrary_types_allowed = True  </span><br><span class="line">  </span><br><span class="line">    def run(self, **kwargs) -&gt; ToolResult:</span><br><span class="line">        if self.validate_missing:</span><br><span class="line">            missing_values = self.validate_input(**kwargs)  </span><br><span class="line">            if missing_values:  </span><br><span class="line">                content = f&quot;Missing values: &#123;&#x27;, &#x27;.join(missing_values)&#125;&quot;  </span><br><span class="line">                return ToolResult(content=content, success=False)  </span><br><span class="line">        result = self.function(**kwargs)  </span><br><span class="line">        return ToolResult(content=str(result), success=True)  </span><br><span class="line">      </span><br><span class="line">    def validate_input(self, **kwargs) -&gt; List[str]:  </span><br><span class="line">        missing_values = []  </span><br><span class="line">        for key in self.model.__fields__.keys():  </span><br><span class="line">            if key not in kwargs:  </span><br><span class="line">                missing_values.append(key)  </span><br><span class="line">        return missing_values</span><br><span class="line">    @property</span><br><span class="line">    def openai_tool_schema(self) -&gt; Dict[str, Any]:</span><br><span class="line">        schema = convert_to_openai_tool(self.model)</span><br><span class="line">        if &quot;required&quot; in schema[&quot;function&quot;][&quot;parameters&quot;]:</span><br><span class="line">            del schema[&quot;function&quot;][&quot;parameters&quot;][&quot;required&quot;]</span><br><span class="line">        return schem</span><br></pre></td></tr></table></figure>
+<p>该Tool类是 AI 代理工作流程中的关键组成部分，作为一个蓝图来创建和管理各种工具，这些工具由代理来执行特定任务。它被设计用于处理输入验证，执行工具的功能，并以标准化格式返回结果。</p>
+<h3 id="Tool-类的关键组成部分："><a href="#Tool-类的关键组成部分：" class="headerlink" title="Tool 类的关键组成部分："></a>Tool 类的关键组成部分：</h3><ul>
+<li>name ：工具的名称。</li>
+<li>model ：定义工具输入模式的 Pydantic BaseModel。</li>
+<li>function ：工具执行的可调用函数。</li>
+<li>validate_missing ：一个布尔标志，指示是否validate missing的输入值（默认为 False ）。</li>
+</ul>
+<h3 id="这个Tool类有两个主要方法："><a href="#这个Tool类有两个主要方法：" class="headerlink" title="这个Tool类有两个主要方法："></a>这个Tool类有两个主要方法：</h3><ul>
+<li><p>run(self, **kwargs) -&gt; ToolResult: 该方法负责使用提供的输入参数执行tool的功能。首先检查validate_missing 是否设置为True。如果是，则调用validate_input()方法检查缺少的输入值。如果找到任何缺少的值，则返回一个带有错误消息的ToolResult对象，并设置success 为False。如果所有必需的输入值都存在，则继续使用提供的参数执行tool的function ，并返回一个带有结果的对象ToolResult ，并设置success 为True。</p>
+</li>
+<li><p>validate_input(self, **kwargs) -&gt; List[str]: 该方法将传递给tool的输入参数与在model中定义的预期输入模式进行比较。它遍历model中定义的字段，并检查每个字段是否存在于输入参数中。如果有任何字段缺失，它将字段名称追加到缺失值列表中。最后，它返回缺失值列表。</p>
+</li>
+</ul>
+<p>该Tool类还有一个名为openai_tool_schema的属性，它返回该工具的 OpenAI 工具模式。它使用convert_to_openai_tool()函数将model转换为 OpenAI 工具模式格式。此外，它从模式中删除”required”键，使所有输入参数都是可选的。这使得代理可以仅提供可用信息，而无需虚构缺失的值。</p>
+<p>通过封装工具的功能、输入验证和模式生成，该Tool类为在 AI 代理的工作流中创建和管理工具提供了一个干净且可重用的接口。它抽象了处理缺失值的复杂性，并确保代理能够优雅地处理不完整的信息，同时根据可用的输入执行适当的工具。</p>
+<h3 id="测试缺失信息的处理流程"><a href="#测试缺失信息的处理流程" class="headerlink" title="测试缺失信息的处理流程"></a>测试缺失信息的处理流程</h3><p>接下来，我们将扩展我们的 OpenAI API 调用。我们希望客户端能够利用我们的工具，并且我们的响应对象能够直接触发 tool.run()。为此，我们需要在我们新创建的 Tool 类中初始化我们的工具。我们定义了两个虚拟函数，它们返回一个成功消息字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">def add_expense_func(**kwargs):  </span><br><span class="line">    return f&quot;Added expense: &#123;kwargs&#125; to the database.&quot;</span><br><span class="line"></span><br><span class="line">add_expense_tool = Tool(  </span><br><span class="line">    name=&quot;add_expense_tool&quot;,  </span><br><span class="line">    model=Expense,  </span><br><span class="line">    function=add_expense_func  </span><br><span class="line">)  </span><br><span class="line">  </span><br><span class="line">def report_func(report: str = None):  </span><br><span class="line">    return f&quot;Reported: &#123;report&#125;&quot;  </span><br><span class="line">  </span><br><span class="line">report_tool = Tool(  </span><br><span class="line">    name=&quot;report_tool&quot;,  </span><br><span class="line">    model=ReportTool,  </span><br><span class="line">    function=report_func  </span><br><span class="line">)  </span><br><span class="line">  </span><br><span class="line">tools = [add_expense_tool, report_tool]</span><br></pre></td></tr></table></figure>
+<p>接下来，我们定义了一个辅助函数，它以客户端的响应作为输入，并帮助与我们的工具进行交互。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">def get_tool_from_response(response, tools=tools):  </span><br><span class="line">    tool_name = response.choices[0].message.tool_calls[0].function.name  </span><br><span class="line">    for t in tools:  </span><br><span class="line">        if t.name == tool_name:  </span><br><span class="line">            return t  </span><br><span class="line">    raise ValueError(f&quot;Tool &#123;tool_name&#125; not found in tools list.&quot;)</span><br><span class="line"></span><br><span class="line">def parse_function_args(response):  </span><br><span class="line">    message = response.choices[0].message  </span><br><span class="line">    return json.loads(message.tool_calls[0].function.arguments)</span><br><span class="line"></span><br><span class="line">def run_tool_from_response(response, tools=tools):  </span><br><span class="line">    tool = get_tool_from_response(response, tools)  </span><br><span class="line">    tool_kwargs = parse_function_args(response)  </span><br><span class="line">    return tool.run(**tool_kwargs)</span><br></pre></td></tr></table></figure>
+
+<p>现在，我们可以使用我们的新工具执行客户端并使用该run_tool_from_response 函数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">response = client.chat.completions.create(  </span><br><span class="line">            model=model_name,  </span><br><span class="line">            messages=messages,  </span><br><span class="line">            tools=[tool.openai_tool_schema for tool in tools]  </span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">tool_result = run_tool_from_response(response, tools=tools)</span><br><span class="line">print(tool_result)</span><br></pre></td></tr></table></figure>
+
+<p>运行上述代码后，您应该会看到以下输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">content=&#x27;Missing values: gross_amount, date&#x27; success=False</span><br></pre></td></tr></table></figure>
+
+<p>完美，我们现在看到我们的工具显示存在缺失值。多亏了我们将所有参数都设为可选的技巧，我们现在避免了虚构的参数。</p>
+<h2 id="构建代理工作流程"><a href="#构建代理工作流程" class="headerlink" title="构建代理工作流程"></a>构建代理工作流程</h2><p>我们目前的流程还不能代表一个真正的代理。到目前为止，我们只执行了一个 API 工具调用。为了将其转化为代理工作流程，我们需要引入一个迭代过程，将工具执行的结果反馈给客户端。基本流程应该是这样的：<br><img src="/../asset_scratchaiagentopenai/01.webp"></p>
+<p>让我们开始创建一个新的 OpenAIAgent 类：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">class StepResult(BaseModel):  </span><br><span class="line">    event: str   </span><br><span class="line">    content: str  </span><br><span class="line">    success: bool</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class OpenAIAgent:  </span><br><span class="line">      </span><br><span class="line">    def __init__(  </span><br><span class="line">            self,   </span><br><span class="line">            tools: list[Tool],   </span><br><span class="line">            client: OpenAI,   </span><br><span class="line">            system_message: str = SYSTEM_MESSAGE,   </span><br><span class="line">            model_name: str = &quot;gpt-3.5-turbo-0125&quot;,  </span><br><span class="line">            max_steps: int = 5,  </span><br><span class="line">            verbose: bool = True  </span><br><span class="line">    ):  </span><br><span class="line">        self.tools = tools  </span><br><span class="line">        self.client = client  </span><br><span class="line">        self.model_name = model_name  </span><br><span class="line">        self.system_message = system_message  </span><br><span class="line">        self.step_history = []  </span><br><span class="line">        self.max_steps = max_steps  </span><br><span class="line">        self.verbose = verbose  </span><br><span class="line">      </span><br><span class="line">      </span><br><span class="line">    def to_console(self, tag: str, message: str, color: str = &quot;green&quot;):  </span><br><span class="line">        if self.verbose:  </span><br><span class="line">            color_prefix = Fore.__dict__[color.upper()]  </span><br><span class="line">            print(color_prefix + f&quot;&#123;tag&#125;: &#123;message&#125;&#123;Style.RESET_ALL&#125;&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>像我们的ToolResult对象一样，我们将一个StepResult  定义为每个代理步骤的对象。然后，我们定义了 OpenAIAgent 类的__init__ 方法和一个 to_console() 方法，用于将我们的中间步骤和工具调用打印到控制台，使用 colorama 进行彩色打印。接下来，我们定义了代理的核心，run() 和run_step() 方法。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">class OpenAIAgent:</span><br><span class="line"></span><br><span class="line">    # ... __init__...</span><br><span class="line">    </span><br><span class="line">    # ... to_console ...</span><br><span class="line">    </span><br><span class="line">    def run(self, user_input: str):  </span><br><span class="line">        </span><br><span class="line">        openai_tools = [tool.openai_tool_schema for tool in self.tools]    </span><br><span class="line">        self.step_history = [    </span><br><span class="line">            &#123;&quot;role&quot;:&quot;system&quot;, &quot;content&quot;:self.system_message&#125;,    </span><br><span class="line">            &#123;&quot;role&quot;:&quot;user&quot;, &quot;content&quot;:user_input&#125;    </span><br><span class="line">        ]    </span><br><span class="line">          </span><br><span class="line">        step_result = None    </span><br><span class="line">        i = 0</span><br><span class="line">        </span><br><span class="line">        self.to_console(&quot;START&quot;, f&quot;Starting Agent with Input: &#123;user_input&#125;&quot;)</span><br><span class="line">          </span><br><span class="line">        while i &lt; self.max_steps:  </span><br><span class="line">            step_result = self.run_step(self.step_history, openai_tools)    </span><br><span class="line">            </span><br><span class="line">            if step_result.event == &quot;finish&quot;:    </span><br><span class="line">                break  </span><br><span class="line">            elif step_result.event == &quot;error&quot;:  </span><br><span class="line">                self.to_console(step_result.event, step_result.content, &quot;red&quot;)  </span><br><span class="line">            else:  </span><br><span class="line">                self.to_console(step_result.event, step_result.content, &quot;yellow&quot;)  </span><br><span class="line">            i += 1   </span><br><span class="line">              </span><br><span class="line">        self.to_console(&quot;Final Result&quot;, step_result.content, &quot;green&quot;)  </span><br><span class="line">        return step_result.content</span><br></pre></td></tr></table></figure>
+
+<p>在该run() 方法中，我们首先通过使用预定义的 system_message 和 user_input 来初始化step_history，它们将作为我们的消息存储器。然后我们开始我们的 while 循环，在每次迭代中调用 run_step  函数，它将返回一个 StepResult 对象。我们判断代理是否完成了任务或是否发生了错误，并将其传递给控制台。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">class OpenAIAgent:</span><br><span class="line"></span><br><span class="line">    # ... __init__...</span><br><span class="line">    </span><br><span class="line">    # ... to_console ...</span><br><span class="line">    # ... run ...</span><br><span class="line">    def run_step(self, messages: list[dict], tools):  </span><br><span class="line">          </span><br><span class="line">        # plan the next step  </span><br><span class="line">        response = self.client.chat.completions.create(  </span><br><span class="line">            model=self.model_name,  </span><br><span class="line">            messages=messages,  </span><br><span class="line">            tools=tools  </span><br><span class="line">        )  </span><br><span class="line">          </span><br><span class="line">        # add message to history  </span><br><span class="line">        self.step_history.append(response.choices[0].message)  </span><br><span class="line">        </span><br><span class="line">        # check if tool call is present  </span><br><span class="line">        if not response.choices[0].message.tool_calls:  </span><br><span class="line">            return StepResult(</span><br><span class="line">                event=&quot;Error&quot;,</span><br><span class="line">                content=&quot;No tool calls were returned.&quot;, </span><br><span class="line">                success=False</span><br><span class="line">                )  </span><br><span class="line">          </span><br><span class="line">        tool_name = response.choices[0].message.tool_calls[0].function.name  </span><br><span class="line">        tool_kwargs = parse_function_args(response)  </span><br><span class="line">          </span><br><span class="line">        # execute the tool call  </span><br><span class="line">        self.to_console(</span><br><span class="line">        &quot;Tool Call&quot;, f&quot;Name: &#123;tool_name&#125;\nArgs: &#123;tool_kwargs&#125;&quot;, &quot;magenta&quot;</span><br><span class="line">        )  </span><br><span class="line">        tool_result = run_tool_from_response(response, tools=self.tools)  </span><br><span class="line">        tool_result_msg = self.tool_call_message(response, tool_result)  </span><br><span class="line">        self.step_history.append(tool_result_msg)  </span><br><span class="line">          </span><br><span class="line">        if tool_result.success:  </span><br><span class="line">            step_result = StepResult(  </span><br><span class="line">                event=&quot;tool_result&quot;,   </span><br><span class="line">                content=tool_result.content,   </span><br><span class="line">                success=True)  </span><br><span class="line">        else:  </span><br><span class="line">            step_result = StepResult(  </span><br><span class="line">                event=&quot;error&quot;,   </span><br><span class="line">                content=tool_result.content,   </span><br><span class="line">                success=False  </span><br><span class="line">            )   </span><br><span class="line">          </span><br><span class="line">        return step_result  </span><br><span class="line">          </span><br><span class="line">      </span><br><span class="line">    def tool_call_message(self, response, tool_result: ToolResult):  </span><br><span class="line">        tool_call = response.choices[0].message.tool_calls[0]  </span><br><span class="line">        return &#123;  </span><br><span class="line">            &quot;tool_call_id&quot;: tool_call.id,  </span><br><span class="line">            &quot;role&quot;: &quot;tool&quot;,  </span><br><span class="line">            &quot;name&quot;: tool_call.function.name,  </span><br><span class="line">            &quot;content&quot;: tool_result.content,  </span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在我们已经为每个步骤定义了逻辑。我们首先通过之前测试过的客户端 API 调用工具来获取一个响应对象。我们将响应消息对象附加到我们的 step_history 中。然后我们验证是否在响应对象中包含了一个工具调用，否则我们在 StepResult 中返回一个错误。然后我们将工具调用记录到控制台，并使用之前定义的run_tool_from_response() 方法运行所选的工具。我们还需要将工具结果附加到我们的消息历史中。OpenAI 已经为此定义了一个特定的格式，以便模型知道哪个工具调用与哪个输出相关联，通过将 tool_call_id 传递给我们的消息字典。这是通过我们的方法 tool_call_message() 完成的，该方法接受响应对象和工具结果作为输入参数。在每个步骤结束时，我们将工具结果分配给一个 StepResult 对象，该对象还指示步骤是否成功，并将其返回给我们的循环 run() 中。</p>
+<h2 id="运行代理"><a href="#运行代理" class="headerlink" title="运行代理"></a>运行代理</h2><p>现在我们可以使用之前的示例来测试我们的代理，直接将其配备为一个get_current_date_tool 。在这里，我们可以将之前定义的validate_missing 属性设置为False ，因为该工具不需要任何输入参数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">class DateTool(BaseModel):  </span><br><span class="line">    x: str = None  </span><br><span class="line"></span><br><span class="line">get_date_tool = Tool(  </span><br><span class="line">    name=&quot;get_current_date&quot;,  </span><br><span class="line">    model=DateTool,  </span><br><span class="line">    function=lambda: datetime.now().strftime(&quot;%Y-%m-%d&quot;),  </span><br><span class="line">    validate_missing=False  </span><br><span class="line">)  </span><br><span class="line">      </span><br><span class="line">tools = [  </span><br><span class="line">    add_expense_tool,   </span><br><span class="line">    report_tool,  </span><br><span class="line">    get_date_tool  </span><br><span class="line">]  </span><br><span class="line">  </span><br><span class="line">agent = OpenAIAgent(tools, client)</span><br><span class="line">agent.run(&quot;I have spent 5$ on a coffee today please track my expense. The tax rate is 0.2.&quot;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">START: Starting Agent with Input: </span><br><span class="line">&quot;I have spend 5$ on a coffee today please track my expense. The tax rate is 0.2.&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Tool Call: get_current_date</span><br><span class="line">Args: &#123;&#125;</span><br><span class="line">tool_result: 2024-03-15</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Tool Call: add_expense_tool</span><br><span class="line">Args: &#123;&#x27;description&#x27;: &#x27;Coffee expense&#x27;, &#x27;net_amount&#x27;: 5, &#x27;tax_rate&#x27;: 0.2, &#x27;date&#x27;: &#x27;2024-03-15&#x27;&#125;</span><br><span class="line">error: Missing values: gross_amount</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Tool Call: add_expense_tool</span><br><span class="line">Args: &#123;&#x27;description&#x27;: &#x27;Coffee expense&#x27;, &#x27;net_amount&#x27;: 5, &#x27;tax_rate&#x27;: 0.2, &#x27;date&#x27;: &#x27;2024-03-15&#x27;, &#x27;gross_amount&#x27;: 6&#125;</span><br><span class="line">tool_result: Added expense: &#123;&#x27;description&#x27;: &#x27;Coffee expense&#x27;, &#x27;net_amount&#x27;: 5, &#x27;tax_rate&#x27;: 0.2, &#x27;date&#x27;: &#x27;2024-03-15&#x27;, &#x27;gross_amount&#x27;: 6&#125; to the database.</span><br><span class="line">Error: No tool calls were returned.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Tool Call: Name: report_tool</span><br><span class="line">Args: &#123;&#x27;report&#x27;: &#x27;Expense successfully tracked for coffee purchase.&#x27;&#125;</span><br><span class="line">tool_result: Reported: Expense successfully tracked for coffee purchase.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Final Result: Reported: Expense successfully tracked for coffee purchase.</span><br></pre></td></tr></table></figure>
+
+<p>在成功执行我们的原型代理之后，值得强调的是代理根据计划有效地利用了指定的工具。最初，它调用了get_current_date_tool，为费用记录建立了基础时间戳。随后，在尝试通过add_expense_tool 进行费用记录时，我们智能设计的工具类发现了一个缺失的gross_amount——这是准确财务跟踪所必需的关键信息。令人印象深刻的是，代理通过使用提供的tax_rate自动解决了这个gross_amount 计算问题。</p>
+<p>调试发现AI Agent不会成功，不成功log如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">START: Starting Agent with Input: I have spend 5$ on a coffee today please track my expense. The tax rate is 0.2</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Tool Call: Name: get_current_date</span><br><span class="line">Args: &#123;&#125;</span><br><span class="line">tool_result: 2024-04-03</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Tool Call: Name: add_expense_tool</span><br><span class="line">Args: &#123;&#x27;description&#x27;: &#x27;Coffee&#x27;, &#x27;net_amount&#x27;: 5, &#x27;tax_rate&#x27;: 0.2, &#x27;date&#x27;: &#x27;2024-04-03&#x27;&#125;</span><br><span class="line">error: Missing values: gross_amount</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Tool Call: Name: add_expense_tool</span><br><span class="line">Args: &#123;&#x27;description&#x27;: &#x27;Coffee&#x27;, &#x27;net_amount&#x27;: 5, &#x27;tax_rate&#x27;: 0.2, &#x27;date&#x27;: &#x27;2024-04-03&#x27;, &#x27;gross_amount&#x27;: 6&#125;</span><br><span class="line">tool_result: Added expense: &#123;&#x27;description&#x27;: &#x27;Coffee&#x27;, &#x27;net_amount&#x27;: 5, &#x27;tax_rate&#x27;: 0.2, &#x27;date&#x27;: &#x27;2024-04-03&#x27;, &#x27;gross_amount&#x27;: 6&#125; to the database.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Tool Call: Name: report_tool</span><br><span class="line">Args: &#123;&#x27;report&#x27;: &#x27;Expense of $5 for coffee today has been successfully tracked with a tax rate of 0.2.&#x27;&#125;</span><br><span class="line">tool_result: Reported: Expense of $5 for coffee today has been successfully tracked with a tax rate of 0.2.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Error: No tool calls were returned.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Final Result: No tool calls were returned.</span><br></pre></td></tr></table></figure>
+<p>这是因为openai的模型判断工具调用完成就会停止工具调用，返回response.choices[0].message.tool_calls 为空，需要改一下源代码。<br>如下：在agent.py中添加check if task is completed如下代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># add message to history</span><br><span class="line">self.step_history.append(response.choices[0].message)</span><br><span class="line"># check if task is completed</span><br><span class="line">if response.choices[0].finish_reason == &quot;stop&quot;:</span><br><span class="line">    step_result = StepResult(event=&quot;finish&quot;, content=&quot;Task completed.&quot;, success=True)</span><br><span class="line">    return step_result</span><br></pre></td></tr></table></figure>
+
+
+<p>在我们的测试中，需要提到的是，输入费用的性质——无论是花在咖啡上的 5 美元是净额还是毛额——并没有明确指定。在这个阶段，为了使代理能够成功完成任务，这种明确性并不是必需的。然而，这为我们改进代理的理解和交互能力提供了有价值的见解：将这些详细信息纳入我们的初始系统提示中，可以显著提高代理在处理费用记录方面的准确性和效率。这个调整将确保从一开始就更全面地掌握财务数据。</p>
+<h2 id="要点"><a href="#要点" class="headerlink" title="要点"></a>要点</h2><ul>
+<li>迭代开发：该项目强调了迭代开发周期的关键性，通过反馈促进持续改进。在人工智能领域，这种方法至关重要，因为变化是常态，需要一种适应性强、响应迅速的开发策略。</li>
+<li>处理不确定性：我们的过程突显了优雅地管理模糊和错误的重要性。创新，如可选参数和严格的输入验证，已被证明对提高代理的可靠性和用户体验至关重要。</li>
+<li>特定任务的定制代理工作流程：这项工作的一个关键洞察是定制代理工作流程以适应特定的用例的重要性。除了组装一套工具之外，工具交互和响应的战略设计至关重要。这种定制确保代理有效地应对特定挑战，从而实现更加专注和高效的问题解决方法。</li>
+</ul>
+<h2 id="展望未来"><a href="#展望未来" class="headerlink" title="展望未来"></a>展望未来</h2><p>接下来的文章将着重扩展我们原型的功能，并将其与现实世界的系统集成。在下一篇文章中，我们将深入探讨设计一个强大的项目结构，使我们的代理能够与 SQL 数据库无缝交互。通过利用本文中开发的代理，我们将展示 AI 如何高效地管理和操作存储在数据库中的数据，为自动化数据相关任务打开了无限可能性。</p>
+<p>在此基础上，本系列的第三篇文章将介绍高级查询功能，使我们的代理能够处理更复杂的数据检索和操作任务。我们还将探讨路由代理的概念，它将充当一个中央枢纽，用于管理多个子代理，每个子代理负责与特定的数据库表进行交互。这种分层结构将允许用户用自然语言提出请求，然后路由代理将解释并将其指示给适当的子代理执行。</p>
+<p>为了进一步提升我们基于人工智能的系统的实用性和安全性，我们将引入基于角色的访问控制系统。这将确保用户根据其分配的角色拥有适当的权限来访问和修改数据。通过实施这一功能，我们可以展示人工智能代理如何在现实场景中部署，同时保持数据的完整性和安全性。</p>
+<p>通过这些即将推出的增强功能，我们旨在展示 AI 代理在简化数据管理流程和为用户提供更直观高效的与数据库交互方式方面的真正潜力。通过结合自然语言处理、数据库管理和基于角色的访问控制的能力，我们将为开发能够彻底改变企业和个人处理数据方式的复杂 AI 助手奠定基础。</p>
+<h2 id="源代码"><a href="#源代码" class="headerlink" title="源代码"></a>源代码</h2><p>所涵盖项目的全部源代码都可以在 GitHub 上找到。您可以在 <a target="_blank" rel="noopener" href="https://github.com/elokus/AgentDemo">https://github.com/elokus/AgentDemo</a> 访问它。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://towardsdatascience.com/leverage-openai-tool-calling-building-a-reliable-ai-agent-from-scratch-4e21fcd15b62">https://towardsdatascience.com/leverage-openai-tool-calling-building-a-reliable-ai-agent-from-scratch-4e21fcd15b62</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1815,150 +2005,8 @@ public class DemoApplication &#123;
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/03/02/self-RAG/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Howard Huang">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/03/02/self-RAG/" class="post-title-link" itemprop="url">self-RAG如何革新工业LLMs</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2024-03-02 10:00:16 / 修改时间：15:46:40" itemprop="dateCreated datePublished" datetime="2024-03-02T10:00:16+08:00">2024-03-02</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>4.7k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>9 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>让我们面对现实吧 - 原始的RAG非常愚蠢。无法保证返回的回答是相关的。了解使用Self-RAG如何显著的提供帮助。</p>
-<p>大型语言模型（LLMs）已经准备好彻底改变各个行业。让我们以金融领域为例，LLMs可以用来研究大量文件，并在短时间内找到趋势，而且成本只是分析师完成同样任务的一小部分。但是这里有个问题——你得到的答案往往只是部分和不完整的。举个例子，假设你有一份包含公司X过去15年年度收入的文件，但是分散在不同的部分。在下面所示的标准检索增强生成（RAG）架构中，通常会检索前k个文件，或选择固定上下文长度内的文件。</p>
-<p><img src="/../asset_selfrag/01.png"></p>
-<p>然而，这可能会有几个问题。一个问题是前k个文档中可能不包含所有的答案 - 例如，可能只对应于最近的5年或10年。另一个问题是，在文档片段和提示之间计算相似度并不总是产生相关的上下文。在这种情况下，你可能会得到一个错误的答案。</p>
-<p>一个真正的问题是，你开发了一个在你测试的简单情况下运行良好的基本RAG应用程序，但当你将这个原型展示给利益相关者并且他们提出一些非常规的问题时，它就会失败</p>
-<p>这就是self RAG发挥作用的地方！作者们开发了一种巧妙的方法，通过对经过微调的语言模型（Llama2–7B和13B）输出特殊标记[检索]、[无检索]、[相关]、[不相关]、[不支持&#x2F;矛盾]、[部分支持]、[效用]等，来决定一个上下文是否相关&#x2F;不相关，语言模型生成的文本是否得到支持，以及生成的效用。</p>
-<p><img src="/../asset_selfrag/02.png"></p>
-<h3 id="训练self-RAG"><a href="#训练self-RAG" class="headerlink" title="训练self RAG"></a>训练self RAG</h3><p>Self-RAG在一个两个步骤的层次化过程中进行训练。第一步，训练了一个简单的语言模型，用于分类生成的输出（仅prompt或prompt+RAG增强输出），并在末尾添加相关的特殊标记。这个“评价模型”是通过GPT-4的注释进行训练的。具体来说，使用了一种类型特定的指令来提示GPT-4（“给定一条指令，判断从网络上找到一些外部文档是否有助于生成更好的回答。”）。</p>
-<p>在第二步中，生成模型使用标准的下一个标记预测目标来学习生成延续，以及用于检索&#x2F;评价生成结果的特殊标记。不像其他微调或RLHF方法，他们的后续训练可能会影响模型输出并使未来的生成结果带有偏见。通过这种简单的方法，模型只被训练成适当地生成特殊标记，而不改变底层的语言模型！这真是太棒了！</p>
-<h3 id="推理"><a href="#推理" class="headerlink" title="推理"></a>推理</h3><p>对于推理，<a target="_blank" rel="noopener" href="https://github.com/AkariAsai/self-rag">self-RAG存储库</a> 建议使用 <a target="_blank" rel="noopener" href="https://github.com/vllm-project/vllm">vllm</a> 一个用于LLM推理的库。</p>
-<p>您可以按照以下方式加载库并进行查询：</p>
-<pre><code>from vllm import LLM, SamplingParams
-model = LLM(&quot;selfrag/selfrag_llama2_7b&quot;, download_dir=&quot;/gscratch/h2lab/akari/model_cache&quot;, dtype=&quot;half&quot;)
-sampling_params = SamplingParams(temperature=0.0, top_p=1.0, max_tokens=100, skip_special_tokens=False)
-
-def format_prompt(input, paragraph=None):
-    prompt = &quot;### Instruction:\n&#123;0&#125;\n\n### Response:\n&quot;.format(input)
-    if paragraph is not None:
-        prompt += &quot;[Retrieval]&lt;paragraph&gt;&#123;0&#125;&lt;/paragraph&gt;&quot;.format(paragraph)
-    return prompt
-
-query_1 = &quot;Leave odd one out: twitter, instagram, whatsapp.&quot;
-query_2 = &quot;Can you tell me the difference between llamas and alpacas?&quot;
-queries = [query_1, query_2]
-# for a query that doesn&#39;t require retrieval
-preds = model.generate([format_prompt(query) for query in queries], sampling_params)
-for pred in preds:
-    print(&quot;Model prediction: &#123;0&#125;&quot;.format(pred.outputs[0].text))
-</code></pre>
-<p>对于需要检索的查询，您可以按照下面的示例提供必要的信息作为字符串。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">paragraph=&quot;&quot;&quot;Llamas range from 200 to 350 lbs., while alpacas weigh in at 100 to 175 lbs.&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">def format_prompt_p(input, paragraph=paragraph):</span><br><span class="line">  prompt = &quot;### Instruction:\n&#123;0&#125;\n\n### Response:\n&quot;.format(input)</span><br><span class="line">  if paragraph is not None:</span><br><span class="line">    prompt += &quot;[Retrieval]&lt;paragraph&gt;&#123;0&#125;&lt;/paragraph&gt;&quot;.format(paragraph)</span><br><span class="line">  return prompt</span><br><span class="line"></span><br><span class="line">query_1 = &quot;Leave odd one out: twitter, instagram, whatsapp.&quot;</span><br><span class="line">query_2 = &quot;Can you tell me the differences between llamas and alpacas?&quot;</span><br><span class="line">queries = [query_1, query_2]</span><br><span class="line"></span><br><span class="line"># for a query that doesn&#x27;t require retrieval</span><br><span class="line">preds = model.generate([format_prompt_p(query) for query in queries], sampling_params)</span><br><span class="line">for pred in preds:</span><br><span class="line">  print(&quot;Model prediction: &#123;0&#125;&quot;.format(pred.outputs[0].text))</span><br></pre></td></tr></table></figure>
-<pre><code>[Irrelevant]Whatsapp is the odd one out.
-[No Retrieval]Twitter and Instagram are both social media platforms, 
-while Whatsapp is a messaging app.[Utility:5]
-
-[Relevant]Llamas are larger than alpacas, with males weighing up to 350 pounds.
-[Partially supported][Utility:5]
-</code></pre>
-<p>在上面的例子中，对于第一个查询（与social media platforms有关），段落上下文是无关的，如检索结果开头的[Irrelevant]标记所示。然而，对于第二个查询（与llamas and alpacas有关），外部上下文是相关的。正如您所看到的，它在生成的上下文中包含了这些信息，由[Relevant]标记标记。</p>
-<p>但在下面的例子中，上下文“I like Avocado。”与提示无关。如下所示，模型预测对于两个查询都开始为[Irrelevant]，并且只使用内部信息来回答提示。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">paragraph=&quot;&quot;&quot;I like Avocado.&quot;&quot;&quot;</span><br><span class="line">def format_prompt_p(input, paragraph=paragraph):</span><br><span class="line">  prompt = &quot;### Instruction:\n&#123;0&#125;\n\n### Response:\n&quot;.format(input)</span><br><span class="line">  if paragraph is not None:</span><br><span class="line">    prompt += &quot;[Retrieval]&lt;paragraph&gt;&#123;0&#125;&lt;/paragraph&gt;&quot;.format(paragraph)</span><br><span class="line">  return prompt</span><br><span class="line"></span><br><span class="line">query_1 = &quot;Leave odd one out: twitter, instagram, whatsapp.&quot;</span><br><span class="line">query_2 = &quot;Can you tell me the differences between llamas and alpacas?&quot;</span><br><span class="line">queries = [query_1, query_2]</span><br><span class="line"></span><br><span class="line"># for a query that doesn&#x27;t require retrieval</span><br><span class="line">preds = model.generate([format_prompt_p(query) for query in queries], sampling_params)</span><br><span class="line">for pred in preds:</span><br><span class="line">  print(&quot;Model prediction: &#123;0&#125;&quot;.format(pred.outputs[0].text))</span><br></pre></td></tr></table></figure>
-<pre><code>Model prediction: [Irrelevant]Twitter is the odd one out.[Utility:5]
-
-[Irrelevant]Sure![Continue to Use Evidence]
-Alpacas are a much smaller than llamas.
-They are also bred specifically for their fiber.[Utility:5]
-</code></pre>
-<h3 id="另外"><a href="#另外" class="headerlink" title="另外"></a>另外</h3><p>Self RAG相对于普通的LLM有几个优点。</p>
-<ul>
-<li>自适应通道检索：通过这种方式，LLM可以持续检索上下文，直到找到所有相关的上下文（当然是在上下文窗口内）。</li>
-<li>更相关的检索：很多时候，嵌入模型在检索相关上并不是最好的。Self RAG可能通过相关&#x2F;不相关的特殊标记来解决这个问题。</li>
-<li>超越其他类似模型：Self-RAG超越其他类似模型，并且在许多任务中令人惊讶地超越了ChatGPT。如果使用ChatGPT未经训练的数据进行比较，例如更多专有的工业数据，将会很有趣。</li>
-<li>不改变基础语言模型：对我来说，这是一个巨大的升级销售点——因为我们知道微调和强化学习很容易导致偏见模型。自我RAG似乎通过添加特殊标记来解决这个问题，同时保持文本生成方式不变。</li>
-</ul>
-<p>尽管还有改进的空间，但在处理固定上下文长度方面还有一些问题。这可能通过在Self-RAG中添加摘要组件来实现。另一个令人兴奋的方向是OpenAI最近发布的上下文长度窗口的增加 - GPT-4 128k上下文窗口更新。然而，正如论坛中提到的，这个上下文窗口代表输入长度，而输出限制仍然是4k个标记。</p>
-<p>RAG代表着行业在数据上应用LLMs的一种最令人兴奋的方式，以产生真正的业务影响。然而，对于语言模型的RAG特定调优还不够多。我对这个领域未来的改进感到兴奋。</p>
-<p>推理代码在这个GitHub仓库中：<br><a target="_blank" rel="noopener" href="https://github.com/skandavivek/self-RAG">https://github.com/skandavivek/self-RAG</a></p>
-<h3 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h3><p><a target="_blank" rel="noopener" href="https://towardsdatascience.com/how-self-rag-could-revolutionize-industrial-llms-b33d9f810264">https://towardsdatascience.com/how-self-rag-could-revolutionize-industrial-llms-b33d9f810264</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
@@ -1980,13 +2028,13 @@ They are also bred specifically for their fiber.[Utility:5]
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">216k</span>
+    <span title="站点总字数">221k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">6:32</span>
+    <span title="站点阅读时长">6:43</span>
   </span>
 </div>
 <div class="busuanzi-count">

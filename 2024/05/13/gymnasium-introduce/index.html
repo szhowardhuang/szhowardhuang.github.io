@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"szhowardhuang.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="前面介绍了强化学习的例子，觉得有必要介绍gymnasium环境。 作为强化学习最常用的工具，gym一直在不停地升级和折腾，比较大的变化就是2021年接口从gym库变成了gymnasium库。 step和观察结果总体来说，对于gymnasium我们只需要做两件事情：一个是初始化环境，另一个就是通过step函数不停地给环境做输入，然后观察对应的结果。 初始化环境分为两步。第一步是创建gymnasium">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Gymnasium 介绍">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/05/13/gymnasium-introduce/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="前面介绍了强化学习的例子，觉得有必要介绍gymnasium环境。 作为强化学习最常用的工具，gym一直在不停地升级和折腾，比较大的变化就是2021年接口从gym库变成了gymnasium库。 step和观察结果总体来说，对于gymnasium我们只需要做两件事情：一个是初始化环境，另一个就是通过step函数不停地给环境做输入，然后观察对应的结果。 初始化环境分为两步。第一步是创建gymnasium">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-05-13T07:12:51.550Z">
+<meta property="article:modified_time" content="2024-05-13T07:48:36.250Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://szhowardhuang.github.io/2024/05/13/gymnasium-introduce/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://szhowardhuang.github.io/2024/05/13/gymnasium-introduce/","path":"2024/05/13/gymnasium-introduce/","title":"Gymnasium 介绍"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Gymnasium 介绍 | 嵌入式老兵博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">嵌入式老兵博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#step%E5%92%8C%E8%A7%82%E5%AF%9F%E7%BB%93%E6%9E%9C"><span class="nav-number">1.</span> <span class="nav-text">step和观察结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8E%E8%80%81gym%E7%9A%84%E4%B8%BB%E8%A6%81%E5%8C%BA%E5%88%AB"><span class="nav-number">2.</span> <span class="nav-text">与老gym的主要区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gymnasium%E4%B8%8E%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E5%BA%93%E7%9A%84%E7%BB%93%E5%90%88"><span class="nav-number">3.</span> <span class="nav-text">gymnasium与强化学习算法库的结合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E8%BE%93%E5%87%BA-%E4%BB%8EMonitor%E5%88%B0RecordVideo"><span class="nav-number">4.</span> <span class="nav-text">视频输出 - 从Monitor到RecordVideo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Howard Huang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/05/13/gymnasium-introduce/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Gymnasium 介绍 | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Gymnasium 介绍
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-05-13 15:12:51 / 修改时间：15:48:36" itemprop="dateCreated datePublished" datetime="2024-05-13T15:12:51+08:00">2024-05-13</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>5.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>11 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>前面介绍了强化学习的例子，觉得有必要介绍gymnasium环境。 作为强化学习最常用的工具，gym一直在不停地升级和折腾，比较大的变化就是2021年接口从gym库变成了gymnasium库。</p>
+<h3 id="step和观察结果"><a href="#step和观察结果" class="headerlink" title="step和观察结果"></a>step和观察结果</h3><p>总体来说，对于gymnasium我们只需要做两件事情：一个是初始化环境，另一个就是通过step函数不停地给环境做输入，然后观察对应的结果。</p>
+<p>初始化环境分为两步。<br>第一步是创建gymnasium中所支持的环境，比如我们使用经典的让一个杆子不倒的CartPole环境：</p>
+<pre><code>import gymnasium as gym
+env = gym.make(&quot;CartPole-v1&quot;)
+</code></pre>
+<p>第二步，我们就可以通过env的reset函数来进行环境的初始化：</p>
+<pre><code>observation, info = env.reset()
+</code></pre>
+<p>我们可以将observation打印出来，它一个4元组，4个数值分别表示：</p>
+<ul>
+<li>小车位置</li>
+<li>小车速度</li>
+<li>棍的倾斜角度</li>
+<li>棍的角速度</li>
+</ul>
+<p>如果角度大于12度，或者小车位置超出了2.4，就意味着失败了，直接结束。</p>
+<p>小车的输入就是一个力，要么是向左的力，要么是向右的力。0是向左推小车，1是向右推小车。</p>
+<p>下面我们让代码跑起来。</p>
+<p>首先我们通过pip来安装gymnasium的包：</p>
+<pre><code>pip install gymnasium
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gymnasium <span class="keyword">as</span> gym</span><br><span class="line"></span><br><span class="line">num_eval_episodes = <span class="number">4</span></span><br><span class="line"></span><br><span class="line">env = gym.make(<span class="string">&quot;CartPole-v1&quot;</span>, render_mode=<span class="string">&quot;rgb_array&quot;</span>)  <span class="comment"># replace with your environment</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(env.action_space)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> episode_num <span class="keyword">in</span> <span class="built_in">range</span>(num_eval_episodes):</span><br><span class="line">    obs, info = env.reset()</span><br><span class="line"></span><br><span class="line">    episode_over = <span class="literal">False</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">not</span> episode_over:</span><br><span class="line">        action = env.action_space.sample()  <span class="comment"># replace with actual agent</span></span><br><span class="line">        obs, reward, terminated, truncated, info = env.step(action)</span><br><span class="line"></span><br><span class="line">        episode_over = terminated <span class="keyword">or</span> truncated</span><br><span class="line">env.close()</span><br></pre></td></tr></table></figure>
+
+<p>env.action_space输出是Discrete(2)。也就是两个离散的值0和1。前面我们介绍了，这分别代表向左和向右推动小车。</p>
+<p>obs输出的4元组，我们前面也讲过了，像这样：<br>[ 0.0273956 -0.00611216 0.03585979 0.0197368 ]</p>
+<p>下面就是关键的step一步：</p>
+<pre><code>action = env.action_space.sample()  # replace with actual agent
+obs, reward, terminated, truncated, info = env.step(action)
+</code></pre>
+<p>CartPole的输入只有0和1两个值。我们采用sample()函数只是随机采用左右动的方式来试图让小车不倒。</p>
+<p>返回的5元组，obs就是位置4元组，reward是用于强化学习的奖励，在本例中只要是不死就是1. terminated就是是否游戏结束了。<br>Truncated在官方定义中用于处理比如超时等特殊结束的情况。<br>truncated, info对于CartPole来说没有用到。</p>
+<p>搭建好了gymnasium环境之后，我们就可以进行策略的升级与迭代了。<br>比如我们写死一个策略，如果位置小于0则向右推，反之则向左推：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">action_pos</span>(<span class="params">obs</span>): </span><br><span class="line">    pos, v, ang, va = obs</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> pos &lt;= <span class="number">0</span>: </span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>: </span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span> </span><br></pre></td></tr></table></figure>
+<p>用 action_pos(obs) 替换 env.action_space.sample() 即可。</p>
+<h3 id="与老gym的主要区别"><a href="#与老gym的主要区别" class="headerlink" title="与老gym的主要区别"></a>与老gym的主要区别</h3><p>目前版本与之前gym的最主要区别在于step返回值从原来的4元组变成了5元组。<br>原来是observation, reward, done, info，而现在done变成了 terminated增加了truncated。</p>
+<p>老版本的：</p>
+<pre><code>status, reward, done, info = env.step(0)
+</code></pre>
+<p>新版的：</p>
+<pre><code>observation, reward, terminated, truncated, info = env.step(0)
+</code></pre>
+<p>因而，原来处理done的地方需要改成terminated或truncated:</p>
+<pre><code>if terminated or truncated:
+    something()
+</code></pre>
+<p>另外，env.reset函数目前返回的是两个值，而不是原来的一个值：</p>
+<pre><code>obs,info = env.reset()
+</code></pre>
+<h3 id="gymnasium与强化学习算法库的结合"><a href="#gymnasium与强化学习算法库的结合" class="headerlink" title="gymnasium与强化学习算法库的结合"></a>gymnasium与强化学习算法库的结合</h3><p>stable-baselines3等强化学习库已经对gymnasium进行了支持，所以我们可以在stable-baselines3中直接使用gymnasium的环境。</p>
+<p>先安装库：</p>
+<pre><code>pip install gymnasium[atari]
+pip install gymnasium[accept-rom-license]
+pip install stable_baselines3
+</code></pre>
+<p>我们用DQN算法来训练乒乓球游戏：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gymnasium <span class="keyword">as</span> gym</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> stable_baselines3 <span class="keyword">import</span> DQN</span><br><span class="line"><span class="keyword">from</span> stable_baselines3.dqn <span class="keyword">import</span> CnnPolicy</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">game = <span class="string">&#x27;ALE/Pong-v5&#x27;</span></span><br><span class="line"></span><br><span class="line">env = gym.make(game,render_mode=<span class="string">&quot;rgb_array&quot;</span>)</span><br><span class="line"></span><br><span class="line">save_file = <span class="string">&#x27;dqn_&#x27;</span>+game;</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(env.action_space)</span><br><span class="line">model = DQN(CnnPolicy, env, verbose=<span class="number">1</span>,exploration_final_eps=<span class="number">0.01</span>,exploration_fraction=<span class="number">0.1</span>,gradient_steps=<span class="number">1</span>,learning_rate=<span class="number">0.0001</span>,buffer_size=<span class="number">10000</span>)</span><br><span class="line">model.set_env(env)</span><br><span class="line">model.learn(total_timesteps=<span class="number">1000000</span>, log_interval=<span class="number">10</span>)</span><br><span class="line">model.save(save_file)</span><br><span class="line"></span><br><span class="line">obs,info = env.reset()</span><br><span class="line"></span><br><span class="line">score = <span class="number">0</span></span><br><span class="line">rewards_sum = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    action, _states = model.predict(obs, deterministic=<span class="literal">True</span>)</span><br><span class="line">    obs, reward, terminated, truncated, info = env.step(action)</span><br><span class="line">    score = score + <span class="number">1</span></span><br><span class="line">    rewards_sum += reward</span><br><span class="line">    <span class="keyword">if</span> reward &gt; <span class="number">0</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;win!!!&#x27;</span>, reward)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> terminated <span class="keyword">or</span> truncated:</span><br><span class="line">        <span class="comment"># obs = env.reset()</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;finished&#x27;</span>, score)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;reward sum=&#x27;</span>, rewards_sum)</span><br><span class="line">        <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+
+<p>上面的代码我们还可以做两处改进：</p>
+<p>如果存在save_file，我们可以直接加载模型，在原有模型上继续训练。<br>我们可以增加一个测试模式，观看训练后模型打游戏的真实效果。</p>
+<p>我们让PPO算法来玩乒乓球游戏了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gymnasium <span class="keyword">as</span> gym</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> stable_baselines3 <span class="keyword">import</span> PPO</span><br><span class="line"><span class="keyword">from</span> stable_baselines3.dqn <span class="keyword">import</span> MlpPolicy</span><br><span class="line"><span class="keyword">from</span> stable_baselines3.dqn <span class="keyword">import</span> CnnPolicy</span><br><span class="line"></span><br><span class="line">game = <span class="string">&#x27;ALE/Pong-v5&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#eval = True</span></span><br><span class="line"><span class="built_in">eval</span> = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">cont = <span class="literal">True</span></span><br><span class="line"><span class="comment">#cont = False</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> (time.strftime(<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>, time.localtime()))</span><br><span class="line"></span><br><span class="line">start_time = time.time()</span><br><span class="line">start_date = datetime.now()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">eval</span>:</span><br><span class="line">    env = gym.make(game,render_mode=<span class="string">&quot;human&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    env = gym.make(game,render_mode=<span class="string">&quot;rgb_array&quot;</span>)</span><br><span class="line"></span><br><span class="line">save_file = <span class="string">&#x27;./dqn_&#x27;</span>+game;</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(env.action_space)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">eval</span>:</span><br><span class="line">    model = PPO.load(save_file)</span><br><span class="line">    model.set_env(env) </span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="keyword">if</span> cont:</span><br><span class="line">        model = PPO.load(save_file)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        model = PPO(<span class="string">&quot;MlpPolicy&quot;</span>, env, verbose=<span class="number">1</span>,learning_rate=<span class="number">2.5e-4</span>,clip_range=<span class="number">0.1</span>,vf_coef=<span class="number">0.5</span>,ent_coef=<span class="number">0.01</span>,n_steps=<span class="number">128</span>)    </span><br><span class="line">    model.set_env(env)</span><br><span class="line">    model.learn(total_timesteps=<span class="number">1000000</span>, log_interval=<span class="number">10</span>)</span><br><span class="line">    model.save(save_file)</span><br><span class="line"></span><br><span class="line">obs,info = env.reset()</span><br><span class="line"></span><br><span class="line">score = <span class="number">0</span></span><br><span class="line">rewards_sum = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    action, _states = model.predict(obs)</span><br><span class="line">    obs, reward, terminated, truncated, info = env.step(action)</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">eval</span>:</span><br><span class="line">        env.render()</span><br><span class="line"></span><br><span class="line">    score = score + <span class="number">1</span></span><br><span class="line">    rewards_sum += reward</span><br><span class="line">    <span class="keyword">if</span> reward &gt; <span class="number">0</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;win!!!&#x27;</span>, reward)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> terminated <span class="keyword">or</span> truncated:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;finished&#x27;</span>, score)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;reward sum=&#x27;</span>, rewards_sum)</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">duration = time.time() - start_time</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;duration=&#x27;</span>, duration)</span><br><span class="line"></span><br><span class="line">time_cost = datetime.now() - start_date</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;time cost=&#x27;</span>, time_cost)</span><br></pre></td></tr></table></figure>
+<h3 id="视频输出-从Monitor到RecordVideo"><a href="#视频输出-从Monitor到RecordVideo" class="headerlink" title="视频输出 - 从Monitor到RecordVideo"></a>视频输出 - 从Monitor到RecordVideo</h3><p>有时候我们希望把游戏的视频输出出来，gym曾经使用Monitor来实现。现在gymnasium则改用RecordVideo来实现。</p>
+<p>使用RecordVideo需要先安装moviepy库：</p>
+<pre><code>pip install moviepy
+</code></pre>
+<p>然后从gymnasium.wrappers包中引用RecordVideo：</p>
+<pre><code>from gymnasium.wrappers import RecordVideo
+</code></pre>
+<p>human模式是没有办法输出视频的，所以我们需要把human模式改成rgb_array模式。</p>
+<pre><code>env = gym.make(&quot;CartPole-v1&quot;, render_mode=&quot;rgb_array&quot;)
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> gymnasium <span class="keyword">as</span> gym</span><br><span class="line"><span class="keyword">from</span> gymnasium.wrappers <span class="keyword">import</span> RecordEpisodeStatistics, RecordVideo</span><br><span class="line"></span><br><span class="line">training_period = <span class="number">250</span>  <span class="comment"># record the agent&#x27;s episode every 250</span></span><br><span class="line">num_training_episodes = <span class="number">10_000</span>  <span class="comment"># total number of training episodes</span></span><br><span class="line"></span><br><span class="line">env = gym.make(<span class="string">&quot;CartPole-v1&quot;</span>, render_mode=<span class="string">&quot;rgb_array&quot;</span>)  <span class="comment"># replace with your environment</span></span><br><span class="line">env = RecordVideo(env, video_folder=<span class="string">&quot;cartpole-agent&quot;</span>, name_prefix=<span class="string">&quot;training&quot;</span>,</span><br><span class="line">                  episode_trigger=<span class="keyword">lambda</span> x: x % training_period == <span class="number">0</span>)</span><br><span class="line">env = RecordEpisodeStatistics(env)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> episode_num <span class="keyword">in</span> <span class="built_in">range</span>(num_training_episodes):</span><br><span class="line">    obs, info = env.reset()</span><br><span class="line"></span><br><span class="line">    episode_over = <span class="literal">False</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">not</span> episode_over:</span><br><span class="line">        action = env.action_space.sample()  <span class="comment"># replace with actual agent</span></span><br><span class="line">        obs, reward, terminated, truncated, info = env.step(action)</span><br><span class="line"></span><br><span class="line">        episode_over = terminated <span class="keyword">or</span> truncated</span><br><span class="line"></span><br><span class="line">    logging.info(<span class="string">f&quot;episode-<span class="subst">&#123;episode_num&#125;</span>&quot;</span>, info[<span class="string">&quot;episode&quot;</span>])</span><br><span class="line">env.close()</span><br></pre></td></tr></table></figure>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a target="_blank" rel="noopener" href="https://gymnasium.farama.org/">https://gymnasium.farama.org/</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/05/05/reinforce-learing-game-2/" rel="prev" title="通过游戏深入了解强化学习 下篇">
+                  <i class="fa fa-angle-left"></i> 通过游戏深入了解强化学习 下篇
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Howard Huang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">221k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">6:43</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动-->
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
