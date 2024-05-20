@@ -27,14 +27,14 @@
 <meta property="og:description" content="When Large Language Models Meet Knowledge Graphs当大语言模型遇上知识图谱 图 RAG：RAG x 知识图谱图形 RAG 基于 RAG 的概念，利用知识图谱（KGs）。 这种创新的方法是由 NebulaGraph 首创的概念，通过整合图数据库改变了LLMs解释和响应查询的方式。 图形 RAG 通过将知识图谱中的结构化数据整合到LLM的处理中，为模型的响">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag/01.png">
-<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag/04.webp">
-<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag/02.webp">
-<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag/03.webp">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag/04.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag/02.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag/03.png">
 <meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag/05.png">
 <meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag/06.png">
 <meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag/07.png">
 <meta property="article:published_time" content="2024-03-31T15:26:28.000Z">
-<meta property="article:modified_time" content="2024-04-08T12:26:56.821Z">
+<meta property="article:modified_time" content="2024-05-15T06:59:01.216Z">
 <meta property="article:author" content="Howard Huang">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://szhowardhuang.github.io/asset_graphrag/01.png">
@@ -132,7 +132,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">32</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -196,7 +196,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-04-08 20:26:56" itemprop="dateModified" datetime="2024-04-08T20:26:56+08:00">2024-04-08</time>
+      <time title="修改时间：2024-05-15 14:59:01" itemprop="dateModified" datetime="2024-05-15T14:59:01+08:00">2024-05-15</time>
     </span>
 
   
@@ -241,7 +241,7 @@
 <p>Graph RAG 的创新在于将图数据库与LLMs集成，以丰富模型在生成响应之前的上下文。</p>
 <p>一些受欢迎的图数据库产品包括 Ontotext、NebulaGraph 和 Neo4J。</p>
 <h2 id="图形-RAG-演示"><a href="#图形-RAG-演示" class="headerlink" title="图形 RAG 演示"></a>图形 RAG 演示</h2><p>对于这个演示，我们将使用 <a target="_blank" rel="noopener" href="https://www.developer.tech.gov.sg/products/all-products/">Govtech 的开发者门户网站</a>上的产品信息作为我们的知识库。</p>
-<h3 id="1-设置"><a href="#1-设置" class="headerlink" title="1. 设置"></a>1. 设置</h3><p>使用 Neo4j 桌面版启动一个本地的 Neo4j 实例,<br><img src="/../asset_graphrag/04.webp"></p>
+<h3 id="1-设置"><a href="#1-设置" class="headerlink" title="1. 设置"></a>1. 设置</h3><p>使用 Neo4j 桌面版启动一个本地的 Neo4j 实例,<br><img src="/../asset_graphrag/04.png"></p>
 <p>使用 LangChain 在本地连接到 Neo4j 数据库。好消息是，LangChain 有一个可直接使用的<a target="_blank" rel="noopener" href="https://python.langchain.com/docs/templates/neo4j-advanced-rag">模板</a>，方便快速设置。</p>
 <h3 id="2-提取"><a href="#2-提取" class="headerlink" title="2. 提取"></a>2. 提取</h3><p>使用快速工程和LLM来提取信息、节点及其连接。以下是一个提示的示例：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"># Instructions for Creating Knowledge Graphs</span><br><span class="line">## Overview</span><br><span class="line">You are engineered for organising data into knowledge graphs.</span><br><span class="line">- **Nodes**: Represent entities and ideas.</span><br><span class="line">- The objective is to ensure the knowledge graph is straightforward and intelligible for broad use.</span><br><span class="line"></span><br><span class="line">## Node Labeling</span><br><span class="line">- **Uniformity**: Stick to simple labels for nodes. For instance, label any entity that is an organisation as &quot;company&quot;, rather than using terms like &quot;Facebook&quot; or &quot;Amazon&quot;.</span><br><span class="line">- **Identifiers for Nodes**: Opt for textual or comprehensible identifiers over numerical ones.</span><br><span class="line">  - **Permissible Node Labels**: If there are specific allowed node labels, list them here.</span><br><span class="line">  - **Permissible Relationship Types**: If there are specific allowed relationship types, list them here.</span><br><span class="line"></span><br><span class="line">## Managing Numerical Data and Dates</span><br><span class="line">- Integrate numerical information directly as attributes of nodes.</span><br><span class="line">- **Integrated Dates/Numbers**: Refrain from creating distinct nodes for dates or numbers, attaching them instead as attributes.</span><br><span class="line">- **Format for Properties**: Use a key-value pairing format.</span><br><span class="line">- **Avoiding Quotation Marks**: Do not use escaped quotes within property values.</span><br><span class="line">- **Key Naming**: Adopt camelCase for naming keys, such as `dateTime`.</span><br><span class="line"></span><br><span class="line">## Uniformity</span><br><span class="line">- **Entity Uniformity**: Ensure consistent identification for entities across various mentions or references.</span><br><span class="line">  </span><br><span class="line">## Adherence to Guidelines</span><br><span class="line">Strict adherence to these instructions is mandatory. Non-adherence will result in termination.</span><br></pre></td></tr></table></figure>
@@ -254,7 +254,7 @@
 <li><p>通过我们的提取管道处理文档，并将信息存储在 Neo4j 中</p>
 </li>
 </ul>
-<p><img src="/../asset_graphrag/02.webp"><br>该过程耗时近一个小时，最终得到了提取的节点标签的最终列表</p>
+<p><img src="/../asset_graphrag/02.png"><br>该过程耗时近一个小时，最终得到了提取的节点标签的最终列表</p>
 <ul>
 <li>不幸的是，不是所有的节点标签都对我们的上下文有用或符合我们的需求。</li>
 </ul>
@@ -265,7 +265,7 @@
 
 
 <p>使用 Neo4j 浏览器探索我们新构建的知识图谱</p>
-<p><img src="/../asset_graphrag/03.webp"></p>
+<p><img src="/../asset_graphrag/03.png"></p>
 <p>例子如下：</p>
 <p>Q: “I need to remove sensitive information from some of my documents. What products does Govtech offer that has these capabilities?”</p>
 <p>Base RAG: “Govtech offers the products Cloak and FileSG, which have capabilities to help remove sensitive information from documents.”</p>
@@ -372,13 +372,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">221k</span>
+    <span title="站点总字数">224k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">6:43</span>
+    <span title="站点阅读时长">6:47</span>
   </span>
 </div>
 <div class="busuanzi-count">
