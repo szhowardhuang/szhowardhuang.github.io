@@ -119,7 +119,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-count">34</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -137,6 +137,341 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/05/27/deepQ/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/05/27/deepQ/" class="post-title-link" itemprop="url">强化学习：深度 Q 网络</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-05-27 17:29:10" itemprop="dateCreated datePublished" datetime="2024-05-27T17:29:10+08:00">2024-05-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-05-28 15:35:12" itemprop="dateModified" datetime="2024-05-28T15:35:12+08:00">2024-05-28</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>18k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>33 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>在强化学习（RL）中，Q 学习是一种基础算法，帮助代理通过学习最大化累积奖励的策略来导航其环境。它通过更新动作值函数来实现这一点，该函数基于接收的奖励和未来的奖励来估计在给定状态下采取特定动作的预期效用。</p>
+<p>然而，传统的 Q 学习也存在挑战。随着状态空间的增长，它在可扩展性方面遇到困难，并且在具有连续状态和动作空间的环境中效果较差。这就是深度 Q 网络（DQNs）发挥作用的地方。DQNs 使用神经网络来近似 Q 值，使代理能够有效处理更大更复杂的环境。</p>
+<p>在本文中，我们将深入探讨深度 Q 网络。我们将探讨 DQN 如何克服传统 Q 学习的局限性，并讨论构成 DQN 的关键组件。我们还将介绍如何从头开始实现一个 DQN，并将其应用于更复杂的环境中。</p>
+<h2 id="传统的-Q-学习"><a href="#传统的-Q-学习" class="headerlink" title="传统的 Q 学习"></a>传统的 Q 学习</h2><p>Q-learning 指导代理来学习在环境中最大化累积奖励的最佳行动。在深度 Q 网络之前，先简要回顾其前身 Q-learning 背后的机制。</p>
+<h3 id="状态和动作"><a href="#状态和动作" class="headerlink" title="状态和动作"></a>状态和动作</h3><p>想象一下，你是一个在迷宫中导航的机器人。迷宫中你所占据的每个位置被称为“状态”。你可以采取的每个可能移动，比如向左、向右、向上或向下，都是一种“动作”。目标是找出在每个状态下应该采取哪种动作，最终找到迷宫中的最佳路径。</p>
+<h3 id="Q-值"><a href="#Q-值" class="headerlink" title="Q-值"></a>Q-值</h3><p>Q 学习的核心是 Q 值，表示为𝑄(𝑠, 𝑎)。该值代表在特定状态 s 中采取特定动作 a 后预期的未来奖励，然后沿着最佳路径（策略）继续。</p>
+<p>将 Q 值视为指南中的条目，评估每个可能移动的长期收益。例如，如果你在迷宫中的特定位置并考虑向左移动，Q 值会告诉你这一移动在未来奖励方面预计会有多大益处。较高的 Q 值表示更好的移动。</p>
+<h3 id="Q-表"><a href="#Q-表" class="headerlink" title="Q 表"></a>Q 表</h3><p>Q 学习使用 Q 表来跟踪这些 Q 值。Q 表本质上是一个大型的电子表格，其中每一行对应一个状态，每一列对应一个动作，每个单元格包含该状态-动作对的 Q 值。</p>
+<p>想象 Q 表格就像一个巨大的电子表格，其中每个单元格代表从迷宫中特定位置做出特定移动的潜在未来奖励。随着对环境的了解越来越多，您会用更好的估计值更新这个电子表格中的这些奖励。</p>
+<h3 id="学习过程"><a href="#学习过程" class="headerlink" title="学习过程"></a>学习过程</h3><p>Q-Learning 中的学习过程是迭代的。它始于一个初始状态 s。然后，决定采取一个动作 a。这个选择可以基于：</p>
+<ul>
+<li>探索：尝试新的行动以发现它们的效果。</li>
+<li>利用：利用现有知识选择具有已知最高 Q 值的动作。</li>
+</ul>
+<p>执行选择的动作，观察奖励 r，并移动到下一个状态 s′。使用 Q-Learning 公式更新状态-动作对 (s, a) 的 Q 值：</p>
+<p><img src="/../asset_deepq/01.png" alt="Q-值更新公式"></p>
+<p>这里：</p>
+<ul>
+<li>α是学习率，它决定了新信息覆盖旧信息的程度。</li>
+<li>γ是折扣因子，它更高地重视即时奖励而不是遥远未来的奖励。</li>
+<li>maxa′​Q(s′,a′)代表了在所有可能的动作 a′中，下一个状态 s′的最高 Q 值。</li>
+</ul>
+<p>想象一下，你不断更新你的指南。每次移动后，你会得到关于这个移动是好是坏的反馈（奖励）。然后，你会调整指南中的评分（Q 值）以反映这些新信息，使你未来的决策更加明智。</p>
+<p>继续重复这个过程，直到 Q 值收敛，这意味着代理已经学会了在迷宫中导航的最优策略。随着时间的推移，通过反复探索迷宫并根据经验更新你的指南，你会制定出一套全面的策略，告诉你在任何给定位置做出最佳移动以最大化奖励。</p>
+<h2 id="从-Q-学习到深度-Q-网络"><a href="#从-Q-学习到深度-Q-网络" class="headerlink" title="从 Q 学习到深度 Q 网络"></a>从 Q 学习到深度 Q 网络</h2><h3 id="传统-Q-学习的局限性"><a href="#传统-Q-学习的局限性" class="headerlink" title="传统 Q 学习的局限性"></a>传统 Q 学习的局限性</h3><p>虽然 Q 学习是一种强大的强化学习算法，但它有一些限制，阻碍了它在更复杂环境中的有效性：</p>
+<ul>
+<li><p>可扩展性问题：传统的 Q 学习维护一个 Q 表，其中每个状态-动作对都映射到一个 Q 值。随着状态空间的增长，特别是在高维度或连续环境中，Q 表变得过大，导致内存效率低下和学习过程缓慢。</p>
+</li>
+<li><p>离散状态和动作空间：Q 学习在状态和动作是离散和有限的环境中表现良好。然而，许多现实世界的问题涉及连续的状态和动作空间，传统的 Q 学习在不对这些空间进行离散化的情况下效率低下，这可能导致信息丢失和次优策略。</p>
+</li>
+</ul>
+<h3 id="神经网络"><a href="#神经网络" class="headerlink" title="神经网络"></a>神经网络</h3><p>让我们现在介绍神经网络，它在深度网络中扮演着关键角色。受到人类大脑结构和功能的启发，神经网络是强大的函数逼近器，能够从数据中学习复杂模式。它们由相互连接的节点（神经元）层组成，处理输入数据，并通过权重和偏差将其转换为输出。</p>
+<p>在强化学习的背景下，神经网络可以用来逼近 Q 函数，它将状态-动作对映射到 Q 值。这使得代理能够更好地在各种状态和动作之间进行泛化，特别是在大型或连续空间中，维护 Q 表是不可行的。</p>
+<p>因此，深度 Q 网络（DQNs）将 Q 学习的原理与神经网络的函数逼近能力相结合。通过这样做，它们解决了传统 Q 学习的关键局限性。</p>
+<p>DQNs 不是将 Q 值存储在表中，而是使用神经网络来近似 Q 函数。该网络以状态作为输入，并为所有可能的动作输出 Q 值。通过使用来自环境的经验对网络进行训练，代理程序学会预测每个动作的预期奖励，有效地在大量状态和动作之间进行泛化。</p>
+<p>想象一下，你正在学习下棋。与其记住每种可能的棋盘布局和每一步最佳走法（这是不可能的），你学习一般性的策略和原则（比如控制棋盘中心和保护国王）。同样，一个 DQN 通过神经网络学习一般模式和策略，使其能够做出明智的决策，而无需记住每种可能的状态。</p>
+<p>神经网络的使用使 DQN 能够处理具有大型或连续状态空间的环境。网络可以学习状态空间的表示，捕捉关键特征，使代理能够做出明智的决策，而无需离散化空间。</p>
+<p>考虑尝试在一个大城市中导航。与其记住每条街道和建筑物的布局（这就像一个巨大的 Q 表），不如学会识别地标和主要道路，这有助于您找到方向。DQN 中的神经网络工作方式类似，学会识别状态空间的重要特征，帮助代理在复杂环境中导航。</p>
+<p>通过对各种经历进行训练，模型学会从过去的经历中归纳。这意味着代理可以将所学应用于新的、未曾见过的状态和行动，使其在不同情况下更具适应性和效率。</p>
+<h2 id="深度-Q-网络的解剖"><a href="#深度-Q-网络的解剖" class="headerlink" title="深度 Q 网络的解剖"></a>深度 Q 网络的解剖</h2><h3 id="DQN-的组成部分"><a href="#DQN-的组成部分" class="headerlink" title="DQN 的组成部分"></a>DQN 的组成部分</h3><p>要理解深度 Q 网络（DQNs）的工作原理，必须分解它们的关键组成部分：</p>
+<h4 id="神经网络-1"><a href="#神经网络-1" class="headerlink" title="神经网络"></a>神经网络</h4><p><img src="/../asset_deepq/02.png" alt="前馈神经网络 "></p>
+<p>DQN 的核心是一个神经网络，它作为 Q 值的函数逼近器。典型的架构通常包括：</p>
+<ul>
+<li>输入层：将其想象为代理的“眼睛”。它接收来自环境的状态表示，类似于您的眼睛接收周围的视觉信息。这是上图左侧的第一层，有两个节点。</li>
+<li>隐藏层：将这些层视为代理的“大脑”。它们通过多个思考阶段处理眼睛接收到的信息，识别复杂的特征和模式，就像你的大脑处理和理解世界一样。这是上图中具有三个节点的中间层。</li>
+<li>输出层：这就像代理人的“决策”部分。它根据输入状态产生所有可能动作的 Q 值，类似于你的大脑根据所见和所想决定最佳动作。每个输出对应于采取特定动作的预期奖励。这是上图中最右边的最后一层，有一个节点。</li>
+</ul>
+<p>上面的图像代表了一个简单的前馈神经网络，是神经网络最基本的形式。虽然这种结构是基础的，但它还不是一个“深度”神经网络。要将其转变为深度神经网络，我们可以添加更多隐藏层，增加网络的深度。此外，我们可以尝试不同的架构和配置来开发更高级的模型。还要注意的是，每个层中的节点数量并不固定；它取决于特定的训练数据集和任务。这种灵活性使我们能够根据特定需求来定制网络。</p>
+<h4 id="经历回放"><a href="#经历回放" class="headerlink" title="经历回放"></a>经历回放</h4><p>经历重放, 这是一种用于稳定和改进 DQN 学习过程的技术。它涉及：</p>
+<ul>
+<li>内存缓冲区：将其想象为代理的“日记”。它会随着时间而存储代理的经历（状态、动作、奖励、下一个状态、完成），就像你可能会每天写下发生在你身上的事情一样。</li>
+<li>随机抽样：在训练过程中，代理人翻阅其日记的随机页面，以从过去的经历中学习。这打破了事件序列，帮助代理人通过防止过度拟合到经历顺序来更加稳健地学习。</li>
+</ul>
+<h4 id="目标网络"><a href="#目标网络" class="headerlink" title="目标网络"></a>目标网络</h4><p>最后，目标网络是一个单独的神经网络，用于计算目标 Q 值进行训练。它在架构上与主网络相同，但具有冻结的权重，这些权重会定期更新以匹配主网络的权重。可以将其视为代理的“稳定指南”。虽然主网络不断学习和更新，但目标网络为训练提供稳定的 Q 值。这就像有一个可靠的、定期更新的手册可供参考，有助于保持学习的稳定性和一致性。</p>
+<h3 id="DQN-算法"><a href="#DQN-算法" class="headerlink" title="DQN 算法"></a>DQN 算法</h3><p>有了这些组件，DQN 算法可以在几个关键步骤中概述：</p>
+<h4 id="前向传播"><a href="#前向传播" class="headerlink" title="前向传播"></a>前向传播</h4><p>首先，我们从前向传播开始，这对于预测 Q 值至关重要。这些 Q 值存储了在给定状态下采取某些行动的预期未来奖励。该过程始于状态输入。</p>
+<ul>
+<li><p>状态输入：<br>代理人从环境中观察当前状态 s。这个状态被表示为描述代理人当前情况的特征向量。将状态视为代理人周围世界的快照，类似于您环顾四周时眼睛捕捉视觉场景。这个快照包含了代理人做出决策所需的所有必要细节。</p>
+</li>
+<li><p>Q 值预测：<br>接下来，观察到的状态 s 被输入神经网络。神经网络通过多层处理这个输入，并输出一组 Q 值 Q(s, a; θ)。每个 Q 值对应一个可能的动作 a，参数 θ 表示网络的权重和偏差。</p>
+</li>
+</ul>
+<p><img src="/../asset_deepq/03.png" alt="Q 值预测公式"></p>
+<p>想象神经网络是代理的大脑中的一个复杂决策机器。当它接收到快照（状态）时，它通过几个阶段（层）处理这些信息，以找出不同行动的潜在结果（Q 值）。就像你的大脑根据所见的情况思考不同可能的行动一样。</p>
+<ul>
+<li>行动选择：<br>代理然后选择具有最高 Q 值的动作 a∗作为其下一步行动，遵循贪婪动作选择策略：</li>
+</ul>
+<p><img src="/../asset_deepq/04.png" alt="行动选择公式"></p>
+<p>这就好比在深思熟虑所有选项后决定最佳行动。代理人选择它认为会带来最高奖励的行动，就像你根据所见和理解选择似乎最有前途的道路一样。</p>
+<h4 id="经历重播"><a href="#经历重播" class="headerlink" title="经历重播"></a>经历重播</h4><p>接下来，我们继续进行经历重演，这有助于稳定和改善学习过程。</p>
+<ul>
+<li><p>记录经历：<br>代理程序执行动作 a 并获得奖励 r 和新状态 s′ 后，将这一经历存储为一个元组(s, a, r, s′, done) 放入重放缓冲区。变量 done 表示该情节是否已结束。可以将重放缓冲区视为代理程序记录经历的日记，就像记录一天中值得注意的事件一样。</p>
+</li>
+<li><p>小批量取样:<br>在训练期间，一小批经历从重播缓冲区中随机抽取。这一批数据用于通过计算目标 Q 值和最小化损失来更新网络。当代理进行训练时，它会翻阅其日记的随机页面，以从过去的经历中学习。这种随机抽样有助于打破事件序列，并提供多样化的学习示例，就像查看日记中不同日期以获得更广泛的视角一样。</p>
+</li>
+</ul>
+<p><img src="/../asset_deepq/05.png" alt="深度 Q 网络中的小批量学习"></p>
+<h4 id="反向传播"><a href="#反向传播" class="headerlink" title="反向传播"></a>反向传播</h4><p>最后一步涉及反向传播，它更新网络以改善其预测。</p>
+<ul>
+<li>计算目标 Q 值：<br>对于小批量中的每个经历，代理计算目标 Q 值 y_。如果下一个状态 s’是终止状态（done即为真），目标 Q 值就是简单的奖励 r。否则，它是奖励加上由目标网络 Qtarget 预测的下一个状态 s’ 的最大 Q 值的折扣：</li>
+</ul>
+<p><img src="/../asset_deepq/06.png" alt=" "></p>
+<p>在这里，γ是折扣因子（0 ≤ γ &lt; 1）。这一步就像是基于过去的经历提前规划。如果经历结束了一段旅程（一个回合），目标就是所获得的奖励。如果继续下去，目标就包括了预期的未来奖励，类似于你考虑即时和未来利益来规划行动的方式。</p>
+<ul>
+<li>损失计算:<br>接下来，损失被计算为主网络预测的 Q 值 Q(s_i, a_i; θ)与目标 Q 值 y_i 之间的均方误差：</li>
+</ul>
+<p><img src="/../asset_deepq/07.png" alt="损失公式"></p>
+<p>计算损失就像评估你的预测与实际发生情况之间的差距。就像检查你的猜测与实际结果相比有多准确，并注意其中的差异。</p>
+<ul>
+<li>反向传播和优化:<br>最后，执行反向传播以最小化这种损失。计算得到的损失通过网络进行反向传播，使用优化算法（如随机梯度下降（SGD）或 Adam）来更新权重。这个过程调整网络参数θ 以最小化损失：</li>
+</ul>
+<p><img src="/../asset_deepq/08.png" alt="反向传播公式 "></p>
+<p>这里，α是学习率，∇θ​Loss 代表损失对网络参数的梯度。反向传播就像从错误中学习一样。当你意识到你的预测有多么偏离（损失）时，你会调整你的策略（网络权重）来改善你未来的决策。这就像根据反馈来微调你的方法，以便下次获得更好的结果。</p>
+<p>使用这种架构，代理程序会迭代地改进其策略。它学会采取行动，以最大化随时间累积的奖励。神经网络、经历重放和目标网络的结合使得 DQN 能够在复杂的高维环境中有效学习。这个过程会持续下去，直到代理程序能够熟练地在其环境中导航。</p>
+<h2 id="从头开始实现深度-Q-网络"><a href="#从头开始实现深度-Q-网络" class="headerlink" title="从头开始实现深度 Q 网络"></a>从头开始实现深度 Q 网络</h2><p>我们从0开始实现一个深度 Q 网络（DQN）。这样可以清楚地了解如何在 Python 中构建和训练一个 DQN。</p>
+<p>我们将使用 OpenAI Gym 的LunarLander 环境。在这个环境中，目标是控制月球着陆器并成功降落在指定的着陆垫上。着陆器必须通过环境，使用推进器来控制其运动和方向。</p>
+<h3 id="设置环境"><a href="#设置环境" class="headerlink" title="设置环境"></a>设置环境</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">gymnasium             0.29.1</span><br><span class="line">matplotlib            3.8.4</span><br><span class="line">numpy                 1.26.4</span><br><span class="line">optuna                3.6.1</span><br><span class="line">torch                 2.1.0+cu121</span><br><span class="line">torchaudio            2.1.0+cu121</span><br><span class="line">torchvision           0.16.0+cu121</span><br><span class="line">swig                  4.2.1</span><br><span class="line">moviepy               1.0.3</span><br></pre></td></tr></table></figure>
+<p>安装box2D：  pip install gymnasium[box2d]</p>
+<p>在win10系统会安装失败，显示log如下。安装微软工具，然后继续安装box2d 。</p>
+<pre><code>Failed to build box2d-py
+ERROR: Could not build wheels for box2d-py, which is required to install pyproject.toml-based projects
+</code></pre>
+<p>登录该网站<a target="_blank" rel="noopener" href="https://visualstudio.microsoft.com/zh-hans/visual-cpp-build-tools/">build-tools</a> ，点击下载生成工具. 勾选使用C++的桌面开发，点击安装.</p>
+<p><img src="/../asset_deepq/11.png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"><span class="keyword">import</span> gymnasium <span class="keyword">as</span> gym</span><br><span class="line"><span class="keyword">from</span> gymnasium.wrappers.monitoring.video_recorder <span class="keyword">import</span> VideoRecorder</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim</span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> deque</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> optuna</span><br></pre></td></tr></table></figure>
+<p>在这里，我们导入必要的库。 gym用于环境，torch用于构建和训练我们的神经网络，collections和 random、optuna 用于经历重放和超参数优化。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">env = gym.make(<span class="string">&#x27;LunarLander-v2&#x27;</span>, render_mode=<span class="string">&quot;rgb_array&quot;</span>)</span><br><span class="line">state_dim = env.observation_space.shape[<span class="number">0</span>]</span><br><span class="line">action_dim = env.action_space.n</span><br></pre></td></tr></table></figure>
+
+<p>我们初始化 LunarLander 环境并获取状态和动作空间的维度。state_dim表示状态中的特征数量，action_dim表示可能动作的数量。</p>
+<h3 id="构建深度神经网络"><a href="#构建深度神经网络" class="headerlink" title="构建深度神经网络"></a>构建深度神经网络</h3><p>对于我们的深度神经网络，我们将创建一个名为DQN的类。这个类定义了一个具有三个全连接层的神经网络。输入层接收状态表示，隐藏层通过线性变换和 ReLU 激活函数处理这些信息，输出层为每个可能的动作产生 Q 值。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">DQN</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, state_dim, action_dim</span>):</span><br><span class="line">        <span class="built_in">super</span>(DQN, self).__init__()</span><br><span class="line">        self.fc1 = nn.Linear(state_dim, <span class="number">128</span>)</span><br><span class="line">        self.fc2 = nn.Linear(<span class="number">128</span>, <span class="number">128</span>)</span><br><span class="line">        self.fc3 = nn.Linear(<span class="number">128</span>, action_dim)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        x = torch.relu(self.fc1(x))</span><br><span class="line">        x = torch.relu(self.fc2(x))</span><br><span class="line">        <span class="keyword">return</span> self.fc3(x)</span><br></pre></td></tr></table></figure>
+
+<p>我们定义一个名为DQN的类，它继承自 nn.Module，这是 PyTorch 中所有神经网络模块的基类。这使我们能够利用 PyTorch 的内置函数和特性来构建神经网络。</p>
+<h4 id="类初始化"><a href="#类初始化" class="headerlink" title="类初始化"></a>类初始化</h4><p>__init__方法是一种特殊的方法，用于初始化对象的属性。在我们这个例子，它设置了神经网络的每一层。</p>
+<p>我们定义三个全连接（线性）层：</p>
+<ul>
+<li>self.fc1 &#x3D; nn.Linear(state_dim, 128) ：第一层接受输入状态维度（状态中的特征数量）并将其映射到 128 个神经元。</li>
+<li>self.fc2 &#x3D; nn.Linear(128, 128): 第二层将来自第一层的 128 个神经元映射到另外 128 个神经元。</li>
+<li>self.fc3 &#x3D; nn.Linear(128, action_dim): 第三层将来自第二层的 128 个神经元映射到动作维度（可能动作数量）。</li>
+</ul>
+<p>每一层nn.Linear对输入数据执行线性变换：</p>
+<p><img src="/../asset_deepq/09.png" alt="线性变换"></p>
+<p>其中 x 是输入，W 是权重矩阵，b 是偏置向量。</p>
+<h4 id="forward方法"><a href="#forward方法" class="headerlink" title="forward方法"></a>forward方法</h4><p>forward方法定义了数据如何在网络中流动。当您通过网络传递数据时，该方法会自动调用。</p>
+<p>在第一层中，输入数据x通过第一个全连接层self.fc1传递。然后使用 ReLU（修正线性单元）激活函数进行转换。</p>
+<p>ReLU 激活函数定义为：</p>
+<p><img src="/../asset_deepq/10.png" alt="ReLU 激活函数公式"></p>
+<p>它将非线性引入模型中，使网络能够学习更复杂的函数。</p>
+<p>在第二层中，来自第一层的输出通过第二个全连接层（self.fc2）传递，并再次使用 ReLU 激活函数进行转换.</p>
+<p>最后，在输出层，第二层的输出通过第三个全连接层（self.fc3）传递，没有激活函数. 该层为每个动作生成最终的 Q 值。每个值代表在给定状态下采取该动作的预期未来奖励。</p>
+<h3 id="实现经历回放"><a href="#实现经历回放" class="headerlink" title="实现经历回放"></a>实现经历回放</h3><p>该ReplayBuffer类提供了一种存储和采样经历的机制，这对于稳定和改进 DQNs 中的学习过程至关重要。因此，它使代理能够从各种过去经历中学习，增强其泛化能力，并在复杂环境中表现良好。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ReplayBuffer</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, capacity</span>):</span><br><span class="line">        self.buffer = deque(maxlen=capacity)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">push</span>(<span class="params">self, state, action, reward, next_state, done</span>):</span><br><span class="line">        self.buffer.append((state, action, reward, next_state, done))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">sample</span>(<span class="params">self, batch_size</span>):</span><br><span class="line">        state, action, reward, next_state, done = <span class="built_in">zip</span>(*random.sample(self.buffer, batch_size))</span><br><span class="line">        <span class="keyword">return</span> state, action, reward, next_state, done</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__len__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">len</span>(self.buffer)</span><br></pre></td></tr></table></figure>
+
+<h4 id="类初始化-1"><a href="#类初始化-1" class="headerlink" title="类初始化"></a>类初始化</h4><p>__init__方法使用固定容量初始化双端队列。双端队列允许您高效地从两端添加和弹出数据。它特别适用于实现需要快速从两端添加和弹出数据的队列和栈。<br>self.buffer &#x3D; deque(maxlen&#x3D;capacity) 实际上创建了一个 deque，可以容纳capacity个的经历。当缓冲区已满时，添加新经历将自动删除最旧的经历。</p>
+<h4 id="push方法"><a href="#push方法" class="headerlink" title="push方法"></a>push方法</h4><p>该push 方法向缓冲区添加新经历。每个经历都是一个元组，包括state，action，reward，next_state和done：</p>
+<ul>
+<li>state ：当前状态。</li>
+<li>action ：代理人采取的行动。</li>
+<li>reward ：执行动作后获得的奖励。</li>
+<li>next_state ：代理采取行动后得到的状态。</li>
+<li>done ：一个布尔值，指示该场景是否已结束。</li>
+</ul>
+<h4 id="采样方法"><a href="#采样方法" class="headerlink" title="采样方法"></a>采样方法</h4><p>该sample方法从缓冲区中随机采样一批经历。<br>random.sample(self.buffer, batch_size) 从缓冲区中随机选择batch_size 经历。 </p>
+<p>zip(*random.sample(self.buffer, batch_size)) 将经历列表解压成单独的元组，赋值于state， action， reward， next_state， done</p>
+<p>该方法返回这些元组。</p>
+<h4 id="length方法"><a href="#length方法" class="headerlink" title="length方法"></a>length方法</h4><p>__len__方法返回缓冲区中存储的当前经历数量。 </p>
+<h3 id="实现目标网络"><a href="#实现目标网络" class="headerlink" title="实现目标网络"></a>实现目标网络</h3><p>目标网络，我们为训练提供了一组稳定的 Q 值，这有助于稳定学习过程并提高代理在复杂环境中的性能。目标网络更新频率低于主网络，确保用于更新主网络权重的 Q 值估计更加稳定。</p>
+<p>我们将在一个名为DQNTrainer的类中实现目标网络，该类管理 DQN 的训练过程，包括主网络、目标网络、优化器和重放缓冲区。 </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">DQNTrainer</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, env, main_network, target_network, optimizer, replay_buffer, model_path=<span class="string">&#x27;model/model.pth&#x27;</span>, gamma=<span class="number">0.99</span>, batch_size=<span class="number">64</span>, target_update_frequency=<span class="number">1000</span></span>):</span><br><span class="line">        self.env = env</span><br><span class="line">        self.main_network = main_network</span><br><span class="line">        self.target_network = target_network</span><br><span class="line">        self.optimizer = optimizer</span><br><span class="line">        self.replay_buffer = replay_buffer</span><br><span class="line">        self.model_path = model_path</span><br><span class="line">        self.gamma = gamma</span><br><span class="line">        self.batch_size = batch_size</span><br><span class="line">        self.target_update_frequency = target_update_frequency</span><br><span class="line">        self.step_count = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># Load the model if it exists</span></span><br><span class="line">        <span class="keyword">if</span> os.path.exists(os.path.dirname(self.model_path)):</span><br><span class="line">            <span class="keyword">if</span> os.path.isfile(self.model_path):</span><br><span class="line">                self.main_network.load_state_dict(torch.load(self.model_path))</span><br><span class="line">                self.target_network.load_state_dict(torch.load(self.model_path))</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;Loaded model from disk&quot;</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            os.makedirs(os.path.dirname(self.model_path))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">self, num_episodes, save_model=SAVE_MODEL, save_video=SAVE_VIDEO</span>):</span><br><span class="line">        total_rewards = []</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Create a VideoWriter to save the rendering</span></span><br><span class="line">        <span class="keyword">if</span> save_video:</span><br><span class="line">            videoPath = os.path.join(os.path.expanduser(<span class="string">&#x27;~&#x27;</span>), <span class="string">&#x27;deepq/training.mp4&#x27;</span>)</span><br><span class="line">            <span class="keyword">if</span> os.path.exists(videoPath):</span><br><span class="line">                os.remove(videoPath)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(os.path.dirname(videoPath)):</span><br><span class="line">                    os.makedirs(os.path.dirname(videoPath))</span><br><span class="line">            self.video = VideoRecorder(env, videoPath, enabled=<span class="literal">True</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> episode <span class="keyword">in</span> <span class="built_in">range</span>(num_episodes):</span><br><span class="line">            state, _ = self.env.reset()  <span class="comment"># Extract the state from the returned tuple</span></span><br><span class="line">            done = <span class="literal">False</span></span><br><span class="line">            total_reward = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">while</span> <span class="keyword">not</span> done:</span><br><span class="line">                self.env.render()  <span class="comment"># Add this line to render the environment</span></span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> save_video:</span><br><span class="line">                    self.video.capture_frame()</span><br><span class="line">                </span><br><span class="line">                <span class="comment"># Ensure the state is in the correct shape by adding an extra dimension</span></span><br><span class="line">                action = self.main_network(torch.FloatTensor(state).unsqueeze(<span class="number">0</span>)).argmax(dim=<span class="number">1</span>).item()</span><br><span class="line">                next_state, reward, done, _, _ = self.env.step(action)  <span class="comment"># Extract the next_state from the returned tuple</span></span><br><span class="line">                self.replay_buffer.push(state, action, reward, next_state, done)</span><br><span class="line">                state = next_state</span><br><span class="line">                total_reward += reward</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> <span class="built_in">len</span>(self.replay_buffer) &gt;= self.batch_size:</span><br><span class="line">                    self.update_network()</span><br><span class="line"></span><br><span class="line">            total_rewards.append(total_reward)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;Episode <span class="subst">&#123;episode&#125;</span>, Total Reward: <span class="subst">&#123;total_reward&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Save the model after training</span></span><br><span class="line">        <span class="keyword">if</span> save_model:</span><br><span class="line">            torch.save(self.main_network.state_dict(), self.model_path)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Saved model to disk&quot;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> save_video:</span><br><span class="line">            self.video.close()</span><br><span class="line"></span><br><span class="line">        self.env.close()</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">sum</span>(total_rewards) / <span class="built_in">len</span>(total_rewards)  <span class="comment"># Return average reward</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">update_network</span>(<span class="params">self</span>):</span><br><span class="line">        state_batch, action_batch, reward_batch, next_state_batch, done_batch = self.replay_buffer.sample(self.batch_size)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Convert to tensors</span></span><br><span class="line">        state_batch = torch.FloatTensor(state_batch)</span><br><span class="line">        action_batch = torch.LongTensor(action_batch)</span><br><span class="line">        reward_batch = torch.FloatTensor(reward_batch)</span><br><span class="line">        next_state_batch = torch.FloatTensor(next_state_batch)</span><br><span class="line">        done_batch = torch.FloatTensor(done_batch)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Calculate the current Q-values</span></span><br><span class="line">        q_values = self.main_network(state_batch).gather(<span class="number">1</span>, action_batch.unsqueeze(<span class="number">1</span>)).squeeze(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Calculate the target Q-values</span></span><br><span class="line">        next_q_values = self.target_network(next_state_batch).<span class="built_in">max</span>(<span class="number">1</span>)[<span class="number">0</span>]</span><br><span class="line">        expected_q_values = reward_batch + self.gamma * next_q_values * (<span class="number">1</span> - done_batch)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Compute the loss</span></span><br><span class="line">        loss = nn.MSELoss()(q_values, expected_q_values.detach())</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Optimize the model</span></span><br><span class="line">        self.optimizer.zero_grad()</span><br><span class="line">        loss.backward()</span><br><span class="line">        self.optimizer.step()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Periodically update the target network</span></span><br><span class="line">        <span class="keyword">if</span> self.step_count % self.target_update_frequency == <span class="number">0</span>:</span><br><span class="line">            self.target_network.load_state_dict(self.main_network.state_dict())</span><br><span class="line"></span><br><span class="line">        self.step_count += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="类定义"><a href="#类定义" class="headerlink" title="类定义"></a>类定义</h4><p>__init__方法初始化了训练所需的各种组件： </p>
+<ul>
+<li>env ：代理程序运行的环境。</li>
+<li>main_network ：正在训练的主要神经网络。</li>
+<li>target_network ：用于稳定 Q 值估计的目标神经网络。</li>
+<li>optimizer ：用于更新主网络权重的优化器。</li>
+<li>replay_buffer ：用于存储和采样经历的缓冲区。</li>
+<li>model_path ：保存&#x2F;加载训练模型的路径。</li>
+<li>gamma ：未来奖励的折现因子。</li>
+<li>batch_size ：每个训练步骤从replay缓冲区中采样的经历数量。</li>
+<li>target_update_frequency ：匹配主网络权重的目标网络权重更新频率</li>
+<li>step_count ：一个用于跟踪训练过程中步骤数量的计数器。</li>
+</ul>
+<h4 id="模型加载"><a href="#模型加载" class="headerlink" title="模型加载"></a>模型加载</h4><p>我们用 os.path.exists(os.path.dirname(self.model_path)) 检查模型路径的目录是否存在。如果存在已保存的模型，则加载该模型以继续训练，从离开的地方继续 。</p>
+<p>torch.load 使用 load_state_dict 将保存的模型权重加载到主网络和目标网络中。如果模型目录不存在，则使用 os.makedirs 创建它。</p>
+<h3 id="训练深度-Q-网络"><a href="#训练深度-Q-网络" class="headerlink" title="训练深度 Q 网络"></a>训练深度 Q 网络</h3><p>接下来，我们将实现训练循环来训练我们的 DQN。这个DQNTrainer方法发生在内部。它运行 DQN 的训练循环，代理与环境交互，收集经验，更新网络，并跟踪性能。<br>train方法运行指定回合数量的训练循环。这个循环对于代理获取经验并提高其决策能力至关重要。</p>
+<p>首先将total_rewards 初始化为空列表。 在每个回合开始时，环境会被重置到初始状态。 代理根据当前状态使用主网络选择动作。</p>
+<p>torch.FloatTensor(state).unsqueeze(0) 将状态转换为 PyTorch 张量，并添加额外的维度以匹配网络的预期输入形状。</p>
+<p>self.main_network(…).argmax(dim&#x3D;1).item() 选择由主网络预测的具有最高 Q 值的动作。</p>
+<p>代理程序执行所选动作，观察奖励和下一个状态，并将经历存储在重放缓冲区中。</p>
+<p>self.env.step(action) 执行动作并返回下一个状态、奖励以及该情节是否已结束。</p>
+<p>self.replay_buffer.push(…) 将经历存储在重放缓冲区中。</p>
+<p>state &#x3D; next_state 将当前状态更新为下一个状态。</p>
+<p>total_reward +&#x3D; reward 累积当前回合的奖励。</p>
+<p>如果重放缓冲区有足够的经历，网络就会被更新。</p>
+<p>if len(self.replay_buffer) &gt;&#x3D; self.batch_size 检查回放缓冲区是否至少有batch_size经验。 </p>
+<p>self.update_network() 使用来自重放缓冲区的一批经历更新网络。</p>
+<p>每个回合结束时记录并打印总奖励。</p>
+<p>total_rewards.append(total_reward) 将当前回合的总奖励添加到总奖励列表中。</p>
+<p>训练完成后，模型被保存到磁盘。</p>
+<p>torch.save(self.main_network.state_dict(), self.model_path) 将主网络的状态字典保存到指定的文件路径。</p>
+<p>最后，该方法关闭环境并返回所有剧集的平均奖励。</p>
+<p>return sum(total_rewards) &#x2F; len(total_rewards) 计算并返回平均奖励。</p>
+<h3 id="调整模型"><a href="#调整模型" class="headerlink" title="调整模型"></a>调整模型</h3><p>最后，我们将看看如何评估和调整训练模型。让我们构建一个Optimizer类，负责优化超参数以提高 DQN 的性能。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Optimizer</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, env, main_network, target_network, replay_buffer, model_path, params_path=<span class="string">&#x27;params.pkl&#x27;</span></span>):</span><br><span class="line">        self.env = env</span><br><span class="line">        self.main_network = main_network</span><br><span class="line">        self.target_network = target_network</span><br><span class="line">        self.replay_buffer = replay_buffer</span><br><span class="line">        self.model_path = model_path</span><br><span class="line">        self.params_path = params_path</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">objective</span>(<span class="params">self, trial, n_episodes=<span class="number">10</span></span>):</span><br><span class="line">        lr = trial.suggest_loguniform(<span class="string">&#x27;lr&#x27;</span>, <span class="number">1e-5</span>, <span class="number">1e-1</span>)</span><br><span class="line">        gamma = trial.suggest_uniform(<span class="string">&#x27;gamma&#x27;</span>, <span class="number">0.9</span>, <span class="number">0.999</span>)</span><br><span class="line">        batch_size = trial.suggest_categorical(<span class="string">&#x27;batch_size&#x27;</span>, [<span class="number">32</span>, <span class="number">64</span>, <span class="number">128</span>])</span><br><span class="line">        target_update_frequency = trial.suggest_categorical(<span class="string">&#x27;target_update_frequency&#x27;</span>, [<span class="number">500</span>, <span class="number">1000</span>, <span class="number">2000</span>])</span><br><span class="line"></span><br><span class="line">        optimizer = optim.Adam(self.main_network.parameters(), lr=lr)</span><br><span class="line">        trainer = DQNTrainer(self.env, self.main_network, self.target_network, optimizer, self.replay_buffer, self.model_path, gamma=gamma, batch_size=batch_size, target_update_frequency=target_update_frequency)</span><br><span class="line">        reward = trainer.train(n_episodes, save=<span class="literal">False</span>)</span><br><span class="line">        <span class="keyword">return</span> reward</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">optimize</span>(<span class="params">self, n_trials=<span class="number">100</span>, save_params=<span class="literal">True</span></span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> TRAIN <span class="keyword">and</span> os.path.isfile(self.params_path):</span><br><span class="line">            <span class="keyword">with</span> <span class="built_in">open</span>(self.params_path, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">                best_params = pickle.load(f)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Loaded parameters from disk&quot;</span>)</span><br><span class="line">        <span class="keyword">elif</span> <span class="keyword">not</span> FINETUNE:</span><br><span class="line">            best_params = &#123;</span><br><span class="line">                <span class="string">&#x27;lr&#x27;</span>: LEARNING_RATE, </span><br><span class="line">                <span class="string">&#x27;gamma&#x27;</span>: GAMMA, </span><br><span class="line">                <span class="string">&#x27;batch_size&#x27;</span>: BATCH_SIZE, </span><br><span class="line">                <span class="string">&#x27;target_update_frequency&#x27;</span>: TARGET_UPDATE_FREQUENCY</span><br><span class="line">                &#125;</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;Using default parameters: <span class="subst">&#123;best_params&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Optimizing hyperparameters&quot;</span>)</span><br><span class="line">            study = optuna.create_study(direction=<span class="string">&#x27;maximize&#x27;</span>)</span><br><span class="line">            study.optimize(self.objective, n_trials=n_trials)</span><br><span class="line">            best_params = study.best_params</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> save_params:</span><br><span class="line">                <span class="keyword">with</span> <span class="built_in">open</span>(self.params_path, <span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">                    pickle.dump(best_params, f)</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;Saved parameters to disk&quot;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> best_params</span><br></pre></td></tr></table></figure>
+
+<h4 id="objective方法建议超参数的值，并使用这些值训练模型"><a href="#objective方法建议超参数的值，并使用这些值训练模型" class="headerlink" title="objective方法建议超参数的值，并使用这些值训练模型"></a>objective方法建议超参数的值，并使用这些值训练模型</h4><ul>
+<li>lr &#x3D; trial.suggest_loguniform(‘lr’, 1e-5, 1e-1) ：建议学习率在[1e-5, 1e-1]范围内。</li>
+<li>gamma &#x3D; trial.suggest_uniform(‘gamma’, 0.9, 0.999) ：建议在范围[0.9, 0.999]内选择折扣因子。</li>
+<li>batch_size &#x3D; trial.suggest_categorical(‘batch_size’, [32, 64, 128]) ：建议从指定列表中选择一个批次大小。</li>
+<li>target_update_frequency &#x3D; trial.suggest_categorical(‘target_update_frequency’, [500, 1000, 2000]) ：建议从指定列表中选择目标更新频率。</li>
+</ul>
+<p>我们使用建议的学习率设置了一个 Adam 优化器。Adam（自适应矩估计的缩写）是一种常用于训练神经网络的优化算法。</p>
+<p>对于神经网络中的每个参数，Adam 计算损失函数对该参数的梯度。它跟踪梯度的指数移动平均值（第一时刻，表示为 m）和平方梯度（第二时刻，表示为 v）。</p>
+<p>为了考虑移动平均数的初始化偏差，Adam 对第一和第二时刻的估计值应用偏差校正。然后使用校正后的第一和第二时刻来更新参数。更新规则旨在结合学习率和时刻，以一种考虑梯度的大小和方向的方式调整参数。</p>
+<p>使用建议的超参数初始化DQNTrainer 实例。 最后，为模型训练指定数量的周期，并返回平均奖励</p>
+<h4 id="Optimize方法，该方法运行指定次数的优化过程"><a href="#Optimize方法，该方法运行指定次数的优化过程" class="headerlink" title="Optimize方法，该方法运行指定次数的优化过程"></a>Optimize方法，该方法运行指定次数的优化过程</h4><p>我们使用 Optuna，这是一个 Python 库，它将帮助我们系统地探索超参数空间，高效地找到最大化模型性能的组合。</p>
+<p>如果不需要训练(not TRAIN)并且参数文件存在，则从磁盘加载参数。</p>
+<p>如果不需要微调（not FINETUNE），则使用默认参数。 </p>
+<p>如果需要超参数优化，将使用 Optuna 来找到最佳参数。</p>
+<p>study &#x3D; optuna.create_study(direction&#x3D;’maximize’) 创建一个 Optuna study以最大化objective函数。</p>
+<p>study.optimize(self.objective, n_trials&#x3D;n_trials) 运行指定次数的优化。</p>
+<p>如果save_params是True，则最佳参数将保存到磁盘。</p>
+<h3 id="运行模型"><a href="#运行模型" class="headerlink" title="运行模型"></a>运行模型</h3><h4 id="设置训练和微调"><a href="#设置训练和微调" class="headerlink" title="设置训练和微调"></a>设置训练和微调</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">TRAIN = <span class="literal">True</span></span><br><span class="line">FINETUNE = <span class="literal">False</span></span><br><span class="line">SAVE_MODEL = <span class="literal">True</span> <span class="comment"># Save the model after training</span></span><br><span class="line">SAVE_VIDEO = <span class="literal">False</span> <span class="comment"># Save the video of the training process</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Training hyperparameters</span></span><br><span class="line">TRAINING_EPISODES = <span class="number">1000</span> <span class="comment"># valid only if TRAIN is True</span></span><br><span class="line">FINETUNE_TRIALS = <span class="number">100</span> <span class="comment"># valid only if FINETUNE is True</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Set the following hyperparameters if FINETUNE is False</span></span><br><span class="line">GAMMA = <span class="number">0.99</span></span><br><span class="line">BATCH_SIZE = <span class="number">64</span></span><br><span class="line">TARGET_UPDATE_FREQUENCY = <span class="number">1000</span></span><br><span class="line">LEARNING_RATE = <span class="number">1e-3</span></span><br></pre></td></tr></table></figure>
+
+<p>TRAIN &#x3D; True 表示是否训练模型。如果设置为False，训练将被跳过。 </p>
+<p>FINETUNE &#x3D; False 表示是否微调模型。如果设置为True，将使用现有参数并进行微调。</p>
+<p>如果FINETUNE是False，我们设置以下超参数： </p>
+<ul>
+<li>GAMMA &#x3D; 0.99 ：未来奖励的折现因子。这决定了未来奖励相对于即时奖励的价值有多大。</li>
+<li>BATCH_SIZE &#x3D; 64 ：每个训练步骤从重播缓冲区中采样的经历数量。</li>
+<li>TARGET_UPDATE_FREQUENCY &#x3D; 1000 ：匹配主网络权重的目标网络权重更新的频率（以步数计）。</li>
+<li>LEARNING_RATE &#x3D; 1e-3 ：优化器的学习率，控制模型在每次更新模型权重时根据估计误差进行的改变大小。</li>
+</ul>
+<h4 id="初始化网络和重放缓冲区"><a href="#初始化网络和重放缓冲区" class="headerlink" title="初始化网络和重放缓冲区"></a>初始化网络和重放缓冲区</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">main_network = DQN(state_dim, action_dim)</span><br><span class="line">target_network = DQN(state_dim, action_dim)</span><br><span class="line">target_network.load_state_dict(main_network.state_dict())</span><br><span class="line">target_network.<span class="built_in">eval</span>()</span><br><span class="line"></span><br><span class="line">replay_buffer = ReplayBuffer(<span class="number">10000</span>)</span><br></pre></td></tr></table></figure>
+
+
+<p>main_network &#x3D; DQN(state_dim, action_dim) 使用指定的状态和动作维度初始化主网络。</p>
+<p>target_network &#x3D; DQN(state_dim, action_dim) 使用与主网络相同的架构初始化目标网络。</p>
+<p>target_network.load_state_dict(main_network.state_dict()) 将权重从主网络复制到目标网络。</p>
+<p>target_network.eval() 将目标网络设置为评估模式。这可以确保在推断期间某些层（如 dropout 和批量归一化）的行为是适当的。</p>
+<p>replay_buffer &#x3D; ReplayBuffer(10000) 使用容量为 10,000 的重放缓冲区进行初始化。</p>
+<h4 id="设置步数"><a href="#设置步数" class="headerlink" title="设置步数"></a>设置步数</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">STEP_COUNT = <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p>STEP_COUNT &#x3D; 0 初始化一个计数器，用于跟踪训练过程中所采取的步骤数量。</p>
+<h4 id="优化器初始化和超参数优化"><a href="#优化器初始化和超参数优化" class="headerlink" title="优化器初始化和超参数优化"></a>优化器初始化和超参数优化</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">home_directory = os.path.expanduser(<span class="string">&#x27;~&#x27;</span>)</span><br><span class="line"></span><br><span class="line">optimizer = Optimizer(env, main_network, target_network, replay_buffer, <span class="string">f&#x27;<span class="subst">&#123;home_directory&#125;</span>/model/model.pth&#x27;</span>, <span class="string">f&#x27;<span class="subst">&#123;home_directory&#125;</span>/model/params.pkl&#x27;</span>)</span><br><span class="line">best_params = optimizer.optimize(n_trials=<span class="number">2</span>, save_params=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<p>optimizer &#x3D; Optimizer(…) 使用环境、网络、重放缓冲区、模型路径和参数路径初始化Optimizer 类。</p>
+<p>best_params &#x3D; optimizer.optimize(n_trials&#x3D;2, save_params&#x3D;True) 运行优化过程以找到最佳超参数。这个函数：</p>
+<ul>
+<li>运行指定次数的优化（n_trials&#x3D;2）。 </li>
+<li>如果save_params是True，则将最佳超参数保存到磁盘。</li>
+</ul>
+<h4 id="创建-PyTorch-优化器和-DQN-训练器"><a href="#创建-PyTorch-优化器和-DQN-训练器" class="headerlink" title="创建 PyTorch 优化器和 DQN 训练器"></a>创建 PyTorch 优化器和 DQN 训练器</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">optimizer = optim.Adam(main_network.parameters(), lr=best_params[<span class="string">&#x27;lr&#x27;</span>])</span><br><span class="line">trainer = DQNTrainer(env, main_network, target_network, optimizer, replay_buffer, <span class="string">f&#x27;<span class="subst">&#123;home_directory&#125;</span>/model/model.pth&#x27;</span>, gamma=best_params[<span class="string">&#x27;gamma&#x27;</span>], batch_size=best_params[<span class="string">&#x27;batch_size&#x27;</span>], target_update_frequency=best_params[<span class="string">&#x27;target_update_frequency&#x27;</span>])</span><br><span class="line">trainer.train(TRAINING_EPISODES, save_model=SAVE_MODEL, save_video=SAVE_VIDEO)</span><br></pre></td></tr></table></figure>
+
+<p>optimizer &#x3D; optim.Adam(main_network.parameters(), lr&#x3D;best_params[‘lr’]) 使用最佳超参数创建一个 Adam 优化器。</p>
+<p>trainer &#x3D; DQNTrainer(…) 使用最佳参数从环境、网络、优化器、重放缓冲区、模型路径和超参数初始化DQNTrainer 类。 </p>
+<p>trainer.train(…) 为模型训练了 TRAINING_EPISODES 个周期。</p>
+<p>代理在培训的前 10 回合中的表现：</p>
+<p><img src="/../asset_deepq/11.gif"></p>
+<p>可以看到模型笨拙，做出随机且经常是次优的决策。这是预期的，因为代理仍在探索环境并学习基础知识。它还没有制定出最大化奖励的强大策略。随着更多的训练周期，代理的表现应该会显著提高，因为它不断完善其策略并从经验中学习。</p>
+<p>模型训练了 1000 次后的 10 个训练集</p>
+<p><img src="/../asset_deepq/12.gif"></p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>采用先进技术并探索新架构，以提高您的代理性能。例如，您可以尝试设置不同的超参数，使用不同的优化算法（如 SGD 或 Nadam），使用不同的微调算法等等！</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://towardsdatascience.com/reinforcement-learning-from-scratch-deep-q-networks-0a8d33ce165b">https://towardsdatascience.com/reinforcement-learning-from-scratch-deep-q-networks-0a8d33ce165b</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -182,7 +517,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-05-22 19:41:05" itemprop="dateModified" datetime="2024-05-22T19:41:05+08:00">2024-05-22</time>
+      <time title="修改时间：2024-05-27 17:28:26" itemprop="dateModified" datetime="2024-05-27T17:28:26+08:00">2024-05-27</time>
     </span>
 
   
@@ -1854,221 +2189,6 @@ model.eval()
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/04/09/reinforce-learing-game/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Howard Huang">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/04/09/reinforce-learing-game/" class="post-title-link" itemprop="url">通过游戏深入了解强化学习 上篇</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-04-09 21:11:59" itemprop="dateCreated datePublished" datetime="2024-04-09T21:11:59+08:00">2024-04-09</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-05-05 16:24:00" itemprop="dateModified" datetime="2024-05-05T16:24:00+08:00">2024-05-05</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>6.4k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>12 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>本文将分为两部分。在这一部分中，我们将探讨一些强化学习的基本理论，同时使用 PyTorch 的 REINFORCE 方法玩 <a target="_blank" rel="noopener" href="https://flappybird.io/">Flappy Bird</a> 游戏。</p>
-<p>在下一部分中，我们将研究更复杂的 RL 算法，例如 Advantage Actor Critic （A2C） 和当前最先进的算法 PPO</p>
-<h2 id="强化学习"><a href="#强化学习" class="headerlink" title="强化学习"></a>强化学习</h2><p>强化学习是一种机器学习方法，专注于通过与环境的交互来学习行为策略，旨在实现特定目标或最大化绩效指标。它由三个主要元素组成：环境、代理和奖励。</p>
-<p><img src="/../asset_reinforcelearinggame/01.webp"></p>
-<ul>
-<li>代理从环境接收状态 （s_t）</li>
-<li>根据该状态，代理向环境提供操作 （a_t）</li>
-<li>环境进入新状态 （s_t+1），并向代理提供一些奖励 （r_t+1）</li>
-</ul>
-<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>环境是与代理交互的系统。它定义了代理可能遇到的所有可能状态、在这些状态下可以采取的操作以及这些操作的结果。</p>
-<p>环境通过提供新的状态和奖励信息来响应智能体的行为，这些信息用于指导智能体的学习过程。环境定义以下信息：</p>
-<ul>
-<li>操作空间：定义代理可能执行的一组操作</li>
-<li>观察空间：定义代理可以观察的所有可能状态。这些状态提供代理决定其下一步操作所需的信息。状态空间可以是有限的，也可以是无限的，可以是连续的，也可以是离散的</li>
-<li>奖励功能： 奖励功能提供对代理行为的即时评估（奖励），指导代理学习如何调整其策略以获得更高的总奖励。</li>
-<li>转换动态： 转换动态描述了在给定的当前状态和采取特定操作后环境移动到新状态的概率。</li>
-</ul>
-<h2 id="代理"><a href="#代理" class="headerlink" title="代理"></a>代理</h2><p>在强化学习中，代理是指可以观察环境、做出决策和执行操作的实体。代理的目标是学习一种策略，这是一种在给定环境状态下选择最佳行动的方法，以便最大化获得的长期回报。</p>
-<h2 id="奖励"><a href="#奖励" class="headerlink" title="奖励"></a>奖励</h2><p>奖励是指导代理学习过程的关键信号，提供有关其行为的反馈。这些奖励，无论是积极的还是消极的，都有助于代理了解其行为在实现目标方面的后果。</p>
-<p>代理的主要目标是通过学习策略来选择各种状态下的最佳行动，从而随着时间的推移最大化其总回报。</p>
-<p><img src="/../asset_reinforcelearinggame/02.webp"></p>
-<p>Gt 是时间步长 t 的总奖励（也称为回报）。它被定义为从时间步长 t 到过程结束 （T） 的奖励总和。此外，我们对每个奖励都应用折扣率 γ。该因素决定了未来奖励在时间步长 t 处对总奖励的贡献程度。</p>
-<p>贴现率γ是介于 0 和 1 之间的值。以 0.95 为例，预计在更遥远的将来获得的奖励 Rt 乘以一个较小的数字 0.95^（t-1）。</p>
-<p>这是因为达到未来某个状态的概率相对较低，因此，它提供的奖励应该较小才能被认为是合理的。</p>
-<p><img src="/../asset_reinforcelearinggame/03.webp"></p>
-<p>这是一个计算奖励的简单示例。“蛇”和“目标”的图像分别代表初始状态和最终状态。我们现在有两条可能实现目标的途径：</p>
-<p>路径1：直上，然后向右走到目标</p>
-<p>路径 2：向右走，然后向上走到果阿l</p>
-<p>当贴现率 γ &#x3D; 1 时</p>
-<ul>
-<li>R（路径 1） &#x3D; 2 + γ（-3） + γ²（0） + γ³（1） &#x3D; 0</li>
-<li>R（路径 2） &#x3D; 1+ γ（0） + γ²（3） + γ³（0） &#x3D; 4</li>
-</ul>
-<p>我们可以看到有不同的轨迹（路径）可以达到目标，但每个轨迹都可能导致非常不同的回报（0 和 4）。因此，找到最大化总奖励的最佳轨迹是强化学习 （RL） 的目标。</p>
-<p>轨迹： 轨迹（通常表示为 τ）描述了代理所经历的特定状态、操作和奖励序列。例如：τ &#x3D; （s₀， a₀， r₁， s₁， a₁， r₂， s₂， a₂， …， s_T， a_T， r_T+1， s_T+1）</p>
-<h2 id="值函数"><a href="#值函数" class="headerlink" title="值函数"></a>值函数</h2><p>为了定义我们的状态有多好，我们必须有一个函数来确定它，这就是值函数。</p>
-<p>从本质上讲，此函数估计处于该状态的预期回报。它让人感受到在特定状态下，遵循特定策略（代理遵循的一种策略）所能带来的长期效益。</p>
-<p><img src="/../asset_reinforcelearinggame/04.webp"></p>
-<p>上面定义的值函数可以重新表述为<a target="_blank" rel="noopener" href="https://huggingface.co/learn/deep-rl-course/unit2/bellman-equation">贝尔曼方程</a>的形式，以提高我们计算其值的能力。这允许我们以递归方式计算状态值。</p>
-<p><img src="/../asset_reinforcelearinggame/05.webp"></p>
-<p>在值函数中，转移概率 P（a ，s→s′） 的期望值用于解释在相同状态 （s） 下采取相同操作 （a） 的结果（状态 s′）可能会变化的实际场景。</p>
-<p>符号 π 表示代理的策略，其中 π（a | s） 表示代理在状态 s 中选择操作 a 的概率。</p>
-<p>看一个例子：<br><img src="/../asset_reinforcelearinggame/06.webp"></p>
-<p>（r 表示从一种状态过渡到另一种状态获得的即时奖励，例如 s1 -&gt; s3，奖励 &#x3D; 3）</p>
-<p>在此场景中，我们有四种状态：s1 作为起始状态，s2、s3 和 s4 作为结束状态。可以选择两个动作，“左”或“右”，每个动作在这些状态之间都有自己的一组转换概率。</p>
-<p>不同的策略下状态 1 的值：</p>
-<ul>
-<li>V（π &#x3D; 始终向左） &#x3D; 0.5 * 2 + 0.5 * 4 &#x3D; 3</li>
-<li>V（π &#x3D; 始终向右） &#x3D; 0.33 * 3 + 0.67 * 4 &#x3D; 3.67</li>
-<li>V（π &#x3D; 50% 左，50% 右） &#x3D; 0.5 * V（左） + 0.5 * V（右） &#x3D; 3.335<br>此示例考虑了转换概率（例如，action &#x3D; right：33% 到 s3,67% 到 s4），突出了转换的随机性，即相同的操作并不能保证每次都获得相同的结果。</li>
-</ul>
-<p>一个更复杂的例子：<br><img src="/../asset_reinforcelearinggame/07.webp"></p>
-<p>为简单起见，在此示例中，我们将忽略转换概率，代理只能选择在开始时执行“向上”或“向下”操作。对于后续状态，代理始终向右。</p>
-<p>（S1 为起始状态，S6 为终末状态，终末状态值 &#x3D; 0）</p>
-<p>对于 π &#x3D; 始终向上，γ &#x3D; 1</p>
-<ul>
-<li>V（s6） &#x3D; 0</li>
-<li>V（s3） &#x3D; V（s5） &#x3D; 10 + γV（s6） &#x3D; 10</li>
-<li>V（s2） &#x3D; 2+ γV（s3） &#x3D; 12</li>
-<li>V（s4） &#x3D; 4+ γV（s5） &#x3D; 14</li>
-<li>V（s1） &#x3D; 1 + γV（s2） &#x3D; 13</li>
-</ul>
-<p>对于π &#x3D;（50% 上升，50% 下降），γ &#x3D; 1</p>
-<ul>
-<li>V（s6） &#x3D; 0</li>
-<li>V（s3） &#x3D; V（s5） &#x3D; 10 + γV（s6） &#x3D; 10</li>
-<li>V（s2） &#x3D; 2+ γV（s3） &#x3D; 12</li>
-<li>V（s4） &#x3D; 4+ γV（s5） &#x3D; 14</li>
-<li>V（s1） &#x3D; （1 + γV（s2）） * 0.5 + （2 + γV（s4）） * 0.5 &#x3D; 9.5</li>
-</ul>
-<h2 id="Q-函数"><a href="#Q-函数" class="headerlink" title="Q 函数"></a>Q 函数</h2><p>在实践中，如果所有状态的值都是已知的，我们可以通过确保代理在每个时间片移动到具有最高值的状态来最大化累积奖励。</p>
-<p>但是，由于计算状态值需要了解转移概率，而转移概率通常是未知的。因此，使用状态-动作函数（Q 函数）成为更好的选择。</p>
-<p>由于 Q 值可以直接从经验中学习，因此无需知道环境的转换概率。</p>
-<p><img src="/../asset_reinforcelearinggame/08.webp"></p>
-<p>Q 函数或 action-value 函数，定义了在策略 π 下的状态 s 中执行操作 a 的值。Q 函数和值函数之间的区别在于，Q 函数指定确定性动作的值，因此无需计算给定策略 π（a∣s） 的动作概率。</p>
-<p><img src="/../asset_reinforcelearinggame/09.webp"></p>
-<p>值函数也可以看作是所有可能操作 a 的 Q 函数的总和。</p>
-<p><img src="/../asset_reinforcelearinggame/10.webp"><br>上式中的Q*（s， a）是最优Q函数</p>
-<p>在像 Q-learning 这样基于价值的方法中，始终为每个状态选择具有最高 Q 值的行动的策略确保了总奖励的自动最大化。</p>
-<p>但是，当动作空间非常大或连续时，计算所有可能的 Q 值以确定每个状态的最佳动作变得不切实际。</p>
-<h2 id="基于策略的方法"><a href="#基于策略的方法" class="headerlink" title="基于策略的方法"></a>基于策略的方法</h2><p><img src="/../asset_reinforcelearinggame/11.webp"><br>强化学习中基于策略的方法，直接参数化和优化代理选择行动所遵循的策略，而无需明确计算作为中间函数的价值函数（基于价值的方法）。</p>
-<p>该策略，用 π（a∣s;θ），是一个将状态映射到动作概率分布的函数，其中 θ 表示策略的参数（例如，神经网络的权重）。</p>
-<h2 id="强化"><a href="#强化" class="headerlink" title="强化"></a>强化</h2><p>REINFORCETE是一种优化策略的策略梯度方法。它通过估计相对于策略参数的预期回报梯度，然后使用梯度下降来调整这些参数来做到这一点。<br><img src="/../asset_reinforcelearinggame/12.webp"></p>
-<p>梯度刻度与回报 （R（τ）） 成正比，回报表示所采取的行动的质量。同时，梯度本身由采取该行动的概率的对数表示。</p>
-<p>这种方法旨在增加产生高回报的行动的概率，并降低导致低回报的行动的概率。</p>
-<h2 id="强化步骤"><a href="#强化步骤" class="headerlink" title="强化步骤"></a>强化步骤</h2><p>在 REINFORCE 方法中，有必要使用真实样本计算回报。此外，实施还需要通过<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Monte_Carlo_method">蒙特卡洛方法</a>获得的完整轨迹。</p>
-<ul>
-<li>使用随机权重初始化网络。</li>
-<li>执行 N 次完整过程，收集它们的轨迹（s、a、r、s’）</li>
-<li>计算每个时间步长的返回值。</li>
-<li>计算损失函数 L &#x3D; -R（τ）logπ（a|s）</li>
-<li>更新模型权重</li>
-</ul>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>在我们的第一个实现中，我们使用 Gym 环境来玩 FlappyBird 游戏。</p>
-<p><img src="/../asset_reinforcelearinggame/13.webp"></p>
-<p>在开始之前，了解环境的细节非常重要。在实施之前，请确保每次都通读<a target="_blank" rel="noopener" href="https://github.com/markub3327/flappy-bird-gymnasium">文档</a>。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">import os</span><br><span class="line">os.environ[&quot;KMP_DUPLICATE_LIB_OK&quot;]=&quot;TRUE&quot;  # 如果遇到KMP_DUPLICATE_LIB 就服用此行</span><br><span class="line">import torch</span><br><span class="line">import torch.nn as nn</span><br><span class="line">import torch.optim as optim</span><br><span class="line">import torch.nn.functional as F</span><br><span class="line"></span><br><span class="line">import numpy as np</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line">import gymnasium as gym</span><br><span class="line">import flappy_bird_gymnasium</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">def make_env(env_id):</span><br><span class="line">    def wrapped_env():</span><br><span class="line">        env = gym.make(env_id, render_mode=&#x27;rgb_array&#x27;)</span><br><span class="line">        # could add some environment wrapper</span><br><span class="line">        return env</span><br><span class="line">    return wrapped_env</span><br><span class="line"></span><br><span class="line">env_id = &#x27;FlappyBird-v0&#x27;</span><br><span class="line">env = make_env(env_id)()</span><br><span class="line">obs, _ = env.reset()</span><br><span class="line">image = env.render()</span><br><span class="line"></span><br><span class="line">plt.imshow(image)</span><br><span class="line">plt.axis(&#x27;off&#x27;)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p><img src="/../asset_reinforcelearinggame/14.webp"></p>
-<p>观测由一个 1D 阵列组成，该阵列由 LIDAR 传感器收集 180 个数据点。代理可以采取两种可能的操作：0 表示不执行任何操作，1 表示拍打。</p>
-<p><img src="/../asset_reinforcelearinggame/15.webp"></p>
-<h2 id="BirdAgent-训练"><a href="#BirdAgent-训练" class="headerlink" title="BirdAgent &amp; 训练"></a>BirdAgent &amp; 训练</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class BirdPolicy(nn.Module):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        super(BirdPolicy, self).__init__()</span><br><span class="line">        self.fc1 = nn.Linear(180, 128)  </span><br><span class="line">        self.relu = nn.ReLU()  </span><br><span class="line">        self.fc2 = nn.Linear(128, 2)  </span><br><span class="line">        self.softmax = nn.Softmax(dim=-1) </span><br><span class="line"></span><br><span class="line">    def forward(self, x):</span><br><span class="line">        x = self.relu(self.fc1(x))</span><br><span class="line">        x = self.fc2(x)</span><br><span class="line">        return self.softmax(x)</span><br></pre></td></tr></table></figure>
-
-<p>代理主要负责根据环境提供的状态做出决策。它返回一个概率分布，表示选择每个可能操作的可能性。</p>
-<p>因此，动作数（表示为 n_action）等于环境的动作空间，即 2。</p>
-<p>最后，这里是训练循环~~ </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">def REINFORCE(env, episodes, policy, device, optimizer):</span><br><span class="line">    for episode in range(episodes):</span><br><span class="line">        obs, _ = env.reset()</span><br><span class="line">        log_probs = []</span><br><span class="line">        rewards = []</span><br><span class="line">        done = False</span><br><span class="line">        </span><br><span class="line">        while not done:</span><br><span class="line">            # Add batch dimension</span><br><span class="line">            obs = torch.FloatTensor(obs).unsqueeze(0).to(device) </span><br><span class="line">            probs = policy(obs)</span><br><span class="line">            action = torch.distributions.Categorical(probs).sample()</span><br><span class="line">            log_prob = torch.log(probs.squeeze(0)[action])</span><br><span class="line">            obs, reward, done, _, info = env.step(action.item())</span><br><span class="line">            log_probs.append(log_prob)</span><br><span class="line">            rewards.append(reward)</span><br><span class="line">        Return = []</span><br><span class="line">        Gt = 0</span><br><span class="line"></span><br><span class="line">        for reward in rewards[::-1]:</span><br><span class="line">            # bellman equation</span><br><span class="line">            # computed from back to front</span><br><span class="line">            Gt = reward + 0.99 * Gt</span><br><span class="line">            Return.insert(0, Gt)</span><br><span class="line">        </span><br><span class="line">        Return = torch.tensor(Return).to(device)</span><br><span class="line">        policy_loss = []</span><br><span class="line">        for log_prob, Q in zip(log_probs, Return):</span><br><span class="line">            # compute policy gradient</span><br><span class="line">            policy_loss.append(-log_prob * Q)</span><br><span class="line">            </span><br><span class="line">        policy_loss = torch.cat(policy_loss).mean()</span><br><span class="line">        optimizer.zero_grad()</span><br><span class="line">        policy_loss.backward()</span><br><span class="line">        optimizer.step()</span><br><span class="line">            </span><br><span class="line">        if episode % 200 == 0:</span><br><span class="line">            print(f&#x27;Episode &#123;episode+1&#125;, Total Reward: &#123;sum(rewards)&#125;&#x27;)</span><br><span class="line">            torch.save(policy.state_dict(), f&quot;./weight_epoch.pt&quot;)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">device = &quot;cuda&quot; if torch.cuda.is_available() else &quot;cpu&quot;</span><br><span class="line">policy = BirdPolicy().to(device) </span><br><span class="line">optimizer = optim.Adam(policy.parameters(), lr=1e-4)</span><br><span class="line"></span><br><span class="line"># train for 20000 iterations</span><br><span class="line">REINFORCE(env, 20000, policy, device, optimizer)</span><br></pre></td></tr></table></figure>
-
-<p>训练完了以后，可以推理一下训练出来的模型。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">def INFERENCE(env, policy, device):</span><br><span class="line"></span><br><span class="line">    obs, _ = env.reset()</span><br><span class="line"></span><br><span class="line">    done = False</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    policy.load_state_dict(torch.load(f&quot;./weight_epoch.pt&quot;, map_location=torch.device(&#x27;cpu&#x27;)))</span><br><span class="line">    # 如果模型是CUDA训练出来的，推理用CPU，需要添加 map_location=torch.device(&#x27;cpu&#x27;) 来适配</span><br><span class="line">    policy.eval()</span><br><span class="line">    while not done:</span><br><span class="line">        obs = torch.FloatTensor(obs).unsqueeze(0).to(device)</span><br><span class="line">        probs = policy(obs)</span><br><span class="line">        action = torch.distributions.Categorical(probs).sample()</span><br><span class="line">        obs, reward, done, _, info = env.step(action.item())</span><br></pre></td></tr></table></figure>
-
-<p>修改以下代码就可以看到图像：</p>
-<pre><code># env = gym.make(env_id, render_mode=&#39;rgb_array&#39;)
-env = gym.make(env_id, render_mode=&#39;human&#39;)
-</code></pre>
-<p>修改以下代码就可以推理：</p>
-<pre><code># REINFORCE(env, 20000, policy, device, optimizer)
-INFERENCE(env, policy, device)
-</code></pre>
-<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>在本文中，我简要介绍了强化学习的基本原理，包括值函数、Q 函数等。我还从策略梯度方法中引入了 REINFORCE 算法，并用它来玩 Flappy Bird 游戏。</p>
-<p>在下一部分中，我将介绍另外两种策略梯度方法，A2C 和 PPO，并在两个游戏中实现它们：<a target="_blank" rel="noopener" href="https://gymnasium.farama.org/environments/box2d/car_racing/">赛车</a>和<a target="_blank" rel="noopener" href="https://github.com/linyiLYi/snake-ai">贪吃蛇游戏</a>。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://levelup.gitconnected.com/mastering-game-worlds-a-deep-dive-into-reinforcement-learning-5acccad89a18">https://levelup.gitconnected.com/mastering-game-worlds-a-deep-dive-into-reinforcement-learning-5acccad89a18</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -2092,13 +2212,13 @@ INFERENCE(env, policy, device)
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">237k</span>
+    <span title="站点总字数">255k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">7:11</span>
+    <span title="站点阅读时长">7:44</span>
   </span>
 </div>
 <div class="busuanzi-count">
