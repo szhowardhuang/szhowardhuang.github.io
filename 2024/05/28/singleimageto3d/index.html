@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"szhowardhuang.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="使用 Python 中的多视图扩散模型来重建 3D . 首先我们建立了一个适当的计算环境。接下来，我们需要为任务配置必要的模型。然后，我们处理图像以生成多个视图，这些视图是创建最终的 3D 重建对象所需的。 每个步骤都会详细讨论。我们将看到如何准备环境，设置模型，并使用 InstantMesh 将图像从单个图像转换为 3D 重建。  InstantMesh 的理论框架动机InstantMesh 解">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通过单个图像进行 3D 重建">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/05/28/singleimageto3d/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="使用 Python 中的多视图扩散模型来重建 3D . 首先我们建立了一个适当的计算环境。接下来，我们需要为任务配置必要的模型。然后，我们处理图像以生成多个视图，这些视图是创建最终的 3D 重建对象所需的。 每个步骤都会详细讨论。我们将看到如何准备环境，设置模型，并使用 InstantMesh 将图像从单个图像转换为 3D 重建。  InstantMesh 的理论框架动机InstantMesh 解">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_singlleimageto3d/01.gif">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_singlleimageto3d/02.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_singlleimageto3d/03.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_singlleimageto3d/04.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_singlleimageto3d/05.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_singlleimageto3d/06.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_singlleimageto3d/07.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_singlleimageto3d/02.gif">
+<meta property="article:published_time" content="2024-05-28T12:10:00.111Z">
+<meta property="article:modified_time" content="2024-05-29T03:34:06.378Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://szhowardhuang.github.io/asset_singlleimageto3d/01.gif">
+
+
+<link rel="canonical" href="https://szhowardhuang.github.io/2024/05/28/singleimageto3d/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://szhowardhuang.github.io/2024/05/28/singleimageto3d/","path":"2024/05/28/singleimageto3d/","title":"通过单个图像进行 3D 重建"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>通过单个图像进行 3D 重建 | 嵌入式老兵博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">嵌入式老兵博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#InstantMesh-%E7%9A%84%E7%90%86%E8%AE%BA%E6%A1%86%E6%9E%B6"><span class="nav-number">1.</span> <span class="nav-text">InstantMesh 的理论框架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E6%9C%BA"><span class="nav-number">1.1.</span> <span class="nav-text">动机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E5%92%8C%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.2.</span> <span class="nav-text">背景和相关工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6%E5%92%8C%E5%88%9B%E6%96%B0"><span class="nav-number">1.3.</span> <span class="nav-text">核心组件和创新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E7%AD%96%E7%95%A5%E5%92%8C%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF"><span class="nav-number">1.4.</span> <span class="nav-text">训练策略和优化技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-number">1.5.</span> <span class="nav-text">工作流程图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E5%8F%98%E4%BD%93%E5%92%8C%E9%85%8D%E7%BD%AE"><span class="nav-number">1.6.</span> <span class="nav-text">模型变体和配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Python-%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.</span> <span class="nav-text">Python 实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.1.</span> <span class="nav-text">环境设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">2.2.</span> <span class="nav-text">模型初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E5%92%8C%E5%A4%9A%E8%A7%86%E5%9B%BE%E5%90%88%E6%88%90%E5%8A%9F%E8%83%BD"><span class="nav-number">2.3.</span> <span class="nav-text">图像处理和多视图合成功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E5%8A%A0%E8%BD%BD%E3%80%81%E5%A4%84%E7%90%86%E5%92%8C%E5%A4%9A%E8%A7%86%E5%9B%BE%E7%94%9F%E6%88%90"><span class="nav-number">2.4.</span> <span class="nav-text">图像加载、处理和多视图生成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E9%85%8D%E7%BD%AE"><span class="nav-number">2.5.</span> <span class="nav-text">模型配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3D-%E6%A8%A1%E5%9E%8B%E7%94%9F%E6%88%90%E5%92%8C%E5%8F%AF%E8%A7%86%E5%8C%96%E7%9A%84%E5%8A%9F%E8%83%BD"><span class="nav-number">2.6.</span> <span class="nav-text">3D 模型生成和可视化的功能</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Howard Huang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/05/28/singleimageto3d/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="通过单个图像进行 3D 重建 | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          通过单个图像进行 3D 重建
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-05-28 20:10:00" itemprop="dateCreated datePublished" datetime="2024-05-28T20:10:00+08:00">2024-05-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-05-29 11:34:06" itemprop="dateModified" datetime="2024-05-29T11:34:06+08:00">2024-05-29</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>18k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>33 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>使用 Python 中的多视图扩散模型来重建 3D .</p>
+<p>首先我们建立了一个适当的计算环境。接下来，我们需要为任务配置必要的模型。然后，我们处理图像以生成多个视图，这些视图是创建最终的 3D 重建对象所需的。</p>
+<p>每个步骤都会详细讨论。我们将看到如何准备环境，设置模型，并使用 <a target="_blank" rel="noopener" href="https://github.com/Entreprenerdly/InstantMesh">InstantMesh</a> 将图像从单个图像转换为 3D 重建。</p>
+<p><img src="/../asset_singlleimageto3d/01.gif"></p>
+<h2 id="InstantMesh-的理论框架"><a href="#InstantMesh-的理论框架" class="headerlink" title="InstantMesh 的理论框架"></a>InstantMesh 的理论框架</h2><h3 id="动机"><a href="#动机" class="headerlink" title="动机"></a>动机</h3><p>InstantMesh 解决了从单个图像进行 3D 重建的挑战，这对虚拟现实和动画等应用非常重要。有限的 3D 数据和不完善的注释历来使得这项任务困难。然而，InstantMesh 利用大规模扩散模型和新颖的架构来增强 3D 网格生成。</p>
+<h3 id="背景和相关工作"><a href="#背景和相关工作" class="headerlink" title="背景和相关工作"></a>背景和相关工作</h3><p>先前的研究已经将 2D 扩散扩展到 3D 空间，使用了诸如得分蒸馏采样（SDS）和大型重建模型（LRMs）这样的方法，直接将图像标记映射到 3D 表示。</p>
+<h3 id="核心组件和创新"><a href="#核心组件和创新" class="headerlink" title="核心组件和创新"></a>核心组件和创新</h3><p>多视角扩散模型（MVD）。该组件从单个图像中合成多个视图，用于构建 3D 模型。此外，它使用了 <a target="_blank" rel="noopener" href="https://stability.ai/news/stable-zero123-3d-generation">Zero123++模型</a>的修改版本，经过优化以通过在生成的图像中保持一致的背景来减少伪影。</p>
+<p>MVD 的数学表达。</p>
+<p><img src="/../asset_singlleimageto3d/02.png"></p>
+<p>扩散模型使用由𝜃表示的参数，经过微调以生成一致的背景，以𝐼作为输入图像，并合成多视角图像𝐼′。</p>
+<p>稀疏视图大型重建模型（LRM）。使用基于 Transformer 的架构，能够处理稀疏输入，LRM 将多视图图像转换为 3D 网格。</p>
+<p>等值面提取（FlexiCubes）。</p>
+<p><img src="/../asset_singlleimageto3d/03.png"></p>
+<p>𝑀是网格输出，𝑉代表 LRM 中的体积数据，𝜙是 FlexiCubes 模块的参数，它们直接应用于网格上的几何约束。</p>
+<h3 id="训练策略和优化技术"><a href="#训练策略和优化技术" class="headerlink" title="训练策略和优化技术"></a>训练策略和优化技术</h3><p>数据准备和训练策略：训练采用两阶段方法，首先侧重于 NeRF 表示，然后过渡到网格优化。</p>
+<p>阶段 1：基于 NeRF 的训练。</p>
+<p>这个阶段的重点是利用 NeRF 的体积渲染能力建立一个强大的基础模型。目标是学习一个初始表示，从合成的多视角图像中捕捉整体形状和外观。</p>
+<p><img src="/../asset_singlleimageto3d/04.png"></p>
+<p>𝐼^𝑖和𝑀^𝑖是预测图像和掩模，𝐼𝑔𝑡𝑖和𝑀𝑔𝑡𝑖是实际图像和掩模，𝜆值是正则化系数。</p>
+<p>阶段 2：基于网格的优化。</p>
+<p>这个阶段转向基于网格的方法，其中使用 FlexiCubes 来细化表面细节并提高网格的几何精度。此外，在这个阶段，从 NeRF 中学到的初步知识被利用来专注于增强表面细节并应用逼真的纹理。</p>
+<p><img src="/../asset_singlleimageto3d/05.png"></p>
+<p>𝐷^𝑖和𝑁^𝑖是预测的深度图和法线图，𝐷𝑔𝑡𝑖和𝑁𝑔𝑡𝑖是地面真实值，⊗表示逐元素乘法，𝐿reg 是 FlexiCubes 的正则化项。</p>
+<p>相机增强和扰动技术。增强包括对相机姿势进行随机旋转和缩放，以提高模型对不同输入的稳健性。</p>
+<p>优化技术:</p>
+<ul>
+<li>AdaLN（自适应层归一化）：此技术用于transformer 内，以调整模型对不同相机姿势的敏感性，从而提高其在各种视角下的泛化能力。</li>
+<li>正规化和监督：深度和法线监督对于优化模型的输出至关重要。此外，它确保 3D 网格在视觉上类似于输入，并且符合物理尺寸和方向。</li>
+</ul>
+<p>损失函数组件:</p>
+<ul>
+<li>深度和法线监督。通过将预测的深度图和法线与它们的地面真实对应物进行比较，增强模型预测准确几何属性的能力。</li>
+<li>正则化项。包括维持网格完整性、防止过拟合和鼓励生成网格平滑的项。</li>
+</ul>
+<h3 id="工作流程图"><a href="#工作流程图" class="headerlink" title="工作流程图"></a>工作流程图</h3><p>下面的图表代表了 InstantMesh 框架的工作流程，用于从单个图像生成 3D 重建。以下是图表中每个组件如何产生作用：</p>
+<ul>
+<li><p>输入图像。流程始于单个输入图像，图示为一个插图人物。</p>
+</li>
+<li><p>多视角扩散模型。生成输入图像的多个视图，该模型增强了进行 3D 重建所需的空间理解。接下来，视图被展示为人物的几个不同视角，有助于全面捕捉其 3D 结构。</p>
+</li>
+<li><p>稀疏视图大重建模型。该模型由几个关键组件组成：</p>
+<ul>
+<li>ViT 编码器。处理多视图图像，视觉 Transformer（ViT）编码器将它们转换为一系列图像标记，这些标记封装了每个视图的关键特征。</li>
+<li>三层面解码器。该组件将图像令牌解码为三层面表示，这是一种三维格式，用作最终网格生成之前的中间步骤。</li>
+<li>FlexiCubes。作为等值面提取模块，FlexiCubes 将三面数据转换为网格，直接应用几何监督来细化和详细化 3D 输出。</li>
+</ul>
+</li>
+<li><p>128³ 网格。该网格结构为 128x128x128，网格突出了最终 3D 模型中捕捉到的分辨率和细节。</p>
+</li>
+<li><p>渲染。从各个角度渲染，最终的网格展示了完成的 3D 模型，并展示了该模型在捕捉原始输入的全面几何细节方面的有效性。</p>
+</li>
+</ul>
+<p><img src="/../asset_singlleimageto3d/06.png"></p>
+<h3 id="模型变体和配置"><a href="#模型变体和配置" class="headerlink" title="模型变体和配置"></a>模型变体和配置</h3><p>InstantMesh 提供了几种模型变体，以满足各种计算需求和应用场景。</p>
+<p>这些变体根据它们的 3D 表示（NeRF vs. Mesh）和参数规模（base vs. large）分为不同类别。</p>
+<p>模型变体的参数配置:</p>
+<ul>
+<li>NeRF 和 Mesh 变体。NeRF 变体最初采用神经辐射场方法，擅长捕捉复杂的体积细节。另一方面，Mesh 变体从一开始就采用网格表示，实现直接的几何操作，通常使用 FlexiCubes 模块可以实现更快的处理时间。</li>
+<li>基础和大型模型。transformer 网络的大小以及三角面或网格表示的复杂性来区分这些配置。更大的模型旨在处理更复杂的场景，但需要更多的计算资源。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Representation</th>
+<th>Input Views</th>
+<th>Transformer Layers</th>
+<th>Triplane&#x2F;Mesh Details</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>InstantNeRF</td>
+<td>NeRF</td>
+<td>6</td>
+<td>12 (Base) &#x2F; 16 (Large)</td>
+<td>Triplane 64x64</td>
+</tr>
+<tr>
+<td>InstantMesh</td>
+<td>Mesh</td>
+<td>6</td>
+<td>12 (Base) &#x2F; 16 (Large)</td>
+<td>Mesh grid size 128x128</td>
+</tr>
+</tbody></table>
+<h2 id="Python-实现"><a href="#Python-实现" class="headerlink" title="Python 实现"></a>Python 实现</h2><h3 id="环境设置"><a href="#环境设置" class="headerlink" title="环境设置"></a>环境设置</h3><p>从 GitHub 克隆‘InstantMesh’存储库， 安装各种 Python 库的特定版本。其中包括深度学习 ( pytorch-lightning , torchmetrics )，以及其他实用工具 ( einops , omegaconf )。</p>
+<ul>
+<li>PyMCubes 和 trimesh 用于网格处理。提取等值面（将 3D 体素数据转换为网格）需要 PyMCubes 。相反， trimesh 用于轻松操作和查看 3D 网格数据。</li>
+<li>rembg 用于从图像中去除背景，对于需要将图像主题隔离出来的处理至关重要。</li>
+<li>nvdiffrast 和 jax 和 jaxlib. 这些库对可微光栅化和数值计算是必需的，从而实现基于梯度下降的复杂 3D 几何优化。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pip install pytorch-lightning==2.1.2 gradio==3.50.2 einops omegaconf torchmetrics webdataset accelerate tensorboard</span><br><span class="line">pip install PyMCubes trimesh rembg transformers diffusers==0.20.2 bitsandbytes imageio[ffmpeg] xatlas plyfile</span><br><span class="line">pip install git+https://github.com/NVlabs/nvdiffrast jax==0.4.19 jaxlib==0.4.19 ninja</span><br></pre></td></tr></table></figure>
+
+<h3 id="模型初始化"><a href="#模型初始化" class="headerlink" title="模型初始化"></a>模型初始化</h3><p>模型管道设置:</p>
+<ul>
+<li>一个 DiffusionPipeline 是从一个预训练模型实例化的。这个模型，由 sudo-ai&#x2F;zero123plus-v1.2 标识，专门配置为以半精度（ torch_dtype&#x3D;torch.float16 ）运行。</li>
+<li>扩散模型的调度程序配置为 trailing 时间步距。该配置影响了扩散步骤的计算方式，优化了图像合成过程中降噪进程的处理。</li>
+</ul>
+<p>模型加载：</p>
+<ul>
+<li>从 Hugging Face Hub（ hf_hub_download ）下载模型，并将其加载到模型（ pipeline.unet.load_state_dict(state_dict, strict&#x3D;True) ）中，确保我们拥有准备部署的精确训练参数。</li>
+</ul>
+<p>设备配置:</p>
+<ul>
+<li>将计算设备设置为 GPU（ device &#x3D; torch.device(‘cuda’) ）并将管道移动到该设备（ pipeline &#x3D; pipeline.to(device) ）是深度学习任务的标准做法。</li>
+</ul>
+<p>可重复性:</p>
+<ul>
+<li>一个随机种子（ seed_everything(0) ）可以确保模型的输出是确定性的和可重现的。这在科学实验和产品开发中尤为重要。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Load libraries</span></span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="comment"># Empty Cache and clear any previous model references</span></span><br><span class="line">model = <span class="literal">None</span></span><br><span class="line">torch.cuda.empty_cache()</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> rembg</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">from</span> pytorch_lightning <span class="keyword">import</span> seed_everything</span><br><span class="line"><span class="keyword">from</span> einops <span class="keyword">import</span> rearrange</span><br><span class="line"><span class="keyword">from</span> diffusers <span class="keyword">import</span> DiffusionPipeline, EulerAncestralDiscreteScheduler</span><br><span class="line"><span class="keyword">from</span> huggingface_hub <span class="keyword">import</span> hf_hub_download</span><br><span class="line"><span class="keyword">from</span> src.utils.infer_util <span class="keyword">import</span> remove_background, resize_foreground</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Initialize a DiffusionPipeline with a pretrained model specified by its identifier.</span></span><br><span class="line"><span class="comment"># This model uses a custom pipeline setting and operates at half precision (float16) to enhance performance on compatible GPUs.</span></span><br><span class="line">pipeline = DiffusionPipeline.from_pretrained(<span class="string">&quot;sudo-ai/zero123plus-v1.2&quot;</span>, custom_pipeline=<span class="string">&quot;zero123plus&quot;</span>, torch_dtype=torch.float16)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Configure the pipeline&#x27;s scheduler, setting the timestep spacing to &#x27;trailing&#x27; which affects how steps are calculated in the diffusion process.</span></span><br><span class="line">pipeline.scheduler = EulerAncestralDiscreteScheduler.from_config(pipeline.scheduler.config, timestep_spacing=<span class="string">&#x27;trailing&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Download the model checkpoint from the Hugging Face Hub, specifying the repository and the file name.</span></span><br><span class="line">unet_ckpt_path = hf_hub_download(repo_id=<span class="string">&quot;TencentARC/InstantMesh&quot;</span>, filename=<span class="string">&quot;diffusion_pytorch_model.bin&quot;</span>, repo_type=<span class="string">&quot;model&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Load the state dictionary of the model from the downloaded checkpoint, ensuring it&#x27;s loaded to CPU memory first.</span></span><br><span class="line">state_dict = torch.load(unet_ckpt_path, map_location=<span class="string">&#x27;cpu&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Load the state dictionary into the UNet model within the pipeline, ensuring strict loading to match all model parameters exactly.</span></span><br><span class="line">pipeline.unet.load_state_dict(state_dict, strict=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Set the device for model computation to GPU for faster processing if available.</span></span><br><span class="line">device = torch.device(<span class="string">&#x27;cuda&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Move the pipeline to the specified device (GPU).</span></span><br><span class="line">pipeline = pipeline.to(device)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Set a seed for random number generation to ensure reproducibility of the results.</span></span><br><span class="line">seed_everything(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="图像处理和多视图合成功能"><a href="#图像处理和多视图合成功能" class="headerlink" title="图像处理和多视图合成功能"></a>图像处理和多视图合成功能</h3><p>实现负责图像预处理和从单个输入生成合成多视图图像的函数, 这个阶段通过transforms 输入可用的空间信息，将初始输入转换为适合 3D 建模的格式。</p>
+<p>预处理功能：</p>
+<ul>
+<li>preprocess 函数旨在可选地从输入图像中移除背景。这一步骤对于将模型的注意力集中在图像的主题上并避免引入噪音是必要的。</li>
+<li>调整前景大小。在去除背景后，将前景调整为其原始大小的 85％有助于标准化输入尺寸，可能减少处理过程中的计算负载。</li>
+</ul>
+<p>多视角合成:</p>
+<ul>
+<li>generate_mvs 函数使用扩散模型从预处理图像创建多个合成视图。这是必要的，因为人工生成同一对象的不同视角可以增加数据集的丰富性，并模拟多摄像头设置。</li>
+<li>通过使用扩散模型，该功能合成保持与原始图像上下文一致但不同角度的新视图。</li>
+<li>图像重新排列。合成视图被重新排列成网格格式。这一步骤并不简单，因为它涉及到操纵图像张量的形状和尺寸，以使多个视图对齐整齐。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">preprocess</span>(<span class="params">input_image, do_remove_background</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Preprocesses the input image by optionally removing the background.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">    input_image (PIL.Image): The image to preprocess.</span></span><br><span class="line"><span class="string">    do_remove_background (bool): Flag to determine if the background should be removed.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    PIL.Image: The preprocessed image.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># Create a new rembg session only if background removal is requested</span></span><br><span class="line">    rembg_session = rembg.new_session() <span class="keyword">if</span> do_remove_background <span class="keyword">else</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># If background removal is enabled, apply the removal process and resize the foreground</span></span><br><span class="line">    <span class="keyword">if</span> do_remove_background:</span><br><span class="line">        input_image = remove_background(input_image, rembg_session)  <span class="comment"># Remove the background</span></span><br><span class="line">        input_image = resize_foreground(input_image, <span class="number">0.85</span>)  <span class="comment"># Resize the foreground to 85% of its original size</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> input_image</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">generate_mvs</span>(<span class="params">input_image, sample_steps, sample_seed</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Generates multi-view synthetic images from a single input image using a diffusion model.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">    input_image (PIL.Image): The image to process.</span></span><br><span class="line"><span class="string">    sample_steps (int): Number of inference steps for the diffusion process.</span></span><br><span class="line"><span class="string">    sample_seed (int): Seed for random number generation to ensure reproducibility.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    tuple: A tuple containing:</span></span><br><span class="line"><span class="string">        - z123_image (torch.Tensor): The raw tensor image from the diffusion model.</span></span><br><span class="line"><span class="string">        - show_image (PIL.Image): The rearranged image ready for display.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># Set a seed to ensure reproducibility in the generation process</span></span><br><span class="line">    seed_everything(sample_seed)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Create a new torch generator for random numbers on the specified device</span></span><br><span class="line">    generator = torch.Generator(device=device)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Generate a synthetic image using the diffusion pipeline</span></span><br><span class="line">    z123_image = pipeline(</span><br><span class="line">        input_image,</span><br><span class="line">        num_inference_steps=sample_steps,</span><br><span class="line">        generator=generator,</span><br><span class="line">    ).images[<span class="number">0</span>]  <span class="comment"># Access the first image from the generated set</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Convert the PyTorch tensor to a numpy array with type uint8</span></span><br><span class="line">    show_image = np.asarray(z123_image, dtype=np.uint8)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Rearrange the image dimensions to organize multiple views into a grid format for display</span></span><br><span class="line">    show_image = torch.from_numpy(show_image)  <span class="comment"># Convert numpy array back to PyTorch tensor</span></span><br><span class="line">    show_image = rearrange(show_image, <span class="string">&#x27;(n h) (m w) c -&gt; (n m) h w c&#x27;</span>, n=<span class="number">3</span>, m=<span class="number">2</span>)  <span class="comment"># Rearrange for multi-view</span></span><br><span class="line">    show_image = rearrange(show_image, <span class="string">&#x27;(n m) h w c -&gt; (n h) (m w) c&#x27;</span>, n=<span class="number">2</span>, m=<span class="number">3</span>)  <span class="comment"># Adjust the final layout</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Convert the final tensor back to a PIL image for easy display and manipulation</span></span><br><span class="line">    show_image = Image.fromarray(show_image.numpy())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> z123_image, show_image</span><br></pre></td></tr></table></figure>
+
+<h3 id="图像加载、处理和多视图生成"><a href="#图像加载、处理和多视图生成" class="headerlink" title="图像加载、处理和多视图生成"></a>图像加载、处理和多视图生成</h3><ul>
+<li>图像加载：该过程始于指定输入图像的路径，并使用 Python Imaging Library（PIL）加载图像。</li>
+<li>背景去除和图像处理：使用前面讨论过的 preprocess 函数，我们去除加载图像的背景并调整大小。</li>
+<li>合成多视图生成：然后将 generate_mvs 函数应用于预处理图像，以生成多个合成视图。此生成的参数 — 例如扩散过程中的步数（75）被选择以平衡计算需求和生成视图的质量之间的权衡。</li>
+<li>图像保存和显示：扩散过程产生的原始张量图像和视觉上排列的多视图图像都保存到指定路径。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Define the path to the input image stored in the notebook&#x27;s workspace environment.</span></span><br><span class="line">input_image_path = <span class="string">&#x27;examples/bird.jpg&#x27;</span> <span class="comment">#@param &#123;type:&quot;string&quot;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Open the image file from the specified path using PIL&#x27;s Image module.</span></span><br><span class="line">input_image = Image.<span class="built_in">open</span>(input_image_path)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Preprocess the input image by removing the background, leveraging the &#x27;preprocess&#x27; function.</span></span><br><span class="line">processed_image = preprocess(input_image, <span class="literal">True</span>)  <span class="comment"># Pass True to indicate background removal is needed.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Display the processed image; useful for verification in a Jupyter Notebook environment.</span></span><br><span class="line">processed_image</span><br><span class="line"></span><br><span class="line"><span class="comment"># Generate multi-view synthetic images from the preprocessed image using a diffusion model.</span></span><br><span class="line"><span class="comment"># Specify 75 steps for the diffusion process and a seed value of 42 for reproducibility.</span></span><br><span class="line">mv_images, mv_show_images = generate_mvs(processed_image, <span class="number">75</span>, <span class="number">42</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Define the path where the generated multi-view images will be saved.</span></span><br><span class="line">output_image_path = <span class="string">&#x27;mv_images.png&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Save the raw tensor image (not visually arranged) to the specified file path.</span></span><br><span class="line">mv_images.save(output_image_path)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Display the rearranged multi-view images, which are formatted for easy viewing.</span></span><br><span class="line"><span class="comment"># This output can be directly viewed in a Jupyter Notebook environment.</span></span><br><span class="line">mv_show_images</span><br></pre></td></tr></table></figure>
+<p><img src="/../asset_singlleimageto3d/07.png"></p>
+<h3 id="模型配置"><a href="#模型配置" class="headerlink" title="模型配置"></a>模型配置</h3><p>我们设置操作参数，从外部来源加载必要的配置，并确保模型在给定硬件上性能优化。</p>
+<p>配置加载和应用。</p>
+<ul>
+<li>OmegaConf 从一个 YAML 文件中加载模型的配置。这一步提供了一种灵活且结构化的方式来管理设置和操作参数，可以在不改变代码库的情况下进行调整。</li>
+<li>此外，YAML 文件包含各种模型方面的规范，包括架构细节和操作参数，这些规范指导系统在执行过程中的行为。</li>
+</ul>
+<p>模型初始化。</p>
+<ul>
+<li>根据上一步加载的配置，系统创建一个模型。这涉及设置模型架构，如在 YAML 文件中指定的那样。</li>
+</ul>
+<p>状态字典管理。</p>
+<ul>
+<li>从远程存储库下载模型后，系统将状态字典加载到实例化的模型中。该状态字典包含经过训练的权重和偏置。</li>
+<li>状态字典的管理确保模型的所有组件都正确地使用训练参数进行初始化。</li>
+</ul>
+<p>GPU 加速设备配置。</p>
+<ul>
+<li>如果可用，系统会配置模型在 GPU 上运行以加快计算速度。这种设置涉及将模型的计算任务转移到 GPU 上，以便高效地处理并行处理。</li>
+<li>这一步处理涉及 3D 建模和图像处理的复杂计算，特别是在处理大数据量或需要实时性能时。</li>
+</ul>
+<p>FlexiCubes 几何特殊配置。</p>
+<ul>
+<li>另外一项检查评估模型是否使用 FlexiCubes。如果 FlexiCubes 是配置的一部分，则会执行额外的初始化步骤来设置这个几何结构。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Empty Cache and clear any previous pipeline references</span></span><br><span class="line">pipeline = <span class="literal">None</span></span><br><span class="line">torch.cuda.empty_cache()</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> torchvision.transforms <span class="keyword">import</span> v2</span><br><span class="line"><span class="keyword">from</span> omegaconf <span class="keyword">import</span> OmegaConf</span><br><span class="line"><span class="keyword">from</span> einops <span class="keyword">import</span> repeat</span><br><span class="line"><span class="keyword">import</span> tempfile</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br><span class="line"><span class="keyword">import</span> imageio</span><br><span class="line"><span class="keyword">from</span> src.utils.train_util <span class="keyword">import</span> instantiate_from_config</span><br><span class="line"><span class="keyword">from</span> src.utils.camera_util <span class="keyword">import</span> (FOV_to_intrinsics, get_zero123plus_input_cameras,get_circular_camera_poses,)</span><br><span class="line"><span class="keyword">from</span> src.utils.mesh_util <span class="keyword">import</span> save_obj, save_obj_with_mtl</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Define the path to the configuration file for the model.</span></span><br><span class="line">config_path = <span class="string">&#x27;configs/instant-mesh-base.yaml&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Load the configuration from the YAML file using OmegaConf.</span></span><br><span class="line">config = OmegaConf.load(config_path)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Extract the base name of the configuration file, removing the &#x27;.yaml&#x27; extension for use in conditional logic or naming.</span></span><br><span class="line">config_name = os.path.basename(config_path).replace(<span class="string">&#x27;.yaml&#x27;</span>, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Access specific configuration blocks for the model and inference from the loaded configuration.</span></span><br><span class="line">model_config = config.model_config</span><br><span class="line">infer_config = config.infer_config</span><br><span class="line"></span><br><span class="line"><span class="comment"># Download the model checkpoint from Hugging Face Hub, specifying the repository ID and filename.</span></span><br><span class="line">model_ckpt_path = hf_hub_download(repo_id=<span class="string">&quot;TencentARC/InstantMesh&quot;</span>, filename=<span class="string">&quot;instant_mesh_base.ckpt&quot;</span>, repo_type=<span class="string">&quot;model&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Instantiate the model using the configuration for the model.</span></span><br><span class="line">model = instantiate_from_config(model_config)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Load the model&#x27;s state dictionary from the checkpoint, ensuring it&#x27;s directed to CPU memory.</span></span><br><span class="line">state_dict = torch.load(model_ckpt_path, map_location=<span class="string">&#x27;cpu&#x27;</span>)[<span class="string">&#x27;state_dict&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># Filter and adjust the keys in the state dictionary to match the expected format by removing a specific prefix and excluding any keys related to the &#x27;source_camera&#x27;.</span></span><br><span class="line">state_dict = &#123;k[<span class="number">14</span>:]: v <span class="keyword">for</span> k, v <span class="keyword">in</span> state_dict.items() <span class="keyword">if</span> k.startswith(<span class="string">&#x27;lrm_generator.&#x27;</span>) <span class="keyword">and</span> <span class="string">&#x27;source_camera&#x27;</span> <span class="keyword">not</span> <span class="keyword">in</span> k&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Load the processed state dictionary into the model, ensuring a strict match.</span></span><br><span class="line">model.load_state_dict(state_dict, strict=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Set the device for model computation to GPU to accelerate processing.</span></span><br><span class="line">device = torch.device(<span class="string">&#x27;cuda&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Move the model to the specified device.</span></span><br><span class="line">model = model.to(device)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check if the configuration name starts with &#x27;instant-mesh&#x27; to determine if FlexiCubes geometry initialization is required.</span></span><br><span class="line">IS_FLEXICUBES = <span class="literal">True</span> <span class="keyword">if</span> config_name.startswith(<span class="string">&#x27;instant-mesh&#x27;</span>) <span class="keyword">else</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># If the model uses FlexiCubes, initialize the FlexiCubes geometry with the specified field of view.</span></span><br><span class="line"><span class="keyword">if</span> IS_FLEXICUBES:</span><br><span class="line">    model.init_flexicubes_geometry(device, fovy=<span class="number">30.0</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Set the model to evaluation mode, which disables training-specific behaviors like dropout.</span></span><br><span class="line">model = model.<span class="built_in">eval</span>()</span><br></pre></td></tr></table></figure>
+
+<h3 id="3D-模型生成和可视化的功能"><a href="#3D-模型生成和可视化的功能" class="headerlink" title="3D 模型生成和可视化的功能"></a>3D 模型生成和可视化的功能</h3><p>实现从处理过的图像生成和可视化 3D 模型的功能。</p>
+<p>这些功能将多视图图像转换为 3D 输出（MP4、对象文件等），可在各种应用中进行评估和利用。</p>
+<ul>
+<li>从图像序列创建视频： images_to_video 函数将图像序列转换为视频文件。该函数会检查和转换图像数据，以确保帧具有正确的格式和尺寸，然后将它们编译成视频。</li>
+<li>用于 3D 渲染的相机参数生成： get_render_cameras 计算并提供渲染 3D 模型所需的相机参数。这些参数是基于圆形配置推导出来的，模拟了一个真实的相机设置，可以从多个角度捕捉对象。</li>
+<li>3D 网格生成： make_mesh 函数从模型提供的平面数据创建 3D 网格。该函数生成网格，还可以选择性地应用纹理映射。</li>
+<li>全面的 3D 模型和可视化生成： make3d 功能编排整个将图像数据转换为 3D 网格和相应视频的过程。它管理从处理初始图像、设置相机参数、生成网格平面，最后将输出编译成静态（网格）和动态（视频）格式的工作流程。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">images_to_video</span>(<span class="params">images, output_path, fps=<span class="number">30</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Converts a sequence of images into a video file.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">    images (Tensor): A tensor of images to convert into video.</span></span><br><span class="line"><span class="string">    output_path (str): The file path where the video will be saved.</span></span><br><span class="line"><span class="string">    fps (int): Frames per second for the output video.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># Ensure the directory for the output path exists, create if not.</span></span><br><span class="line">    os.makedirs(os.path.dirname(output_path), exist_ok=<span class="literal">True</span>)</span><br><span class="line">    frames = []</span><br><span class="line">    <span class="comment"># Convert each image tensor to a numpy array, adjust for display, and collect frames.</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(images.shape[<span class="number">0</span>]):</span><br><span class="line">        frame = (images[i].permute(<span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>).cpu().numpy() * <span class="number">255</span>).astype(np.uint8).clip(<span class="number">0</span>, <span class="number">255</span>)</span><br><span class="line">        <span class="comment"># Ensure frame dimensions match expected dimensions.</span></span><br><span class="line">        <span class="keyword">assert</span> frame.shape[<span class="number">0</span>] == images.shape[<span class="number">2</span>] <span class="keyword">and</span> frame.shape[<span class="number">1</span>] == images.shape[<span class="number">3</span>], \</span><br><span class="line">            <span class="string">f&quot;Frame shape mismatch: <span class="subst">&#123;frame.shape&#125;</span> vs <span class="subst">&#123;images.shape&#125;</span>&quot;</span></span><br><span class="line">        <span class="comment"># Ensure pixel values are within the valid range.</span></span><br><span class="line">        <span class="keyword">assert</span> frame.<span class="built_in">min</span>() &gt;= <span class="number">0</span> <span class="keyword">and</span> frame.<span class="built_in">max</span>() &lt;= <span class="number">255</span>, \</span><br><span class="line">            <span class="string">f&quot;Frame value out of range: <span class="subst">&#123;frame.<span class="built_in">min</span>()&#125;</span> ~ <span class="subst">&#123;frame.<span class="built_in">max</span>()&#125;</span>&quot;</span></span><br><span class="line">        frames.append(frame)</span><br><span class="line">    <span class="comment"># Write the frames to a video file.</span></span><br><span class="line">    imageio.mimwrite(output_path, np.stack(frames), fps=fps, codec=<span class="string">&#x27;h264&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_render_cameras</span>(<span class="params">batch_size=<span class="number">1</span>, M=<span class="number">120</span>, radius=<span class="number">2.5</span>, elevation=<span class="number">10.0</span>, is_flexicubes=<span class="literal">False</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Generates camera parameters for 3D rendering based on a circular configuration.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">    batch_size (int): Number of camera sets to generate.</span></span><br><span class="line"><span class="string">    M (int): Number of camera positions.</span></span><br><span class="line"><span class="string">    radius (float): Radius of the camera circle.</span></span><br><span class="line"><span class="string">    elevation (float): Elevation angle of cameras.</span></span><br><span class="line"><span class="string">    is_flexicubes (bool): Flag to indicate if FlexiCubes geometry is used.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    Tensor: Camera parameters for rendering.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># Compute camera positions based on circular parameters.</span></span><br><span class="line">    c2ws = get_circular_camera_poses(M=M, radius=radius, elevation=elevation)</span><br><span class="line">    <span class="comment"># If using FlexiCubes, adjust camera parameters accordingly.</span></span><br><span class="line">    <span class="keyword">if</span> is_flexicubes:</span><br><span class="line">        cameras = torch.linalg.inv(c2ws)</span><br><span class="line">        cameras = cameras.unsqueeze(<span class="number">0</span>).repeat(batch_size, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        extrinsics = c2ws.flatten(-<span class="number">2</span>)</span><br><span class="line">        intrinsics = FOV_to_intrinsics(<span class="number">30.0</span>).unsqueeze(<span class="number">0</span>).repeat(M, <span class="number">1</span>, <span class="number">1</span>).<span class="built_in">float</span>().flatten(-<span class="number">2</span>)</span><br><span class="line">        cameras = torch.cat([extrinsics, intrinsics], dim=-<span class="number">1</span>)</span><br><span class="line">        cameras = cameras.unsqueeze(<span class="number">0</span>).repeat(batch_size, <span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> cameras</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">make_mesh</span>(<span class="params">mesh_fpath, planes</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Creates a 3D mesh with optional texture mapping.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">    mesh_fpath (str): File path for saving the mesh.</span></span><br><span class="line"><span class="string">    planes (Tensor): Planar data for mesh generation.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    str: The file path where the mesh is saved.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># Extract base filename and directory from path.</span></span><br><span class="line">    mesh_basename = os.path.basename(mesh_fpath).split(<span class="string">&#x27;.&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    mesh_dirname = os.path.dirname(mesh_fpath)</span><br><span class="line">    <span class="comment"># Use texture mapping to save a detailed mesh.</span></span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        mesh_out = model.extract_mesh(planes, use_texture_map=<span class="literal">True</span>, **infer_config)</span><br><span class="line">        vertices, faces, uvs, mesh_tex_idx, tex_map = mesh_out</span><br><span class="line">        save_obj_with_mtl(</span><br><span class="line">            vertices.data.cpu().numpy(),</span><br><span class="line">            uvs.data.cpu().numpy(),</span><br><span class="line">            faces.data.cpu().numpy(),</span><br><span class="line">            mesh_tex_idx.data.cpu().numpy(),</span><br><span class="line">            tex_map.permute(<span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>).data.cpu().numpy(),</span><br><span class="line">            mesh_fpath,</span><br><span class="line">        )</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Mesh with texmap saved to <span class="subst">&#123;mesh_fpath&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> mesh_fpath</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">make3d</span>(<span class="params">images</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Generates a 3D mesh and a video of the mesh from images.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">    images (Tensor or array): Image data used for 3D generation.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    tuple: Paths to the generated video and mesh file.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># Convert image data to tensor and normalize.</span></span><br><span class="line">    images = np.asarray(images, dtype=np.float32) / <span class="number">255.0</span></span><br><span class="line">    images = torch.from_numpy(images).permute(<span class="number">2</span>, <span class="number">0</span>, <span class="number">1</span>).contiguous().<span class="built_in">float</span>()</span><br><span class="line">    <span class="comment"># Reorganize images for processing.</span></span><br><span class="line">    images = rearrange(images, <span class="string">&#x27;c (n h) (m w) -&gt; (n m) c h w&#x27;</span>, n=<span class="number">3</span>, m=<span class="number">2</span>)</span><br><span class="line">    <span class="comment"># Obtain camera parameters for input and rendering.</span></span><br><span class="line">    input_cameras = get_zero123plus_input_cameras(batch_size=<span class="number">1</span>, radius=<span class="number">4.0</span>).to(device)</span><br><span class="line">    render_cameras = get_render_cameras(</span><br><span class="line">        batch_size=<span class="number">1</span>, radius=<span class="number">4.5</span>, elevation=<span class="number">20.0</span>, is_flexicubes=IS_FLEXICUBES).to(device)</span><br><span class="line">    <span class="comment"># Resize images and move to GPU.</span></span><br><span class="line">    images = images.unsqueeze(<span class="number">0</span>).to(device)</span><br><span class="line">    images = v2.functional.resize(images, (<span class="number">320</span>, <span class="number">320</span>), interpolation=<span class="number">3</span>, antialias=<span class="literal">True</span>).clamp(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">    <span class="comment"># Prepare directory for temporary storage.</span></span><br><span class="line">    directory = <span class="string">&#x27;tmp&#x27;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(directory):</span><br><span class="line">        os.makedirs(directory)</span><br><span class="line">    tempfile.tempdir = directory</span><br><span class="line">    <span class="comment"># Create temporary files for mesh and video.</span></span><br><span class="line">    mesh_fpath = tempfile.NamedTemporaryFile(suffix=<span class="string">&quot;.obj&quot;</span>, delete=<span class="literal">False</span>).name</span><br><span class="line">    mesh_basename = os.path.basename(mesh_fpath).split(<span class="string">&#x27;.&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">    mesh_dirname = os.path.dirname(mesh_fpath)</span><br><span class="line">    video_fpath = os.path.join(mesh_dirname, <span class="string">f&quot;<span class="subst">&#123;mesh_basename&#125;</span>.mp4&quot;</span>)</span><br><span class="line">    <span class="comment"># Generate mesh planes and render frames for video.</span></span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        planes = model.forward_planes(images, input_cameras)</span><br><span class="line">        chunk_size = <span class="number">20</span> <span class="keyword">if</span> IS_FLEXICUBES <span class="keyword">else</span> <span class="number">1</span></span><br><span class="line">        render_size = <span class="number">384</span></span><br><span class="line">        frames = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> tqdm(<span class="built_in">range</span>(<span class="number">0</span>, render_cameras.shape[<span class="number">1</span>], chunk_size)):</span><br><span class="line">            <span class="keyword">if</span> IS_FLEXICUBES:</span><br><span class="line">                frame = model.forward_geometry(planes, render_cameras[:, i:i+chunk_size], render_size=render_size)[<span class="string">&#x27;img&#x27;</span>]</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                frame = model.synthesizer(planes, cameras=render_cameras[:, i:i+chunk_size], render_size=render_size)[<span class="string">&#x27;images_rgb&#x27;</span>]</span><br><span class="line">            frames.append(frame)</span><br><span class="line">        frames = torch.cat(frames, dim=<span class="number">1</span>)</span><br><span class="line">        images_to_video(frames[<span class="number">0</span>], video_fpath, fps=<span class="number">30</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Video saved to <span class="subst">&#123;video_fpath&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="comment"># Save the mesh and return paths.</span></span><br><span class="line">    mesh_fpath = make_mesh(mesh_fpath, planes)</span><br><span class="line">    <span class="keyword">return</span> video_fpath, mesh_fpath</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Open the multi-view image file previously saved to check the output from the image generation process.</span></span><br><span class="line">mv_images = Image.<span class="built_in">open</span>(<span class="string">&#x27;mv_images.png&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Pass the opened multi-view images to the &#x27;make3d&#x27; function to generate a 3D model and a video visualization of the model.</span></span><br><span class="line">output_video, output_model_obj = make3d(mv_images)</span><br></pre></td></tr></table></figure>
+<p>播放生成的视频文件</p>
+<p><img src="/../asset_singlleimageto3d/02.gif"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://medium.com/@crisvelasquez/3d-reconstructions-from-a-single-image-d53c387261b6">https://medium.com/@crisvelasquez/3d-reconstructions-from-a-single-image-d53c387261b6</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/05/27/deepQ/" rel="prev" title="强化学习：深度 Q 网络">
+                  <i class="fa fa-angle-left"></i> 强化学习：深度 Q 网络
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Howard Huang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">273k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">8:17</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动-->
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

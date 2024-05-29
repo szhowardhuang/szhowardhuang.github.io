@@ -119,7 +119,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-count">35</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -137,6 +137,377 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/01/19/make-react/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/01/19/make-react/" class="post-title-link" itemprop="url">构建 ReAct AI 代理</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-01-19 23:00:16" itemprop="dateCreated datePublished" datetime="2024-01-19T23:00:16+08:00">2024-01-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-01-20 16:03:59" itemprop="dateModified" datetime="2024-01-20T16:03:59+08:00">2024-01-20</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>8.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>16 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>人工智能代理是一种系统或软件，它可以根据其所处环境和收到的输入，自主执行操作或任务以实现特定目标。人工智能代理旨在做出决策并采取行动。</p>
+<p>人工智能代理可能是人工智能改变我们日常生活方式的下一个创新方式。借助人工智能代理，我们可以完全委托一些工作流程并更快地获得结果。</p>
+<p>人工智能代理面临的挑战是推理和可靠性。最近出现的大多数人工智能代理都基于 LLMs。但 LLMs 本身并不是推理引擎。只有 GPT-4 在伪造推理方面相当先进。</p>
+<p>为了提高 LLMs 的推理能力，已经发明了几种提示策略，包括但不限于思想链、思想树和 ReAct（推理和行动）。</p>
+<p>本文将向您展示如何从0 开始实现 ReAct 人工智能代理。</p>
+<p>ReAct 是一种将推理和行动相结合的策略，作为提高基于 LLM 的代理的整体可靠性和事实充分性的方法，因为采取行动并从行动中获取反馈可以帮助奠定 LLM 的回应。</p>
+<h3 id="创建代理"><a href="#创建代理" class="headerlink" title="创建代理"></a>创建代理</h3><p>第一步是创建代理类。代理必须由一个充当其大脑的LLM来定义。代理还应该能够访问一组工具，这些工具将帮助它采取行动并从这些行动中接收反馈。最后，代理将通过经历“反应链”来解决每个问题解决任务，包括以下步骤：思考、选择行动和工具、确定行动的输入、采取行动并观察结果、确定是否结束推理链。</p>
+<p><img src="/../asset_makereact/1__Rs9OHRaD7xVPKjkhmtsMg.webp"></p>
+<p>在下面的 Agent 类定义中，您会注意到我使用 OpenAI 的 LLM 作为我的代理的 Brain。为此，我使用了我几个月前开发的 anonLLM 库。anonLLM 库的核心目标是从 LLM API 中隐藏个人身份信息，但在这里我主要会将它用作 OpenAI API 的 Python 客户端的包装器。使用 anonLLM 的优势源于它生成结构化 JSON 输出的能力。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/fsndzomga/anonLLM">https://github.com/fsndzomga/anonLLM</a></p>
+<p>为什么它很重要？因为我们需要一种方法来在 ReAct 链的步骤之间传递信息。例如，在定义操作的参数时，您希望能够将这些参数直接传递给操作函数。但是，LLM 会生成格式不可预测的文本，这使得使用正则表达式解析来利用结果变得很困难。生成结构化的 JSON 输出使我们能够简化代理堆栈不同组件之间的通信过程。anonLLM 库将为我们处理这些事情。</p>
+<p>要使用 anonLLM 生成结构化的 JSON 输出，我们只需要定义并传递一个 BaseModel 类作为 output_format，如下所示：</p>
+<pre><code>from anonLLM.llm import OpenaiLanguageModel as brain
+from pydantic import BaseModel
+
+class ReactEnd(BaseModel):
+    stop: bool
+    final_answer: str
+
+
+class ToolChoice(BaseModel):
+    tool_name: str
+    reason_of_choice: str
+
+response = brain.generate(prompt=prompt, output_format=ToolChoice)
+
+check_final = brain.generate(prompt=f&quot;Is &#123;self.background_info()&#125; enough to finally answer to this request: &#123;self.messages[0]&#125;&quot;,
+                output_format=ReactEnd)
+</code></pre>
+<p>这是我首次定义代理类的方式。代理基本上会循环遍历 ReAct 链，直到找到用户请求的答案。这是第一个实现，我将在未来的文章中使其更加健壮。</p>
+<pre><code>from anonLLM.llm import OpenaiLanguageModel as Brain
+from typing import Callable
+from dotenv import load_dotenv
+from pydantic import BaseModel
+import inspect
+import datetime
+import wikipedia
+import os
+
+load_dotenv()
+
+class Agent:
+    def __init__(self, api_key: str = os.environ.get(&#39;OPENAI_API_KEY&#39;), model: str = &#39;gpt-4&#39;) -&gt; None:
+        self.api_key = api_key
+        self.model = model
+        self.brain = Brain(api_key=api_key,
+                        model=model,
+                        anonymize=False)  # I know it violates the dependency injection rule,
+                                            # but it is not a big issue here.
+        self.tools = []
+
+        self.messages = []
+
+        self.request = &quot;&quot;
+
+        self.token_count = 0
+
+        self.token_limit = 5000
+
+    def add_tool(self, tool: Tool) -&gt; None:
+        self.tools.append(tool)
+
+    def append_message(self, message):
+        self.messages.append(message)
+        self.token_count += len(message)
+
+        # Check if token_count exceeds the limit
+        while self.token_count &gt; self.token_limit and len(self.messages) &gt; 1:
+            # Remove messages from the end until token_count is within the limit
+            removed_message = self.messages.pop(1)  # Keep the first message, remove the second one
+            self.token_count -= len(removed_message)
+
+    @staticmethod
+    def extract_first_nested_dict(data_dict):
+        for key, value in data_dict.items():
+            if isinstance(value, dict):
+                return value
+        return &#123;&#125;
+
+    def background_info(self) -&gt; str:
+        return f&quot;Here are your previous think steps: &#123;self.messages[1:]&#125;&quot; if len(self.messages) &gt; 1 else &quot;&quot;
+
+    def think(self) -&gt; None:
+
+        prompt = f&quot;&quot;&quot;Answer the following request as best you can: &#123;self.request&#125;.
+                    &#123;self.background_info()&#125;
+                    First think about what to do. What action to take first if any.
+                    Here are the tools at your disposal: &#123;[tool.name for tool in self.tools]&#125;&quot;&quot;&quot;
+
+        self.append_message(prompt)
+
+        response = self.brain.generate(prompt=prompt, max_tokens=100)
+
+        print(f&quot;Thought: &#123;response&#125;&quot;)
+
+        self.append_message(response)
+
+        self.choose_action()
+
+    def choose_action(self) -&gt; None:
+        prompt = f&quot;&quot;&quot;To Answer the following request as best you can: &#123;self.request&#125;.
+                    &#123;self.background_info()&#125;
+                    Choose the tool to use if need be. The tool should be among:
+                    &#123;[tool.name for tool in self.tools]&#125;.
+                    &quot;&quot;&quot;
+        self.append_message(prompt)
+
+        response = self.brain.generate(prompt=prompt, output_format=ToolChoice)
+
+        print(f&quot;&quot;&quot;Action: I should use this tool: &#123;response[&quot;tool_name&quot;]&#125;.
+            &#123;response[&quot;reason_of_choice&quot;]&#125;&quot;&quot;&quot;)
+
+        self.append_message(response)
+
+        tool = [tool for tool in self.tools if tool.name == response[&quot;tool_name&quot;]].pop()
+
+        self.action(tool)
+
+    def action(self, tool: Tool) -&gt; None:
+        prompt = f&quot;&quot;&quot;To Answer the following request as best you can: &#123;self.request&#125;.
+                    &#123;self.background_info()&#125;
+                    Determine the inputs to send to the tool: &#123;tool.name&#125;
+                    Given that the source code of the tool function is: &#123;inspect.getsource(tool.func)&#125;.
+                    &quot;&quot;&quot;
+        self.append_message(prompt)
+
+        parameters = inspect.signature(tool.func).parameters
+
+        class DynamicClass(BaseModel):
+            pass
+
+        for name, param in parameters.items():
+            # Setting default value if it exists, else None
+            default_value = param.default if param.default is not inspect.Parameter.empty else None
+            setattr(DynamicClass, name, (param.annotation, default_value))
+
+        response = self.brain.generate(prompt=prompt, output_format=DynamicClass)
+
+        self.append_message(response)
+
+        input_parameters = self.extract_first_nested_dict(response)
+
+        action_result = tool.func(**input_parameters)
+
+        self.append_message(f&quot;Results of action: &#123;action_result&#125;&quot;)
+
+        self.observation()
+
+    def observation(self) -&gt; None:
+        prompt = f&quot;Observation:&#123;self.messages[-1]&#125;.&quot;
+        self.append_message(prompt)
+
+        check_final = self.brain.generate(prompt=f&quot;Is &#123;self.background_info()&#125; enough to finally answer to this request: &#123;self.messages[0]&#125;&quot;,
+                output_format=ReactEnd)
+
+        if check_final[&quot;stop&quot;]:
+            print(&quot;Thought: I now know the final answer. \n&quot;)
+            prompt = f&quot;&quot;&quot;Give the final answer the following request: &#123;self.request&#125;.
+                    given &#123;self.background_info()&#125;
+                    &quot;&quot;&quot;
+            print(f&quot;Final Answer: &#123;self.brain.generate(prompt=prompt)&#125;&quot;)
+        else:
+            self.think()
+
+
+    def react(self, input: str) -&gt; str:
+        self.append_message(input)
+        self.request = input
+        self.think()
+</code></pre>
+<p>Agent 类旨在与语言模型（称为 Brain ）交互、处理请求并利用各种工具来生成响应。以下是其功能的细分：</p>
+<p>初始化 ( <strong>init</strong> ):</p>
+<ul>
+<li>代理使用 API 密钥和模型规范（默认为“gpt-4”）进行初始化。</li>
+<li>self.brain 是 Brain 的一个实例，它似乎是一个语言模型接口（可能是针对 OpenAI 的 GPT 模型）。</li>
+<li>代理维护一个 tools 列表（ Tool 类的实例）， messages 用于跟踪对话历史记录，并管理令牌以遵守 API 限制。</li>
+</ul>
+<p>添加工具 ( add_tool ):</p>
+<ul>
+<li>使用此方法将工具添加到代理。每个工具都是 Tool 类的实例，封装特定功能（如维基百科搜索、计算等）。</li>
+</ul>
+<p>消息处理 ( append_message ):</p>
+<ul>
+<li>此方法将消息添加到代理的历史记录中，管理令牌计数以保持在限制范围内。如果超过令牌限制，则会删除较旧的消息。</li>
+</ul>
+<p>对输入做出反应 ( react ):</p>
+<ul>
+<li>这是与代理交互的入口点。它接收输入请求，将其附加到消息中，设置请求并启动思考过程。</li>
+</ul>
+<p>思考过程 ( think ):</p>
+<ul>
+<li>代理根据当前请求和背景信息（之前的消息）生成一个思考过程。它使用 self.brain 为提示生成一个响应。</li>
+</ul>
+<p>动作选择 ( choose_action ):</p>
+<ul>
+<li>经过思考，代理根据请求和背景信息选择一个动作（要使用的工具）。通过使用 self.brain 生成响应来做出此选择，该响应格式化为 ToolChoice 。</li>
+</ul>
+<p>执行操作 ( action ):</p>
+<ul>
+<li>代理通过调用所选工具的 act 方法来执行所选操作。它首先通过检查工具函数的参数来确定该函数所需的输入。</li>
+</ul>
+<p>观察和响应 ( observation ):</p>
+<ul>
+<li>执行操作后，代理观察结果并决定是否已获得足够的信息来提供最终答案。如果没有，则返回思考过程。</li>
+</ul>
+<h3 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h3><p>定义代理后，我需要定义代理将使用的某些工具。工具基本上是一个函数，表示将执行的操作，例如执行计算、在维基百科上进行搜索或检索当前日期。</p>
+<p>以下是工具类的定义：</p>
+<pre><code>class Tool:
+    def __init__(self, name: str, func: Callable) -&gt; None:
+        self.name = name
+        self.func = func
+
+    def act(self, **kwargs) -&gt; str:
+        return self.func(**kwargs)
+</code></pre>
+<p>以下是具体定义工具并将其添加到代理中的方法，然后进行测试：</p>
+<pre><code># Equivalent of the perform_calculation function
+def perform_calculation(operation, a, b):
+    # Validating the operation
+    if operation not in [&#39;add&#39;, &#39;subtract&#39;, &#39;multiply&#39;, &#39;divide&#39;]:
+        return f&quot;Invalid operation: &#123;operation&#125;, should be among [&#39;add&#39;, &#39;subtract&#39;, &#39;multiply&#39;, &#39;divide&#39;]&quot;
+
+    if operation == &#39;add&#39;:
+        return a + b
+    elif operation == &#39;subtract&#39;:
+        return a - b
+    elif operation == &#39;multiply&#39;:
+        return a * b
+    elif operation == &#39;divide&#39;:
+        if b == 0:
+            return &quot;Division by zero&quot;
+        return a / b
+
+
+# Equivalent of the search_wikipedia function
+def search_wikipedia(search_query):
+    # Fetch the page content
+    page = wikipedia.page(search_query)
+
+    # Extract the text
+    text = page.content
+
+    # Print and return the first 100 characters
+    return text[:300]
+
+
+# Equivalent of the date_req function
+def date_of_today():
+    return datetime.date.today()
+
+# Creating instances of the Tool class
+wikipedia_search_tool = Tool(&quot;WikipediaSearch&quot;, search_wikipedia)
+calculator_tool = Tool(&quot;Calculator&quot;, perform_calculation)
+date_request_tool = Tool(&quot;Date_of_request&quot;, date_of_today)
+
+# Creating an Agent
+
+agent = Agent()
+
+agent.add_tool(wikipedia_search_tool)
+agent.add_tool(calculator_tool)
+agent.add_tool(date_request_tool)
+
+agent.react(&quot;What is the double of barack obama&#39;s age?&quot;)
+</code></pre>
+<p>最后，以下是代理的推理过程：</p>
+<pre><code>Thought: First, I would use the &#39;WikipediaSearch&#39; tool to find out Barack Obama&#39;s current age. Then, I would use the &#39;Calculator&#39; tool to double the age I found.
+
+Action: I should use this tool: WikipediaSearch. I need to find out Barack Obama&#39;s current age.
+
+Thought: From the Wikipedia search, we found out that Barack Obama was born on August 4, 1961. To determine his current age, we need to know the current date. Therefore, I will use the &#39;Date_of_request&#39; tool. After finding out his current age, I will use the &#39;Calculator&#39; tool to find the double of his age.
+
+Action: I should use this tool: Date_of_request. I need to find out the current date to calculate Barack Obama&#39;s age.
+
+Thought: I now know the final answer. 
+
+Final Answer: Barack Obama was born on August 4, 1961. So as of January 3, 2024, he would be 62 years old. Therefore, the double of his age would be 124 years.
+</code></pre>
+<p>现在，可以做更多的事情来增强此 AI 代理的推理能力，例如在代理内部实现 RAG，让它可以访问互联网等等。本文的目标只是让您了解可以做些什么来提高 AI 代理的推理能力。</p>
+<h3 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h3><p><a target="_blank" rel="noopener" href="https://github.com/fsndzomga/react-ai-agent">https://github.com/fsndzomga/react-ai-agent</a></p>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p><a target="_blank" rel="noopener" href="https://medium.com/gitconnected/building-a-react-ai-agent-from-scratch-using-python-3adc2030b198">https://medium.com/gitconnected/building-a-react-ai-agent-from-scratch-using-python-3adc2030b198</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -929,13 +1300,13 @@ Final Answer: Camila Morrone is Leo DiCaprio&#39;s girlfriend and her current ag
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">255k</span>
+    <span title="站点总字数">273k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">7:44</span>
+    <span title="站点阅读时长">8:17</span>
   </span>
 </div>
 <div class="busuanzi-count">
