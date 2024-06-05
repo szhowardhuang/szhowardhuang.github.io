@@ -119,7 +119,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-count">36</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -137,6 +137,103 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/03/12/ollama/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/03/12/ollama/" class="post-title-link" itemprop="url">ollama使用方法</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-03-12 11:49:50 / 修改时间：15:41:44" itemprop="dateCreated datePublished" datetime="2024-03-12T11:49:50+08:00">2024-03-12</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>591</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>Ollama 终于可以在 Windows 上运行了</p>
+<h2 id="下载-Ollma-安装文件"><a href="#下载-Ollma-安装文件" class="headerlink" title="下载 Ollma 安装文件"></a>下载 Ollma 安装文件</h2><p>访问 <a target="_blank" rel="noopener" href="https://ollama.com/download%EF%BC%8C%E9%80%89%E6%8B%A9">https://ollama.com/download，选择</a> Windows，单击 “Download for Windows (Preview)” 进行下载。</p>
+<h2 id="安装-Ollama"><a href="#安装-Ollama" class="headerlink" title="安装 Ollama"></a>安装 Ollama</h2><p>双击下载的 “OllamaSetup.exe”，直接安装就可以了。安装完以后，ollama app后台进程会自动运行。</p>
+<h2 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h2><p>Ollama 下载的模型模型保存在 C 盘，如果想更改默认路径的话，可以通过设置 OLLAMA_MODELS 进行修改。</p>
+<p>OLLAMA_MODELS：F:\OllamaCache</p>
+<p>Ollama 默认提供 OpenAI 的兼容 API，默认端口是 11434，默认只可以通过 localhost 进行访问，如果想公开访问的话，可以通过设置 OLLAMA_HOST 进行修改。</p>
+<p>OLLAMA_HOST：0.0.0.0</p>
+<p>修改环境变量后，需要去任务管理器杀掉ollama的各个进程或者重启电脑，然后重新打开cmd，set看下环境变量，再重新启动ollama</p>
+<h2 id="使用-Ollama"><a href="#使用-Ollama" class="headerlink" title="使用 Ollama"></a>使用 Ollama</h2><p>访问 <a target="_blank" rel="noopener" href="https://ollama.com/library">https://ollama.com/library</a></p>
+<p>搜索你要使用的模型，主流的模型，比如 llama2、qwen1.5、mixtral 等，Ollama都支持。</p>
+<p>下面以允许 qwen 为例，我们要运行 7b 的模型，</p>
+<p>ollama App在后台已经跑起来的情况下，打开cmd，输入</p>
+<p><code>ollama run qwen:7b</code></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -2166,114 +2263,6 @@ xtuner chat ./internlm-chat-7b --adapter hf --lagent
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/01/28/InternLm-training/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Howard Huang">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/01/28/InternLm-training/" class="post-title-link" itemprop="url">书生-浦语实战训练营</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-01-28 23:00:16" itemprop="dateCreated datePublished" datetime="2024-01-28T23:00:16+08:00">2024-01-28</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-01-29 21:59:29" itemprop="dateModified" datetime="2024-01-29T21:59:29+08:00">2024-01-29</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.1k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>历经2周的InternLM实战训练营，我收获颇丰。</p>
-<p>本次训练营的主要内容是：</p>
-<ul>
-<li>书生·浦语大模型全链路开源体系</li>
-<li>书生·浦语大模型 Demo</li>
-<li>基于 InternLM 和 LangChain 搭建知识库</li>
-<li>XTuner 大模型单卡低成本微调实战</li>
-<li>LMDeploy 大模型量化部署实践</li>
-<li>OpenCompass 大模型评测</li>
-</ul>
-<p>我将每一课的内容和作业都发布在GitHub上，欢迎大家参与讨论和学习。</p>
-<h2 id="课程内容"><a href="#课程内容" class="headerlink" title="课程内容"></a>课程内容</h2><h4 id="第1课"><a href="#第1课" class="headerlink" title="第1课"></a>第1课</h4><p>笔记 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/36#discussioncomment-8013121">https://github.com/InternLM/tutorial/discussions/36#discussioncomment-8013121</a></p>
-<h4 id="第2课"><a href="#第2课" class="headerlink" title="第2课"></a>第2课</h4><p>笔记 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/37#discussioncomment-8035063">https://github.com/InternLM/tutorial/discussions/37#discussioncomment-8035063</a>	<br>作业 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/92#discussioncomment-8035219">https://github.com/InternLM/tutorial/discussions/92#discussioncomment-8035219</a></p>
-<h4 id="第3课"><a href="#第3课" class="headerlink" title="第3课"></a>第3课</h4><p>笔记 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/38#discussioncomment-8061447">https://github.com/InternLM/tutorial/discussions/38#discussioncomment-8061447</a>	<br>作业 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/93#discussioncomment-8081121">https://github.com/InternLM/tutorial/discussions/93#discussioncomment-8081121</a></p>
-<h4 id="第4课"><a href="#第4课" class="headerlink" title="第4课"></a>第4课</h4><p>笔记 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/39#discussioncomment-8108951">https://github.com/InternLM/tutorial/discussions/39#discussioncomment-8108951</a>	<br>作业 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/94#discussioncomment-8116585">https://github.com/InternLM/tutorial/discussions/94#discussioncomment-8116585</a></p>
-<h4 id="第5课"><a href="#第5课" class="headerlink" title="第5课"></a>第5课</h4><p>笔记 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/40#discussioncomment-8122800">https://github.com/InternLM/tutorial/discussions/40#discussioncomment-8122800</a>	<br>作业 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/95#discussioncomment-8122839">https://github.com/InternLM/tutorial/discussions/95#discussioncomment-8122839</a></p>
-<h4 id="第6课"><a href="#第6课" class="headerlink" title="第6课"></a>第6课</h4><p>笔记 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/41#discussioncomment-8217329">https://github.com/InternLM/tutorial/discussions/41#discussioncomment-8217329</a>	<br>作业 <a target="_blank" rel="noopener" href="https://github.com/InternLM/tutorial/discussions/96#discussioncomment-8217311">https://github.com/InternLM/tutorial/discussions/96#discussioncomment-8217311</a></p>
-<p>后续还要在通用算力平台实践一把，欢迎大家关注！</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -2297,13 +2286,13 @@ xtuner chat ./internlm-chat-7b --adapter hf --lagent
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">273k</span>
+    <span title="站点总字数">286k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">8:17</span>
+    <span title="站点阅读时长">8:39</span>
   </span>
 </div>
 <div class="busuanzi-count">

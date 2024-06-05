@@ -119,7 +119,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-count">36</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -137,6 +137,190 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/04/12/autogenstudio-mistral/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/04/12/autogenstudio-mistral/" class="post-title-link" itemprop="url">用AutoGen Studio 与本地 Mistral AI 模型来实践生成式AI代理</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-04-12 20:20:13" itemprop="dateCreated datePublished" datetime="2024-04-12T20:20:13+08:00">2024-04-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-28 19:55:24" itemprop="dateModified" datetime="2024-04-28T19:55:24+08:00">2024-04-28</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>14k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>25 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>AutoGen 是由 Microsoft 开发的框架，旨在简化多代理应用程序的开发，特别是在编排 LLM 代理方面。</p>
+<p>多智能体应用程序涉及多个 LLM 或多模式智能体或实体在整个工作流程中相互交互以实现特定目标或任务的系统。这些代理可以是 LLM 代理、检索代理或其他能够做出独立决策、函数调用或执行操作的代理。</p>
+<p>在本文中，我们将重点介绍AutoGen Studio直观的无代码平台与本地集成的Mistral AI模型的融合。这种组合不仅仅是为了让人工智能更容易应用;它还涉及促进我们如何在许多现实生活中的行业工作流程中与不同的生成式 AI 代理进行交互、部署并从中受益。</p>
+<p><img src="/../asset_autogenmistral/01.png"></p>
+<h2 id="环境安装"><a href="#环境安装" class="headerlink" title="环境安装"></a>环境安装</h2><h3 id="安装autogen-studio"><a href="#安装autogen-studio" class="headerlink" title="安装autogen studio"></a>安装autogen studio</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install autogenstudio</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="安装mistral"><a href="#安装mistral" class="headerlink" title="安装mistral"></a>安装mistral</h3><p>先安装ollama</p>
+<ul>
+<li><p>Ollama 是一个提供对大型语言模型的访问的平台。安装 Ollama 是第一步，因为它是运行 Mistral 模型的环境。它允许您自定义和创建自己的模型或运行现有模型，如 Llama 2、Code Llama 和 Mistral。您可以在此处下载ollama： <a target="_blank" rel="noopener" href="https://ollama.ai/">https://ollama.ai/</a> ， 选择download，选择linux版本，因为mistral 7B需要24GB 显卡，我没有，只能去云端的linux机器上安装ollama。</p>
+</li>
+<li><p>运行 Ollama Mistral：按照以下命令从 Ollama 平台启动 Mistral 模型，使其准备好处理请求。此命令初始化用于设置模型、加载必要数据以及启动将处理查询处理的服务的进程。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ollama run mistral</span><br></pre></td></tr></table></figure>
+<p>如果说没有ollama app，就起一个console，执行 ollama serve，然后在另外一个console执行ollama run mistral。执行完测试一下mistral，就可以把两个进程都杀掉了。</p>
+</li>
+<li><p>安装 LiteLLM：LiteLLM 库是一个工具，它有助于从 http 端点运行语言模型。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install litellm --upgrade</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装 Gunicorn：Gunicorn 是用于 UNIX 系统的 Python WSGI HTTP 服务器，用于运行 Python Web 应用程序。它是运行 LiteLLM 代理的先决条件，它允许您向语言模型发出本地 HTTP 请求。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install gunicorn</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="运行-Mistral-模型"><a href="#运行-Mistral-模型" class="headerlink" title="运行 Mistral 模型"></a>运行 Mistral 模型</h2><p>使用 Ollama&#x2F;Mistral 模型运行 LiteLLM：此步骤实际上初始化模型并使其准备好运行。此命令告诉 LiteLLM 使用 Ollama 提供的 Mistral 模型。它为交互准备模型，允许您开始进行查询和接收响应。</p>
+<p>在此过程结束时，本地 Mistral 模型从 0.0.0.0：4000 开始，有 1 个工作线程。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">litellm --model ollama/mistral</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="运行-Autogen-Studio"><a href="#运行-Autogen-Studio" class="headerlink" title="运行 Autogen Studio"></a>运行 Autogen Studio</h2><p>通过在终端中输入以下内容来运行 Web UI：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">autogenstudio ui --port 6006</span><br></pre></td></tr></table></figure>
+
+<p>AutoGen Studio 提供了一个简化且用户友好的界面，有助于创建和管理多代理 AI 应用程序。该界面分为几个部分，包括技能、模型、代理和工作流，每个部分在应用程序开发中都发挥着不可或缺的作用。</p>
+<h3 id="技能"><a href="#技能" class="headerlink" title="技能"></a>技能</h3><p>在“技能”部分中，用户可以开发和存储代理将用于解决任务的 Python 函数。它是一个编程环境，在其中定义和优化应用程序的功能。<br><img src="/../asset_autogenmistral/06.png"></p>
+<h3 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h3><p>在模型部分，用户可以配置和管理 AI 模型，包括 GPT-4 和其他本地或自定义模型。</p>
+<p>用户可以设置 Mistral AI 等模型，表明工作室支持本地 AI 模型集成和管理。这种灵活性允许使用强大的模型，如 OpenAI 的 GPT-4，以及为特定任务量身定制的专有或专用模型。<br><img src="/../asset_autogenmistral/07.png"></p>
+<h3 id="代理"><a href="#代理" class="headerlink" title="代理"></a>代理</h3><p>“代理”部分设计用于配置可重用代理。用户可以创建和定义各种代理的角色，例如本地助理、主要代理和用户代理，协调它们在应用工作流中的交互方式。<br><img src="/../asset_autogenmistral/08.png"></p>
+<h3 id="工作流"><a href="#工作流" class="headerlink" title="工作流"></a>工作流</h3><p>“工作流”部分是奇迹发生的地方。用户可以设计复杂的工作流，以定义系统如何处理任务。这是所有组件聚集在一起的地方：技能提供逻辑，模型提供 AI 的智能，代理对任务采取行动，工作流将所有组件连接到一个连贯的系统中。<br><img src="/../asset_autogenmistral/09.png"></p>
+<h2 id="使用-AutoGen-和-Mistral-AI-进行工作流编排："><a href="#使用-AutoGen-和-Mistral-AI-进行工作流编排：" class="headerlink" title="使用 AutoGen 和 Mistral AI 进行工作流编排："></a>使用 AutoGen 和 Mistral AI 进行工作流编排：</h2><p>在我们想要编写一个 Python 脚本来绘制正弦波并将其保存为“sine_wave.png”文件的情况下，AutoGen 和 Mistral AI 可以一起使用来创建简化的工作流程。AutoGen Studio 用作构建和管理多智能体应用程序的接口，而 Mistral AI 则通过其本地模型提供处理能力。</p>
+<p>下面是使用这两个平台的功能进行编排的工作方式：</p>
+<h3 id="模型配置"><a href="#模型配置" class="headerlink" title="模型配置"></a>模型配置</h3><p>在 AutoGen Studio 中设置了一个名为“mistral local model”的模型，用于与 Mistral AI 进行交互。<br>模型的 API 端点将配置为运行 Mistral AI 的本地服务器地址（例如，<a href="http://0.0.0.0:4000）。">http://0.0.0.0:4000）。</a><br>此设置允许 AutoGen Studio 将数据发送到 Mistral AI 模型并接收处理后的结果。</p>
+<p><img src="/../asset_autogenmistral/02.png"></p>
+<p>因为我们有 LiteLLM 代理服务器的 URL <a href="http://0.0.0.0:4000，可以在">http://0.0.0.0:4000，可以在</a> AutoGen 中使用它，就像使用 OpenAI 或基于云的代理服务器一样。</p>
+<p>由于在本地运行此代理服务器，因此不需要 API 密钥。此外，由于模型是在运行 LiteLLM 命令时设置的，因此不需要在 AutoGen 中配置模型名称。但是，model type和api key是 A​​utoGen 中配置的必填字段，因此我们在其中放置虚拟值 NotRequired ，如上图所示。</p>
+<h3 id="代理配置"><a href="#代理配置" class="headerlink" title="代理配置"></a>代理配置</h3><p>我们可以新建一个代理，也可以直接修改primary_assistant的Model，设定到之前定义的mistral local model<br><img src="/../asset_autogenmistral/03.png"></p>
+<h3 id="创建工作流"><a href="#创建工作流" class="headerlink" title="创建工作流"></a>创建工作流</h3><ul>
+<li>在AutoGen Studio中，将启动一个新的工作流，指定用于生成正弦波图像的特定任务。</li>
+<li>我们使用名称配置工作流，例如“local mistral Agent Workflow”。</li>
+<li>工作流规范包括发送方和接收方代理，其中“userproxy”可以是发起请求的发送方，“primary_assistant”是处理请求并提供输出的接收方。</li>
+<li>userproxy代理的角色将与用户交互并执行primary_assistant生成的代码。如果代码中有任何错误，将错误发送给primary_assistant代理。</li>
+<li>primary_assistant代理由本地 Mistral AI 模型授权，它将在我们的场景中生成代码。如果错误，根据userproxy代理发送的执行错误信息重新调整代码。</li>
+</ul>
+<p><img src="/../asset_autogenmistral/04.png"></p>
+<h3 id="建立并运行会话"><a href="#建立并运行会话" class="headerlink" title="建立并运行会话"></a>建立并运行会话</h3><p>在playground新建一个session，</p>
+<p><img src="/../asset_autogenmistral/05.png"></p>
+<ul>
+<li>之后在AutoGen Studio的“Playground”界面中，用户通过选择“Local mistral Agent Workflow”来启动一个新会话。</li>
+<li>用户输入“write a python script to plot a sine wave and save it to disc as a pngfile sina_wave.png”请求。</li>
+<li>请求由userproxy代理发送到primary_assistant代理，该代理利用 Mistral AI 模型。它生成 Python 脚本，userproxy代理执行代码。如果发生错误，则将其发送回primary_assistant代理。primary_assistant代理重新调整代码并将其发送回userproxy代理，直到代码正常工作并创建正弦波图像。</li>
+</ul>
+<p><img src="/../asset_autogenmistral/10.webp"></p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>AutoGen Studio 与本地 Mistral AI 模型一起展示了在编排 GenAI 代理工作流程方面的重大进展。这种架构有利于 AutoGen Studio 的直观设计和 Mistral AI 的出色性能，构建一个多智能体能够做出贡献的环境。</p>
+<p>将 AutoGen Studio 与本地 Mistral AI 模型结合使用的优势：</p>
+<ul>
+<li>易于集成：本地 Mistral AI 模型可以轻松集成到 AutoGen Studio 中，从而简化了将不同 LLM 模型整合到一个部署中的过程，从而简化了开发过程。</li>
+<li>定制和灵活性：开发人员可以定制 AI 模型以满足特定要求，提供完全适合单个项目不同需求的定制解决方案。</li>
+<li>增强的性能：使用 AutoGen 在本地运行 AI 模型可减少延迟并缩短响应时间，这对于实时应用程序和敏感工作流至关重要。</li>
+<li>数据隐私和安全：AI 模型的本地执行可以完全控制数据，这是无法暴露给外部环境的敏感或专有信息的关键因素。</li>
+<li>成本效益：通过最大限度地减少对基于云的 AI 服务的依赖，组织可以显著降低与数据传输和 LLM API 使用相关的成本。</li>
+<li>离线功能：本地 Mistral AI 模型确保系统即使在没有互联网连接的情况下也能保持运行，从而实现 AI 驱动解决方案的离线功能。</li>
+<li>使用 UI 构建复杂的 AI 工作流：用户可以利用AutoGen Studio的无代码界面来可视化和管理整个过程，轻松制作精心设计的人工智能驱动的工作流程。</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://towardsdatascience.com/no-code-genai-agents-workflow-orchestration-autogen-studio-with-local-mistral-ai-model-7566546a16d9">https://towardsdatascience.com/no-code-genai-agents-workflow-orchestration-autogen-studio-with-local-mistral-ai-model-7566546a16d9</a></p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>由于在AutoDL做了一个镜像，装了mistral，就顺便测试一下多文件代码生成。</p>
+<h3 id="创建文件-multiple-code-generator-py"><a href="#创建文件-multiple-code-generator-py" class="headerlink" title="创建文件 multiple_code_generator.py"></a>创建文件 multiple_code_generator.py</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br></pre></td><td class="code"><pre><span class="line">from litellm import completion</span><br><span class="line">import colorama</span><br><span class="line">from colorama import Fore, Style</span><br><span class="line">import re</span><br><span class="line">import os</span><br><span class="line">def generate_context_prompt(user_input):</span><br><span class="line">    return f&quot; Understand just the context \&quot;&#123;user_input&#125;\&quot;.&quot;</span><br><span class="line"></span><br><span class="line">def generate_features_prompt(system):</span><br><span class="line">    return f&quot; Understand just the context \&quot;&#123;system&#125;\&quot;. Now identify features by expanding for the context and list them&quot;</span><br><span class="line"></span><br><span class="line">def generate_user_stories_prompt(features, system):</span><br><span class="line">    return f&quot; For the features \&quot;&#123;features&#125; and &#123;system&#125;\&quot;: identify user stories for each feature and list them&quot;</span><br><span class="line"></span><br><span class="line">def generate_solution_architecture_prompt(user_stories, system):</span><br><span class="line">    return f&quot; For user stories in \&quot;&#123;user_stories&#125; and &#123;system&#125;\&quot;: list the solution architecture&quot;</span><br><span class="line"></span><br><span class="line">def generate_project_structure_prompt(solution_architecture, user_stories, system):</span><br><span class="line">    return f&quot;&quot;&quot;  </span><br><span class="line">     For the context \&quot;&#123;solution_architecture&#125; and &#123;user_stories&#125; and &#123;system&#125;\&quot;:</span><br><span class="line">        Think about the whole solution.</span><br><span class="line">        Think about overall coding structure based on user stories.</span><br><span class="line">        Think about overall testing structure based on user stories.</span><br><span class="line">        Think about what file refers to what other file and make it as a dependency in the project structure.</span><br><span class="line">        Think about external or framework library references.</span><br><span class="line">        Think above all the edge cases that can come while coding and testing.</span><br><span class="line">        Think that each file will be completed without any &quot;todo&quot; comments for future.</span><br><span class="line">        Envisage to allow only 200 lines per file.</span><br><span class="line">        If more than 200 lines needed separate them into multiple files.</span><br><span class="line">        Do not allow duplication of functionality and code.</span><br><span class="line">        Do not allow duplication of test code.</span><br><span class="line">        Make sure all top level files like main, index, app etc are included if needed.</span><br><span class="line">        Make sure to have proper test files are envisaged.</span><br><span class="line">        It is also must to think about each reference file as needed, like an addition definition in one file and </span><br><span class="line">        Its reference in other file where it is being called and also in corresponding test files.</span><br><span class="line">        Now based on these understandings create project structure with its solution file structure tree, solution files&#x27; dependency tree and solution deployment script tree of the project.</span><br><span class="line">        In both project structure and dependency tree, filename are a must, if they are available</span><br><span class="line">        Expectation here is to output file names and their oneliner description.</span><br><span class="line">        Expectation also contains each files dependent filenames for each coding and testing files.</span><br><span class="line">        Make sure that the project tree structure hold all the necessary folder structures and files in each.  </span><br><span class="line">        Make sure that the dependency tree structure hold all the necessary file name that are to be generated with its dependency files in the solution.</span><br><span class="line">        Make sure that there are relevant test file names</span><br><span class="line">        Make sure that there are only files to be generated in both trees.</span><br><span class="line">        Make sure that only filename will have &quot;.&quot; in the text here.</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">def extract_filenames_prompt(project_structure):</span><br><span class="line">    return f&quot;extract only file names to be generated from: &#123;project_structure&#125;&quot;</span><br><span class="line"></span><br><span class="line">def generate_file_content_prompt(user_stories, project_structure, filenames, taskcount):</span><br><span class="line">    return f&quot;&quot;&quot;</span><br><span class="line">    Understand the context &#x27;&#123;user_stories&#125;&#x27; as a whole.</span><br><span class="line">    Understand the project structure  &#123;project_structure&#125;.</span><br><span class="line">    Then think about no details but just write file content for &#123;filenames[taskcount]&#125;.</span><br><span class="line">    Refer dependency files in the project structure.</span><br><span class="line">    Write bug free well-formatted file.</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">def generate_installation_scripts_prompt(features, system):</span><br><span class="line">    return f&quot;&quot;&quot;Based on the features \&quot;&#123;features&#125;\&quot; and system \&quot;&#123;system&#125;\&quot;, generate detailed installation scripts. </span><br><span class="line">           Include environment setup, dependency management, and any necessary system configurations.&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">def generate_deployment_scripts_prompt(solution_architecture, system):</span><br><span class="line">    return f&quot;&quot;&quot;Considering the solution architecture \&quot;&#123;solution_architecture&#125;\&quot; and system \&quot;&#123;system&#125;\&quot;,</span><br><span class="line">           generate deployment scripts. Focus on automating the deployment process, including server configurations,</span><br><span class="line">           application deployment, and post-deployment checks.&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">def generate_test_files_prompt(user_stories, system):</span><br><span class="line">    return f&quot;&quot;&quot;For each user story in \&quot;&#123;user_stories&#125;\&quot; and the system \&quot;&#123;system&#125;\&quot;,</span><br><span class="line">           generate comprehensive test files. Ensure coverage for unit tests, integration tests, and any relevant</span><br><span class="line">           end-to-end tests. Focus on testing critical functionalities and edge cases.&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line"># Initialize colorama</span><br><span class="line">colorama.init(autoreset=True)</span><br><span class="line"></span><br><span class="line">roles= &quot;&quot;</span><br><span class="line"></span><br><span class="line">def create_directory(directory_path):</span><br><span class="line">    if not os.path.exists(directory_path):</span><br><span class="line">        os.makedirs(directory_path)</span><br><span class="line">        print(f&quot;Directory &#x27;&#123;directory_path&#125;&#x27; created successfully.&quot;)</span><br><span class="line">    else:</span><br><span class="line">        print(f&quot;Directory &#x27;&#123;directory_path&#125;&#x27; already exists.&quot;)</span><br><span class="line"></span><br><span class="line">def extract_content_between_backticks(text):</span><br><span class="line">        pattern = r&#x27;```(.*?)```&#x27;</span><br><span class="line">        return re.findall(pattern, text, re.DOTALL)</span><br><span class="line"></span><br><span class="line">def complete(prompt_function, *args):</span><br><span class="line">            prompt = prompt_function(*args)</span><br><span class="line">            response = completion(</span><br><span class="line">                model=&quot;ollama/mistral&quot;, </span><br><span class="line">                messages=[&#123;&quot;content&quot;: prompt, &quot;role&quot;: &quot;user&quot;&#125;], </span><br><span class="line">                api_base=&quot;http://localhost:11434&quot;,</span><br><span class="line">                stream=True</span><br><span class="line">            )</span><br><span class="line">            resp=&quot;&quot;</span><br><span class="line">            for chunk in response:</span><br><span class="line">                if chunk[&#x27;choices&#x27;][0][&#x27;delta&#x27;][&#x27;content&#x27;] is not None:</span><br><span class="line">                    resp = resp + chunk[&#x27;choices&#x27;][0][&#x27;delta&#x27;][&#x27;content&#x27;]</span><br><span class="line">                    print(Fore.GREEN + chunk[&#x27;choices&#x27;][0][&#x27;delta&#x27;][&#x27;content&#x27;], end=&quot;&quot;)</span><br><span class="line">            resp=resp+&#x27;\n&#x27;</span><br><span class="line">            return resp</span><br><span class="line"></span><br><span class="line">pattern = r&#x27;(\b\w+\.\w+\b)&#x27;</span><br><span class="line"></span><br><span class="line">def extract_filenames(title):</span><br><span class="line">    filenames = re.findall(pattern, title)</span><br><span class="line">    return filenames</span><br><span class="line"></span><br><span class="line">def create_code():</span><br><span class="line">    user_input = &quot;&quot;</span><br><span class="line">    resp = &quot;&lt;&lt;done&gt;&gt;&quot;</span><br><span class="line">    taskcount = -1</span><br><span class="line">    filenames = []</span><br><span class="line">    text = []</span><br><span class="line">    output_log = []  # List to collect all output strings</span><br><span class="line"></span><br><span class="line">    while taskcount &lt; len(filenames):</span><br><span class="line">        input_lines = []</span><br><span class="line">        if &quot;&lt;&lt;done&gt;&gt;&quot; in resp.strip().lower():</span><br><span class="line">            prompt = Fore.YELLOW + &quot;Describe the problem for which coding to be done:&quot;</span><br><span class="line">            print(prompt)</span><br><span class="line">            output_log.append(prompt)  # Collect prompt for output log</span><br><span class="line">            while True:</span><br><span class="line">                line = input()</span><br><span class="line">                if line == &quot;exit&quot;:</span><br><span class="line">                    exit_message = Fore.RED + &quot;Exiting chat.&quot;</span><br><span class="line">                    print(exit_message)</span><br><span class="line">                    output_log.append(&quot;Exiting chat.&quot;)  # Collect exit message without color codes</span><br><span class="line">                    return</span><br><span class="line">                if line == &quot;&quot;:</span><br><span class="line">                    break</span><br><span class="line">                input_lines.append(line)</span><br><span class="line">            user_input = &quot;&quot;.join(input_lines)</span><br><span class="line">            taskcount = 0</span><br><span class="line">            system = complete(generate_context_prompt, user_input)</span><br><span class="line">            features = complete(generate_features_prompt, system)</span><br><span class="line">            user_stories = complete(generate_user_stories_prompt, features, system)</span><br><span class="line">            solution_architecture = complete(generate_solution_architecture_prompt, user_stories, system)</span><br><span class="line">            project_structure = complete(generate_project_structure_prompt, solution_architecture, user_stories, system)</span><br><span class="line">            </span><br><span class="line">            # Generate Installation Scripts</span><br><span class="line">            installation_scripts = complete(generate_installation_scripts_prompt, features, system)</span><br><span class="line">            output_log.append(installation_scripts)  # Collect installation scripts</span><br><span class="line"></span><br><span class="line">            # Generate Deployment Scripts</span><br><span class="line">            deployment_scripts = complete(generate_deployment_scripts_prompt, solution_architecture, system)</span><br><span class="line">            output_log.append(deployment_scripts)  # Collect deployment scripts</span><br><span class="line">            </span><br><span class="line">            # Generate Test Files</span><br><span class="line">            test_files = complete(generate_test_files_prompt, user_stories, system)</span><br><span class="line">            output_log.append(test_files)  # Collect test files</span><br><span class="line"></span><br><span class="line">            filenames_response = complete(extract_filenames_prompt, project_structure)</span><br><span class="line">            filenames = extract_filenames(filenames_response)</span><br><span class="line">            output_log.extend([system, features, user_stories, solution_architecture, project_structure, filenames_response])  # Collect all outputs</span><br><span class="line"></span><br><span class="line">        for filename in filenames:</span><br><span class="line">            prompt = f&quot;\n-------------------------------------------------------\n------------------&#123;filename&#125;----------------\n-------------------------------------------------------\n&quot;</span><br><span class="line">            print(prompt)</span><br><span class="line">            output_log.append(prompt)  # Collect file processing prompt</span><br><span class="line">            resp = complete(generate_file_content_prompt, user_stories, project_structure, filenames, taskcount)</span><br><span class="line">            text.append(resp)</span><br><span class="line">            output_log.append(resp)  # Collect file content</span><br><span class="line">            taskcount += 1</span><br><span class="line"></span><br><span class="line">    out_dir = &quot;generated_output&quot;</span><br><span class="line">    create_directory(out_dir)</span><br><span class="line">    for i, filename in enumerate(filenames):</span><br><span class="line">        with open(f&quot;&#123;out_dir&#125;/&#123;filename&#125;&quot;, &quot;w&quot;) as file:</span><br><span class="line">            extracted_content = extract_content_between_backticks(text[i])</span><br><span class="line">            if extracted_content:</span><br><span class="line">                file_content = extracted_content[0]</span><br><span class="line">                file.write(file_content)</span><br><span class="line">            else:</span><br><span class="line">                error_message = f&quot;No content extracted for &#123;filename&#125;&quot;</span><br><span class="line">                print(error_message)</span><br><span class="line">                output_log.append(error_message)  # Collect error message</span><br><span class="line"></span><br><span class="line">    # Write the collected outputs and logs to a README file</span><br><span class="line">    with open(f&quot;&#123;out_dir&#125;/README.md&quot;, &quot;w&quot;) as readme_file:</span><br><span class="line">        readme_file.write(&quot;\n&quot;.join(output_log))</span><br><span class="line"></span><br><span class="line"># Note: Ensure the complete function is defined to work with the new prompt function names and logic.</span><br><span class="line"></span><br><span class="line">create_code()</span><br></pre></td></tr></table></figure>
+
+<p>该脚本旨在自动化软件项目的脚手架搭建，利用 Ollama 进行动态代码生成和 Colorama 来增强终端输出的可视化效果。它系统地涵盖了开发生命周期的各个阶段，从收集初始上下文到构建整个项目并生成诸如代码文件、安装脚本、部署脚本和测试文件等必要组件。</p>
+<ul>
+<li><p>初始化：在开始时调用 colorama.init(autoreset&#x3D;True) 确保终端中的每个打印语句在视觉上都经过样式处理，而不会将样式传递给后续打印，使输出清晰易读。</p>
+</li>
+<li><p>动态提示: 重命名和更具描述性的定义功能（例如， generate_context_prompt ， generate_features_prompt 等）用于构建特定上下文的提示。这些提示被发送到 Ollama 代码生成模型，指导其根据当前开发阶段生成项目的相关部分。这种动态提示机制对于定制生成的代码和文档以满足项目特定需求和结构至关重要。</p>
+</li>
+<li><p>目录和文件管理: create_directory 函数确保为项目建立必要的目录结构，有效地组织生成的代码、脚本和文件。 extract_filenames 函数在识别和管理生成内容中的文件名方面发挥关键作用，有助于系统化组织项目的组件。</p>
+</li>
+<li><p>complete 函数: 作为脚本的核心，此函数通过向 Ollama 发送动态构建的提示并将模型的响应集成到项目中来与 Ollama 进行接口。通过这个过程，该函数协调生成项目的架构，包括代码库、安装要求、部署程序和测试框架。</p>
+</li>
+</ul>
+<p>python multiple_code_generator.py</p>
+<p>运行脚本会启动一个引导过程,开发人员被提示描述问题</p>
+<p>输入了以下内容：</p>
+<p>Write a react based chatboat with flask based backend to communicate to LLMs with openai API framework. I want typescript to be used in react and also flask should have python typings.</p>
+<p>它生成以下内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">Project Structure:</span><br><span class="line">1. frontend/</span><br><span class="line">   - node_modules/</span><br><span class="line">   - public/</span><br><span class="line">      - index.html</span><br><span class="line">   - src/</span><br><span class="line">      - components/</span><br><span class="line">         - ChatInterface.tsx</span><br><span class="line">         - MessageDisplay.tsx</span><br><span class="line">         - UserInput.tsx</span><br><span class="line">      - hooks/</span><br><span class="line">         - useChatBotApi.ts</span><br><span class="line">      - App.tsx</span><br><span class="line">      - index.tsx</span><br><span class="line">      - setupTests.ts</span><br><span class="line">2. backend/</span><br><span class="line">   - app.py</span><br><span class="line">   - venv/</span><br><span class="line">3. .gitignore</span><br><span class="line">4. package.json</span><br><span class="line">5. tsconfig.json</span><br><span class="line">6. README.md</span><br></pre></td></tr></table></figure>
+
+<p>Readme.md 显示整个执行过程的log</p>
+<p>以后可以将此脚本集成到开发工作流程中，根据项目需求进行定制，并考虑扩展其功能，如与版本控制系统或自动化测试框架集成。</p>
+<p>结束。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1671,103 +1855,6 @@ INFERENCE(env, policy, device)
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/03/12/ollama/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Howard Huang">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/03/12/ollama/" class="post-title-link" itemprop="url">ollama使用方法</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2024-03-12 11:49:50 / 修改时间：15:41:44" itemprop="dateCreated datePublished" datetime="2024-03-12T11:49:50+08:00">2024-03-12</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>591</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Ollama 终于可以在 Windows 上运行了</p>
-<h2 id="下载-Ollma-安装文件"><a href="#下载-Ollma-安装文件" class="headerlink" title="下载 Ollma 安装文件"></a>下载 Ollma 安装文件</h2><p>访问 <a target="_blank" rel="noopener" href="https://ollama.com/download%EF%BC%8C%E9%80%89%E6%8B%A9">https://ollama.com/download，选择</a> Windows，单击 “Download for Windows (Preview)” 进行下载。</p>
-<h2 id="安装-Ollama"><a href="#安装-Ollama" class="headerlink" title="安装 Ollama"></a>安装 Ollama</h2><p>双击下载的 “OllamaSetup.exe”，直接安装就可以了。安装完以后，ollama app后台进程会自动运行。</p>
-<h2 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h2><p>Ollama 下载的模型模型保存在 C 盘，如果想更改默认路径的话，可以通过设置 OLLAMA_MODELS 进行修改。</p>
-<p>OLLAMA_MODELS：F:\OllamaCache</p>
-<p>Ollama 默认提供 OpenAI 的兼容 API，默认端口是 11434，默认只可以通过 localhost 进行访问，如果想公开访问的话，可以通过设置 OLLAMA_HOST 进行修改。</p>
-<p>OLLAMA_HOST：0.0.0.0</p>
-<p>修改环境变量后，需要去任务管理器杀掉ollama的各个进程或者重启电脑，然后重新打开cmd，set看下环境变量，再重新启动ollama</p>
-<h2 id="使用-Ollama"><a href="#使用-Ollama" class="headerlink" title="使用 Ollama"></a>使用 Ollama</h2><p>访问 <a target="_blank" rel="noopener" href="https://ollama.com/library">https://ollama.com/library</a></p>
-<p>搜索你要使用的模型，主流的模型，比如 llama2、qwen1.5、mixtral 等，Ollama都支持。</p>
-<p>下面以允许 qwen 为例，我们要运行 7b 的模型，</p>
-<p>ollama App在后台已经跑起来的情况下，打开cmd，输入</p>
-<p><code>ollama run qwen:7b</code></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1791,13 +1878,13 @@ INFERENCE(env, policy, device)
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">273k</span>
+    <span title="站点总字数">286k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">8:17</span>
+    <span title="站点阅读时长">8:39</span>
   </span>
 </div>
 <div class="busuanzi-count">
