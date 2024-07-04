@@ -119,7 +119,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-count">39</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -137,6 +137,729 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/07/04/knowledge-transfer-tutorial/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/07/04/knowledge-transfer-tutorial/" class="post-title-link" itemprop="url">英文知识搬运教程</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-07-04 10:21:12 / 修改时间：11:11:22" itemprop="dateCreated datePublished" datetime="2024-07-04T10:21:12+08:00">2024-07-04</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>之前搬运很多medium的文章，搬运过程很耗时间，首先要把网页文章翻译成中文，然后一段段的校对，拷贝黏贴到markdown文件中，图片文件要下载存储更名到本地，更新markdown文件链接。最后再转换成html文件发布到github io博客。经常要2~3个小时才能完成一篇文章的搬运。</p>
+<p>前两天发现思源笔记可以直接拷贝粘贴翻译好的文章，生成笔记，作为平时的网络摘抄笔记。评估了一下思源的会员，最后还是安装思源笔记docker server版本，免费开源。会员有图传和同步功能，对于程序员来说，可以克服这些问题。</p>
+<p>言归正传，对于经典的文章，想要发布到博客的，可以用思源笔记把文章导出到markdown文件，省掉编辑markdown的时间。不过，markdown里面的图片链接都是远程的，我们当然不希望这些图片不受控制，所以还需要把图片下载到本地，然后更新markdown文件中的链接。思源笔记有图床，不过要收费，而且一样不受控。</p>
+<p>所以，还是自己动手吧，写个python脚本，自动下载markdown的远程链接文件，把图片下载到本地，更新链接，这样就可以省下很多时间，而且图片也能更好地管理。</p>
+<p>pip install requests python-magic</p>
+<p>对于windows系统，还需要 pip install python-magic-bin</p>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"><span class="keyword">import</span> magic</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">download_images_and_update_markdown</span>(<span class="params">markdown_file, output_directory</span>):</span><br><span class="line">    <span class="comment"># 确保输出目录存在</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(output_directory):</span><br><span class="line">        os.makedirs(output_directory)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 将输出目录转换为绝对路径</span></span><br><span class="line">    output_directory = os.path.abspath(output_directory)</span><br><span class="line">    markdown_file = os.path.abspath(markdown_file)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 读取Markdown文件</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(markdown_file, <span class="string">&#x27;r&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> file:</span><br><span class="line">        content = file.read()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 使用正则表达式匹配图片URL</span></span><br><span class="line">    urls = re.findall(<span class="string">r&#x27;!\[.*?\]\((https?://[^\s]+)\)&#x27;</span>, content)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 存储远程到本地文件的映射</span></span><br><span class="line">    url_to_local = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    headers = &#123;</span><br><span class="line">        <span class="string">&#x27;User-Agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> index, url <span class="keyword">in</span> <span class="built_in">enumerate</span>(urls, start=<span class="number">1</span>):</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="comment"># 临时文件路径</span></span><br><span class="line">            temp_filename = os.path.join(output_directory, <span class="string">f&quot;temp_<span class="subst">&#123;index&#125;</span>&quot;</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 下载文件</span></span><br><span class="line">            response = requests.get(url, headers=headers)</span><br><span class="line">            response.raise_for_status()  <span class="comment"># 检查请求是否成功</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 保存临时文件</span></span><br><span class="line">            <span class="keyword">with</span> <span class="built_in">open</span>(temp_filename, <span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">                f.write(response.content)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 使用magic库检测文件类型</span></span><br><span class="line">            mime = magic.Magic(mime=<span class="literal">True</span>)</span><br><span class="line">            mime_type = mime.from_file(temp_filename)</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 根据mime类型确定扩展名</span></span><br><span class="line">            <span class="keyword">if</span> mime_type == <span class="string">&#x27;image/jpeg&#x27;</span>:</span><br><span class="line">                extension = <span class="string">&#x27;.jpg&#x27;</span></span><br><span class="line">            <span class="keyword">elif</span> mime_type == <span class="string">&#x27;image/png&#x27;</span>:</span><br><span class="line">                extension = <span class="string">&#x27;.png&#x27;</span></span><br><span class="line">            <span class="keyword">elif</span> mime_type == <span class="string">&#x27;image/gif&#x27;</span>:</span><br><span class="line">                extension = <span class="string">&#x27;.gif&#x27;</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                extension = <span class="string">&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> extension:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f&quot;Failed to determine the file type of <span class="subst">&#123;url&#125;</span>&quot;</span>)</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 最终文件名</span></span><br><span class="line">            filename = os.path.join(output_directory, <span class="string">f&quot;<span class="subst">&#123;index:02&#125;</span><span class="subst">&#123;extension&#125;</span>&quot;</span>)</span><br><span class="line">            os.rename(temp_filename, filename)</span><br><span class="line"></span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;Downloaded: <span class="subst">&#123;url&#125;</span> to <span class="subst">&#123;filename&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 计算相对于Markdown文件的相对路径并替换反斜杠为正斜杠</span></span><br><span class="line">            relative_path = os.path.relpath(filename, os.path.dirname(markdown_file)).replace(<span class="string">&#x27;\\&#x27;</span>, <span class="string">&#x27;/&#x27;</span>)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 保存远程到本地文件的映射</span></span><br><span class="line">            url_to_local[url] = relative_path</span><br><span class="line">        <span class="keyword">except</span> requests.RequestException <span class="keyword">as</span> e:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;Failed to download <span class="subst">&#123;url&#125;</span>: <span class="subst">&#123;e&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 更新Markdown文件内容</span></span><br><span class="line">    <span class="keyword">for</span> url, local_path <span class="keyword">in</span> url_to_local.items():</span><br><span class="line">        content = content.replace(url, local_path)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 将更新后的内容写回Markdown文件</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(markdown_file, <span class="string">&#x27;w&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> file:</span><br><span class="line">        file.write(content)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    parser = argparse.ArgumentParser(description=<span class="string">&#x27;Download images from a markdown file and update the links.&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;markdown_file&#x27;</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, <span class="built_in">help</span>=<span class="string">&#x27;The path to the markdown file.&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;output_directory&#x27;</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, <span class="built_in">help</span>=<span class="string">&#x27;The path to the output directory.&#x27;</span>)</span><br><span class="line">    </span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    </span><br><span class="line">    download_images_and_update_markdown(args.markdown_file, args.output_directory)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/07/03/serveless-ai/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/07/03/serveless-ai/" class="post-title-link" itemprop="url">使用 Google Cloud 预训练 AI 构建无服务器图像文本提取器和翻译器</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-07-03 17:52:25" itemprop="dateCreated datePublished" datetime="2024-07-03T17:52:25+08:00">2024-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-07-04 11:16:21" itemprop="dateModified" datetime="2024-07-04T11:16:21+08:00">2024-07-04</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>29k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>53 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p><img src="/../asset_serveless_ai/01.jpg"></p>
+<p> 图像-文本-翻译器</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>一篇关于Google Cloud端到端开发体验的博客。</p>
+<p><img src="/../asset_serveless_ai/02.png"></p>
+<p>在这篇博客中，我将讨论如何构建一个无服务器 AI 应用程序，该应用程序获取用户上传的图像，提取它找到的任何文本，并在必要时对其进行翻译。我将利用：</p>
+<ul>
+<li>Cloud Run 以 Python Flask 应用程序的形式托管 UI。</li>
+<li>Cloud Functions，用于托管后端逻辑以响应用户上传图像。</li>
+<li><strong>Google 预构建的图像和翻译 AI 机器学习 API。</strong></li>
+<li>使用 Visual Studio Code 进行本地开发，以及 functions-framework 用于本地 Cloud Functions 开发的 Cloud Code，以及用于本地 Cloud Run 开发的 Cloud Code。</li>
+</ul>
+<h1 id="AI-和-AI-产品概览"><a href="#AI-和-AI-产品概览" class="headerlink" title="AI 和 AI 产品概览"></a>AI 和 AI 产品概览</h1><h2 id="人工智能"><a href="#人工智能" class="headerlink" title="人工智能"></a>人工智能</h2><p>人工智能是一个广义的术语，用于描述利用机器自动化来执行通常需要人类智能的任务。例如语音识别、视觉感知、语言翻译、决策。</p>
+<p><img src="/../asset_serveless_ai/03.gif"></p>
+<h2 id="机器学习"><a href="#机器学习" class="headerlink" title="机器学习"></a>机器学习</h2><p>人工智能的一个特定子领域，与教机器识别数据模式有关，并且能够在没有明确编码解决方案的情况下进行预测和解决问题。</p>
+<h2 id="生成式人工智能（Gen-AI）"><a href="#生成式人工智能（Gen-AI）" class="headerlink" title="生成式人工智能（Gen AI）"></a>生成式人工智能（Gen AI）</h2><p>AI 的一个子类，能够生成与训练数据相似但不相同的新数据。Gen AI 依赖于基础模型，例如大型语言模型 （）、LLMs生成图像模型和多模态模型。多模态模型是一种能够处理多种类型的输入数据（例如文本、图像和视频）并生成多种类型内容的模型。</p>
+<p><img src="/../asset_serveless_ai/04.png"></p>
+<p>多模态 Gen AI — 例如 Google Gemini Pro</p>
+<p>我的解决方案不会使用 Gen AI。但我在这里提到它，因为 Gen AI 非常普遍，我想确保你了解这些模型与我在解决方案中使用的预测模型有何不同。</p>
+<h2 id="Google-的预训练机器学习-API"><a href="#Google-的预训练机器学习-API" class="headerlink" title="Google 的预训练机器学习 API"></a>Google 的预训练机器学习 API</h2><p>这些是 Google 预先构建和训练的 ML 模型，用于执行特定任务。它们被归类为预测模型，而不是生成模型。示例包括：</p>
+<ul>
+<li>Google Cloud Vision API — 用于分类、面部识别和文本检测等任务。</li>
+<li>Google Cloud Natural Language API— 用于理解文本背后的含义。这包括识别文本的重要元素，以及情感分析。</li>
+<li>Google Cloud Translation API — 用于将一种语言翻译成另一种语言。</li>
+<li>Google Cloud Video — 用于视频分析和注释。</li>
+</ul>
+<h1 id="申请动机"><a href="#申请动机" class="headerlink" title="申请动机"></a>申请动机</h1><p>我学习乌克兰语已经有一段时间了,乌克兰有一种模因。有时我会理解这个模因。通常我不会。</p>
+<p><img src="/../asset_serveless_ai/11.png"></p>
+<p> 乌克兰模因</p>
+<p>所以我想……“我想要一个应用程序，我可以上传一个模因（或任何图像），从中提取文本，并将该文本翻译成我的母语。”</p>
+<p>当然，还有其他方法可以做到这一点。但我认为这是一个很好的用例，可以在 Google Cloud 中从头开始构建一个新的无服务器应用程序。</p>
+<h1 id="应用程序架构"><a href="#应用程序架构" class="headerlink" title="应用程序架构"></a>应用程序架构</h1><p>这是一个非常简单的应用程序架构，托管在 Google Cloud 无服务器服务上：</p>
+<p><img src="/../asset_serveless_ai/06.png"></p>
+<p>图像-文本-翻译器应用程序的体系结构</p>
+<h2 id="The-Webapp-UI-—-Cloud-Run"><a href="#The-Webapp-UI-—-Cloud-Run" class="headerlink" title="The Webapp UI — Cloud Run"></a>The Webapp UI — Cloud Run</h2><p>在这里，我在 Google Cloud Run 上将 Flask Web 应用程序作为容器运行。Web 应用程序执行以下几项操作：</p>
+<ol>
+<li>它呈现包含用于捕获用户输入（例如语言和图像上传）的表单的前端页面。</li>
+<li>它处理来自用户的请求，捕获图像，并将其发送到 Cloud Function 后端。</li>
+</ol>
+<p>我之所以选择 Cloud Run，是因为：</p>
+<ul>
+<li>它提供了一种托管和运行容器化应用程序的无服务器方式。（即我们的 Python Flask Web 应用程序。</li>
+<li>它非常适合托管简单的无状态 Web 应用程序，例如这个应用程序。</li>
+<li>它会自动扩展，并在没有需求时缩减到 0 个实例。</li>
+</ul>
+<h2 id="后端-—-云函数"><a href="#后端-—-云函数" class="headerlink" title="后端 — 云函数"></a>后端 — 云函数</h2><p>Cloud Function 从用户处接收图像（通过 Web 应用程序界面），然后调用相应的 Google Cloud API，以便从图像中提取文本并进行翻译。</p>
+<p>我之所以选择 Cloud Functions，是因为：</p>
+<ul>
+<li>它非常适合执行短期处理，以响应事件。因此，非常适合运行我们的提取和翻译任务，以响应用户上传的图像。</li>
+<li>它会自动缩放，并在没有需求时缩减到 0。</li>
+<li>我们可以将图像处理与实际用户前端解耦。因此，如果我们想使用不同的前端，我们可以轻松地做到这一点，而无需更改云函数中的代码。</li>
+</ul>
+<h2 id="文本提取和翻译"><a href="#文本提取和翻译" class="headerlink" title="文本提取和翻译"></a>文本提取和翻译</h2><p>我正在使用 Google 预构建的 Vision API 和 Translation API。但是，为什么不使用生成式AI模型，例如Gemini Pro Vision呢？</p>
+<ul>
+<li>视觉和翻译 API 是专门为我想要执行的任务而构建的。</li>
+<li>相反，Gemini Pro Gen AI 多模态基础模型可以响应自然语言提示，实现相同的结果。但是，我们在这里不需要自然语言交互。为什么？因为我们确切地知道我们希望 API 在响应图像上传时执行什么操作。</li>
+<li>尽管 Gemino Pro Vision 作为多模态基础模型具有更多的多功能性，但这种功能伴随着更高的价格标签。Vision API 每月允许 1000 次免费调用;翻译 API 每月免费提供前五十万个字符的翻译。</li>
+</ul>
+<h1 id="我的开发环境"><a href="#我的开发环境" class="headerlink" title="我的开发环境"></a>我的开发环境</h1><h2 id="WSL"><a href="#WSL" class="headerlink" title="WSL"></a>WSL</h2><p>我正在运行 Windows，其中包含适用于 Linux 的 Windows 子系统 （WSL）。对于那些不熟悉 WSL 的人来说，它是一个开箱即用的环境（包含在 Windows 10 及更高版本中），允许直接在 Windows 中运行完整的 Linux 环境。我碰巧在使用 Ubuntu。</p>
+<p>在 WSL 中工作的好处是我可以用 bash 编写任何必要的脚本，这意味着我的代码将更具可移植性。例如，我可以在自己的环境中运行与在 Google Cloud Shell 中相同的脚本。</p>
+<h2 id="Visual-Studio-代码"><a href="#Visual-Studio-代码" class="headerlink" title="Visual Studio 代码"></a>Visual Studio 代码</h2><p>VS Code 是我选择的代码编辑器。它是免费和开源的。它在 Windows、Linux 和 Mac 上运行，并具有许多有用的插件，例如 Git 集成和 Google Cloud Code：一组 AI 辅助插件（包括 Gemini Code Assist），用于促进使用 Google Cloud 服务的本地开发。</p>
+<h1 id="开发项目结构"><a href="#开发项目结构" class="headerlink" title="开发项目结构"></a>开发项目结构</h1><p>如果你想查看 git 存储库，你可以在这里找到它。</p>
+<p>整体结构如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">└── image-text-translator</span><br><span class="line">    ├── docs/                   - Documentation for the repo</span><br><span class="line">    |</span><br><span class="line">    ├── infra-tf/               - Terraform for installing infra</span><br><span class="line">    |</span><br><span class="line">    ├── scripts/                - For environment setup and helper scripts</span><br><span class="line">    |   └── setup.sh            - Setup helper script</span><br><span class="line">    |</span><br><span class="line">    ├── app/                    - The Application</span><br><span class="line">    │   ├── ui_cr/                - Browser UI (Cloud Run)</span><br><span class="line">    │   │   ├── static/             - Static content for frontend</span><br><span class="line">    |   |   ├── templates/          - HTML templates for frontend</span><br><span class="line">    |   |   ├── app.py              - The Flask application</span><br><span class="line">    |   |   ├── requirements.txt    - The UI Python requirements</span><br><span class="line">    |   |   ├── Dockerfile             - Dockerfile to build the Flask container</span><br><span class="line">    |   |   └── .dockerignore          - Files to ignore in Dockerfile</span><br><span class="line">    |   |</span><br><span class="line">    │   └── backend_gcf/          - Backend (Cloud Function)</span><br><span class="line">    │       ├── main.py             - The backend CF application</span><br><span class="line">    │       └── requirements.txt    - The backend CF Python requirements</span><br><span class="line">    |</span><br><span class="line">    ├── testing/</span><br><span class="line">    │   └── images/</span><br><span class="line">    |</span><br><span class="line">    ├── requirements.txt          - Python requirements for project local dev</span><br><span class="line">    └── README.md</span><br></pre></td></tr></table></figure>
+
+<h1 id="一次性-Google-项目设置和权限"><a href="#一次性-Google-项目设置和权限" class="headerlink" title="一次性 Google 项目设置和权限"></a>一次性 Google 项目设置和权限</h1><h2 id="创建-Google-Cloud-项目"><a href="#创建-Google-Cloud-项目" class="headerlink" title="创建 Google Cloud 项目"></a>创建 Google Cloud 项目</h2><p>为您的应用创建 Google Cloud 项目。这是我的：</p>
+<p><img src="/../asset_serveless_ai/07.png"></p>
+<p>创建您的 Google Cloud 项目</p>
+<p>从具有足够权限的帐户（例如 或 Project Admin Org Admin .</p>
+<h2 id="启用-API"><a href="#启用-API" class="headerlink" title="启用 API"></a>启用 API</h2><p>最终，我们将对这种配置进行 Terraform。但最初，这些是您需要启用的 API：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"># Authenticate to Google Cloud</span><br><span class="line">gcloud auth list</span><br><span class="line"></span><br><span class="line"># Check we have the correct project selected</span><br><span class="line">export PROJECT_ID=&lt;enter your project ID&gt;</span><br><span class="line">gcloud config set project $PROJECT_ID</span><br><span class="line"></span><br><span class="line"># Enable Cloud Build API</span><br><span class="line">gcloud services enable cloudbuild.googleapis.com</span><br><span class="line"></span><br><span class="line"># Enable Cloud Storage API</span><br><span class="line">gcloud services enable storage-api.googleapis.com</span><br><span class="line"></span><br><span class="line"># Enable Artifact Registry API</span><br><span class="line">gcloud services enable artifactregistry.googleapis.com</span><br><span class="line"></span><br><span class="line"># Enable Eventarc API</span><br><span class="line">gcloud services enable eventarc.googleapis.com</span><br><span class="line"></span><br><span class="line"># Enable Cloud Run Admin API</span><br><span class="line">gcloud services enable run.googleapis.com</span><br><span class="line"></span><br><span class="line"># Enable Cloud Logging API</span><br><span class="line">gcloud services enable logging.googleapis.com</span><br><span class="line"></span><br><span class="line"># Enable Cloud Pub/Sub API</span><br><span class="line">gcloud services enable pubsub.googleapis.com</span><br><span class="line"></span><br><span class="line"># Enable Cloud Functions API</span><br><span class="line">gcloud services enable cloudfunctions.googleapis.com</span><br><span class="line"></span><br><span class="line"># Enable Cloud Translation API</span><br><span class="line">gcloud services enable translate.googleapis.com</span><br><span class="line"></span><br><span class="line"># Enable Cloud Vision API</span><br><span class="line">gcloud services enable vision.googleapis.com</span><br><span class="line"></span><br><span class="line"># Enable Service Account Credentials API</span><br><span class="line">gcloud services enable iamcredentials.googleapis.com</span><br></pre></td></tr></table></figure>
+
+<h2 id="服务帐户和角色"><a href="#服务帐户和角色" class="headerlink" title="服务帐户和角色"></a>服务帐户和角色</h2><p>服务帐户是管理应用程序（而不是最终用户）的身份验证和授权的标准方法。我们的 Cloud Run 应用程序需要向 Cloud Function 进行身份验证，而 Cloud Function 需要向 Cloud Cloud Vision 和 Translation API 进行身份验证。</p>
+<p>因此，让我们创建一个服务帐户：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># Make sure your PROJECT_ID variable is set before doing this!</span><br><span class="line">export SVC_ACCOUNT=image-text-translator-sa</span><br><span class="line">export SVC_ACCOUNT_EMAIL=$SVC_ACCOUNT@$PROJECT_ID.iam.gserviceaccount.com</span><br><span class="line"></span><br><span class="line"># Attaching a user-managed service account is the preferred way to provide credentials to ADC for production code running on Google Cloud.</span><br><span class="line">gcloud iam service-accounts create $SVC_ACCOUNT</span><br></pre></td></tr></table></figure>
+
+<p>现在，我们将多个角色绑定到我们的服务帐户：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"># Grant roles to the service account</span><br><span class="line">gcloud projects add-iam-policy-binding $PROJECT_ID \</span><br><span class="line">  --member=&quot;serviceAccount:$SVC_ACCOUNT_EMAIL&quot; \</span><br><span class="line">  --role=roles/run.admin</span><br><span class="line"></span><br><span class="line">gcloud projects add-iam-policy-binding $PROJECT_ID \</span><br><span class="line">  --member=&quot;serviceAccount:$SVC_ACCOUNT_EMAIL&quot; \</span><br><span class="line">  --role=roles/run.invoker</span><br><span class="line"></span><br><span class="line">gcloud projects add-iam-policy-binding $PROJECT_ID \</span><br><span class="line">  --member=&quot;serviceAccount:$SVC_ACCOUNT_EMAIL&quot; \</span><br><span class="line">  --role=roles/cloudfunctions.admin</span><br><span class="line"></span><br><span class="line">gcloud projects add-iam-policy-binding $PROJECT_ID \</span><br><span class="line">  --member=&quot;serviceAccount:$SVC_ACCOUNT_EMAIL&quot; \</span><br><span class="line">  --role=roles/cloudfunctions.invoker</span><br><span class="line"></span><br><span class="line">gcloud projects add-iam-policy-binding $PROJECT_ID \</span><br><span class="line">  --member=&quot;serviceAccount:$SVC_ACCOUNT_EMAIL&quot; \</span><br><span class="line">  --role=&quot;roles/cloudtranslate.user&quot;</span><br><span class="line"></span><br><span class="line"># Grant the required role to the principal that will attach the service account to other resources.</span><br><span class="line">gcloud iam service-accounts add-iam-policy-binding $SVC_ACCOUNT_EMAIL \</span><br><span class="line">  --member=&quot;group:gcp-devops@my-org.com&quot; \</span><br><span class="line">  --role=roles/iam.serviceAccountUser</span><br><span class="line"></span><br><span class="line"># Allow service account impersonation</span><br><span class="line">gcloud iam service-accounts add-iam-policy-binding $SVC_ACCOUNT_EMAIL \</span><br><span class="line">  --member=&quot;group:gcp-devops@my-org.com&quot; \</span><br><span class="line">  --role=roles/iam.serviceAccountTokenCreator</span><br><span class="line"></span><br><span class="line"># Ensure your account has access to deploy to Cloud Functions and Cloud Run</span><br><span class="line">gcloud projects add-iam-policy-binding $PROJECT_ID \</span><br><span class="line">   --member=&quot;group:gcp-devops@my-org.com&quot; \</span><br><span class="line">   --role roles/run.admin</span><br></pre></td></tr></table></figure>
+
+<h1 id="本地开发环境设置"><a href="#本地开发环境设置" class="headerlink" title="本地开发环境设置"></a>本地开发环境设置</h1><p>（您需要在计划进行开发的任何计算机上执行这些步骤。</p>
+<p>打开终端。（我正在从 Windows 终端打开 Ubuntu Shell。如果您尚未这样做，则需要将 Google gcloud CLI 和支持工具安装到您的本地环境中：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># Install Google Cloud CLI in your local Linux environment.</span><br><span class="line"># See https://cloud.google.com/sdk/docs/install</span><br><span class="line"></span><br><span class="line"># Setup Python and pip in Gcloud CLI</span><br><span class="line"># See https://cloud.google.com/python/docs/setup</span><br><span class="line"></span><br><span class="line"># Install additional Google Cloud CLI packages for local dev</span><br><span class="line">sudo apt install google-cloud-cli-gke-gcloud-auth-plugin kubectl google-cloud-cli-skaffold google-cloud-cli-minikube</span><br></pre></td></tr></table></figure>
+
+<p>在这里（从现在开始），我们将使用我们的开发人员帐户进行身份验证，而不是组织管理员帐户。为什么？我遵循最小特权原则。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># Authenticate to Google Cloud</span><br><span class="line">gcloud auth login</span><br></pre></td></tr></table></figure>
+
+<p>身份验证时，单击显示的第一个链接。然后，系统会提示您提供密码。</p>
+<p><img src="/../asset_serveless_ai/08.png"></p>
+<p>向 Google Cloud 进行身份验证</p>
+<p>接下来，我们将设置应用程序项目文件夹并安装一些依赖项。如果您要遵循并从头开始构建应用程序，则接下来的步骤如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># This is where I keep my project</span><br><span class="line">cd ~/localdev/gcp/image-text-translator</span><br><span class="line"></span><br><span class="line"># Create a Python virtual env. For example...</span><br><span class="line">python3 -m venv .venv</span><br><span class="line"># And now ACTIVATE it</span><br><span class="line"></span><br><span class="line"># Add Python packages we need...</span><br><span class="line">python3 -m pip install Flask</span><br><span class="line">python3 -m pip install pillow # For image handling</span><br><span class="line">python3 -m pip install functions-framework</span><br><span class="line">python3 -m pip install google-cloud-storage google-cloud-translate google-cloud-vision google-auth</span><br><span class="line"></span><br><span class="line"># And create the requirements.txt file</span><br><span class="line">python3 -m pip freeze &gt; requirements.txt</span><br></pre></td></tr></table></figure>
+
+<p>或者，如果你想克隆我的 git 存储库：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/derailed-dash/image-text-translator.git</span><br><span class="line"></span><br><span class="line">cd image-text-translator</span><br><span class="line"></span><br><span class="line"># Create a Python virtual env. For example...</span><br><span class="line">python3 -m venv .venv</span><br><span class="line"># And now ACTIVATE it. E.g.</span><br><span class="line">source .venv/bin/activate</span><br><span class="line"></span><br><span class="line"># Install the Python dependencies now</span><br><span class="line">python3 -m pip install -r requirements.txt</span><br></pre></td></tr></table></figure>
+
+<h2 id="Git-设置"><a href="#Git-设置" class="headerlink" title="Git 设置"></a>Git 设置</h2><p>如果你从头开始构建所有内容（没有克隆我的存储库），你现在应该设置你的 Git 和 GitHub 环境。别忘了先创建 .gitignore .查看我的存储库以了解它应该是什么样子。然后按照下列步骤操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># Setup git in Cloud Shell, if you haven&#x27;t done so before</span><br><span class="line">git config --global user.email &quot;bob@wherever.com&quot;</span><br><span class="line">git config --global user.name &quot;Bob&quot;</span><br><span class="line">git config --global core.autocrlf input # really important if you&#x27;re using WSL!</span><br><span class="line"></span><br><span class="line"># Create local git repo.</span><br><span class="line"># Before proceeding, make sure you have created .gitignore file </span><br><span class="line"># to ignore .terraform dirs and local state, plans, etc.</span><br><span class="line">git init</span><br><span class="line">git add .</span><br><span class="line">git commit -m &quot;Initial commit&quot;</span><br><span class="line"></span><br><span class="line"># Let&#x27;s authenticate the GitHub command line tool</span><br><span class="line"># It is already installed on Cloud Shell</span><br><span class="line">gh auth login</span><br><span class="line"></span><br><span class="line"># Now let&#x27;s use gh cli to create a remote repo in GitHub.</span><br><span class="line"># You can make it private, if you prefer</span><br><span class="line">gh repo create image-text-translator --public --source=.</span><br><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure>
+
+<h2 id="运行-VS-Code"><a href="#运行-VS-Code" class="headerlink" title="运行 VS Code"></a>运行 VS Code</h2><p>让我们从项目文件夹中打开 VS Code：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># From /path/to/your/image-text-translator</span><br><span class="line">code .</span><br></pre></td></tr></table></figure>
+
+<p>VS Code 足够聪明，可以配置所需的任何必要的 WSL 插件。</p>
+<p><img src="/../asset_serveless_ai/09.png"></p>
+<p>VS Code 知道它在 WSL 环境中工作</p>
+<h2 id="安装应用程序默认凭据-（ADC）"><a href="#安装应用程序默认凭据-（ADC）" class="headerlink" title="安装应用程序默认凭据 （ADC）"></a>安装应用程序默认凭据 （ADC）</h2><p>ADC 是一种策略，它允许身份验证库根据当前环境自动查找凭据。这很有用，因为我们既可以在本地环境（使用 Cloud SDK）中利用 ADC，也可以在 Google Cloud 上的目标环境中利用 ADC。</p>
+<p>ADC 可以配置为使用我们的服务帐户凭据。有两种方法可以做到这一点：</p>
+<ol>
+<li>我们可以使用自己的用户身份模拟服务帐户。</li>
+<li>我们可以为我们的服务帐户创建一个私钥，并将 ADC 指向此密钥的位置。</li>
+</ol>
+<p>我最初尝试使用模拟：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcloud auth application-default login --impersonate-service-account $SVC_ACCOUNT_EMAIL</span><br></pre></td></tr></table></figure>
+
+<p>不幸的是，在对 Cloud Run 的 Cloud Function 调用进行身份验证时，我很难做到这一点。因此，我创建了一个服务帐户密钥，我们可以将 ADC 指向：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">gcloud auth application-default login</span><br><span class="line"></span><br><span class="line"># If these are not already set...</span><br><span class="line">export SVC_ACCOUNT=image-text-translator-sa</span><br><span class="line">export SVC_ACCOUNT_EMAIL=$SVC_ACCOUNT@$PROJECT_ID.iam.gserviceaccount.com</span><br><span class="line"></span><br><span class="line"># Create a service account key for local dev</span><br><span class="line">gcloud iam service-accounts keys create ~/.config/gcloud/$SVC_ACCOUNT.json \</span><br><span class="line">  --iam-account=$SVC_ACCOUNT_EMAIL</span><br><span class="line"></span><br><span class="line"># Configure the ADC environment variable</span><br><span class="line"># which is automatically detected by client libraries</span><br><span class="line">export GOOGLE_APPLICATION_CREDENTIALS=~/.config/gcloud/$SVC_ACCOUNT.json</span><br></pre></td></tr></table></figure>
+
+<p>我们实际上需要在每个会话中设置这个 GOOGLE_APPLICATION_CREDENTIALS 环境变量。这就把我们带到了…</p>
+<h1 id="每个会话的设置"><a href="#每个会话的设置" class="headerlink" title="每个会话的设置"></a>每个会话的设置</h1><p>您需要在每个新的终端会话中运行这些命令。（或者，您可以运行命令 source <project_dir>&#x2F;scripts&#x2F;setup.sh 来运行这些命令。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">export PROJECT_ID=$(gcloud config list --format=&#x27;value(core.project)&#x27;)</span><br><span class="line">export REGION=europe-west4</span><br><span class="line">export SVC_ACCOUNT=image-text-translator-sa</span><br><span class="line">export SVC_ACCOUNT_EMAIL=$SVC_ACCOUNT@$PROJECT_ID.iam.gserviceaccount.com</span><br><span class="line">export GOOGLE_APPLICATION_CREDENTIALS=~/.config/gcloud/$SVC_ACCOUNT.json</span><br><span class="line"></span><br><span class="line"># Functions</span><br><span class="line">export FUNCTIONS_PORT=8081</span><br><span class="line">export BACKEND_GCF=https://$REGION-$PROJECT_ID.cloudfunctions.net/extract-and-translate</span><br><span class="line"></span><br><span class="line"># Flask</span><br><span class="line">export FLASK_SECRET_KEY=some-secret-1234</span><br><span class="line">export FLASK_RUN_PORT=8080</span><br><span class="line"></span><br><span class="line">echo &quot;Environment variables configured:&quot;</span><br><span class="line">echo PROJECT_ID=&quot;$PROJECT_ID&quot;</span><br><span class="line">echo REGION=&quot;$REGION&quot;</span><br><span class="line">echo SVC_ACCOUNT_EMAIL=&quot;$SVC_ACCOUNT_EMAIL&quot;</span><br><span class="line">echo BACKEND_GCF=&quot;$BACKEND_GCF&quot;</span><br><span class="line">echo FUNCTIONS_PORT=&quot;$FUNCTIONS_PORT&quot;</span><br><span class="line">echo FLASK_RUN_PORT=&quot;$FLASK_RUN_PORT&quot;</span><br></pre></td></tr></table></figure>
+
+<h1 id="云函数后端"><a href="#云函数后端" class="headerlink" title="云函数后端"></a>云函数后端</h1><h2 id="功能的本地开发"><a href="#功能的本地开发" class="headerlink" title="功能的本地开发"></a>功能的本地开发</h2><p>我不会重现所有代码，因为您可以在 GitHub 中查看它。我只想指出几件关键的事情。</p>
+<p>在我的 backend-gcf 文件夹中，我创建了一个 requirements.txt .这是为了定义必须安装的 Python 包。当您部署 Cloud Functions 时，Cloud Functions 会自动安装这些软件包。</p>
+<p>然后我创建一个 main.py .以下是作为云函数入口点的部分函数： extract_and_translate() 。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">@functions_framework.http</span><br><span class="line">def extract_and_translate(request):</span><br><span class="line">    &quot;&quot;&quot;Extract and translate the text from an image.</span><br><span class="line">    The image can be POSTed in the request, or it can be a GCS object reference.</span><br><span class="line"></span><br><span class="line">    If a POSTed image, enctype should be multipart/form-data and the file should be named &#x27;uploaded&#x27;.</span><br><span class="line">    If we&#x27;re passing a GCS object reference, content-type should be &#x27;application/json&#x27;, </span><br><span class="line">    with two attributes:</span><br><span class="line">    - bucket: name of GCS bucket in which the file is stored.</span><br><span class="line">    - filename: name of the file to be read.</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">    # Check if the request method is POST</span><br><span class="line">    if request.method == &#x27;POST&#x27;:</span><br><span class="line">        # Get the uploaded file from the request</span><br><span class="line">        uploaded = request.files.get(&#x27;uploaded&#x27;)  # Assuming the input filename is &#x27;uploaded&#x27;</span><br><span class="line">        to_lang = request.form.get(&#x27;to_lang&#x27;, &quot;en&quot;)</span><br><span class="line">        print(f&quot;&#123;uploaded=&#125;, &#123;to_lang=&#125;&quot;)</span><br><span class="line">        if not uploaded:</span><br><span class="line">            return flask.jsonify(&#123;&quot;error&quot;: &quot;No file uploaded.&quot;&#125;), 400</span><br><span class="line"></span><br><span class="line">        if uploaded: # Process the uploaded file</span><br><span class="line">            file_contents = uploaded.read()  # Read the file contents</span><br><span class="line">            image = vision.Image(content=file_contents)</span><br><span class="line">        else:</span><br><span class="line">            return flask.jsonify(&#123;&quot;error&quot;: &quot;Unable to read uploaded file.&quot;&#125;), 400</span><br></pre></td></tr></table></figure>
+
+<p>这是不言自明的。</p>
+<ul>
+<li>我们检查函数是否已收到 POST。 （稍后，我们将创建 Cloud Run 应用程序来 POST 请求。</li>
+<li>如果是这样，我们将在请求中查找一个名为 uploaded 的对象。（我们的 Cloud Run 应用程序会将其附加到请求中。</li>
+<li>如果我们发现这个对象附加了，我们把它读成二进制，然后用它来创建 vision.Image 对象。</li>
+<li>接下来我们调用函数 detect_text() ，传入图像。此函数将使用 Vision API 查看图像中是否有任何文本。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># Use the Vision API to extract text from the image</span><br><span class="line">detected = detect_text(image)</span><br><span class="line">if detected:</span><br><span class="line">   translated = translate_text(detected, to_lang)</span><br><span class="line">   if translated[&quot;text&quot;] != &quot;&quot;:</span><br><span class="line">       return translated[&quot;text&quot;]</span><br></pre></td></tr></table></figure>
+
+<p>如果是这样，它将返回包含此文本的 Python 字典。然后，它会将此文本传递到函数中 translate_text() ，以将文本翻译成我们选择的语言。</p>
+<p>detect_text() 功能如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">def detect_text(image: vision.Image) -&gt; dict | None:</span><br><span class="line">    &quot;&quot;&quot;Extract the text from the Image object &quot;&quot;&quot;</span><br><span class="line">    text_detection_response = vision_client.text_detection(image=image)</span><br><span class="line">    annotations = text_detection_response.text_annotations</span><br><span class="line"></span><br><span class="line">    if annotations:</span><br><span class="line">        text = annotations[0].description</span><br><span class="line">    else:</span><br><span class="line">        text = &quot;&quot;</span><br><span class="line">    print(f&quot;Extracted text from image:\n&#123;text&#125;&quot;)</span><br><span class="line"></span><br><span class="line">    # Returns language identifer in ISO 639-1 format. E.g. en.</span><br><span class="line">    # See https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes</span><br><span class="line">    detect_language_response = translate_client.detect_language(text)</span><br><span class="line">    src_lang = detect_language_response[&quot;language&quot;]</span><br><span class="line">    print(f&quot;Detected language: &#123;src_lang&#125;.&quot;)</span><br><span class="line"></span><br><span class="line">    message = &#123;</span><br><span class="line">        &quot;text&quot;: text,</span><br><span class="line">        &quot;src_lang&quot;: src_lang,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return message</span><br></pre></td></tr></table></figure>
+
+<p>此代码不仅检测图像中的任何文本，还使用 Google 语言 API 来确定文本的语言。</p>
+<p>接下来， translate_text() 函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">def translate_text(message: dict, to_lang: str) -&gt; dict:</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Translates the text in the message from the specified source language</span><br><span class="line">    to the requested target language, then sends a message requesting another</span><br><span class="line">    service save the result.</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">    text = message[&quot;text&quot;]</span><br><span class="line">    src_lang = message[&quot;src_lang&quot;]</span><br><span class="line"></span><br><span class="line">    translated = &#123; # before translating</span><br><span class="line">        &quot;text&quot;: text,</span><br><span class="line">        &quot;src_lang&quot;: src_lang,</span><br><span class="line">        &quot;to_lang&quot;: to_lang,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if src_lang != to_lang and src_lang != &quot;und&quot;:</span><br><span class="line">        print(f&quot;Translating text into &#123;to_lang&#125;.&quot;)</span><br><span class="line">        translated_text = translate_client.translate(</span><br><span class="line">                text, target_language=to_lang, source_language=src_lang)</span><br><span class="line"></span><br><span class="line">        translated = &#123;</span><br><span class="line">            &quot;text&quot;: unescape(translated_text[&quot;translatedText&quot;]),</span><br><span class="line">            &quot;src_lang&quot;: src_lang,</span><br><span class="line">            &quot;to_lang&quot;: to_lang,</span><br><span class="line">        &#125;</span><br><span class="line">    else:</span><br><span class="line">        print(&quot;No translation required.&quot;)</span><br><span class="line"></span><br><span class="line">    return translated</span><br></pre></td></tr></table></figure>
+
+<p>我们检查源语言和目标语言是否不同，并且源语言是否未定义。如果我们通过了此检查，我们将使用 Google 翻译 API 来翻译文本。</p>
+<h2 id="本地测试"><a href="#本地测试" class="headerlink" title="本地测试"></a>本地测试</h2><p>首先，让我们在本地运行该函数。从我们的 backend-gcf 文件夹中运行以下命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Run the function</span><br><span class="line">functions-framework --target extract_and_translate \</span><br><span class="line">  --debug --port $FUNCTIONS_PORT</span><br></pre></td></tr></table></figure>
+
+<p>它应该看起来像这样：</p>
+<p><img src="/../asset_serveless_ai/10.png"></p>
+<p>在本地运行我们的函数</p>
+<p>我将用这张图片进行测试：</p>
+<p><img src="/../asset_serveless_ai/11.png"></p>
+<p> 乌克兰语中的模因</p>
+<p>从第二个终端，让我们对函数进行 POST 操作，使用 curl ：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># You will first need to authenticate and set the environment vars in this terminal</span><br><span class="line">source ./scripts/setup.sh</span><br><span class="line"></span><br><span class="line"># now invoke</span><br><span class="line">curl -X POST localhost:$FUNCTIONS_PORT \</span><br><span class="line">   -H &quot;Content-Type: multipart/form-data&quot; \</span><br><span class="line">   -F &quot;uploaded=@./testing/images/ua_meme.jpg&quot; \</span><br><span class="line">   -F &quot;to_lang=en&quot;</span><br></pre></td></tr></table></figure>
+
+<p> 它有效！！</p>
+<p><img src="/../asset_serveless_ai/12.png"></p>
+<p>我们申请的回应</p>
+<h2 id="部署云功能（到-Google-Cloud）"><a href="#部署云功能（到-Google-Cloud）" class="headerlink" title="部署云功能（到 Google Cloud）"></a>部署云功能（到 Google Cloud）</h2><p>现在我们已经在本地测试了它，我们可以将其部署到 Google Cloud。同样，我们必须从我们的 backend-gcf 文件夹中运行。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># From the backend-gcf folder</span><br><span class="line">gcloud functions deploy extract-and-translate \</span><br><span class="line">  --gen2 --max-instances 1 \</span><br><span class="line">  --region $REGION \</span><br><span class="line">  --runtime=python312 --source=. \</span><br><span class="line">  --trigger-http --entry-point=extract_and_translate \</span><br><span class="line">  --no-allow-unauthenticated</span><br><span class="line"></span><br><span class="line"># Allow this function to be called by the service account</span><br><span class="line">gcloud functions add-invoker-policy-binding extract-and-translate \</span><br><span class="line">  --region=$REGION \</span><br><span class="line">  --member=&quot;serviceAccount:$SVC_ACCOUNT_EMAIL&quot;</span><br></pre></td></tr></table></figure>
+
+<p> 部署结果：</p>
+<p><img src="/../asset_serveless_ai/13.png"></p>
+<p> 部署成功！</p>
+<p>这是一件很酷的事情……借助 VS Code 中的 Cloud Code 扩展，我们现在可以看到我们在 Google Cloud 中部署的云功能！</p>
+<p><img src="/../asset_serveless_ai/14.png"></p>
+<p>在 Google Cloud 中查看我们的云功能，从 VS Code 中的 Cloud Code 查看</p>
+<h2 id="测试云函数"><a href="#测试云函数" class="headerlink" title="测试云函数"></a>测试云函数</h2><p>我们只需要一个稍微不同的 curl 命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST https://$REGION-$PROJECT_ID.cloudfunctions.net/extract-and-translate \</span><br><span class="line">    -H &quot;Authorization: Bearer $(gcloud auth print-identity-token)&quot; \</span><br><span class="line">    -H &quot;Content-Type: multipart/form-data&quot; \</span><br><span class="line">    -F &quot;uploaded=@./testing/images/ua_meme.jpg&quot; \</span><br><span class="line">    -F &quot;to_lang=en&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../asset_serveless_ai/15.png"></p>
+<p> 它有效！</p>
+<p>让我们用这个模因测试英语到英语：</p>
+<p><img src="/../asset_serveless_ai/16.jpg"></p>
+<p> 测试英语反式</p>
+<p><img src="/../asset_serveless_ai/17.png"></p>
+<p> 提取英语</p>
+<p>现在我将尝试翻译成乌克兰语：</p>
+<p><img src="/../asset_serveless_ai/18.png"></p>
+<p> 翻译成乌克兰语</p>
+<p>呜呜！它有效！现在到法语：</p>
+<p><img src="/../asset_serveless_ai/19.png"></p>
+<p> 翻译成法语</p>
+<p>万岁！所有测试似乎都在起作用。</p>
+<p>注意：如果您尝试在不传入经过身份验证和授权的凭据的情况下使用该函数，则会看到以下内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;&lt;head&gt;</span><br><span class="line">&lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html;charset=utf-8&quot;&gt;</span><br><span class="line">&lt;title&gt;403 Forbidden&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body text=#000000 bgcolor=#ffffff&gt;</span><br><span class="line">&lt;h1&gt;Error: Forbidden&lt;/h1&gt;</span><br><span class="line">&lt;h2&gt;Your client does not have permission to get URL &lt;code&gt;/extract-and-translate&lt;/code&gt; from this server.&lt;/h2&gt;</span><br><span class="line">&lt;h2&gt;&lt;/h2&gt;</span><br><span class="line">&lt;/body&gt;&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="部署新版本"><a href="#部署新版本" class="headerlink" title="部署新版本"></a>部署新版本</h2><p>如果我们更新代码并想要重新部署，我们可以重新运行相同的 deploy 命令。</p>
+<p><img src="/../asset_serveless_ai/20.png"></p>
+<p>通过重新部署来更新我们的功能</p>
+<h2 id="删除函数"><a href="#删除函数" class="headerlink" title="删除函数"></a>删除函数</h2><p>如果要删除 Cloud Funtion，只需运行以下命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcloud functions delete extract-and-translate --region=$REGION</span><br></pre></td></tr></table></figure>
+
+<h1 id="烧瓶用户界面"><a href="#烧瓶用户界面" class="headerlink" title="烧瓶用户界面"></a>烧瓶用户界面</h1><p>我们将使用 Cloud Run 创建一个简单的 Flask Python Web 应用程序。此应用程序将呈现表单页面，并处理表单。然后，在检索表单响应（包括上传的图像）后，它将调用我们的云函数。</p>
+<h2 id="创建-Flask-Web-应用程序"><a href="#创建-Flask-Web-应用程序" class="headerlink" title="创建 Flask Web 应用程序"></a>创建 Flask Web 应用程序</h2><p>本文不打算作为 Flask 教程。因此，我的建议是查看 GitHub 存储库 ui_cr 文件夹中的代码。</p>
+<p>但这里有一些关键点：</p>
+<ul>
+<li>我创建了一个 requirements.txt 来定义此应用程序所需的 Python 包。</li>
+<li>我创建了一个 Dockerfile 负责将我们的 Flask 应用程序打包到 Docker 容器中。（稍后我们将需要此功能才能部署到 Cloud Run。为此，它复制 ui_cr 文件夹的内容，安装 Python 依赖项（如 中 requirements.txt 所定义），然后定义应用程序的入口点。即运行 python app.py .</li>
+</ul>
+<p>我们的 ui_cr 文件夹具有以下结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">├── ui_cr/                - Browser UI (Cloud Run)</span><br><span class="line">    ├── static/             - Static content for frontend</span><br><span class="line">    ├── templates/          - HTML templates for frontend</span><br><span class="line">    ├── app.py              - The Flask application</span><br><span class="line">    ├── requirements.txt    - The UI Python requirements</span><br><span class="line">    ├── Dockerfile             - Dockerfile to build the Flask container</span><br><span class="line">    └── .dockerignore          - Files to ignore in Dockerfile</span><br></pre></td></tr></table></figure>
+
+<h2 id="应用程序代码"><a href="#应用程序代码" class="headerlink" title="应用程序代码"></a>应用程序代码</h2><p>我不打算详细介绍代码。但我会强调一些有趣的观点和陷阱。</p>
+<p>让我们来看看 app.py 。首先，实例化 Flask 应用程序的函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">def create_app():</span><br><span class="line">    &quot;&quot;&quot; Create and configure the app &quot;&quot;&quot;</span><br><span class="line">    flask_app = Flask(__name__, instance_relative_config=True)</span><br><span class="line">    flask_app.config.from_mapping(</span><br><span class="line">        SECRET_KEY=&#x27;dev&#x27;, # override with FLASK_SECRET_KEY env var</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    # Load envs starting with FLASK_</span><br><span class="line">    # E.g. FLASK_SECRET_KEY, FLASK_PORT</span><br><span class="line">    flask_app.config.from_prefixed_env()</span><br><span class="line">    client = translate.Client()</span><br><span class="line">    flask_app.languages = &#123;lang[&#x27;language&#x27;]: lang[&#x27;name&#x27;] for lang in client.get_languages()&#125;</span><br><span class="line">    flask_app.backend_func = os.environ.get(&#x27;BACKEND_GCF&#x27;, &#x27;undefined&#x27;)</span><br><span class="line">    return flask_app</span><br><span class="line"></span><br><span class="line">app = create_app()</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Flask 应用程序需要密钥才能管理会话。我们可以使用环境变量 FLASK_SECRET_KEY 将密钥传递给应用程序。</li>
+<li>我正在使用 Google 翻译 API 检索要翻译的可用语言列表。我将使用它在我的表单中填充下拉选择。</li>
+<li>我们需要传递目标函数的 URL。同样，我将为此使用一个环境变量： BACKEND_GCF .</li>
+</ul>
+<h2 id="处理对-Flask-主页的请求"><a href="#处理对-Flask-主页的请求" class="headerlink" title="处理对 Flask 主页的请求"></a>处理对 Flask 主页的请求</h2><p>在这里，我们处理对 &#x2F; 的请求。当我们的用户第一次访问该页面时，他们将发送一个 GET 请求。但是，当他们提交带有要翻译的图像的表格时，该请求将作为 POST 收到。因此，我们需要同时处理两者。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">@app.route(&#x27;/&#x27;, methods=[&#x27;GET&#x27;, &#x27;POST&#x27;])</span><br><span class="line">def entry():</span><br><span class="line">    &quot;&quot;&quot; Render the upload form &quot;&quot;&quot;</span><br><span class="line">    message = &quot;Upload your image!&quot;</span><br><span class="line">    to_lang = os.environ.get(&#x27;TO_LANG&#x27;, &#x27;en&#x27;)</span><br><span class="line">    encoded_img = &quot;&quot;</span><br><span class="line">    translation = &quot;&quot;</span><br><span class="line"></span><br><span class="line">    if request.method == &#x27;POST&#x27;: # Form has been posted</span><br><span class="line">        app.logger.debug(&quot;Got POST&quot;)</span><br><span class="line">        file = request.files.get(&#x27;file&#x27;)</span><br><span class="line">        to_lang = request.form.get(&#x27;to_lang&#x27;)</span><br><span class="line"></span><br><span class="line">        if file is None:</span><br><span class="line">            flash(&#x27;No file part.&#x27;)</span><br><span class="line">        elif file.filename == &#x27;&#x27;:</span><br><span class="line">            flash(&#x27;No file selected for uploading.&#x27;)</span><br><span class="line">        elif not allowed_file(file.filename):</span><br><span class="line">            filename = secure_filename(file.filename)</span><br><span class="line">            flash(f&#x27;&#123;secure_filename(filename)&#125; is not a supported image format. &#x27;</span><br><span class="line">                  f&#x27;Supported formats are: &#123;ALLOWED_EXTENSIONS&#125;&#x27;)</span><br><span class="line">        else:</span><br><span class="line">            filename = secure_filename(file.filename)</span><br><span class="line">            app.logger.debug(&quot;Got %s&quot;, filename)</span><br><span class="line">            app.logger.debug(&quot;Translating to %s&quot;, to_lang)</span><br><span class="line"></span><br><span class="line">            # We don&#x27;t need to save the image. We just want to binary encode it.</span><br><span class="line">            try:</span><br><span class="line">                img = Image.open(file.stream)</span><br><span class="line">                with BytesIO() as buf:</span><br><span class="line">                    if img_format := img.format: # e.g. JPEG, GIF, PNG</span><br><span class="line">                        img.save(buf, img_format.lower())</span><br><span class="line">                        content_type = f&quot;image/&#123;img_format.lower()&#125;&quot;</span><br><span class="line">                        image_bytes = buf.getvalue()</span><br><span class="line">                        encoded_img = base64.b64encode(image_bytes).decode()</span><br><span class="line">                    else:</span><br><span class="line">                        flash(&#x27;Unable to determine image format.&#x27;)</span><br><span class="line">            except UnidentifiedImageError:</span><br><span class="line">                # This will happen if we resubmit the form</span><br><span class="line">                flash(&#x27;Unable to process image.&#x27;)</span><br><span class="line"></span><br><span class="line">            if encoded_img:</span><br><span class="line">                message = f&quot;Processed &lt;&#123;secure_filename(filename)&#125;&gt;. Feel free to upload a new image.&quot;</span><br><span class="line">                func_response = make_authorized_post_request(endpoint=app.backend_func,</span><br><span class="line">                                        image_data=image_bytes, to_lang=to_lang,</span><br><span class="line">                                        filename=filename, content_type=content_type)</span><br><span class="line">                app.logger.debug(&quot;Function response code: %s&quot;, func_response.status_code)</span><br><span class="line">                app.logger.debug(&quot;Function response text: %s&quot;, func_response.text)</span><br><span class="line">                translation = func_response.text</span><br><span class="line"></span><br><span class="line">    return render_template(&#x27;index.html&#x27;,</span><br><span class="line">                           languages=app.languages,</span><br><span class="line">                           message=message,</span><br><span class="line">                           to_lang=to_lang,</span><br><span class="line">                           img_data=encoded_img,</span><br><span class="line">                           translation=translation), 200</span><br></pre></td></tr></table></figure>
+
+<p>我们验证输入，然后 - 如果图像已上传并且是有效的图像 - 我们向云函数发出请求。此请求需要传递上传图像的原始字节。</p>
+<p>此外，我希望能够在返回的页面中向用户显示上传的图像。我想避免将上传的图像保存在后端的磁盘上，所以我采取了这种方法：</p>
+<ul>
+<li>将上传的图像转换为内存中的 BytesIO 对象。</li>
+<li>将内存中的对象转换为 JPEG。</li>
+<li>在缓冲区中检索图像的原始字节数据。（这也是我将发送到函数的原始 make_authorised_post_request() 数据。</li>
+<li>使用 Base64 编码对 JPEG 二进制图像数据进行编码，这是一种可以安全地发送回浏览器的字符串表示形式。</li>
+</ul>
+<h2 id="对我们的函数进行经过身份验证的调用"><a href="#对我们的函数进行经过身份验证的调用" class="headerlink" title="对我们的函数进行经过身份验证的调用"></a>对我们的函数进行经过身份验证的调用</h2><p>从 Cloud Run Flask 应用程序调用 Cloud Function 时，我们需要在请求标头中包含服务帐户访问令牌。Google 客户端库将自动从 ADC 检索凭据。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">def make_authorized_post_request(endpoint:str,</span><br><span class="line">                                 image_data, to_lang:str,</span><br><span class="line">                                 filename:str, content_type:str):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Make a POST request to the specified HTTP endpoint by authenticating with the ID token</span><br><span class="line">    obtained from the google-auth client library using the specified audience value.</span><br><span class="line">    Expects the image_data to be a bytes representation of the image.</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    if endpoint == &quot;undefined&quot;:</span><br><span class="line">        raise ValueError(&quot;Unable to retrieve Function endpoint.&quot;)</span><br><span class="line"></span><br><span class="line">    # Cloud Functions uses your function&#x27;s URL as the `audience` value</span><br><span class="line">    # For Cloud Functions, `endpoint` and `audience` should be equal</span><br><span class="line">    # ADC requires valid service account credentials</span><br><span class="line">    audience = endpoint</span><br><span class="line">    auth_req = GoogleAuthRequest()</span><br><span class="line"></span><br><span class="line">    # Requests OAuth 2.0 access token for the service identity</span><br><span class="line">    # from the instance metadata server or with local ADC. E.g.</span><br><span class="line">    # export GOOGLE_APPLICATION_CREDENTIALS=/path/to/svc_account.json</span><br><span class="line">    id_token = google.oauth2.id_token.fetch_id_token(auth_req, audience)</span><br><span class="line"></span><br><span class="line">    headers = &#123;</span><br><span class="line">        &quot;Authorization&quot;: f&quot;Bearer &#123;id_token&#125;&quot;,</span><br><span class="line">        # &quot;Content-Type&quot;: &quot;multipart/form-data&quot; # Let requests library decide on the content-type</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    files = &#123;</span><br><span class="line">        &quot;uploaded&quot;: (filename, image_data, content_type),</span><br><span class="line">        &quot;to_lang&quot;: (None, to_lang)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    # Send the HTTP POST request to the Cloud Function</span><br><span class="line">    response = requests.post(endpoint, headers=headers, files=files, timeout=10)</span><br><span class="line"></span><br><span class="line">    return response</span><br></pre></td></tr></table></figure>
+
+<h2 id="获取用户输入"><a href="#获取用户输入" class="headerlink" title="获取用户输入"></a>获取用户输入</h2><p>Flask 使用 Jinja2 模板将内容渲染回浏览器。这些是包含嵌入代码的 HTML 文件。当我们从 中 app.py 调用 render_template() 时，我们会传入一些变量，然后在模板中引用这些变量。</p>
+<h2 id="启动和调试"><a href="#启动和调试" class="headerlink" title="启动和调试"></a>启动和调试</h2><p>我们可以通过以下几种方式在本地启动 Flask 应用程序：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cd app/ui_cr/</span><br><span class="line">source ../../scripts/setup.sh  # Initialise vars if we&#x27;re in a new terminal</span><br><span class="line"></span><br><span class="line"># Run the Flask App</span><br><span class="line">python app.py</span><br><span class="line"></span><br><span class="line"># Or with the Flask command.</span><br><span class="line"># This will automatically load any environment vars starting FLASK_</span><br><span class="line"># The --debug tells Flask to automatically reload after any changes</span><br><span class="line"># and to set the app.logger to debug.</span><br><span class="line">python -m flask --app app run --debug</span><br></pre></td></tr></table></figure>
+
+<p>此外，如果要使用 VS Code 交互式调试器，我建议创建如下所示的启动配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;configurations&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;name&quot;: &quot;Python Debugger: Flask&quot;,</span><br><span class="line">            &quot;type&quot;: &quot;debugpy&quot;,</span><br><span class="line">            &quot;request&quot;: &quot;launch&quot;,</span><br><span class="line">            &quot;module&quot;: &quot;flask&quot;,</span><br><span class="line">            &quot;cwd&quot;: &quot;$&#123;workspaceFolder&#125;/app/ui_cr&quot;,</span><br><span class="line">            &quot;env&quot;: &#123;</span><br><span class="line">                &quot;FLASK_APP&quot;: &quot;app.py&quot;,</span><br><span class="line">                &quot;FLASK_DEBUG&quot;: &quot;1&quot;,</span><br><span class="line">                &quot;FLASK_RUN_PORT&quot;: &quot;8080&quot;</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;args&quot;: [</span><br><span class="line">                &quot;run&quot;,</span><br><span class="line">                &quot;--debug&quot;,</span><br><span class="line">                &quot;--no-debugger&quot;,</span><br><span class="line">                &quot;--no-reload&quot;</span><br><span class="line">            ],</span><br><span class="line">            &quot;jinja&quot;: true,</span><br><span class="line">            &quot;autoStartBrowser&quot;: false</span><br><span class="line">        &#125;,</span><br><span class="line">        // Other configurations</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="测试应用程序"><a href="#测试应用程序" class="headerlink" title="测试应用程序"></a>测试应用程序</h2><p>好了，我们就可以运行应用程序了！</p>
+<p><img src="/../asset_serveless_ai/21.png"></p>
+<p> 启动 Flask 应用程序</p>
+<p>以下是它在浏览器中的样子：</p>
+<p><img src="/../asset_serveless_ai/22.png"></p>
+<p> 运行应用程序</p>
+<p>让我们用它来翻译我们的乌克兰模因：</p>
+<p><img src="/../asset_serveless_ai/23.png"></p>
+<p> 它有效！</p>
+<p> 万岁！</p>
+<h1 id="部署到-Google-Cloud-Run"><a href="#部署到-Google-Cloud-Run" class="headerlink" title="部署到 Google Cloud Run"></a>部署到 Google Cloud Run</h1><p>现在，我们已准备好将 Flask 应用程序部署到 Cloud Run。回想一下，Cloud Run 是一个无服务器容器运行时，因此我们需要先将应用程序打包为容器映像，然后才能部署它。</p>
+<p>我们将运行以下步骤：</p>
+<ol>
+<li>创建一个 Google Artifact Registry （GAR） 存储库，用于存储我们的 Flask 应用容器映像。</li>
+<li>使用 Cloud Build 从源代码构建容器映像并存储在 GAR 中。</li>
+<li>将我们的应用程序从 GAR 部署到 Cloud Run。</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">gcloud artifacts repositories create image-text-translator-artifacts \</span><br><span class="line">  --repository-format=docker \</span><br><span class="line">  --location=$REGION \</span><br><span class="line">  --project=$PROJECT_ID</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../asset_serveless_ai/24.png"></p>
+<p> 构建存储库</p>
+<p>您可以在 Cloud Console 中检查存储库是否已创建：</p>
+<p><img src="/../asset_serveless_ai/25.png"></p>
+<p> 工件注册表</p>
+<p>现在构建 Docker 映像：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">export IMAGE_NAME=$REGION-docker.pkg.dev/$PROJECT_ID/image-text-translator-artifacts/image-text-translator-ui</span><br><span class="line"></span><br><span class="line"># configure Docker to use the Google Cloud CLI to authenticate requests to Artifact Registry.</span><br><span class="line">gcloud auth configure-docker $REGION-docker.pkg.dev</span><br><span class="line"></span><br><span class="line"># Build the image and push it to Artifact Registry</span><br><span class="line"># Run from the ui_cr folder</span><br><span class="line">gcloud builds submit --tag $IMAGE_NAME:v0.1 .</span><br></pre></td></tr></table></figure>
+
+<p>这需要一分钟左右的时间。现在，我们的容器映像已被推送到存储库：</p>
+<p><img src="/../asset_serveless_ai/26.png"></p>
+<p>Google Artifact Registry 中的容器映像</p>
+<p>最后，我们可以使用映像部署到 Cloud Run。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># create a random secret key for our Flask application</span><br><span class="line">export RANDOM_SECRET_KEY=$(openssl rand -base64 32)</span><br><span class="line"></span><br><span class="line">gcloud run deploy image-text-translator-ui \</span><br><span class="line">  --image=$IMAGE_NAME:v0.1 \</span><br><span class="line">  --region=$REGION \</span><br><span class="line">  --platform=managed \</span><br><span class="line">  --allow-unauthenticated \</span><br><span class="line">  --max-instances=1 \</span><br><span class="line">  --service-account=$SVC_ACCOUNT \</span><br><span class="line">  --set-env-vars BACKEND_GCF=$BACKEND_GCF,FLASK_SECRET_KEY=$RANDOM_SECRET_KEY</span><br></pre></td></tr></table></figure>
+
+<p>输出如下所示：</p>
+<p><img src="/../asset_serveless_ai/27.png"></p>
+<p> 部署到 Cloud Run</p>
+<p>我们可以验证我们的服务是否已部署在 Google Cloud 控制台中：</p>
+<p><img src="/../asset_serveless_ai/28.png"></p>
+<p> 我们的 Cloud Run 服务</p>
+<h2 id="重新部署"><a href="#重新部署" class="headerlink" title="重新部署"></a>重新部署</h2><p>如果我们想部署应用程序的新版本，我们可以这样做：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># Check our IMAGE_NAME is set</span><br><span class="line">export IMAGE_NAME=$REGION-docker.pkg.dev/$PROJECT_ID/image-text-translator-artifacts/image-text-translator-ui</span><br><span class="line"># Set our new version number</span><br><span class="line">export VERSION=v0.2</span><br><span class="line"></span><br><span class="line"># Rebuild the container image and push to the GAR</span><br><span class="line">gcloud builds submit --tag $IMAGE_NAME:$VERSION .</span><br><span class="line"></span><br><span class="line"># create a random secret key for our Flask application</span><br><span class="line">export RANDOM_SECRET_KEY=$(openssl rand -base64 32)</span><br><span class="line"></span><br><span class="line"># Redeploy</span><br><span class="line">gcloud run deploy image-text-translator-ui \</span><br><span class="line">  --image=$IMAGE_NAME:$VERSION \</span><br><span class="line">  --region=$REGION \</span><br><span class="line">  --platform=managed \</span><br><span class="line">  --allow-unauthenticated \</span><br><span class="line">  --max-instances=1 \</span><br><span class="line">  --service-account=$SVC_ACCOUNT \</span><br><span class="line">  --set-env-vars BACKEND_GCF=$BACKEND_GCF,FLASK_SECRET_KEY=$RANDOM_SECRET_KEY</span><br></pre></td></tr></table></figure>
+
+<h2 id="（可选）设置自定义-DNS-映射"><a href="#（可选）设置自定义-DNS-映射" class="headerlink" title="（可选）设置自定义 DNS 映射"></a>（可选）设置自定义 DNS 映射</h2><p>像 <a target="_blank" rel="noopener" href="https://image-text-translator-ui-adisqviovq-ez.a.run.app/">https://image-text-translator-ui-adisqviovq-ez.a.run.app/</a> 这样的 URL 不是很令人难忘！因此，您可能希望映射到自定义域。您可以在此处找到详细的指南。</p>
+<blockquote>
+<p>此时，我发现 Cloud Run 不支持该区域 europe-west2 的域映射。因此，我最终使用 europe-west4 .</p>
+</blockquote>
+<p>假设您已经创建了子域 image-text-translator.mydomain.com ，并且想要将此地址用于应用程序。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># Verify your domain ownership with Google</span><br><span class="line">gcloud domains verify mydomain.com</span><br><span class="line"># Check it</span><br><span class="line">gcloud domains list-user-verified</span><br><span class="line"></span><br><span class="line"># Create a mapping to your domain</span><br><span class="line">gcloud beta run domain-mappings create \</span><br><span class="line">  --region $REGION \</span><br><span class="line">  --service image-text-translator-ui \</span><br><span class="line">  --domain image-text-translator.mydomain.com</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../asset_serveless_ai/29.png"></p>
+<p>创建域映射的输出</p>
+<p>现在我们需要获取此域映射的 DNS 记录：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># Obtain the DNS records. We want everything under `resourceRecords`.</span><br><span class="line">gcloud beta run domain-mappings describe \</span><br><span class="line">  --region $REGION \</span><br><span class="line">  --domain image-text-translator.mydomain.com</span><br></pre></td></tr></table></figure>
+
+<p>获取 下 resourceRecords 显示的任何 DNS 记录，并在 DNS 注册机构中创建这些 DNS 记录。对我来说，只有一条 CNAME 记录需要添加：</p>
+<p><img src="/../asset_serveless_ai/30.png"></p>
+<p> 要添加的 DNS 记录</p>
+<p>DNS 记录的传播以及 Google 配置托管 SSL 证书可能需要相当长的时间。对我来说，花了将近两个小时。</p>
+<p>在等待期间，您可以使用以下工具检查进度：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://toolbox.googleapps.com/apps/dig/">https://toolbox.googleapps.com/apps/dig/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.ssllabs.com/ssltest/">https://www.ssllabs.com/ssltest/</a></li>
+</ul>
+<p>但最后……这一切都在我的域中工作！</p>
+<p><img src="/../asset_serveless_ai/31.png"></p>
+<p>从您的域运行应用</p>
+<h1 id="定价和成本管理"><a href="#定价和成本管理" class="headerlink" title="定价和成本管理"></a>定价和成本管理</h1><p>在撰写本文时…</p>
+<h2 id="Google-Cloud-函数"><a href="#Google-Cloud-函数" class="headerlink" title="Google Cloud 函数"></a>Google Cloud 函数</h2><p>成本是函数调用、使用的计算和网络出口的总和。</p>
+<ul>
+<li>每个月的前 100 万次计算秒数是免费的，前 200 万次函数调用也是免费的。</li>
+<li>前 400,000 GB 秒和前 200,000 GHz 秒的计算时间是免费的。</li>
+<li>此外，由于 Cloud Functions 在不使用时会缩放到 0，因此对于零星或低利用率的工作负载来说，这可能非常经济高效。</li>
+</ul>
+<h2 id="Google-Cloud-Run（谷歌云运行酒店）"><a href="#Google-Cloud-Run（谷歌云运行酒店）" class="headerlink" title="Google Cloud Run（谷歌云运行酒店）"></a>Google Cloud Run（谷歌云运行酒店）</h2><p>成本是所用 CPU 和内存的组合。</p>
+<ul>
+<li>前 240000 vCPU 秒每月免费。之后，计算按每 vCPU 秒 0.00001800 USD 收费。</li>
+<li>前 450,000 GiB 秒每月免费。之后，内存按 0.000000200 USD&#x2F;GiB 秒收费</li>
+<li>由于 Cloud Run 在不使用时会扩展到 0，因此这对于零星或低利用率的工作负载来说可能非常经济高效。</li>
+</ul>
+<h2 id="Cloud-Vision-API"><a href="#Cloud-Vision-API" class="headerlink" title="Cloud Vision API"></a>Cloud Vision API</h2><p>每个月免费对每个图像进行前 1000 次文本检测。之后，每 1.50 张图像收费 1000 美元。</p>
+<h2 id="云翻译-API"><a href="#云翻译-API" class="headerlink" title="云翻译 API"></a>云翻译 API</h2><p>每个月前 050 万个字符免费，用于检测和翻译呼叫。之后，它按每百万个字符 20 美元收费。</p>
+<h2 id="一些成本控制策略"><a href="#一些成本控制策略" class="headerlink" title="一些成本控制策略"></a>一些成本控制策略</h2><p>应考虑实施以下成本控制策略：</p>
+<ul>
+<li>在结算帐号中设置预算提醒。如果超过预算阈值（例如 50%、75%、90%、100%），您将收到电子邮件通知。注意：这不会限制您的支出。它只是在达到阈值时提醒您。</li>
+<li>限制自动缩放。虽然 Cloud Run 和 Cloud Functions 都是无服务器自动缩放服务，但我预计我的小应用程序不会有任何重大需求。因此，我将 Cloud Function 和 Cloud Run 服务都设置为 max-instances 1。这意味着每个服务永远不会部署多个并发实例。</li>
+<li>更复杂的策略：当超出预算时，向 Pub&#x2F;Sub 发送通知。 使用 Pub&#x2F;Sub 事件触发云函数，然后将项目与计费帐户分离，从而有效地禁用项目中的所有资源。</li>
+</ul>
+<h1 id="性能注意事项"><a href="#性能注意事项" class="headerlink" title="性能注意事项"></a>性能注意事项</h1><p>扩展到 0 的无服务器服务的缺点之一是，如果需求较低且零星，则通常不会有正在运行的服务实例。对于Cloud Functions来说，这并不是一个真正的问题，因为Cloud Functions是超轻量级的，启动速度非常快。但是我们的 Cloud Run Flask 应用程序稍大一些，冷启动可能需要几秒钟。因此，我们的用户在访问页面时会发现应用程序很慢。</p>
+<p>有几种策略可以通过 Cloud Run 处理此问题：</p>
+<ol>
+<li>我们可以将最小实例配置为 1。如果我们这样做，我们的 Cloud Run 服务将永远不会扩展到 0。总会有一个实例准备好处理请求。但是，这意味着我们将为此实例付费……一直以来。这通常是一个很好的策略。但是对于我点头的低利用率应用程序，我真的不想这样做。</li>
+<li>我们可以配置 Cloud Run 启动 CPU 提升。在这里，Google Cloud 在启动期间为我们的 Cloud Run 容器动态分配更多 CPU，这可以显着缩短我们的启动时间。而且，由于这些额外的 CPU 仅分配给那些不频繁的冷启动，因此它通常比保持实例一直运行更具成本效益。</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcloud beta run services update image-text-translator-ui \</span><br><span class="line">  --region=$REGION --cpu-boost</span><br></pre></td></tr></table></figure>
+
+<p>此外，请检查 Flask 应用程序是否未在启用调试的情况下部署。这肯定会影响您的启动时间！</p>
+<h1 id="一些常见问题、一般观察和提示"><a href="#一些常见问题、一般观察和提示" class="headerlink" title="一些常见问题、一般观察和提示"></a>一些常见问题、一般观察和提示</h1><h2 id="生成式人工智能！"><a href="#生成式人工智能！" class="headerlink" title="生成式人工智能！"></a>生成式人工智能！</h2><p>当然，我需要再次提到Gen AI！！虽然我没有在实际解决方案中使用任何 Gen AI，但我在构建解决方案时大量使用它来获得建议和答案。特别是，我与 Gemini Code Assist（包含在 VS Code 的 Cloud Code 插件中）和 ChatGPT 4 进行了多次对话。我估计，使用这些工具解决问题已经消除了我总时间和精力的 40%。</p>
+<h2 id="为什么同时使用-Cloud-Run-和-Cloud-Functions？"><a href="#为什么同时使用-Cloud-Run-和-Cloud-Functions？" class="headerlink" title="为什么同时使用 Cloud Run 和 Cloud Functions？"></a>为什么同时使用 Cloud Run 和 Cloud Functions？</h2><p>为什么不只包含从我的 Flask 应用程序提取和翻译 API 调用？这样我就完全不需要 Cloud Functions。</p>
+<p> 原因有二：</p>
+<ol>
+<li>我想将提取和翻译逻辑与 UI 分离。这样一来，如果我想更换 UI 或添加另一个 UI（例如移动应用程序），我仍然可以在不更改它的情况下使用我的 Cloud Function。</li>
+<li>我想构建一个需要集成两个无服务器组件的应用程序。这样，我就可以演示一个如何调用另一个，还可以演示其他必要的元素，例如使用服务帐户。</li>
+</ol>
+<h1 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h1><p>大功告成！让我们回顾一下我们取得的成就：</p>
+<ul>
+<li>我们创建了一个 Google Cloud 项目来托管我们的应用程序。</li>
+<li>我们建立了一个本地开发项目和环境。</li>
+<li>我们定义了一个服务帐户并为其分配了角色。</li>
+<li>我们配置了应用程序默认凭据，以便我们的代码可以在部署到的任何环境中查找凭据。</li>
+<li>我们构建了一个 Google Cloud 函数（在 Python 中），用于接收图像数据，从图像中提取任何文本，然后将其翻译成任何指定的语言。我们通过调用 Google 的预制 AI API 来做到这一点。</li>
+<li>我们已使用 Functions 框架在本地测试了 Cloud Function。</li>
+<li>我们已将云功能部署到 GCP 并对其进行了测试。它只能由经过身份验证和授权的客户端调用。</li>
+<li>我们使用 Flask 构建了一个 Python Web 用户界面应用程序。</li>
+<li>我们使用 HTML Jinja 模板、CSS 样式表和 Javascript 构建了一个前端。</li>
+<li>我们已将 Flask Web 应用程序配置为能够对函数进行经过身份验证的调用。</li>
+<li>在本地测试 Flask 应用后，我们使用 Google Cloud Build 将应用打包为容器映像。</li>
+<li>我们已将该图像推送到 Google Artifact Registry。</li>
+<li>我们已从 Artifact Registry 部署到 Cloud Run。</li>
+<li>我们已使用自己的域名公开了我们的 Cloud Run 服务。</li>
+<li>我们回顾了一些成本管理最佳实践和控制措施。</li>
+<li>我们实施了 cpu-boost 加速 Cloud Run 的冷启动。</li>
+</ul>
+<p><img src="/../asset_serveless_ai/32.gif"></p>
+<p> 唷！</p>
+<p>这很有趣！我希望你也喜欢它！</p>
+<h1 id="下一步是什么？"><a href="#下一步是什么？" class="headerlink" title="下一步是什么？"></a>下一步是什么？</h1><p>我将跟进第二部分。在第 2 部分中，我将介绍：</p>
+<ul>
+<li>使用 Terraform 部署我们的 Google Cloud 基础架构。</li>
+<li>设置 CI&#x2F;CD 管道，以自动生成和部署更改。</li>
+<li>其他一些应用程序增强功能。</li>
+</ul>
+<h1 id="出发前"><a href="#出发前" class="headerlink" title="出发前"></a>出发前</h1><ul>
+<li>请与您认为会感兴趣的任何人分享。它可能会帮助他们，它真的帮助了我！</li>
+<li>请给我鼓掌！你知道你不止一次鼓掌，对吧？</li>
+<li>随意发表评论💬。</li>
+<li>关注并订阅，这样您就不会错过我的内容。转到我的个人资料页面，然后单击以下图标：</li>
+</ul>
+<p><img src="/../asset_serveless_ai/33.png"></p>
+<p> 关注并订阅</p>
+<h1 id="相关链接"><a href="#相关链接" class="headerlink" title="相关链接"></a>相关链接</h1><h2 id="应用程序"><a href="#应用程序" class="headerlink" title="应用程序"></a>应用程序</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://image-text-translator.just2good.co.uk/">https://image-text-translator.just2good.co.uk/</a></li>
+</ul>
+<h2 id="应用程序的源代码"><a href="#应用程序的源代码" class="headerlink" title="应用程序的源代码"></a>应用程序的源代码</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/derailed-dash/image-text-translator">GitHub 中的源代码存储库</a></li>
+</ul>
+<h2 id="开发设置"><a href="#开发设置" class="headerlink" title="开发设置"></a>开发设置</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://cloud.google.com/sdk/docs/install"> Gcloud CLI 设置</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.google.com/python/docs/setup">适用于 Gcloud CLI 的 Python 设置</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.google.com/code/docs/vscode">适用于 VS Code 的云代码</a></li>
+<li><a target="_blank" rel="noopener" href="https://code.visualstudio.com/docs/python/tutorial-flask">VS Code：示例 Python 烧瓶教程</a></li>
+</ul>
+<h2 id="云函数"><a href="#云函数" class="headerlink" title="云函数"></a>云函数</h2><ul>
+<li>使用 Python 设置和调用 Cloud Functions，包括本地开发</li>
+<li>适用于 Python 的 Functions 框架 — 适用于本地开发</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/GoogleCloudPlatform/terraform-ml-image-annotation-gcf">Cloud Functions — 图像注释</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.google.com/functions/docs/calling/http">Cloud Functions — HTTP 触发器</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.google.com/functions/docs/tutorials/ocr">OCR 和 CF 翻译</a></li>
+</ul>
+<h2 id="云运行"><a href="#云运行" class="headerlink" title="云运行"></a>云运行</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://cloud.google.com/code/docs/vscode/create-service">在 VS Code 中从示例应用程序创建 Cloud Run 服务Create a Cloud Run service from a sample application in VS Code</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.google.com/code/docs/vscode/develop-service">在 Cloud Code 中本地开发云运行服务</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.google.com/code/docs/vscode/debug-service">在 VS Code 中调试云运行</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/run/helloworld">Cloud Run — Hello World</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/run/image-processing">Cloud Run — 图像处理</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.google.com/run/docs/mapping-custom-domains">将自定义域映射到 Cloud Run 服务</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.google.com/run?utm_source=google&utm_medium=cpc&utm_campaign=emea-gb-all-en-dr-skws-all-all-trial-%7Bmatchtype%7D-gcp-1707574&utm_content=text-ad-none-any-DEV_%7Bdevice%7D-CRE_%7Bcreative%7D-ADGP_%7B_dsadgroup%7D-KWID_%7B_dstrackerid%7D-%7Btargetid%7D-userloc_%7Bloc_physical_ms%7D&utm_term=KW_%7Bkeyword%7D-NET_%7Bnetwork%7D-PLAC_%7Bplacement%7D&%7B_dsmrktparam%7D%7Bignore%7D=&%7B_dsmrktparam%7D=&gclsrc=aw.ds&gad_source=1&gclid=CjwKCAjw-O6zBhASEiwAOHeGxWZDg7nObT9R0wHudfnP1YHPkCpAq7PFfcyV7QBKZNQjp6jpgO2g0hoCLzcQAvD_BwE&hl=en#pricing"> Cloud Run 定价</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.google.com/blog/products/serverless/announcing-startup-cpu-boost-for-cloud-run--cloud-functions">云运行启动 CPU 提升</a></li>
+</ul>
+<h2 id="AI-ML-API"><a href="#AI-ML-API" class="headerlink" title="AI&#x2F;ML API"></a>AI&#x2F;ML API</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://cloud.google.com/vision/docs/ocr">视觉 API — 检测图像中的文本</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.google.com/vision/pricing">Google Cloud Vision API 定价</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.google.com/translate/docs/basic/translating-text">翻译 API — 翻译文本</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.google.com/translate/pricing/?gad_source=1&gclid=CjwKCAjw-O6zBhASEiwAOHeGxdMh6YLV1qcoix8_RgmX5O8Ql2HTmUdPBBX-ckt1bDnothunMt_u4hoCk8kQAvD_BwE&gclsrc=aw.ds">Google Cloud Translation API 定价</a></li>
+</ul>
+<h2 id="认证"><a href="#认证" class="headerlink" title="认证"></a>认证</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://cloud.google.com/docs/authentication/application-default-credentials">Appication 默认凭据的工作原理</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.google.com/docs/authentication/provide-credentials-adc#local-dev">设置应用程序默认凭据</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/auth/service-to-service/auth.py">Python 服务到服务身份验证</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.google.com/functions/docs/securing/managing-access-iam#gcloud">管理对函数的访问</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.google.com/functions/docs/securing/authenticating">Cloud Functions：对调用进行身份验证</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.google.com/run/docs/securing/service-identity">Cloud Run：服务标识</a></li>
+<li>Cloud Run：对服务到服务进行身份验证 — 创建服务帐户;获取 Google 签名的 ID 令牌，并将该令牌添加到标头。</li>
+</ul>
+<h2 id="DNS-和-SSL-配置"><a href="#DNS-和-SSL-配置" class="headerlink" title="DNS 和 SSL 配置"></a>DNS 和 SSL 配置</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://toolbox.googleapps.com/apps/dig/">https://toolbox.googleapps.com/apps/dig/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.ssllabs.com/ssltest/">https://www.ssllabs.com/ssltest/</a></li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://medium.com/google-cloud/building-a-serverless-image-text-extractor-and-translator-using-google-cloud-pre-trained-ai-adfdccdb18d9">使用 Google Cloud 预训练 AI 构建无服务器图像文本提取器和翻译器 |by 达兹博 （Darren Lester） |Google Cloud - 社区 |2024年6月 |中等 — Building a Serverless Image Text Extractor and Translator Using Google Cloud Pre-Trained AI | by Dazbo (Darren Lester) | Google Cloud - Community | Jun, 2024 | Medium</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/06/20/erp-introduce/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/06/20/erp-introduce/" class="post-title-link" itemprop="url">ERP介绍</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-06-20 10:22:06 / 修改时间：10:38:26" itemprop="dateCreated datePublished" datetime="2024-06-20T10:22:06+08:00">2024-06-20</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>在技术驱动的世界中，在线开展业务并对其进行管理是日常业务活动不可或缺的一部分。</p>
+<p>ERP（企业资源规划）是帮助企业进行数字化转型、提高利润率、升级服务并提供增强客户体验的解决方案。它不仅有助于自动化工作流程，还简化了业务流程。</p>
+<h2 id="什么是ERP？"><a href="#什么是ERP？" class="headerlink" title="什么是ERP？"></a>什么是ERP？</h2><p>ERP 是企业资源规划的缩写，是一种软件应用程序，可帮助管理组织的核心活动，例如供应链流程、财务管理、风险和合规管理等等。它有效地帮助规划、管理、预测和报告组织的整体活动，同时确保整个业务流程的透明度。</p>
+<p>ERP系统帮助组织的不同部门进行无缝协作和沟通，确保成本效益和生产力。</p>
+<p>ERP系统主要有三种类型，即：本地ERP，基于云的ERP和混合ERP系统。</p>
+<h2 id="ERP系统的组件"><a href="#ERP系统的组件" class="headerlink" title="ERP系统的组件"></a>ERP系统的组件</h2><p>ERP系统有五个关键组成部分，它们如下：</p>
+<p><img src="/../asset_erpintroduce/01.png"></p>
+<ul>
+<li>客户关系管理（CRM）</li>
+<li>金融</li>
+<li>人力资源管理（HRM）</li>
+<li>制造和物流</li>
+<li>供应链管理 （SCM）</li>
+</ul>
+<h3 id="客户关系管理（CRM）"><a href="#客户关系管理（CRM）" class="headerlink" title="客户关系管理（CRM）"></a>客户关系管理（CRM）</h3><p>该系统使用客户的个人信息、购买历史、使用模式等相关数据与客户互动，以提供个性化的服务和建议，从而增加销售额并提高客户满意度。</p>
+<h3 id="金融"><a href="#金融" class="headerlink" title="金融"></a>金融</h3><p>它是每个组织的核心流程和基础之一，ERP 解决方案有助于轻松监控和管理您的所有财务活动，如应收账款和应付账款、经常性成本、预算、总账等。<br>它有助于优化现金流、减少损失和提高业务的盈利能力，从而使您能够简化复杂的会计流程。</p>
+<h3 id="人力资源管理（HRM）"><a href="#人力资源管理（HRM）" class="headerlink" title="人力资源管理（HRM）"></a>人力资源管理（HRM）</h3><p>它是一个重要的ERP模块，有助于有效管理人力资源，其中包括组织从下到上层次结构中的每个员工。<br>它有助于处理所有与员工相关的任务，例如考勤管理、工资单管理、绩效报告、员工详细信息等等。</p>
+<h3 id="制造和物流"><a href="#制造和物流" class="headerlink" title="制造和物流"></a>制造和物流</h3><p>它是开源 ERP 系统中最重要和最复杂的组件之一，它使您能够战略性地计划、生产&#x2F;包装、运输和交付产品给客户，从而确保无缝的订单履行流程。<br>它使您能够清楚地了解组织每项活动的实时进度，同时在指尖有效地管理它们。</p>
+<h3 id="供应链管理-（SCM）"><a href="#供应链管理-（SCM）" class="headerlink" title="供应链管理 （SCM）"></a>供应链管理 （SCM）</h3><p>这是ERP系统的另一个重要组成部分，它通过确保每个必需的资源都可用来促进货物的无缝生产。它通过收集实时信息来帮助优化制造和分销过程，从而提高您的服务效率。</p>
+<p>ERP系统还有其他附加模块，包括库存管理、电子商务、营销自动化、仓库管理、订单管理、项目管理、采购等，有助于自动化工作流程并简化所有业务流程。</p>
+<h2 id="ERP对企业有什么好处"><a href="#ERP对企业有什么好处" class="headerlink" title="ERP对企业有什么好处"></a>ERP对企业有什么好处</h2><p>ERP系统可帮助您优化业务运营和活动，并满足其他一些好处，其中包括以下内容：</p>
+<p><img src="/../asset_erpintroduce/02.png"></p>
+<ul>
+<li>准确的报告和分析</li>
+<li>集中式数据</li>
+<li>节省成本</li>
+<li>数据安全与合规</li>
+<li>提高生产力</li>
+<li>可扩展性和灵活性</li>
+</ul>
+<h3 id="准确的报告和分析-–"><a href="#准确的报告和分析-–" class="headerlink" title="准确的报告和分析 –"></a>准确的报告和分析 –</h3><p>ERP 的第一个也是最重要的好处是，它可以帮助您根据您的业务需求和要求、客户的购买模式、搜索趋势和其他几个方面提供详细的报告，您可以分析这些方面为您的客户提供优质的服务以及最大的客户满意度，同时使您能够在需要时改进您的服务。</p>
+<h3 id="集中式数据-–"><a href="#集中式数据-–" class="headerlink" title="集中式数据 –"></a>集中式数据 –</h3><p>ERP使您能够在一个集中的位置管理所有业务数据，这意味着您可以随时随地访问它。它可以帮助您了解最新的市场趋势和消费者偏好，从而进一步增强您企业的决策过程。</p>
+<h3 id="节省成本-–"><a href="#节省成本-–" class="headerlink" title="节省成本 –"></a>节省成本 –</h3><p>ERP解决方案的另一个重要好处是，它有助于自动化整个业务流程和工作流程，从而消除手动和重复性任务，这反过来又有助于节省相关成本，同时最大限度地减少错误，并使您的业务服务更加省时和具有成本效益。</p>
+<h3 id="数据安全与合规-–"><a href="#数据安全与合规-–" class="headerlink" title="数据安全与合规 –"></a>数据安全与合规 –</h3><p>它还通过实施多层安全协议、防火墙、身份验证方法和其他安全措施，帮助保护敏感信息免受可能的网络攻击，从而确保安全的工作流程和业务流程。</p>
+<p>此外，它还有助于遵守财务标准和法规以及其他必要的法规遵从性。</p>
+<h3 id="提高生产力-–"><a href="#提高生产力-–" class="headerlink" title="提高生产力 –"></a>提高生产力 –</h3><p>它还有助于通过简化一个屋檐下的协作和通信环境来提高团队的生产力。它确保了团队成员之间的透明度，并实现了工作流程的自动化，从而减少了繁琐的手动工作，同时减少了错误或没有错误，从而确保了高质量的工作和服务。</p>
+<h3 id="可扩展性和灵活性-–"><a href="#可扩展性和灵活性-–" class="headerlink" title="可扩展性和灵活性 –"></a>可扩展性和灵活性 –</h3><p>ERP还提供灵活性，这意味着您可以根据自己的要求构建自定义工作流程，并支持您独特的业务流程和服务。它还随着业务的增长进行相应的调整，使您的业务具有可扩展性，从而适应不断增长的用户群和业务需求。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1852,460 +2575,6 @@ pip install stable_baselines3
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/04/29/ai-agent-everything/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Howard Huang">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/04/29/ai-agent-everything/" class="post-title-link" itemprop="url">AI 代理无处不在</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2024-04-29 12:31:29 / 修改时间：16:15:37" itemprop="dateCreated datePublished" datetime="2024-04-29T12:31:29+08:00">2024-04-29</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>5.1k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>9 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>我现在越来越觉得AI代理是非常重要的技术。 就像linux的kernel，AI代理就是LLM OS的调度核心。</p>
-<p>LLMs现在已经存在了几年，它们正迅速发展成为 AI 代理和代理工作流。LLMs很棒，但它们仍然不擅长自动化处理事务。LLMs与其他工具结合起来是利用LLMs所拥有的通用智能的一种非常高效的方式，通过消耗大量的语言数据。LLMs最大的问题在于它们偶尔会迷失方向（幻觉），我们永远不知道何时LLMs或代理可能会失败。围绕这些失败已经有一些防护措施，但我们远未充分利用LLMs普通智能的全部能力。</p>
-<h2 id="从-RAG-到-Agents"><a href="#从-RAG-到-Agents" class="headerlink" title="从 RAG 到 Agents"></a>从 RAG 到 Agents</h2><p>RAG 是一种半参数类型的系统，其中参数部分是大型语言模型，其余部分是非参数部分。将所有不同部分组合在一起得到半参数系统。LLMs 将所有信息存储在它们的权重或参数中（以编码形式），而系统的其余部分没有定义该知识的参数。</p>
-<ul>
-<li>交换索引（特定信息在LLMs中）使我们能够进行定制，这意味着我们不会遭受过时信息，也可以修改索引中的内容。</li>
-<li>用这些索引来作为LLMs的基础信息，意味着我们会减少幻觉，我们可以通过指向来源进行引用和归因</li>
-</ul>
-<p>因此，原则上，RAG 为我们的LLMs创建更好的情境化。</p>
-<p><img src="/../asset_aiagenteverything/01.png"></p>
-<p>“代理”是一种自动推理和决策引擎。它接收用户输入&#x2F;查询，并可以做出内部决策来执行该查询，以返回正确的结果。关键代理组件可以包括但不限于：</p>
-<ul>
-<li>将复杂问题分解为更小的问题</li>
-<li>选择要使用的外部工具+确定调用该工具的参数</li>
-<li>规划一组任务</li>
-<li>将先前完成的任务存储在内存模块中</li>
-</ul>
-<p><img src="/../asset_aiagenteverything/02.webp"></p>
-<p>我们有不同类型的代理，从简单到极其复杂的代理。根据任务的复杂性，我们设计这些代理，使它们能够自主决定选择可用的工具。下面的图片显示了不同类型的代理及其复杂程度。</p>
-<p><img src="/../asset_aiagenteverything/03.webp"></p>
-<h2 id="代理系统概述"><a href="#代理系统概述" class="headerlink" title="代理系统概述"></a>代理系统概述</h2><p>在一个由LLM驱动的自主代理系统中，LLM充当代理的大脑，利用不同的组件在数字世界中执行操作。</p>
-<h3 id="工具使用"><a href="#工具使用" class="headerlink" title="工具使用"></a>工具使用</h3><p>代理程序学会调用外部 API 或工具，以获取模型权重中可能缺失的额外信息&#x2F;上下文或功能（通常在预训练后难以更改）。这包括当前信息、数学引擎、代码执行能力、访问专有信息源等等。</p>
-<h3 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h3><ul>
-<li>短期记忆：在上下文学习中，可以将其视为利用模型的短期记忆来处理给定问题。上下文长度窗口可以被视为短期记忆。</li>
-<li>长期记忆：为代理提供在较长时间内保留和召回（无限）信息的能力，通常通过利用外部向量存储和快速检索。RAG 中的检索部分可以被视为长期记忆。</li>
-</ul>
-<h3 id="计划"><a href="#计划" class="headerlink" title="计划"></a>计划</h3><ul>
-<li>子目标和任务分解：代理将较大的任务分解为较小、可管理的子目标，从而有效处理复杂任务。</li>
-<li>反思和完善：代理可以进行自我批评（虽然在某些方面存疑），并对过去的行动进行自我反思，从错误中吸取教训，并为未来的步骤进行完善，从而改善最终结果。</li>
-</ul>
-<p><img src="/../asset_aiagenteverything/04.webp"></p>
-<h2 id="人工智能代理的工具使用"><a href="#人工智能代理的工具使用" class="headerlink" title="人工智能代理的工具使用"></a>人工智能代理的工具使用</h2><p>能够使用工具是人类在许多方面与其他生物有所不同的地方。我们创造、修改和利用外部物体来扩展我们的身体和认知能力。同样，为LLMs配备外部工具可以显著扩展它们的能力。</p>
-<p>在 AI 代理设置中，工具对应于一组工具，使LLM代理能够与外部环境（如 Google 搜索、代码解释器、数学引擎等）进行交互。工具也可以是某种形式的数据库、知识库和外部模型。当代理与外部工具交互时，它通过工作流执行任务，帮助代理获取观察结果或完成给定子任务和最终任务所需的上下文。</p>
-<p>工具如何以不同方式被LLMs利用的几个示例：</p>
-<ul>
-<li><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2205.00445">MRKL</a>（Modular Reasoning, Knowledge, and Language）是一个框架，将LLMs与专家模块结合起来，这些模块可以是LLMs或符号化的（计算器或天气 API）。</p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2303.17580">HuggingGPT</a> — 一个由LLM驱动的代理，利用LLMs作为任务规划器，连接各种现有的 AI 模型（基于描述）来解决 AI 任务。</p>
-</li>
-</ul>
-<p><img src="/../asset_aiagenteverything/05.webp"></p>
-<p>HuggingGPT 的整个过程如上图所示，可以根据原始论文中提到的内容分为四个阶段：</p>
-<p>任务规划：使用 ChatGPT 分析用户的请求以理解他们的意图，并将其拆分为可能可解决的任务。</p>
-<p>模型选择：为了解决计划中的任务，ChatGPT 基于模型描述从 Hugging Face 上选择专家模型。</p>
-<p>任务执行：调用并执行每个选择的模型，并将结果返回给 ChatGPT。</p>
-<p>响应生成：最后，ChatGPT 被用于整合所有模型的预测并为用户生成响应。</p>
-<p>HuggingGPT 在一个真实示例中是如何运作的, 如下图。</p>
-<p><img src="/../asset_aiagenteverything/06.png"></p>
-<h2 id="在代理工作流程中解决内存问题"><a href="#在代理工作流程中解决内存问题" class="headerlink" title="在代理工作流程中解决内存问题"></a>在代理工作流程中解决内存问题</h2><p>内存可以被定义为用于获取、存储、保留和稍后检索信息的资源或存储器。在任何计算系统中都有几种类型的内存。</p>
-<h3 id="缓冲内存（感觉内存）"><a href="#缓冲内存（感觉内存）" class="headerlink" title="缓冲内存（感觉内存）:"></a>缓冲内存（感觉内存）:</h3><p>正如感觉记忆作为感觉信息的短暂保留（任务完成后立即消失）的作用，计算机系统中的缓冲存储器可以保存瞬态数据，如指令集。对于LLMs，这可能指的是令牌缓冲区或输入队列。</p>
-<h3 id="工作记忆（短期记忆，STM）："><a href="#工作记忆（短期记忆，STM）：" class="headerlink" title="工作记忆（短期记忆，STM）："></a>工作记忆（短期记忆，STM）：</h3><p>LLMs在处理文本时，采用类似于人类工作记忆的机制。它们使用注意力机制来保持对输入的某些部分的“关注”。在基于 Transformer 的模型（如 GPT）中，注意力权重起着类似于 STM 的作用，同时保持和处理多个信息片段。LLM的工作记忆是其上下文长度。</p>
-<h3 id="参数内存（长期记忆，LTM）："><a href="#参数内存（长期记忆，LTM）：" class="headerlink" title="参数内存（长期记忆，LTM）："></a>参数内存（长期记忆，LTM）：</h3><p>LLMs 的参数（或权重）可以被视为一种长期记忆形式。一旦训练完成，这些参数会编码从训练数据中获取的大量信息，并可以无限期地保留。</p>
-<p>在LLMs中，“记忆”不是作为离散事件存储的，而是作为模式（抽象世界模型，尽管不完全）在一个互连节点网络中表示，并且该模型通过根据其训练状态动态生成响应来“回忆”信息。</p>
-<p>外部存储器可以解决有限注意力跨度的问题。标准做法是将嵌入向量（文本转换为密集向量）保存到一个支持快速最大内积搜索（<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Maximum_inner-product_search">MIPS</a>）的向量存储数据库中。为了优化检索速度，常见选择是使用近似最近邻居（ANN）算法，以返回大约前 k 个最近邻居，以换取一点精度损失来获得巨大的加速。</p>
-<p>用于此检索的一些算法：<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Locality-sensitive_hashing">LSH</a>、<a target="_blank" rel="noopener" href="https://github.com/spotify/annoy">ANNOY</a>、<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1603.09320">HNSW</a>、<a target="_blank" rel="noopener" href="https://github.com/facebookresearch/faiss">FAISS</a> 和 <a target="_blank" rel="noopener" href="https://github.com/google-research/google-research/tree/master/scann">ScaNN</a></p>
-<p>所有这些方法背后的一般原则——LSH、ANNOY、HNSW、FAISS 和 ScaNN——是在高维空间中高效地近似最近邻搜索。这些方法旨在通过使用将相似数据点组合在一起的策略，以允许更快的检索来克服精确搜索的计算强度。</p>
-<h2 id="计划：当前-AI-代理的最大问题"><a href="#计划：当前-AI-代理的最大问题" class="headerlink" title="计划：当前 AI 代理的最大问题"></a>计划：当前 AI 代理的最大问题</h2><p>有时代理会为了回答一个单一&#x2F;简单的问题而大量调用，为每个查询积累令牌给LLM。这不仅成本高昂，还会引入延迟。令牌生成仍然是一个相对缓慢的过程，大部分（不是全部）基于LLM的应用程序中的延迟来自生成输出令牌。反复调用LLM并要求其提供想法&#x2F;观察，我们最终会生成大量输出令牌（成本），导致高延迟（用户体验下降）。</p>
-<p>一个例子如下图所示。为了达到正确答案或行动，LLMs经常发出多个请求，由于代理工作流程的固有结构以树形或图形，这会引入许多延迟。</p>
-<p>有很多类似的论文，比如<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2201.11903">思维链</a>，<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2305.10601.pdf">思维树</a>，<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2308.10379.pdf">思维算法</a>。</p>
-<p><img src="/../asset_aiagenteverything/07.webp"></p>
-<p>最新的高级提示策略是”思维算法”：这篇思维算法新论文的理念与思维树论文相同，但主要区别在于上下文保存的方式。在思维树中，我们使用基于树的数据结构，但在这里我们使用基于图的结构，因此给我们提供了比使用简单的 BFS 或 DFS 更好的方式来浏览所有的知识图。</p>
-<p>另一个优势是思维算法使用更少的提示来实现类似的结果。这些提示策略背后的整个理念是以最少的调用LLM来获得最多的上下文。</p>
-<p>AI 代理的另一个问题是LLMs是非确定性的。虽然对于创意生成有益，但在需要可预测性的场景中，这带来了严重挑战。例如，如果我们正在编写一个LLM支持的聊天应用程序来进行 Postgres 查询（Text2SQL），我们希望有很高的可预测性。</p>
-<h2 id="自我反馈"><a href="#自我反馈" class="headerlink" title="自我反馈"></a>自我反馈</h2><p>由于计划模块不涉及任何反馈，这使得实现长期规划变得非常困难，尤其是解决复杂任务时尤为必要。为了解决这一挑战，我们可以创建一个过程，根据过去的行动和观察，反复反思和完善执行计划。目标是纠正和改进过去的错误，有助于提高最终结果的质量。这在复杂的现实环境和任务中尤为重要，试错是完成任务的关键。</p>
-<h3 id="ReAct"><a href="#ReAct" class="headerlink" title="ReAct"></a>ReAct</h3><p><a target="_blank" rel="noopener" href="https://www.promptingguide.ai/techniques/react">ReAct</a> 结合推理和行动，旨在使LLM能够通过交替执行一系列步骤（重复 N 次）： Thought ， Action 和 Observation 来解决复杂任务。ReAct 促使LLMs生成口头推理痕迹和任务的行动。这使系统能够进行动态推理，为行动创建、维护和调整计划，同时还能与外部环境（例如维基百科）进行交互，将额外信息纳入推理过程。</p>
-<p><img src="/../asset_aiagenteverything/08.webp"></p>
-<p>下图显示了 ReAct 的示例以及执行问答所涉及的不同步骤。</p>
-<p><img src="/../asset_aiagenteverything/09.webp"></p>
-<h3 id="Reflexion"><a href="#Reflexion" class="headerlink" title="Reflexion"></a>Reflexion</h3><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2303.11366">Reflexion</a>这是一个旨在为代理人提供动态记忆和自我反思能力以提高推理能力的框架。 Reflexion 具有标准的 RL 设置，其中奖励模型提供简单的二进制奖励，行动空间遵循 ReAct 中的设置，其中特定于任务的行动空间通过语言进行增强，以实现复杂的推理步骤。在每个动作 𝑎𝑡 之后，代理计算启发式 ℎ𝑡，并根据自我反思结果决定是否重置环境以开始新的试验。</p>
-<p><img src="/../asset_aiagenteverything/10.webp"></p>
-<p>heuristic (启发式)函数确定何时规划低效或包含幻觉,需要停止。低效的规划是指花费太长时间而没有成功。幻觉被定义为遇到一系列连续相同的行动，导致环境中出现相同的观察。</p>
-<h3 id="Chain-of-Hindsight-（CoH）"><a href="#Chain-of-Hindsight-（CoH）" class="headerlink" title="Chain of Hindsight （CoH）"></a>Chain of Hindsight （CoH）</h3><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2302.02676">CoH</a> , 在回顾链中，模型被要求通过查看自己的过去工作来改进自己，评分，并附有如何在下次做得更好的注释。模型通过尝试产生一个能获得更高评分的新输出来进行练习，利用自己尝试和反馈的历史。为了防止模型仅仅记住答案，训练过程中会隐藏部分历史记录。</p>
-<h3 id="Algorithm-Distillation-AD"><a href="#Algorithm-Distillation-AD" class="headerlink" title="Algorithm Distillation (AD)"></a>Algorithm Distillation (AD)</h3><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2210.14215">AD</a> 将类似的想法应用于机器人或代理学习任务（如视频游戏中的 RL 代理）。代理人回顾了自己在过去几次尝试中的表现，并试图找出改进的模式。然后，它预测下一步应该比以前的更好，学习变得更好的策略，而不仅仅是特定问题的解决方案。</p>
-<p>AD 专注于从代理人与环境互动的历史中学习的理念。通过查看过去行动序列及其结果，代理人试图将成功的策略提炼到其策略中。</p>
-<p>Reflexion 反思则赋予代理人记住过去行动并反思其有效性的能力，特别关注检测和避免重复或无效策略（如幻觉）。</p>
-<h2 id="代理类型"><a href="#代理类型" class="headerlink" title="代理类型"></a>代理类型</h2><h3 id="路由代理"><a href="#路由代理" class="headerlink" title="路由代理"></a>路由代理</h3><p>最简单的代理推理形式。根据用户查询和一组选择，输出一个选择子集以路由该查询。</p>
-<p><img src="/../asset_aiagenteverything/11.webp"></p>
-<p>在上述查询中，“作者在艺术学校期间做了什么？”被传递给路由器。路由器的工作是通过系统确定查询的最佳路径，以检索最相关的信息。</p>
-<p>路由器可以选择两条可能的路径：</p>
-<p>矢量查询引擎：该引擎根据查询向量与文档向量之间的语义相似性，从更大的集合中检索前 k 个相关文档。它使用向量空间模型来理解和检索与查询在语义上最接近的文档。</p>
-<p>摘要查询引擎：该引擎检索所有文档并提供其内容的摘要。它允许系统广泛了解一个主题，而无需逐个查看每个文档。</p>
-<p>根据路由器的决定，要么返回来自矢量查询引擎的特定文档子集，要么返回来自摘要查询引擎的所有相关文档的摘要，以回答用户的查询。这从根本上改变了最终返回的输出类型。有些查询可能需要详细答案，有些可能对较广泛的答案满意。这些路由器代理帮助我们修改LLMs的行为。</p>
-<h3 id="查询规划代理"><a href="#查询规划代理" class="headerlink" title="查询规划代理"></a>查询规划代理</h3><p>查询规划代理背后的理念是首先将复杂查询分解为每个相关数据源的子问题，然后收集所有中间响应并综合出最终响应。</p>
-<p><img src="/../asset_aiagenteverything/12.webp"></p>
-<p>查看查询规划代理如何通过子查询获得更好的响应。</p>
-<p><img src="/../asset_aiagenteverything/13.webp"></p>
-<h3 id="工具使用代理"><a href="#工具使用代理" class="headerlink" title="工具使用代理"></a>工具使用代理</h3><p>这是可以使用工具或 API 的代理类型，推断运行该工具所需的参数，并将其结果返回给LLM上下文，以获得更准确的答案。</p>
-<p><img src="/../asset_aiagenteverything/14.webp"></p>
-<p>代理如何处理序列化的一堆问题？代理如何随时间保持状态？</p>
-<p>这就是更高级代理如 HuggingGPT 和 ChemCrow 进入画面的地方。在这些多代理设置中，系统可以使用多个工具，并且通常还集成了动态内存。这些系统通常使用 ReAct 和 Reflexion 等方法，在代理的环境和行动中具有细致自洽的方法。</p>
-<p><img src="/../asset_aiagenteverything/15.webp"></p>
-<p>以下是用于构建 LLM 代理的工具和框架的示例：</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://python.langchain.com/docs/get_started/introduction">LangChain</a>：一个基于语言模型的应用程序和代理开发框架。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Significant-Gravitas/AutoGPT">AutoGPT</a>：提供构建 AI 代理的工具。</li>
-<li><a target="_blank" rel="noopener" href="https://microsoft.github.io/autogen/">AutoGen</a> ：一个框架，可以使用多个代理开发LLM应用程序，这些代理可以相互对话以解决任务。</li>
-<li><a target="_blank" rel="noopener" href="https://www.llamaindex.ai/">LlamaIndex</a> - 用于将自定义数据源连接到大型语言模型的框架。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/gpt-engineer-org/gpt-engineer">GPT Engineer</a> ：自动化代码生成以完成开发任务。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/melih-unsal/DemoGPT">DemoGPT</a> ：自主 AI 代理以创建交互式 Streamlit 应用程序。</li>
-</ul>
-<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>LLM 代理仍处于萌芽阶段，构建它们仍存在许多挑战和限制，比如基于 LLM 的代理需要适应角色以有效地完成领域内的任务，能够进行长期规划，普遍的人类对齐，可靠性，知识限制，以及许多其他问题。</p>
-<p>在未来，我们可能会研究更高级的概念，如 KV 缓存和LLM编译器与操作系统。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://medium.com/aiguys/ai-agents-are-all-you-need-0b38e8ee5481">https://medium.com/aiguys/ai-agents-are-all-you-need-0b38e8ee5481</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/04/17/magic-eraser/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Howard Huang">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/04/17/magic-eraser/" class="post-title-link" itemprop="url">使用 PyTorch 创建迷你神奇橡皮擦</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2024-04-17 20:16:47 / 修改时间：21:18:24" itemprop="dateCreated datePublished" datetime="2024-04-17T20:16:47+08:00">2024-04-17</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>15k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>27 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>去年，Google 向所有拥有 Google One 的用户提供了“神奇橡皮擦”。有了神奇橡皮擦，我们可以轻松地从照片中删除不需要的部分。它利用人工智能根据周围环境填充适当的对象，使整体图片看起来更加自然！微信也有这个功能。</p>
-<p>这项技术可能看起来像魔术，让您可以随心所欲地更改图像。有些人可能认为这需要大量的数学知识和计算机性能。但实际上，魔术橡皮擦，也被称为“图像修复”，并不太复杂，可以在您自己的计算机上完成。</p>
-<p>当今流行的方法包括基于扩散、GANs（生成对抗网络）和注意力机制的模型。在本文中，我将重点介绍基于 GAN 的图像修复方法。</p>
-<h2 id="条件图像生成"><a href="#条件图像生成" class="headerlink" title="条件图像生成"></a>条件图像生成</h2><p>图像生成本质上是让我们的模型产生一个虚假的数据分布 Pmodel(x)。目标是使这个分布尽可能接近真实分布 Pdata(x)，从而生成新的图像。</p>
-<p><img src="/../asset_magiceraser/01.webp"></p>
-<p>在图像修复中，我们的目标是填补图像中缺失的部分。这可以被看作是向图像引入一个“条件”，将我们模型的方法从一般分布 Pmodel(x) 转变为条件分布 Pmodel(x | condition)。</p>
-<p>这个过程类似于常规图像生成，但多了一个将条件纳入我们模型的额外步骤，我稍后会详细讨论。</p>
-<h2 id="图像修复的步骤"><a href="#图像修复的步骤" class="headerlink" title="图像修复的步骤"></a>图像修复的步骤</h2><p><img src="/../asset_magiceraser/02.webp"></p>
-<ul>
-<li>创建一个随机遮罩</li>
-<li>将真实图像与遮罩相结合（遮罩图像）</li>
-<li>把遮罩图像和遮罩作为神经网络的输入，生成假图像</li>
-<li>计算真实图像和假图像之间的相似性（损失）</li>
-</ul>
-<h2 id="联合调制-GAN"><a href="#联合调制-GAN" class="headerlink" title="联合调制 GAN"></a>联合调制 GAN</h2><p>联合调制生成对抗网络，或称 CoModGAN，是一种专为图像补全设计的生成模型。该模型在处理图像中大片缺失区域的任务中特别有效。</p>
-<p>我们可以看到这是一种 GAN（生成对抗网络）模型，这意味着它主要由两部分组成：生成器负责创建图像，鉴别器评估这些图像以确定它们是真实的还是虚假的。</p>
-<p><img src="/../asset_magiceraser/03.webp"><br>有条件图像生成的过程</p>
-<p>让我们关注 CoModGAN 的另一个关键方面：’联合调制’。下面的图像展示了调制的不同方法：（D：解码器，M：映射网络, E：有条件编码器）</p>
-<p><img src="/../asset_magiceraser/04.webp"></p>
-<ul>
-<li>模型 (a) 代表了一种用于生成图像的无条件模型，最初在 StyleGAN 中引入。其关键特征包括调制和映射网络。</li>
-<li>模型 (b) 和 (c) 是编码器-解码器架构的典型示例，其中编码器将图像转换为潜在空间，而解码器重建原始图像。(例如 Pix2Pix，CycleGAN…)</li>
-<li>模型 (d) 基于模型 (b) 和 (c) 的结构，并且还整合了 StyleGAN 的 (a) 映射网络以解开潜在向量 Z。此外，为了更好地控制生成图像的风格，它将 E 和 M 的输出组合作为 D 的额外输入，这就是为什么它被称为共调制。</li>
-</ul>
-<h2 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h2><p>机器学习中的第一步，也是最重要的一步是数据预处理阶段。在这个实现中，我们将使用 CelebA-HQ 数据集和矩形遮罩来训练模型。此外，您也可以使用自由形式的遮罩或创建自己的遮罩</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">def rectangle_mask(shape, min_size=32, max_size=96):</span><br><span class="line">    h, w = shape</span><br><span class="line">    mask = np.zeros([h, w])</span><br><span class="line">    hole_size = random.randint(min_size, max_size)</span><br><span class="line">    hole_size = min(int(w*0.8), int(h*0.8), hole_size)</span><br><span class="line">    x = random.randint(0, w-hole_size-1)</span><br><span class="line">    y = random.randint(0, h-hole_size-1)</span><br><span class="line">    mask[x:x+hole_size, y:y+hole_size] = 1</span><br><span class="line">    return mask.reshape([1, h, w]).astype(np.float32)</span><br><span class="line">    </span><br><span class="line">def random_ff_mask(shape):</span><br><span class="line">    h,w = shape</span><br><span class="line">    mask = np.zeros((h,w))</span><br><span class="line">    num_v = 12+np.random.randint(5)</span><br><span class="line">    </span><br><span class="line">    for i in range(num_v):</span><br><span class="line">        start_x = np.random.randint(w)</span><br><span class="line">        start_y = np.random.randint(h)</span><br><span class="line">        for j in range(1+np.random.randint(5)):</span><br><span class="line">            angle = 0.01+np.random.randint(4)</span><br><span class="line">            if i % 2 == 0:</span><br><span class="line">                angle = 2 * 3.1415926 - angle</span><br><span class="line">            length = 10+np.random.randint(30)</span><br><span class="line">            brush_w = 10+np.random.randint(7)</span><br><span class="line">            end_x = (start_x + length * np.sin(angle)).astype(np.int32)</span><br><span class="line">            end_y = (start_y + length * np.cos(angle)).astype(np.int32)</span><br><span class="line"></span><br><span class="line">            cv2.line(mask, (start_y, start_x), (end_y, end_x), 1.0, brush_w)</span><br><span class="line">            start_x, start_y = end_x, end_y</span><br><span class="line">    return mask.reshape((1,) + mask.shape).astype(np.float32)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">class InpaintData(torch.utils.data.Dataset):</span><br><span class="line">    def __init__(self, path, img_size=[128, 128]):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.file_list = []</span><br><span class="line">        self.img_size = img_size</span><br><span class="line">        self.transforms = transforms.Compose([</span><br><span class="line">            # can put some augmentation here</span><br><span class="line">            transforms.RandomHorizontalFlip(0.5),</span><br><span class="line">            transforms.ToTensor(),</span><br><span class="line">            transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])]</span><br><span class="line">        )</span><br><span class="line">        for file_name in glob(f&#x27;&#123;path&#125;/**/*.jpg&#x27;, recursive=True):</span><br><span class="line">            self.file_list.append(file_name)</span><br><span class="line"></span><br><span class="line">    def __len__(self):</span><br><span class="line">        return len(self.file_list)</span><br><span class="line"></span><br><span class="line">    def __getitem__(self, idx):</span><br><span class="line">        file_name = self.file_list[idx]</span><br><span class="line">        img = Image.open(file_name).convert(&#x27;RGB&#x27;)</span><br><span class="line">        img = transforms.functional.resize(img, self.img_size, Image.BICUBIC)</span><br><span class="line">        img = self.transforms(img)</span><br><span class="line">        mask = rectangle_mask([128, 128])</span><br><span class="line">        return img, mask</span><br><span class="line">      </span><br><span class="line">path = &quot;put your path here!&quot;</span><br><span class="line">dataset = InpaintData(path)</span><br><span class="line">train_data = torch.utils.data.DataLoader(</span><br><span class="line">                    dataset,</span><br><span class="line">                    batch_size=16,</span><br><span class="line">                    shuffle= True,</span><br><span class="line">                    pin_memory=True,</span><br><span class="line">                    drop_last=True)</span><br></pre></td></tr></table></figure>
-
-<p><img src="/../asset_magiceraser/05.webp"></p>
-<h2 id="模型架构"><a href="#模型架构" class="headerlink" title="模型架构"></a>模型架构</h2><p><img src="/../asset_magiceraser/06.webp"></p>
-<p>上面的图表显示了 CoModGAN 中生成器的结构，可以分为两个主要组件：编码器网络和解码器网络。编码器相对简单，我们可以轻松地使用深度卷积网络，如 VGG，来对输入进行编码。</p>
-<p>现在，让我们关注解码器部分。正如您所看到的，联合调制结合了来自编码器和映射网络的两个不同潜在向量，并将它们整合到解码器的各个层中，类似于 StyleGAN 中的合成网络。</p>
-<h2 id="提高-StyleGAN-的图像质量"><a href="#提高-StyleGAN-的图像质量" class="headerlink" title="提高 StyleGAN 的图像质量"></a>提高 StyleGAN 的图像质量</h2><p><img src="/../asset_magiceraser/07.webp"><br>上面的图像是由 StyleGAN 生成的；我们可以看到图像的角落存在一些水滴。这种现象从分辨率为 64x64 的所有特征图中开始出现，并在更高分辨率下逐渐变得更加明显。<br><img src="/../asset_magiceraser/08.webp"></p>
-<p>为了解决水滴问题，作者提出了 StyleGAN2（C 和 D），这是 StyleGAN 的修订版本。 他们认为这个问题是由 AdaIN 层引起的，该层分别对每个特征图的均值和方差进行归一化，可能破坏与特征相对大小相关的信息。</p>
-<p><img src="/../asset_magiceraser/09.webp"></p>
-<p>因此，通过去除风格均值，我们可以发现水滴伪影完全消失了。（附：AdaIN 现在直接在 CNN 的权重（w2，…）上运行，而不是在图像 Xi 上运行）</p>
-<p><img src="/../asset_magiceraser/10.webp"><br>StyleGAN 的 Demod 层</p>
-<p>另一个修改涉及将实例归一化（Norm std）替换为 Demod 层。由于归一化的目的是将层的输出恢复到单位标准差，这可以通过直接对层的权重进行归一化来更直接地实现，这被称为“解调”。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">class Conv2DMod(nn.Module):</span><br><span class="line">    def __init__(self, in_channel, out_channel, kernel, demod=True, stride=1):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.kernel = kernel</span><br><span class="line">        self.demod = demod</span><br><span class="line">        self.stride = stride</span><br><span class="line">        self.filters = out_channel</span><br><span class="line">        self.weight = nn.Parameter(torch.randn((out_channel, in_channel, kernel, kernel)))</span><br><span class="line">        nn.init.kaiming_normal_(self.weight, a=0, mode=&#x27;fan_in&#x27;, nonlinearity=&#x27;leaky_relu&#x27;)</span><br><span class="line"></span><br><span class="line">    def _get_same_padding(self, size, kernel, stride, dilation=1):</span><br><span class="line">        return ((size - 1) * (stride - 1) + dilation * (kernel - 1)) // 2</span><br><span class="line"></span><br><span class="line">    def forward(self, x, style):</span><br><span class="line">        &#x27;&#x27;&#x27; </span><br><span class="line">        x: [b, c, h, w]</span><br><span class="line">        style: [b, s_dim]</span><br><span class="line">        </span><br><span class="line">        Style modulation:</span><br><span class="line">        w&#x27; = style * w</span><br><span class="line">        Demodulation: </span><br><span class="line">        w&#x27;&#x27; = w&#x27; / sqrt(x&#x27;**2 + eps) &#x27;&#x27;&#x27;</span><br><span class="line">        </span><br><span class="line">        b, c, h, w = x.shape</span><br><span class="line">        style = style[:, None, :, None, None]</span><br><span class="line">        weight = self.weight[None, :, :, :, :]</span><br><span class="line">        weight = weight * (style + 1)</span><br><span class="line">        </span><br><span class="line">        if self.demod: </span><br><span class="line">            d = torch.rsqrt((weight ** 2).sum(dim=(2, 3, 4), keepdim=True) + 1e-8)</span><br><span class="line">            weight = weight * d</span><br><span class="line">            </span><br><span class="line">        x = x.reshape(1, -1, h, w)</span><br><span class="line">        _, _, *ws = weight.shape</span><br><span class="line">        weight = weight.reshape(b * self.filters, *ws)</span><br><span class="line">        padding = self._get_same_padding(h, self.kernel, self.stride)</span><br><span class="line">        x = F.conv2d(x, weight, padding=padding, groups=b)</span><br><span class="line">        x = x.reshape(-1, self.filters, h, w)</span><br><span class="line">        return x</span><br></pre></td></tr></table></figure>
-
-<h2 id="生成器块"><a href="#生成器块" class="headerlink" title="生成器块"></a>生成器块</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">class EqualLinear(nn.Module):</span><br><span class="line">    def __init__(self, in_dim, out_dim, bias = True, bias_init = 0, lr_mul = 1):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.weight = torch.nn.Parameter(torch.randn([out_dim, in_dim]) / lr_mul)</span><br><span class="line">        self.bias = torch.nn.Parameter(torch.full([out_dim], np.float32(bias_init))) if bias else None</span><br><span class="line">        self.weight_gain = lr_mul / np.sqrt(in_dim)</span><br><span class="line">        self.bias_gain = lr_mul</span><br><span class="line">    </span><br><span class="line">    def forward(self, x):</span><br><span class="line">        w = self.weight * self.weight_gain</span><br><span class="line">        layer = F.linear(x, w, bias = None)</span><br><span class="line">        if self.bias is not None:</span><br><span class="line">            layer = F.linear(x, w, bias = self.bias * self.bias_gain)</span><br><span class="line">        return layer</span><br><span class="line"></span><br><span class="line">class ToRGB(nn.Module):</span><br><span class="line">    def __init__(self, latent_dim, inp_dim):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.style = Linear(latent_dim, inp_dim)</span><br><span class="line">        self.conv = Conv2DMod(inp_dim, 3, 1, demod=False)</span><br><span class="line">        self.upsample = Upsample(scale_factor = 2, mode=&#x27;bilinear&#x27;)</span><br><span class="line">        </span><br><span class="line">    def forward(self, inp, style, prev_rgb = None):</span><br><span class="line">        style = self.style(style)</span><br><span class="line">        out = self.conv(inp, style)</span><br><span class="line">        if prev_rgb is not None:</span><br><span class="line">            prev_rgb = self.upsample(prev_rgb)</span><br><span class="line">            out += prev_rgb</span><br><span class="line">        return out</span><br></pre></td></tr></table></figure>
-
-<p>EqualLinear 用于映射网络中，在训练过程中动态重新调整层的输出。在我的实验中，与常规线性层相比，使用 EqualLinear 在映射网络中并没有显著影响结果。我建议直接使用 torch.nn.Linear。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">class G_encode(nn.Module):</span><br><span class="line">    def __init__(self, in_channel, out_channel, downsample=True):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.downsample = downsample</span><br><span class="line">        self.conv_res = Conv2d(in_channel, out_channel, kernel_size=1, padding=0)</span><br><span class="line">        self.encode = nn.Sequential(</span><br><span class="line">            Conv2d(in_channel, out_channel, kernel_size=3, padding=1),</span><br><span class="line">            LeakyReLU(0.2, inplace=True),</span><br><span class="line">            Conv2d(out_channel, out_channel, kernel_size=3, padding=1),</span><br><span class="line">            LeakyReLU(0.2, inplace=True)</span><br><span class="line">        )  </span><br><span class="line">    def forward(self, x):</span><br><span class="line">        res = self.conv_res(x)</span><br><span class="line">        x = self.encode(x) + res</span><br><span class="line">        if self.downsample:</span><br><span class="line">            x = AvgPool2d(kernel_size=2, stride=2)(x)</span><br><span class="line">        return x</span><br><span class="line">        </span><br><span class="line">class G_decode(nn.Module):</span><br><span class="line">    def __init__(self, latent_dim, in_channel, out_channel, upsample=True):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.upsample = upsample</span><br><span class="line">        self.style1 = Linear(latent_dim, in_channel)</span><br><span class="line">        self.style2 = Linear(latent_dim, out_channel)</span><br><span class="line">        self.noise1 = Conv2d(1, out_channel, 1, padding=1)</span><br><span class="line">        self.noise2 = Conv2d(1, out_channel, 1, padding=1)</span><br><span class="line">        self.conv1 = Conv2DMod(in_channel, out_channel, 3)</span><br><span class="line">        self.conv2 = Conv2DMod(out_channel, out_channel, 3)</span><br><span class="line">        self.to_rgb = ToRGB(latent_dim, out_channel)</span><br><span class="line">        </span><br><span class="line">    def forward(self, x, style, noise, prev_rgb):</span><br><span class="line">        B, C, H, W = x.shape</span><br><span class="line">        if self.upsample:</span><br><span class="line">            x = Upsample(scale_factor=2, mode=&#x27;bilinear&#x27;, align_corners=False)(x)</span><br><span class="line">        noise1 = self.noise1(noise)[:, :, :x.shape[2], :x.shape[3]]</span><br><span class="line">        noise2 = self.noise2(noise)[:, :, :x.shape[2], :x.shape[3]]</span><br><span class="line">        style1 = self.style1(style)</span><br><span class="line">        style2 = self.style2(style)</span><br><span class="line">        </span><br><span class="line">        x = self.conv1(x, style1)</span><br><span class="line">        x = LeakyReLU(0.2, inplace=True)(x + noise1)</span><br><span class="line">        x = self.conv2(x, style2)</span><br><span class="line">        x = LeakyReLU(0.2, inplace=True)(x + noise2)</span><br><span class="line">        rgb = self.to_rgb(x, style, prev_rgb)</span><br><span class="line">        return x, rgb</span><br></pre></td></tr></table></figure>
-
-<p><img src="/../asset_magiceraser/11.webp"><br>不同类型的 GAN 架构</p>
-<p>这里有一些不同选择的 tRGB 和 fRGB 架构。在我的实验中，我使用 (b) 作为主要结构。</p>
-<h2 id="生成器"><a href="#生成器" class="headerlink" title="生成器"></a>生成器</h2><p><img src="/../asset_magiceraser/12.webp"></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">class Generator(nn.Module):</span><br><span class="line">    def __init__(self, img_size, latent_dim, style_mlp = 8, lr_mul = 0.1, fmap_min = 16, fmap_max = 512):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.num_layers = int(log2(img_size)-2)</span><br><span class="line">        f_map = [fmap_min * (2 ** i) for i in range(self.num_layers + 1)]</span><br><span class="line">        filters = list(map(lambda x: min(fmap_max, x), f_map))</span><br><span class="line">        init_channel = filters[0]</span><br><span class="line">        self.latent_dim = latent_dim</span><br><span class="line">        self.style_dim = latent_dim + filters[-1]</span><br><span class="line">        self.in_out_channel = zip(filters[:-1], filters[1:])</span><br><span class="line">        self.init_conv = Conv2d(init_channel, init_channel, 3, padding=1)</span><br><span class="line">        </span><br><span class="line">        self.style_mapping =  nn.Sequential()</span><br><span class="line">        self.downs =  nn.ModuleList([])</span><br><span class="line">        self.ups = nn.ModuleList([])</span><br><span class="line">        </span><br><span class="line">        # 4 because image (b, 3, h, w) + mask (b, 1, h, w)</span><br><span class="line">        self.from_rgb = nn.Sequential(</span><br><span class="line">            Conv2d(4, filters[0], 3, padding=1),</span><br><span class="line">            LeakyReLU(0.2, inplace=True)</span><br><span class="line">        )</span><br><span class="line">        # x_global: latent vector of the input image</span><br><span class="line">        self.x_global = nn.Sequential(</span><br><span class="line">            Linear(filters[-1] * 4 * 4, filters[-1]),</span><br><span class="line">            LeakyReLU(0.2, inplace=True)</span><br><span class="line">        )</span><br><span class="line">        # style mapping network</span><br><span class="line">        for _ in range(style_mlp):</span><br><span class="line">            self.style_mapping.extend([EqualLinear(latent_dim, latent_dim, lr_mul), </span><br><span class="line">                                       LeakyReLU(0.2, inplace=True)])</span><br><span class="line">        # Encoder</span><br><span class="line">        for in_channel, out_channel in self.in_out_channel:</span><br><span class="line">            g_block = G_encode(in_channel,out_channel)               </span><br><span class="line">            self.downs.append(g_block)</span><br><span class="line">            </span><br><span class="line">        # Decoder (styleGAN)</span><br><span class="line">        reversed_filters = list(reversed(filters))</span><br><span class="line">        self.in_out_channel = zip(reversed_filters[:-1], reversed_filters[1:])</span><br><span class="line">        for in_channel, out_channel in self.in_out_channel:</span><br><span class="line">            g_block = G_decode(self.style_dim, in_channel, out_channel)            </span><br><span class="line">            self.ups.append(g_block)</span><br><span class="line">        </span><br><span class="line">    def forward(self, img, mask, latents, noise, return_latent=False):</span><br><span class="line">        b, c, h, w = img.shape</span><br><span class="line">        x = torch.cat([1 - mask - 0.5, img * (1- mask)], 1)</span><br><span class="line">        x = self.from_rgb(x)</span><br><span class="line">        for blocks in self.downs:</span><br><span class="line">            x = blocks(x)</span><br><span class="line">            </span><br><span class="line">        rgb = None</span><br><span class="line">        x = x.view(b, -1)</span><br><span class="line">        x_global = self.x_global(x) </span><br><span class="line">        styles = self.style_mapping(F.normalize(latents, dim=1))</span><br><span class="line">        styles = styles.view([-1, b, self.latent_dim])</span><br><span class="line">        x = x.view(b, -1, 4, 4)</span><br><span class="line">        </span><br><span class="line">        for block, style in zip(self.ups, styles):</span><br><span class="line">            # co-modulation</span><br><span class="line">            co_style = torch.cat([x_global, style.squeeze()], 1)</span><br><span class="line">            x, rgb = block(x, co_style, noise, rgb)</span><br><span class="line">            </span><br><span class="line">        raw_out = rgb</span><br><span class="line">        images_out = rgb * mask + img * (1-mask)</span><br><span class="line">        if return_latent:</span><br><span class="line">            return images_out, raw_out, styles</span><br><span class="line">        return images_out, raw_out</span><br></pre></td></tr></table></figure>
-
-<h2 id="鉴别器"><a href="#鉴别器" class="headerlink" title="鉴别器"></a>鉴别器</h2><p><img src="/../asset_magiceraser/13.webp"></p>
-<p>在讨论了生成器之后，现在是时候转向鉴别器了。由于鉴别器的主要作用是区分图像是真实的还是虚假的，任何图像分类模型都可以用作鉴别器。</p>
-<p>在这里，让我们简单地使用类似 VGG 的结构来实现它</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">class D_block(nn.Module):</span><br><span class="line">    def __init__(self, in_channel, out_channel, downsample = True):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.downsample = None</span><br><span class="line">        if downsample:</span><br><span class="line">            self.downsample = Conv2d(out_channel, out_channel, 3, padding = 1, stride = 2)</span><br><span class="line">        self.conv_res = Conv2d(in_channel, out_channel, 1, stride = (2 if downsample else 1))</span><br><span class="line">        self.net = nn.Sequential(</span><br><span class="line">            Conv2d(in_channel, out_channel, 3, padding=1),</span><br><span class="line">            LeakyReLU(0.2, inplace=True),</span><br><span class="line">            Conv2d(out_channel, out_channel, 3, padding=1),</span><br><span class="line">            LeakyReLU(0.2, inplace=True))</span><br><span class="line">        </span><br><span class="line">    def forward(self, x):</span><br><span class="line">        res = self.conv_res(x)</span><br><span class="line">        x = self.net(x)</span><br><span class="line">        if self.downsample is not None:</span><br><span class="line">            x = self.downsample(x)</span><br><span class="line">        x = (x + res) * (1 / math.sqrt(2))</span><br><span class="line">        return x</span><br><span class="line">      </span><br><span class="line">class Discriminator(nn.Module):</span><br><span class="line">    def __init__(self, img_size, fmap_min = 32, fmap_max = 512):</span><br><span class="line">        super().__init__()</span><br><span class="line">        self.num_layers = int(log2(img_size)-1)</span><br><span class="line">        f_map = [4] + [fmap_min * (2 ** i) for i in range(self.num_layers)]</span><br><span class="line">        filters = list(map(lambda x: min(fmap_max, x), f_map))</span><br><span class="line">        out_channel = filters[-1]</span><br><span class="line">        </span><br><span class="line">        self.in_out_channel = zip(filters[:-1], filters[1:])</span><br><span class="line">        self.blocks = nn.ModuleList([])</span><br><span class="line">        self.final_conv = Conv2d(out_channel, out_channel, 3, padding=1)</span><br><span class="line">        self.logit = Linear(out_channel * 4 * 4, 1)</span><br><span class="line">        for i, (in_channel, out_channel) in enumerate(self.in_out_channel):</span><br><span class="line">            down_sample = i != (self.num_layers - 1)</span><br><span class="line">            d_block = D_block(in_channel, out_channel, down_sample)</span><br><span class="line">            self.blocks.append(d_block)</span><br><span class="line">   </span><br><span class="line">    def forward(self, img, mask):</span><br><span class="line">        batch_size = img.shape[0]</span><br><span class="line">        x = torch.cat([1 - mask - 0.5, img], 1)</span><br><span class="line">        for block in self.blocks:</span><br><span class="line">            x = block(x)</span><br><span class="line">        x = self.final_conv(x)</span><br><span class="line">        x = x.view(batch_size, -1)</span><br><span class="line">        x = self.logit(x)</span><br><span class="line">        return x</span><br></pre></td></tr></table></figure>
-
-<h2 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h2><p><img src="/../asset_magiceraser/14.webp"><br>条件 GAN 的最小-最大损失</p>
-<ul>
-<li>G：生成器</li>
-<li>D：判别器（输出值介于 0 到 1 之间，假：0，真：1）</li>
-<li>X: 输入图像，形状 [B, C, H, W]</li>
-<li>Y: 掩模，形状 [B, 1, H, W]</li>
-<li>Z: 潜在向量（从高斯分布中随机采样）</li>
-</ul>
-<p>损失函数与经典 GAN 相同，为生成器和鉴别器设定不同的目标，从而在它们之间创建竞争。</p>
-<p>鉴别器试图更好地区分由生成器制作的假图像和真实图像，而生成器的目标是欺骗鉴别器，与鉴别器的做法相反。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">def d_loss_fn(real_pred, fake_pred):</span><br><span class="line">    real_loss = F.softplus(-real_pred)</span><br><span class="line">    fake_loss = F.softplus(fake_pred)</span><br><span class="line">    return real_loss.mean() + fake_loss.mean()</span><br><span class="line">    </span><br><span class="line">def g_loss_fn(fake_pred):</span><br><span class="line">    loss = F.softplus(-fake_pred).mean()</span><br><span class="line">    return loss</span><br></pre></td></tr></table></figure>
-
-<h2 id="训练循环和懒惰正则化"><a href="#训练循环和懒惰正则化" class="headerlink" title="训练循环和懒惰正则化"></a>训练循环和懒惰正则化</h2><p>在 StyleGAN 中，作者采用了两种类型的正则化，即鉴别器的 R1 正则化和生成器的路径长度正则化，用于对两个组件施加约束。</p>
-<p>另外，作者还发现并不需要在每次权重更新时都应用正则化。相反，对鉴别器的正则化每 16 次更新应用一次，对生成器的正则化每 8 次更新应用一次，这被称为“懒惰正则化”。</p>
-<h2 id="R1-正则化"><a href="#R1-正则化" class="headerlink" title="R1 正则化"></a>R1 正则化</h2><p><img src="/../asset_magiceraser/15.webp"><br>R1 正则化仅对真实数据上的梯度进行惩罚，旨在防止鉴别器生成偏离数据流形的非零梯度。</p>
-<p>例如，当生成器产生真实数据分布时，鉴别器在数据流形上的输出等于 0（通常意味着鉴别器无法区分真假数据），梯度惩罚确保鉴别器无法生成非零梯度，否则会导致损失增加。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">def r1_loss_fn(real_pred, real_img):</span><br><span class="line">    grad_real, = autograd.grad(</span><br><span class="line">        outputs=real_pred.sum(), inputs=real_img, create_graph=True</span><br><span class="line">    )</span><br><span class="line">    grad_penalty = grad_real.pow(2).reshape(grad_real.shape[0], -1).sum(1).mean()</span><br><span class="line">    return grad_penalty</span><br></pre></td></tr></table></figure>
-
-<h2 id="路径长度正则化"><a href="#路径长度正则化" class="headerlink" title="路径长度正则化"></a>路径长度正则化</h2><p><img src="/../asset_magiceraser/16.webp"></p>
-<p>路径长度正则化旨在确保当您在潜在空间‘w’（w ~ f(z), f: 映射网络）中进行固定大小的更改时，图像会产生非零且固定幅度的变化。</p>
-<p>我们计算生成器输出相对于‘w’的导数，并将其乘以随机噪声‘y’。在对这个结果应用 L2 范数之后，我们再减去其指数移动平均值‘a’。</p>
-<p>这种正则化可以确保潜在向量 Z 的变化不会导致生成的图像发生剧烈变化。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">def g_path_regularize(fake_img, latents, mean_path_length, decay=0.01):</span><br><span class="line">    noise = torch.randn_like(fake_img) / math.sqrt(</span><br><span class="line">        fake_img.shape[2] * fake_img.shape[3]</span><br><span class="line">    )</span><br><span class="line">    grad, = autograd.grad(</span><br><span class="line">        outputs=(fake_img * noise).sum(), inputs=latents, create_graph=True</span><br><span class="line">    )</span><br><span class="line">    path_lengths = torch.sqrt(grad.pow(2).sum(2).mean(1))</span><br><span class="line">    path_mean = mean_path_length + decay * (path_lengths.mean() - mean_path_length)</span><br><span class="line">    path_penalty = (path_lengths - path_mean).pow(2).mean()</span><br><span class="line">    return path_penalty, path_mean.detach(), path_lengths</span><br></pre></td></tr></table></figure>
-
-<p>最后，这里是 CoModGAN 的训练循环</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">def make_noise(n, latent_dim, device):</span><br><span class="line">    return torch.randn(n, 1, latent_dim).cuda(device)</span><br><span class="line"></span><br><span class="line">def get_g_input(batch, img_size, n_layers, latent_dim, device):</span><br><span class="line">    &#x27;&#x27;&#x27;</span><br><span class="line">    ** style mixing **</span><br><span class="line">    tt = int(torch.rand(()).numpy() * n_layers)</span><br><span class="line">    style1 = torch.tile(make_noise(batch, latent_dim, device), [1, tt, 1])</span><br><span class="line">    style2 = torch.tile(make_noise(batch, latent_dim, device), [1, n_layers - tt, 1])</span><br><span class="line">    styles = torch.cat([style1, style2], dim=1)</span><br><span class="line">    &#x27;&#x27;&#x27;   </span><br><span class="line">    styles = torch.tile(make_noise(batch, latent_dim, device), [1, n_layers, 1])</span><br><span class="line">    noise = torch.FloatTensor(batch, 1, img_size, img_size).uniform_(0., 1.).cuda(device)</span><br><span class="line">    return styles, noise</span><br><span class="line"></span><br><span class="line">def requires_grad(model, flag=True):</span><br><span class="line">    for p in model.parameters():</span><br><span class="line">        p.requires_grad = flag</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"># CoModGAN training Loop</span><br><span class="line">latent_dim = 128</span><br><span class="line">img_size = 128</span><br><span class="line">epochs = 100</span><br><span class="line">num_layers = int(log2(img_size)-1)</span><br><span class="line">d_lazy_reg = 16</span><br><span class="line">g_lazy_reg = 4</span><br><span class="line">mean_path = 0</span><br><span class="line"></span><br><span class="line">device = &quot;cuda&quot; if torch.cuda.is_available() else &quot;cpu&quot;</span><br><span class="line">g_model = Generator(img_size, latent_dim).to(device)</span><br><span class="line">d_model = Discriminator(img_size).to(device)</span><br><span class="line">g_optimizer = torch.optim.Adam(g_model.parameters(), lr=0.0001, betas=(0.5, 0.9))</span><br><span class="line">d_optimizer = torch.optim.Adam(d_model.parameters(), lr=0.0001, betas=(0.5, 0.9))</span><br><span class="line"></span><br><span class="line">for epoch in range(epochs):</span><br><span class="line">    for step, (real_img, mask) in enumerate(train_data):</span><br><span class="line">        B = real_img.size(0)</span><br><span class="line">        real_img = real_img.to(device)</span><br><span class="line">        mask = mask.to(device)</span><br><span class="line">        requires_grad(g_model, False)</span><br><span class="line">        requires_grad(d_model, True)</span><br><span class="line">        </span><br><span class="line">        style, noise = get_g_input(B, img_size, num_layers, latent_dim, device)</span><br><span class="line">        fake_img, _ = g_model(real_img, mask, style, noise)</span><br><span class="line">        fake_pred = d_model(fake_img, mask)</span><br><span class="line">        real_pred = d_model(real_img, mask)</span><br><span class="line">        d_loss = d_loss_fn(real_pred, fake_pred)</span><br><span class="line">        d_model.zero_grad()</span><br><span class="line">        d_loss.backward()</span><br><span class="line">        d_optimizer.step()</span><br><span class="line"></span><br><span class="line">        d_lazy = step % d_lazy_reg == 0</span><br><span class="line">        if d_lazy:</span><br><span class="line">            real_img.requires_grad = True</span><br><span class="line">            real_pred = d_model(real_img, mask)</span><br><span class="line">            r1_loss = r1_loss_fn(real_pred, real_img)</span><br><span class="line"></span><br><span class="line">            d_model.zero_grad()</span><br><span class="line">            (10 / 2 * r1_loss * d_lazy_reg).backward()</span><br><span class="line">            d_optimizer.step()</span><br><span class="line">            </span><br><span class="line">        requires_grad(g_model, True)</span><br><span class="line">        requires_grad(d_model, False)</span><br><span class="line">        style, noise = get_g_input(B, img_size, num_layers, latent_dim, device)</span><br><span class="line">        fake_img, _ = g_model(real_img, mask, style, noise)</span><br><span class="line">        fake_pred = d_model(fake_img, mask)</span><br><span class="line">        g_loss = g_loss_fn(fake_pred)</span><br><span class="line">        g_model.zero_grad()</span><br><span class="line">        g_loss.backward()</span><br><span class="line">        g_optimizer.step()</span><br><span class="line">        g_lazy = step % g_lazy_reg == 0</span><br><span class="line">        </span><br><span class="line">        if g_lazy:</span><br><span class="line">            style, noise = get_g_input(B, img_size, num_layers, latent_dim, device)</span><br><span class="line">            fake_img, _, latent = g_model(real_img, mask, style.requires_grad_(), </span><br><span class="line">                                          noise, return_latent=True)</span><br><span class="line">            path_loss, mean_path_new, path_lengths = g_path_regularize(fake_img, latent, mean_path)</span><br><span class="line">            g_model.zero_grad()</span><br><span class="line">            mean_path = mean_path_new</span><br><span class="line">            pr_loss = 2 * g_lazy_reg * path_loss</span><br><span class="line">            pr_loss.backward()</span><br><span class="line">            g_optimizer.step()</span><br></pre></td></tr></table></figure>
-
-<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>顶部的图像是由 CoModGAN 生成的，而底部的图像是真实图像数据。</p>
-<p>尽管生成的结果与真实数据之间存在一些小差异，但就生成合理图像而言，我认为 CoModGAN 的表现已经可以接受了</p>
-<p><img src="/../asset_magiceraser/17.webp"></p>
-<p><img src="/../asset_magiceraser/18.webp"></p>
-<p><img src="/../asset_magiceraser/19.webp"></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://levelup.gitconnected.com/revealing-the-secrets-of-googles-magic-eraser-fb232c83723b">https://levelup.gitconnected.com/revealing-the-secrets-of-googles-magic-eraser-fb232c83723b</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/04/16/falkordb/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Howard Huang">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/04/16/falkordb/" class="post-title-link" itemprop="url">FalkorDB 知识图谱 for RAG</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2024-04-16 19:56:22 / 修改时间：20:09:09" itemprop="dateCreated datePublished" datetime="2024-04-16T19:56:22+08:00">2024-04-16</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>923</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>在选择适合您的 RAG 应用程序的正确知识图时，需要考虑许多因素。图数据库应该轻量且具有较低的延迟，以实现更高的性能。查询语言应该足够表达性，以支持复杂的图遍历进行模式匹配。图形理想情况下还应设计为具有较低的内存占用量 — 这样可以节省长期资源开销。</p>
-<p>考虑到上述因素，我发现知识图谱 FalkorDB 是一个轻量级且高性能的图形框架，适用于构建人工智能应用程序。以下是原因：</p>
-<h3 id="低延迟"><a href="#低延迟" class="headerlink" title="低延迟"></a>低延迟</h3><p>FalkorDB 旨在为复杂的图遍历提供快速的查询执行。它构建在其前身 RedisGraph 之上，利用内存处理技术加快查询执行速度。通过将相关数据保留在内存中，可以减少与磁盘 I&#x2F;O 操作相关的延迟。</p>
-<h3 id="高效内存利用的分布式架构"><a href="#高效内存利用的分布式架构" class="headerlink" title="高效内存利用的分布式架构"></a>高效内存利用的分布式架构</h3><p>FalkorDB 允许创建<a target="_blank" rel="noopener" href="https://www.falkordb.com/scale-out/">多个读取副本</a>，实现数据集和图形在各个服务器之间的分布。用户可以创建与主数据库同步的数据库副本。这使我们能够将读取查询（在副本上运行）与写入查询（在主数据库上运行）分开。</p>
-<p>这种方法优化了读写操作路由到适当副本的过程，确保操作的高吞吐量和较低的延迟。</p>
-<h3 id="增强检索的向量索引支持"><a href="#增强检索的向量索引支持" class="headerlink" title="增强检索的向量索引支持"></a>增强检索的向量索引支持</h3><p>这允许将数据存储为高维嵌入，从而使用户能够使用相似性搜索找到实体 — 节点和边。这样，用户的响应可以扩展到还包括与输入查询在语义上相似的数据。</p>
-<h3 id="支持-AI-框架"><a href="#支持-AI-框架" class="headerlink" title="支持 AI 框架"></a>支持 AI 框架</h3><p>FalkorDB 提供支持和文档，用于处理 AI 框架，如 LangChain 和 LLamaIndex。通过将其与LLM连接，可以直接使用模块来创建图索引和查询引擎对象。这些集成为用户提供了一个全面的工具包，用于构建像检索增强生成（RAG）管道这样的高级 AI 应用程序。</p>
-<h3 id="交互式图浏览器"><a href="#交互式图浏览器" class="headerlink" title="交互式图浏览器"></a>交互式图浏览器</h3><p>FalkorDB 配备了图浏览器，允许交互式查看和查询图形。您可以在<a target="_blank" rel="noopener" href="https://github.com/FalkorDB/falkordb-browser">这里</a>查看 FalkorDB 图浏览器。用户可以通过单击节点和边，展开或折叠子图，并放大或缩小以聚焦特定感兴趣的区域来浏览图形。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>FalkorDB 的内存处理技术和高效的内存利用率，相较于采用基于磁盘存储方法的图形，有助于更快地执行查询并减少延迟。对各种人工智能框架的支持和文档为构建人工智能应用程序增添了其稳健性。<br>这些特性使得 FalkorDB 成为构建可扩展和高性能 RAG 应用程序的极佳选择。基于知识图的 RAG 模型有望通过生成更准确、信息丰富和连贯的响应来彻底改变自然语言处理领域。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -2329,13 +2598,13 @@ pip install stable_baselines3
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">286k</span>
+    <span title="站点总字数">320k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">8:40</span>
+    <span title="站点阅读时长">9:41</span>
   </span>
 </div>
 <div class="busuanzi-count">

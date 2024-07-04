@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"szhowardhuang.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="之前搬运很多medium的文章，搬运过程很耗时间，首先要把网页文章翻译成中文，然后一段段的校对，拷贝黏贴到markdown文件中，图片文件要下载存储更名到本地，更新markdown文件链接。最后再转换成html文件发布到github io博客。经常要2~3个小时才能完成一篇文章的搬运。 前两天发现思源笔记可以直接拷贝粘贴翻译好的文章，生成笔记，作为平时的网络摘抄笔记。评估了一下思源的会员，最后还是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="英文知识搬运教程">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/07/04/knowledge-transfer-tutorial/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="之前搬运很多medium的文章，搬运过程很耗时间，首先要把网页文章翻译成中文，然后一段段的校对，拷贝黏贴到markdown文件中，图片文件要下载存储更名到本地，更新markdown文件链接。最后再转换成html文件发布到github io博客。经常要2~3个小时才能完成一篇文章的搬运。 前两天发现思源笔记可以直接拷贝粘贴翻译好的文章，生成笔记，作为平时的网络摘抄笔记。评估了一下思源的会员，最后还是">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-07-04T02:21:12.861Z">
+<meta property="article:modified_time" content="2024-07-04T03:11:22.517Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://szhowardhuang.github.io/2024/07/04/knowledge-transfer-tutorial/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://szhowardhuang.github.io/2024/07/04/knowledge-transfer-tutorial/","path":"2024/07/04/knowledge-transfer-tutorial/","title":"英文知识搬运教程"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>英文知识搬运教程 | 嵌入式老兵博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">嵌入式老兵博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Howard Huang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/07/04/knowledge-transfer-tutorial/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="英文知识搬运教程 | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          英文知识搬运教程
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-07-04 10:21:12 / 修改时间：11:11:22" itemprop="dateCreated datePublished" datetime="2024-07-04T10:21:12+08:00">2024-07-04</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>之前搬运很多medium的文章，搬运过程很耗时间，首先要把网页文章翻译成中文，然后一段段的校对，拷贝黏贴到markdown文件中，图片文件要下载存储更名到本地，更新markdown文件链接。最后再转换成html文件发布到github io博客。经常要2~3个小时才能完成一篇文章的搬运。</p>
+<p>前两天发现思源笔记可以直接拷贝粘贴翻译好的文章，生成笔记，作为平时的网络摘抄笔记。评估了一下思源的会员，最后还是安装思源笔记docker server版本，免费开源。会员有图传和同步功能，对于程序员来说，可以克服这些问题。</p>
+<p>言归正传，对于经典的文章，想要发布到博客的，可以用思源笔记把文章导出到markdown文件，省掉编辑markdown的时间。不过，markdown里面的图片链接都是远程的，我们当然不希望这些图片不受控制，所以还需要把图片下载到本地，然后更新markdown文件中的链接。思源笔记有图床，不过要收费，而且一样不受控。</p>
+<p>所以，还是自己动手吧，写个python脚本，自动下载markdown的远程链接文件，把图片下载到本地，更新链接，这样就可以省下很多时间，而且图片也能更好地管理。</p>
+<p>pip install requests python-magic</p>
+<p>对于windows系统，还需要 pip install python-magic-bin</p>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"><span class="keyword">import</span> magic</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">download_images_and_update_markdown</span>(<span class="params">markdown_file, output_directory</span>):</span><br><span class="line">    <span class="comment"># 确保输出目录存在</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(output_directory):</span><br><span class="line">        os.makedirs(output_directory)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 将输出目录转换为绝对路径</span></span><br><span class="line">    output_directory = os.path.abspath(output_directory)</span><br><span class="line">    markdown_file = os.path.abspath(markdown_file)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 读取Markdown文件</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(markdown_file, <span class="string">&#x27;r&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> file:</span><br><span class="line">        content = file.read()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 使用正则表达式匹配图片URL</span></span><br><span class="line">    urls = re.findall(<span class="string">r&#x27;!\[.*?\]\((https?://[^\s]+)\)&#x27;</span>, content)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 存储远程到本地文件的映射</span></span><br><span class="line">    url_to_local = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    headers = &#123;</span><br><span class="line">        <span class="string">&#x27;User-Agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> index, url <span class="keyword">in</span> <span class="built_in">enumerate</span>(urls, start=<span class="number">1</span>):</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="comment"># 临时文件路径</span></span><br><span class="line">            temp_filename = os.path.join(output_directory, <span class="string">f&quot;temp_<span class="subst">&#123;index&#125;</span>&quot;</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 下载文件</span></span><br><span class="line">            response = requests.get(url, headers=headers)</span><br><span class="line">            response.raise_for_status()  <span class="comment"># 检查请求是否成功</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 保存临时文件</span></span><br><span class="line">            <span class="keyword">with</span> <span class="built_in">open</span>(temp_filename, <span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">                f.write(response.content)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 使用magic库检测文件类型</span></span><br><span class="line">            mime = magic.Magic(mime=<span class="literal">True</span>)</span><br><span class="line">            mime_type = mime.from_file(temp_filename)</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 根据mime类型确定扩展名</span></span><br><span class="line">            <span class="keyword">if</span> mime_type == <span class="string">&#x27;image/jpeg&#x27;</span>:</span><br><span class="line">                extension = <span class="string">&#x27;.jpg&#x27;</span></span><br><span class="line">            <span class="keyword">elif</span> mime_type == <span class="string">&#x27;image/png&#x27;</span>:</span><br><span class="line">                extension = <span class="string">&#x27;.png&#x27;</span></span><br><span class="line">            <span class="keyword">elif</span> mime_type == <span class="string">&#x27;image/gif&#x27;</span>:</span><br><span class="line">                extension = <span class="string">&#x27;.gif&#x27;</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                extension = <span class="string">&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> extension:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f&quot;Failed to determine the file type of <span class="subst">&#123;url&#125;</span>&quot;</span>)</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 最终文件名</span></span><br><span class="line">            filename = os.path.join(output_directory, <span class="string">f&quot;<span class="subst">&#123;index:02&#125;</span><span class="subst">&#123;extension&#125;</span>&quot;</span>)</span><br><span class="line">            os.rename(temp_filename, filename)</span><br><span class="line"></span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;Downloaded: <span class="subst">&#123;url&#125;</span> to <span class="subst">&#123;filename&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 计算相对于Markdown文件的相对路径并替换反斜杠为正斜杠</span></span><br><span class="line">            relative_path = os.path.relpath(filename, os.path.dirname(markdown_file)).replace(<span class="string">&#x27;\\&#x27;</span>, <span class="string">&#x27;/&#x27;</span>)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 保存远程到本地文件的映射</span></span><br><span class="line">            url_to_local[url] = relative_path</span><br><span class="line">        <span class="keyword">except</span> requests.RequestException <span class="keyword">as</span> e:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;Failed to download <span class="subst">&#123;url&#125;</span>: <span class="subst">&#123;e&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 更新Markdown文件内容</span></span><br><span class="line">    <span class="keyword">for</span> url, local_path <span class="keyword">in</span> url_to_local.items():</span><br><span class="line">        content = content.replace(url, local_path)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 将更新后的内容写回Markdown文件</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(markdown_file, <span class="string">&#x27;w&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> file:</span><br><span class="line">        file.write(content)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    parser = argparse.ArgumentParser(description=<span class="string">&#x27;Download images from a markdown file and update the links.&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;markdown_file&#x27;</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, <span class="built_in">help</span>=<span class="string">&#x27;The path to the markdown file.&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;output_directory&#x27;</span>, <span class="built_in">type</span>=<span class="built_in">str</span>, <span class="built_in">help</span>=<span class="string">&#x27;The path to the output directory.&#x27;</span>)</span><br><span class="line">    </span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    </span><br><span class="line">    download_images_and_update_markdown(args.markdown_file, args.output_directory)</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/07/03/serveless-ai/" rel="prev" title="使用 Google Cloud 预训练 AI 构建无服务器图像文本提取器和翻译器">
+                  <i class="fa fa-angle-left"></i> 使用 Google Cloud 预训练 AI 构建无服务器图像文本提取器和翻译器
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Howard Huang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">320k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">9:41</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动-->
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

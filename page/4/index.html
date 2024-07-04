@@ -119,7 +119,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-count">39</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -137,6 +137,771 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/02/27/digital-human-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/02/27/digital-human-2/" class="post-title-link" itemprop="url">如何设计一个数字人续篇 --- Video Retalking 模型篇</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-02-27 23:00:16" itemprop="dateCreated datePublished" datetime="2024-02-27T23:00:16+08:00">2024-02-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-02-29 17:56:17" itemprop="dateModified" datetime="2024-02-29T17:56:17+08:00">2024-02-29</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="环境安装"><a href="#环境安装" class="headerlink" title="环境安装"></a>环境安装</h3><pre><code>git clone https://github.com/vinthony/video-retalking.git
+cd video-retalking
+conda create -n video_retalking python=3.8
+conda activate video_retalking
+
+conda install ffmpeg
+</code></pre>
+<p>win10安装cuda11.1， cuda各版本可以共存。通常你现有N卡驱动会很新，所以安装cuda11.1时，不要安装N卡驱动。</p>
+<p>where nvcc，可以看到路径<br><img src="/../asset_digitalhuman2/01.png"></p>
+<p>我们修改环境变量，将cuda11.1的目录添加到PATH中。<br>主要是C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\bin;<br>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\libnvvp这两个变量；<br>先建立cuda11.1 和 cuda12.1的环境变量，再建立CUDA_PATH的环境变量，以后根据需要修改这个变量，选择不同的CUDA版本路径。</p>
+<p><img src="/../asset_digitalhuman2/02.png"></p>
+<p>修改PATH环境变量如下图</p>
+<p><img src="/../asset_digitalhuman2/03.png"></p>
+<pre><code>pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 -f https://download.pytorch.org/whl/torch_stable.html
+
+pip install -r requirements.txt
+</code></pre>
+<p>清华源会出现tb-nightly的错误，因为在tsinghua镜像库中没有tb-nightly</p>
+<p>备注：tb-nightly 是一个 Python 包，它是 TensorFlow 的 TensorBoard 的夜间版本（nightly version）。TensorBoard 是一个用于可视化和监控 TensorFlow 训练过程和模型的工具。TensorBoard 提供了一组交互式的仪表板，可以显示训练过程中的指标、损失函数、模型结构图、梯度直方图等信息。它可以帮助您理解和调试 TensorFlow 模型，以及优化模型的性能。</p>
+<p>pip临时使用阿里源</p>
+<pre><code>pip install -i https://mirrors.aliyun.com/pypi/simple basicsr==1.4.2
+</code></pre>
+<p>安装cmake</p>
+<p>然后继续 pip install -r requirements.txt</p>
+<p>环境安装完成</p>
+<h3 id="模型下载"><a href="#模型下载" class="headerlink" title="模型下载"></a>模型下载</h3><p>下载<a target="_blank" rel="noopener" href="https://drive.google.com/drive/folders/18rhjMpxK8LVVxf7PI6XwOidt8Vouv_H0?usp=share_link">预训练模型</a>，放到checkpoints目录下,这个下载链接没有放GFPGANv1.4模型，可以去<a target="_blank" rel="noopener" href="https://github.com/TencentARC/GFPGAN/releases/download/v1.3.0/GFPGANv1.4.pth">此处</a>下载然后放到checkpoints目录下</p>
+<p>GFPGAN1.4人脸超分效果最好</p>
+<p>修改inference.py的 GFPGANer的model_path参数为checkpoints&#x2F;GFPGANv1.4.pth，如下：</p>
+<pre><code>restorer = GFPGANer(model_path=&#39;checkpoints/GFPGANv1.4.pth&#39;, upscale=1, arch=&#39;clean&#39;, channel_multiplier=2, bg_upsampler=None)
+</code></pre>
+<p>模型如果不好下载，可以去百度云盘下载：<br>链接：<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1GTccvI8QUTQOhHrRnYeeAQ">https://pan.baidu.com/s/1GTccvI8QUTQOhHrRnYeeAQ</a><br>提取码：9l0u </p>
+<h3 id="推理"><a href="#推理" class="headerlink" title="推理"></a>推理</h3><pre><code>python3 inference.py --face examples/face/1.mp4 --audio examples/audio/1.wav --outfile results/1_1.mp4
+</code></pre>
+<p>–exp_img ：预定义的表情模板。默认为“neutral”。您可以选择“smile”或图像路径。</p>
+<p>–up_face ：您可以选择“surprise”或“angry”来修改脸上的表情，参考<a target="_blank" rel="noopener" href="https://github.com/donydchen/ganimation_replicate">GANimation</a>。</p>
+<p>注意： 1.mp4的分辨率要正方形，用FFMPEG处理一下</p>
+<pre><code>ffmpeg -i 6.mp4 -vf crop=720:720:0:0 7.mp4
+corp： w h x y， 裁剪的宽、高、起始横坐标、起始纵坐标（左上角为0，0）。
+</code></pre>
+<p>生成的视频文件已经配上口型，画质有点模糊，可以用GFPGAN1.4做整个画面的超分。<br>方法如下：</p>
+<h4 id="视频转图片流"><a href="#视频转图片流" class="headerlink" title="视频转图片流"></a>视频转图片流</h4><pre><code>ffmpeg -i 1_4.mp4  image%03d.png
+</code></pre>
+<h4 id="将图片流进行超分"><a href="#将图片流进行超分" class="headerlink" title="将图片流进行超分"></a>将图片流进行超分</h4><pre><code>git clone https://github.com/TencentARC/GFPGAN.git
+
+cd GFPGAN
+
+pip install realesrgan
+
+python inference_gfpgan.py -i inputs/whole_imgs -o results -v 1.4 -s 1
+
+-h                   show this help
+-i input             Input image or folder. Default: inputs/whole_imgs
+-o output            Output folder. Default: results
+-v version           GFPGAN model version. Option: 1 | 1.2 | 1.3. Default: 1.3
+-s upscale           The final upsampling scale of the image. Default: 2
+-bg_upsampler        background upsampler. Default: realesrgan
+-bg_tile             Tile size for background sampler, 0 for no tile during testing. Default: 400
+-suffix              Suffix of the restored faces
+-only_center_face    Only restore the center face
+-aligned             Input are aligned faces
+-ext                 Image extension. Options: auto | jpg | png, auto means using the same extension as inputs. Default: auto
+</code></pre>
+<h4 id="将图片流合成视频"><a href="#将图片流合成视频" class="headerlink" title="将图片流合成视频"></a>将图片流合成视频</h4><pre><code>ffmpeg -framerate 30 -i image%03d.png -b:v 575k gfpganwoa.mp4
+</code></pre>
+<p>视频码率属性 -b:v ， 具体码率要参考生成的原视频</p>
+<p>如有必要，可以把两个视频横向合并，便于对比画质，合成视频的音频只会用左边视频的音频</p>
+<pre><code>ffmpeg -i left.mp4 -i right.mp4 -filter_complex hstack output.mp4
+</code></pre>
+<p>如果要重新合成音频，如下：</p>
+<pre><code>ffmpeg -i input.mp4 -i 3.wav -vcodec copy -acodec aac -map 0:v:0 -map 1:a:0 output.mp4
+
+-map 0:v:0 选择了第0个输入文件（视频输入）的第0个轨道。
+–map 1:a:0 选择了第1个输入文件（音频输入）的第0个轨道。
+</code></pre>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/02/22/digital-human/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/02/22/digital-human/" class="post-title-link" itemprop="url">如何设计一个数字人 --- 3D模型篇</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-02-22 23:00:16" itemprop="dateCreated datePublished" datetime="2024-02-22T23:00:16+08:00">2024-02-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-02-23 22:08:16" itemprop="dateModified" datetime="2024-02-23T22:08:16+08:00">2024-02-23</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>5.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>10 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>下面我就以制作一个数字人卖货视频为例</p>
+<p>首先介绍一下将会用到的 AI 工具。</p>
+<ol>
+<li><p>ChatGPT: 在制作数字人的过程中，ChatGPT 可以用于设定数字人的性格、生成演讲文本、回答技术问题等。</p>
+</li>
+<li><p>MetaHuman Creator: 这是一款由 Epic Games 开发的三维人物建模软件，可以通过对头部、身体等部位个性化的调整，实现高度逼真的数字人三维建模。</p>
+</li>
+<li><p>微软语音合成助手，由微软公司开发，用于语音识别与合成，可以将 ChatGPT 生成的文本内容转化为数字人所需要的自然语音输出。</p>
+</li>
+<li><p>Audio2Face: 由英伟达公司开发的一款表情驱动技术软件，可以将音频的语调、音量等信息转化为数字人的面部表情，从而使数字人的表现更加生动真实</p>
+</li>
+<li><p>UE5: Epic Games 开发的一款高级游戏引擎，可以提供实时渲染、动态光照、体积雾等功能，可用于打造更加真实的数字人场景。</p>
+</li>
+</ol>
+<p>下面是制作一个数字人卖货视频的大概流程:</p>
+<p>AI人物设定和内容生成 一 3D建模 一 AI语音生成 一 AI表情驱动 一 AI场景搭建</p>
+<p>接下来让我为你具体介绍每一部分的流程。</p>
+<h3 id="AI人物设定和内容生成"><a href="#AI人物设定和内容生成" class="headerlink" title="AI人物设定和内容生成"></a>AI人物设定和内容生成</h3><p>人物设定是制作数字人的第一步，这里我们可以使用 ChatGPT 来进行人物设定，为数字人定制其个性化特征和语言风格等。</p>
+<p><img src="/../asset_digitalhuman/003.png"></p>
+<p>生成售卖文案</p>
+<p><img src="/../asset_digitalhuman/004.png"></p>
+<h3 id="3D建模"><a href="#3D建模" class="headerlink" title="3D建模"></a>3D建模</h3><p>登录 MetaHuman Creator 进行 3D 建模<br>进入 MetaHuman Creator <a target="_blank" rel="noopener" href="https://metahuman.unrealengine.com/mhc">https://metahuman.unrealengine.com/mhc</a> 在预设数字人中选择一个人物模型，结合chatgpt的描述进行个性化调整，如头发、服饰、发型等。</p>
+<p><img src="/../asset_digitalhuman/005.png"></p>
+<p>调整后如下图：</p>
+<p><img src="/../asset_digitalhuman/006.png"><br>此模型会存在云端，后续从UE5导入此模型。</p>
+<h3 id="AI语音生成"><a href="#AI语音生成" class="headerlink" title="AI语音生成"></a>AI语音生成</h3><p>使用语音合成助手，将 ChatGPT 生成的文本内容转化为数字人所需要的自然语音输出。<br>这里用小白兔AI工具包里面的微软语音合成把文本转成语音，语音文件会自动下载到本地。</p>
+<p><img src="/../asset_digitalhuman/007.png"></p>
+<p>微软语音合成需要用到Microsoft Azure API，需要注册Azure账号，并申请语音合成服务。</p>
+<p><img src="/../asset_digitalhuman/008.png"><br>把密钥和区域填到小白兔AI里面</p>
+<p>注：Microsoft Azure 是微软的公用云端服务平台，首先得有个 Microsoft 账号，然后再基于这个 Microsoft 账号开通 Microsoft Azure 帐户。<br>Microsoft Azure收费模式</p>
+<table>
+<thead>
+<tr>
+<th>服务</th>
+<th>免费额度</th>
+<th>超出免费额度</th>
+<th>并发请求数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>文本转语音</td>
+<td>每月50万字符</td>
+<td>16美元&#x2F;100万字符</td>
+<td>-</td>
+</tr>
+</tbody></table>
+<p>Microsoft Azure支持通过国内的 Visa 卡申请。</p>
+<p>后面讲一下如何开通 Azure 帐户</p>
+<h3 id="AI表情驱动"><a href="#AI表情驱动" class="headerlink" title="AI表情驱动"></a>AI表情驱动</h3><p>Audio2Face是由英伟达公司开发的一款表情驱动技术软件，可以将音频的语调、音量等信息转化为数字人的面部表情，从而使数字人的表现更加生动真实。<br>我们将微软语音助手生成的语音转成WAV格式，并导入到Audio2Face中，进行表情驱动。</p>
+<p>去nvidia官网下载Audio2Face标准版 <a target="_blank" rel="noopener" href="https://www.nvidia.com/en-us/omniverse/apps/audio2face/">https://www.nvidia.com/en-us/omniverse/apps/audio2face/</a></p>
+<p>打开audio2face，如下图设置，确认可以说话动嘴。<br><img src="/../asset_digitalhuman/010.png"><br>然后存项目到本地</p>
+<h3 id="AI场景搭建"><a href="#AI场景搭建" class="headerlink" title="AI场景搭建"></a>AI场景搭建</h3><p>先安装UE5，下载地址 <a target="_blank" rel="noopener" href="https://www.unrealengine.com/en-US/download/">https://www.unrealengine.com/en-US/download/</a></p>
+<p>然后下载MetaHuman示例项目 </p>
+<p><img src="/../asset_digitalhuman/011.png"></p>
+<p>打开此工程，点击窗口，选择Quixel Bridge</p>
+<p><img src="/../asset_digitalhuman/012.png"></p>
+<p>出现如下界面，My MetaHuman 的模型就是之前MetaHuman Creator生成的模型，点击 add按钮，会把这个模型导入到UE5的工程里面。 下载模型的时间很长，耐心等。</p>
+<p><img src="/../asset_digitalhuman/013.png"><br>然后可以在UE5里面使用你导入的模型，因为我修改的模型和示例工程的模型一致，所以UE5会直接替换掉。</p>
+<p>然后设置Omniverse livelink，让UE5和Audio2Face连接起来，让数字人可以和你说话。</p>
+<p>首先把Audio2Face的插件拷贝到UE5的Plugins文件夹下，Audio2Face的插件路径一般是 user目录下面的AppData目录下面</p>
+<p><img src="/../asset_digitalhuman/017.png"></p>
+<p>拷贝到UE5安装目录</p>
+<p><img src="/../asset_digitalhuman/018.png"></p>
+<p>打开UE5的插件，选择Nvidia</p>
+<p><img src="/../asset_digitalhuman/015.png"></p>
+<p>使能 NVIDIA Omniverse ACE</p>
+<p><img src="/../asset_digitalhuman/016.png"></p>
+<p>打开UE5的窗口，选择 虚拟制片 - Live Link，点击「启动 Live Link」</p>
+<p><img src="/../asset_digitalhuman/014.png"></p>
+<p>添加源 NVIDIA Omniverse Live Link，点击 OK<br><img src="/../asset_digitalhuman/019.png"></p>
+<p>点击Audio2face的stage - audio2face - StreamLivelink， 勾选 Activate</p>
+<p><img src="/../asset_digitalhuman/020.png"></p>
+<p>点击audio2face的wave Play按钮，让数字人开始说话。</p>
+<p>之后参考youtube视频，调整audio2face的模型参数，让数字人更加动人。</p>
+<p>最后，修改UE5的场景，调整场景的光照、音效、材质，让场景更加生动。</p>
+<p>教程结束，祝你玩得开心！</p>
+<h2 id="附注"><a href="#附注" class="headerlink" title="附注"></a>附注</h2><h3 id="注册Azure账号"><a href="#注册Azure账号" class="headerlink" title="注册Azure账号"></a>注册Azure账号</h3><p>网页 <a target="_blank" rel="noopener" href="https://signup.azure.com/signup">https://signup.azure.com/signup</a></p>
+<p>进入网页之后，先登陆 Microsoft 账号。</p>
+<p>填写个人信息<br><img src="/../asset_digitalhuman/azure_signup_1.jpg"></p>
+<p>填写卡信息用于身份验证，点击「注册」<br><img src="/../asset_digitalhuman/azure_signup_2.jpg"></p>
+<p>创建 Azure 订阅, Azure 订阅主要就是决定如何计费，一般是有「免费使用版」和 「即用即付」两种选择。</p>
+<p>如果是刚注册 Azure 确实是可以选择「免费使用版」的，但是只能使用 30 天，30 天之后还是得转为「即用即付」才可以继续使用。</p>
+<p>所以我建议直接选「即用即付」订阅，也是享有同等的免费额度。从注册 Azure 开始，Microsoft 翻译可以拥有 12 个月的免费额度，12 个月之后就没有了，想要继续使用需要收费。但是 Microsoft 语音合成目前是每个月都有免费额度，没有 12 个月的限制。（当然，前提是 Microsoft 不改变免费规则）</p>
+<p>进入「订阅页面」<a target="_blank" rel="noopener" href="https://portal.azure.com/?quickstart=True#view/Microsoft_Azure_Billing/SubscriptionsBlade">https://portal.azure.com/?quickstart=True#view/Microsoft_Azure_Billing/SubscriptionsBlade</a> ，点击「添加」，点击「即用即付」下方的「选择产品&#x2F;服务」</p>
+<p><img src="/../asset_digitalhuman/azure_subscription_1.jpg"></p>
+<p>选中「我同意…」、「我愿意…」，点击「下一步」</p>
+<p><img src="/../asset_digitalhuman/azure_subscription_2.jpg"></p>
+<p>之前注册的时候应该已经填写过卡信息了，这里会默认选中，然后点击「下一步」</p>
+<p><img src="/../asset_digitalhuman/azure_subscription_3.jpg"></p>
+<p>然后这里选择「没有任何技术支持…」，点击「注册」</p>
+<p><img src="/../asset_digitalhuman/azure_subscription_4.jpg"></p>
+<p>创建资源组, 进入 「资源组页面」 <a target="_blank" rel="noopener" href="https://portal.azure.com/?quickstart=True#view/HubsExtension/BrowseResourceGroups">https://portal.azure.com/?quickstart=True#view/HubsExtension/BrowseResourceGroups</a> ，点击「创建」</p>
+<p><img src="/../asset_digitalhuman/azure_resource_1.jpg"></p>
+<ul>
+<li>订阅选刚才创建好的订阅，默认应该就一个</li>
+<li>资源组可以直接命名为 Bob</li>
+<li>区域可以选离自己地理位置近的，例如在中国就选 East Aisa 就行</li>
+<li>然后点击「查看+创建」<br><img src="/../asset_digitalhuman/azure_resource_2.jpg"></li>
+</ul>
+<p>点击「创建」<br><img src="/../asset_digitalhuman/azure_resource_3.jpg"></p>
+<p>如下所示即为创建成功<br><img src="/../asset_digitalhuman/azure_resource_4.jpg"></p>
+<p>创建语音服务资源, 进入「Azure AI services | 语音服务 」页面 <a target="_blank" rel="noopener" href="https://portal.azure.com/#view/Microsoft_Azure_ProjectOxford/CognitiveServicesHub/~/SpeechServices">https://portal.azure.com/#view/Microsoft_Azure_ProjectOxford/CognitiveServicesHub/~/SpeechServices</a> ，点击「创建」<br><img src="/../asset_digitalhuman/009.png"></p>
+<ul>
+<li>订阅选刚才创建好的订阅</li>
+<li>资源组选刚才创建好的资源组</li>
+<li>区域可以选离自己地理位置近的，选跟前面创建资源组一样的就行，例如在中国就选 East Aisa 就行</li>
+<li>名称这一栏随便取名，但是不能重名，所以输入和我一样的应该会报错，随便输入不一样的就行，由数字、字母和横线组成即可</li>
+<li>定价层选中「Free F0」</li>
+<li>然后点击「审阅并创建」<br><img src="/../asset_digitalhuman/azure_tts_open_2.jpg"></li>
+</ul>
+<p>点击创建<br><img src="/../asset_digitalhuman/azure_tts_open_3.jpg"></p>
+<p>如下所示即为创建成功<br><img src="/../asset_digitalhuman/azure_tts_open_4.jpg"></p>
+<p>获取秘钥, 进入「认知服务 | 语音服务 」页面 <a target="_blank" rel="noopener" href="https://portal.azure.com/#view/Microsoft_Azure_ProjectOxford/CognitiveServicesHub/~/SpeechServices">https://portal.azure.com/#view/Microsoft_Azure_ProjectOxford/CognitiveServicesHub/~/SpeechServices</a> ，应该能看到你刚才创建语音服务资源，点击进入详情<br><img src="/../asset_digitalhuman/azure_tts_secret_1.jpg"></p>
+<p>选中「密钥和终结点」，如下图所示即为需要的秘钥<br><img src="/../asset_digitalhuman/azure_tts_secret_2.jpg"></p>
+<p>填写秘钥<br>在 小白兔AI 的 设置 &gt; 微软付费订阅 中，将刚才获取到的秘钥填写到对应位置即可。</p>
+<p>微软视素的文档可以看看， <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/azure/ai-services/speech-service/how-to-speech-synthesis-viseme">https://learn.microsoft.com/zh-cn/azure/ai-services/speech-service/how-to-speech-synthesis-viseme</a></p>
+<h3 id="FFMPEG"><a href="#FFMPEG" class="headerlink" title="FFMPEG"></a>FFMPEG</h3><h4 id="使用FFmpeg将MP3文件转换成WAVE格式，你可以使用以下命令："><a href="#使用FFmpeg将MP3文件转换成WAVE格式，你可以使用以下命令：" class="headerlink" title="使用FFmpeg将MP3文件转换成WAVE格式，你可以使用以下命令："></a>使用FFmpeg将MP3文件转换成WAVE格式，你可以使用以下命令：</h4><pre><code>ffmpeg -i input.mp3 -ar 16000 output.wav
+</code></pre>
+<p>-i input.mp3 指定输入文件，其中 input.mp3 是你的源MP3文件的名称。</p>
+<p>-ar 16000 指定了输出文件的采样率为16000 Hz。</p>
+<h4 id="录屏视频截取，使用FFmpeg截取视频文件的一部分，你可以通过指定开始时间（-ss-参数）和持续时间（-t-参数）或结束时间（-to-参数）来完成。以下是一些常见的使用场景和相应的命令示例："><a href="#录屏视频截取，使用FFmpeg截取视频文件的一部分，你可以通过指定开始时间（-ss-参数）和持续时间（-t-参数）或结束时间（-to-参数）来完成。以下是一些常见的使用场景和相应的命令示例：" class="headerlink" title="录屏视频截取，使用FFmpeg截取视频文件的一部分，你可以通过指定开始时间（-ss 参数）和持续时间（-t 参数）或结束时间（-to 参数）来完成。以下是一些常见的使用场景和相应的命令示例："></a>录屏视频截取，使用FFmpeg截取视频文件的一部分，你可以通过指定开始时间（-ss 参数）和持续时间（-t 参数）或结束时间（-to 参数）来完成。以下是一些常见的使用场景和相应的命令示例：</h4><h5 id="使用-ss-和-t-参数"><a href="#使用-ss-和-t-参数" class="headerlink" title="使用 -ss 和 -t 参数"></a>使用 -ss 和 -t 参数</h5><p>在这个例子中，-ss 指定了开始截取的时间点，-t 指定了从开始点后要截取的持续时间。</p>
+<pre><code>ffmpeg -i input.mp4 -ss 00:00:10 -t 00:00:20 -c copy output.mp4
+</code></pre>
+<p>input.mp4 是源视频文件。<br>-ss 00:00:10 表示从视频的第10秒开始截取。<br>-t 00:00:20 表示截取从开始点算起20秒的视频内容。<br>-c copy 表示使用“复制”模式，这样可以避免重新编码视频和音频流，加快处理速度并保持原有质量。<br>output.mp4 是输出的视频文件。</p>
+<h5 id="使用-ss-和-to-参数"><a href="#使用-ss-和-to-参数" class="headerlink" title="使用 -ss 和 -to 参数"></a>使用 -ss 和 -to 参数</h5><p>与上面的例子不同，-to 参数指定的是截取的结束时间点，而不是持续时间。</p>
+<pre><code>ffmpeg -i input.mp4 -ss 00:00:10 -to 00:00:30 -c copy output.mp4
+</code></pre>
+<p>-to 00:00:30 表示截取到视频的第30秒为止。</p>
+<h4 id="音画不同步，画面延迟大约1秒，用FFMPEG调整，相对视频对音频时间戳进行偏移："><a href="#音画不同步，画面延迟大约1秒，用FFMPEG调整，相对视频对音频时间戳进行偏移：" class="headerlink" title="音画不同步，画面延迟大约1秒，用FFMPEG调整，相对视频对音频时间戳进行偏移："></a>音画不同步，画面延迟大约1秒，用FFMPEG调整，相对视频对音频时间戳进行偏移：</h4><p>音频相对于视频移后时间00:00:01.000</p>
+<pre><code>ffmpeg -y -itsoffset 00:00:01.000 -i out.mp4 -i out.mp4 -map 0:a -map 1:v -vcodec copy -acodec copy -f mp4 -threads 2 -v warning out.sync.mp4
+</code></pre>
+<p>-y 可覆盖，如果文件已存在强制替换；</p>
+<p>-itsoffset offset 设置以秒为基准的时间偏移，该选项影响所有后面的输入文件。该偏移被加到输入文件的时戳，定义一个正偏移意味着相应的流被延迟了 offset秒。 [-]hh:mm:ss[.xxx]的格式也支持</p>
+<p>-i 输入，后面是空格，紧跟着就是输入视频文件</p>
+<p>-f fmt 强迫采用格式fmt</p>
+<p>-v：调试信息级别（quiet、panic、fatal、error、warning、info、verbose、debug）</p>
+<p>-vcodec copy 和 -acodec copy表示所要使用的视频和音频的编码格式，这里指定为copy表示原样拷贝</p>
+<p>-map file_number:stream_type[:stream_number]    选择媒体流语法</p>
+<p>这有一些特别流符号的说明：</p>
+<p>1、-map 0 选择第一个文件的所有流</p>
+<p>2、-map i:v 从文件序号i(index)中获取所有视频流， -map i:a 获取所有音频流，-map i:v 获取所有视频流，-map i:s 获取所有字幕流等等。</p>
+<p>3、特殊参数-an,-vn,-sn分别排除所有的音频，视频，字幕流。</p>
+<h4 id="播放验证"><a href="#播放验证" class="headerlink" title="播放验证"></a>播放验证</h4><pre><code>ffplay out.sync.mp4
+</code></pre>
+<h3 id="如何定制数字人的人脸"><a href="#如何定制数字人的人脸" class="headerlink" title="如何定制数字人的人脸"></a>如何定制数字人的人脸</h3><p>用polycam扫描人脸</p>
+<p>导出GLTF</p>
+<p>打开blender，导入GLTF，删除多余部分，选中，按X键删除， 然后merge mesh</p>
+<p>导出FBX，path mode选择copy，并点击旁边的按钮；object选择Animate和mesh；Geometry选择face；disable Bake Animation；然后点击export，保存为.fbx文件<br><img src="/../asset_digitalhuman/021.png"></p>
+<p>到UE5，新建项目，影视和现场活动 - 空白<br><img src="/../asset_digitalhuman/023.png"></p>
+<p>把fbx文件拖到UE5内容窗口，导入.fbx文件</p>
+<p><img src="/../asset_digitalhuman/024.png"></p>
+<p>导入后，双击material，调整material，添加常量节点</p>
+<p><img src="/../asset_digitalhuman/025.png"></p>
+<p>调整后，如下图</p>
+<p><img src="/../asset_digitalhuman/026.png"></p>
+<p>MetaHuman Plugin安装, 在Epic商城安装<br><a target="_blank" rel="noopener" href="https://www.unrealengine.com/marketplace/en-US/product/metahuman-plugin#">https://www.unrealengine.com/marketplace/en-US/product/metahuman-plugin#</a></p>
+<p>打开插件菜单，enable metahuman plugin</p>
+<p>在内容窗口右键，选择metahuman本体</p>
+<p><img src="/../asset_digitalhuman/027.png"></p>
+<p>双击这个本体，进入编辑窗口，导入mesh</p>
+<p><img src="/../asset_digitalhuman/028.png"></p>
+<p>调整人脸的位置， 快捷键 W&#x2F;R&#x2F;E ， 设置viewport的FOV到20</p>
+<p><img src="/../asset_digitalhuman/029.png"></p>
+<p>打开提升帧，选择自动追踪</p>
+<p>点击metahuman本体解算</p>
+<p>点击body，选择一个体型</p>
+<p>点击Mesh to Metahuman，如下图</p>
+<p><img src="/../asset_digitalhuman/030.png"></p>
+<p>进入Quilel Bridge，选择metahuman - my metahuman， 选择你新建立的本体，启动MHC</p>
+<p><img src="/../asset_digitalhuman/031.png"></p>
+<p>进入metahuman后，调整人物各部分</p>
+<p><img src="/../asset_digitalhuman/022.png"></p>
+<p>结束，后续在UE5项目导入你定制的人脸即可。</p>
+<h3 id="参考视频"><a href="#参考视频" class="headerlink" title="参考视频"></a>参考视频</h3><p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=HEFIvFnUfpw">Audio2Face to MetaHuman | How to Animate MetaHuman using Audio2Face Live Link</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=2tGPx0Athvk">Importing a Metahuman into Unreal Engine 5 (simplified way) </a></p>
+<p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=xFk_WU32igA">How to Use Mesh to Metahuman (From Scan to Metahuman)</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/02/01/lagent_sft/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/02/01/lagent_sft/" class="post-title-link" itemprop="url">微调Lagent的实践</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-02-01 21:00:16 / 修改时间：23:06:12" itemprop="dateCreated datePublished" datetime="2024-02-01T21:00:16+08:00">2024-02-01</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>9.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>17 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>InternLM的Lagent是智能代理的一个框架，近几日实践了智能代理调用MM yolo进行图像类识别的任务，特写此文作为记录。</p>
+<h3 id="环境安装"><a href="#环境安装" class="headerlink" title="环境安装"></a>环境安装</h3><pre><code>conda create --name xtuner0.1.9 --clone=/root/share/conda_envs/internlm-base
+conda activate xtuner0.1.9
+git clone -b v0.1.9 https://gitee.com/internlm/xtuner
+cd xtuner
+pip install -e &#39;.[all]&#39;
+</code></pre>
+<h3 id="基座模型"><a href="#基座模型" class="headerlink" title="基座模型"></a>基座模型</h3><p>用InternLM chat 7B基座模型，下载huggingface格式的模型，放到&#x2F;root&#x2F;ft-msagent目录下。</p>
+<h3 id="数据集："><a href="#数据集：" class="headerlink" title="数据集："></a>数据集：</h3><p>去魔搭下载魔搭通用agent数据集：   </p>
+<pre><code>apt install git-lfs
+git clone https://www.modelscope.cn/datasets/iic/ms_agent.git
+</code></pre>
+<p>打开train_agent_react.jsonl ， 搜索图像识别，发现 image_recognition , ImageRecognitionAPI, image_classifier 字段</p>
+<p>需要修改 ImageRecognitionAPI 为 ImageRecognition，<br>修改 image_recognition 为 ImageRecognition，<br>修改 image_classifier 为 ImageClassifier，    </p>
+<p>用sed直接修改    </p>
+<pre><code>sed -i &#39;s/ImageRecognitionAPI/ImageRecognition/g&#39; train_agent_react.jsonl
+sed -i &#39;s/image_recognition/ImageRecognition/g&#39; train_agent_react.jsonl
+sed -i &#39;s/image_classifier/ImageClassifier/g&#39; train_agent_react.jsonl
+</code></pre>
+<p>可以看一下是否修改成功 </p>
+<pre><code>grep ImageClassifier train_agent_react.jsonl
+grep ImageRecognition train_agent_react.jsonl
+</code></pre>
+<p>修改配置文件 &#x2F;root&#x2F;ft-msagent&#x2F;internlm_7b_qlora_msagent_react_e3_gpu8_copy.py<br><img src="/../asset_lagentsft/sft001.png"><br>看到这里你一定要疑问，为什么不把 data_path 指向 本地刚刚git clone下来的数据集路径呢？<br>其实是因为lagent有bug，会把本地数据集当作json格式的客户定制数据集，导致出错。<br>所以用一个work around的方法，就是先让lagent跑通，下载数据集到cache目录，然后进入lagent目录，再修改数据集文件。</p>
+<p>先进入ft-msagent目录，运行</p>
+<pre><code>xtuner train internlm_7b_qlora_msagent_react_e3_gpu8_copy.py --deepspeed deepspeed_zero2
+</code></pre>
+<p>跑一次train，不需要跑完，进入train就可以 CTRL+C 关掉</p>
+<p>然后</p>
+<pre><code>cd ~/.cache/modelscope/hub/datasets/iic/ms_agent/master/data_files 
+</code></pre>
+<p><img src="/../asset_lagentsft/sft003.png"></p>
+<p>修改数据集文件 f0d878b6a17a5cec981643649ea383cc , 这个文件名具体看你们自己的环境，会变化的。</p>
+<pre><code>sed -i &#39;s/ImageRecognitionAPI/ImageRecognition/g&#39; f0d878b6a17a5cec981643649ea383cc
+sed -i &#39;s/image_recognition/ImageRecognition/g&#39; f0d878b6a17a5cec981643649ea383cc
+sed -i &#39;s/image_classifier/ImageClassifier/g&#39; f0d878b6a17a5cec981643649ea383cc
+</code></pre>
+<p>再进入ft-msagent目录，运行</p>
+<pre><code>xtuner train internlm_7b_qlora_msagent_react_e3_gpu8_copy.py --deepspeed deepspeed_zero2
+</code></pre>
+<p><img src="/../asset_lagentsft/sft002.png"><br>可以看到reusing dataset，然后开始训练。<br><img src="/../asset_lagentsft/sft004.png"><br>如果训练一个epoch想停掉，可以按CTRL+C，下次想继续训练，要看一下last_checkpoint文件，把最后一个checkpoint的路径复制到命令行参数里。如下：</p>
+<pre><code>xtuner train internlm_7b_qlora_msagent_react_e3_gpu8_copy.py --deepspeed deepspeed_zero2 --resume /root/ft-msagent/work_dirs/internlm_7b_qlora_msagent_react_e3_gpu8_copy/epoch_2.pth
+</code></pre>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>为了避免后续重复以上数据集繁琐操作，我在魔搭上创建了一个数据集，大家可以直接用这个数据集 szhowardhuang&#x2F;msagent_lite 。</p>
+<p><a target="_blank" rel="noopener" href="https://modelscope.cn/datasets/szhowardhuang/msagent_lite">https://modelscope.cn/datasets/szhowardhuang/msagent_lite</a></p>
+<p>配置文件修改如下，拷贝即可使用：</p>
+<pre><code># Copyright (c) OpenMMLab. All rights reserved.
+import torch
+from bitsandbytes.optim import PagedAdamW32bit
+from mmengine.dataset import DefaultSampler
+from mmengine.hooks import (CheckpointHook, DistSamplerSeedHook, IterTimerHook,
+                            LoggerHook, ParamSchedulerHook)
+from mmengine.optim import AmpOptimWrapper, CosineAnnealingLR
+from modelscope.msdatasets import MsDataset
+from peft import LoraConfig
+from transformers import (AutoModelForCausalLM, AutoTokenizer,
+                        BitsAndBytesConfig)
+
+from xtuner.dataset import process_ms_dataset
+from xtuner.dataset.collate_fns import default_collate_fn
+from xtuner.dataset.map_fns import (msagent_react_map_fn,
+                                    template_map_fn_factory)
+from xtuner.engine import DatasetInfoHook, EvaluateChatHook
+from xtuner.model import SupervisedFinetune
+from xtuner.utils import PROMPT_TEMPLATE
+
+
+#######################################################################
+#                          PART 1  Settings                           #
+#######################################################################
+# Model
+pretrained_model_name_or_path = &#39;/root/ft-msagent/internlm-chat-7b&#39;
+
+# Data
+data_path = &#39;szhowardhuang/msagent_lite&#39;
+prompt_template = PROMPT_TEMPLATE.default
+max_length = 2048
+pack_to_max_length = False
+
+# Scheduler &amp; Optimizer
+batch_size = 4  # per_device
+accumulative_counts = 1
+dataloader_num_workers = 2
+max_epochs = 3
+optim_type = PagedAdamW32bit
+lr = 2e-4
+betas = (0.9, 0.999)
+weight_decay = 0
+max_norm = 1  # grad clip
+
+# Evaluate the generation performance during the training
+evaluation_freq = 500
+SYSTEM = (
+    &#39;你是一个可以调用外部工具的助手，可以使用的工具包括：\n&#39;
+    &quot;&#123;&#123;\'ImageRecognition\': \'用来进行图像识别的API。\\n"
+        '当你需要对于一个图片进行识别时，可以使用这个API。\\n'
+        "输入应该是一张图片文件的路径，或者是图片的URL。\\n\\n\',"
+        "\'ImageClassifier\': \"用来进行图像分类的API，\\n"
+        "当你需要对于一个图片进行分类时，可以使用这个API。\\n"
+        "输入应该是一张图片文件的路径，或者是图片的URL。\\n\"&#125;&#125;\n&quot;
+    &#39;如果使用工具请遵循以下格式回复：\n```\n&#39;
+    &#39;Thought:思考你当前步骤需要解决什么问题，是否需要使用工具\n&#39;
+    &quot;Action:工具名称，你的工具必须从 [[\&#39;ImageRecognition\&#39;, \&#39;ImageClassifier\&#39;]] 选择&quot;
+    &#39;\nAction Input:工具输入参数\n```\n工具返回按照以下格式回复：\n&#39;
+    &#39;```\nResponse:调用工具后的结果\n```&#39;
+    &#39;\n如果你已经知道了答案，或者你不需要工具，请遵循以下格式回复\n```&#39;
+    &#39;\nThought:给出最终答案的思考过程\nFinal Answer:最终答案\n```\n开始!\n&#39;)
+evaluation_inputs = [&#39;识别图片中的物体类别？&#39;]
+
+#######################################################################
+#                      PART 2  Model &amp; Tokenizer                      #
+#######################################################################
+tokenizer = dict(
+    type=AutoTokenizer.from_pretrained,
+    pretrained_model_name_or_path=pretrained_model_name_or_path,
+    trust_remote_code=True,
+    padding_side=&#39;right&#39;)
+
+model = dict(
+    type=SupervisedFinetune,
+    llm=dict(
+        type=AutoModelForCausalLM.from_pretrained,
+        pretrained_model_name_or_path=pretrained_model_name_or_path,
+        trust_remote_code=True,
+        torch_dtype=torch.float16,
+        quantization_config=dict(
+            type=BitsAndBytesConfig,
+            load_in_4bit=True,
+            load_in_8bit=False,
+            llm_int8_threshold=6.0,
+            llm_int8_has_fp16_weight=False,
+            bnb_4bit_compute_dtype=torch.float16,
+            bnb_4bit_use_double_quant=True,
+            bnb_4bit_quant_type=&#39;nf4&#39;)),
+    lora=dict(
+        type=LoraConfig,
+        r=64,
+        lora_alpha=16,
+        lora_dropout=0.1,
+        bias=&#39;none&#39;,
+        task_type=&#39;CAUSAL_LM&#39;))
+
+#######################################################################
+#                      PART 3  Dataset &amp; Dataloader                   #
+#######################################################################
+train_dataset = dict(
+    type=process_ms_dataset,
+    dataset=dict(type=MsDataset.load, dataset_name=data_path, split=&#39;train&#39;),
+    tokenizer=tokenizer,
+    max_length=max_length,
+    dataset_map_fn=msagent_react_map_fn,
+    template_map_fn=dict(
+        type=template_map_fn_factory, template=prompt_template),
+    remove_unused_columns=True,
+    shuffle_before_pack=True,
+    pack_to_max_length=pack_to_max_length)
+
+train_dataloader = dict(
+    batch_size=batch_size,
+    num_workers=dataloader_num_workers,
+    dataset=train_dataset,
+    sampler=dict(type=DefaultSampler, shuffle=True),
+    collate_fn=dict(type=default_collate_fn))
+
+#######################################################################
+#                    PART 4  Scheduler &amp; Optimizer                    #
+#######################################################################
+# optimizer
+optim_wrapper = dict(
+    type=AmpOptimWrapper,
+    optimizer=dict(
+        type=optim_type, lr=lr, betas=betas, weight_decay=weight_decay),
+    clip_grad=dict(max_norm=max_norm, error_if_nonfinite=False),
+    accumulative_counts=accumulative_counts,
+    loss_scale=&#39;dynamic&#39;,
+    dtype=&#39;float16&#39;)
+
+# learning policy
+# More information: https://github.com/open-mmlab/mmengine/blob/main/docs/en/tutorials/param_scheduler.md  # noqa: E501
+param_scheduler = dict(
+    type=CosineAnnealingLR,
+    eta_min=0.0,
+    by_epoch=True,
+    T_max=max_epochs,
+    convert_to_iter_based=True)
+
+# train, val, test setting
+train_cfg = dict(by_epoch=True, max_epochs=max_epochs, val_interval=1)
+
+#######################################################################
+#                           PART 5  Runtime                           #
+#######################################################################
+# Log the dialogue periodically during the training process, optional
+custom_hooks = [
+    dict(type=DatasetInfoHook, tokenizer=tokenizer),
+    dict(
+        type=EvaluateChatHook,
+        tokenizer=tokenizer,
+        every_n_iters=evaluation_freq,
+        evaluation_inputs=evaluation_inputs,
+        system=SYSTEM,
+        prompt_template=prompt_template)
+]
+
+# configure default hooks
+default_hooks = dict(
+    # record the time of every iteration.
+    timer=dict(type=IterTimerHook),
+    # print log every 100 iterations.
+    logger=dict(type=LoggerHook, interval=10),
+    # enable the parameter scheduler.
+    param_scheduler=dict(type=ParamSchedulerHook),
+    # save checkpoint per epoch.
+    checkpoint=dict(type=CheckpointHook, interval=1),
+    # set sampler seed in distributed evrionment.
+    sampler_seed=dict(type=DistSamplerSeedHook),
+)
+
+# configure environment
+env_cfg = dict(
+    # whether to enable cudnn benchmark
+    cudnn_benchmark=False,
+    # set multi process parameters
+    mp_cfg=dict(mp_start_method=&#39;fork&#39;, opencv_num_threads=0),
+    # set distributed parameters
+    dist_cfg=dict(backend=&#39;nccl&#39;),
+)
+
+# set visualizer
+visualizer = None
+
+# set log level
+log_level = &#39;INFO&#39;
+
+# load from which checkpoint
+load_from = None
+
+# whether to resume training from the loaded checkpoint
+resume = False
+
+# Defaults to use random seed and disable `deterministic`
+randomness = dict(seed=None, deterministic=False)
+</code></pre>
+<h3 id="模型转换"><a href="#模型转换" class="headerlink" title="模型转换"></a>模型转换</h3><p>将PTH模型转换成HuggingFace模型，即生成Adapter文件夹, hf文件夹即为我们平时所理解的所谓 “LoRA模型文件”<br>    mkdir hf<br>    export MKL_SERVICE_FORCE_INTEL&#x3D;1<br>    xtuner convert pth_to_hf internlm_7b_qlora_msagent_react_e3_gpu8_copy.py .&#x2F;work_dirs&#x2F;internlm_7b_qlora_msagent_react_e3_gpu8_copy&#x2F;epoch_2.pth .&#x2F;hf</p>
+<h3 id="模型测试"><a href="#模型测试" class="headerlink" title="模型测试"></a>模型测试</h3><p>先下载并安装VisionAgent（即lagent）<br>    <a target="_blank" rel="noopener" href="https://github.com/szhowardhuang/VisionAgent.git">https://github.com/szhowardhuang/VisionAgent.git</a><br>    cd VisionAgent<br>    git checkout a93162536f04679ace6572365a1884e584b4cb03<br>    pip install -e .<br>然后安装 mmdetection<br>    pip install -U openmim<br>    mim install mmengine<br>    mim install “mmcv&gt;&#x3D;2.0.0”<br>    mim install mmdet<br>注释掉 &#x2F;root&#x2F;xtuner019&#x2F;xtuner&#x2F;xtuner&#x2F;tools&#x2F;chat.py 的139行<br><img src="/../asset_lagentsft/sft005.png"></p>
+<pre><code>export SERPER_API_KEY=abcdefg
+xtuner chat ./internlm-chat-7b --adapter hf --lagent
+</code></pre>
+<h3 id="将-HuggingFace-adapter-合并到大语言模型"><a href="#将-HuggingFace-adapter-合并到大语言模型" class="headerlink" title="将 HuggingFace adapter 合并到大语言模型"></a>将 HuggingFace adapter 合并到大语言模型</h3><pre><code>xtuner convert merge ./internlm-chat-7b ./hf ./merged --max-shard-size 2GB
+</code></pre>
+<h3 id="用VisionAgent测试合并后的模型"><a href="#用VisionAgent测试合并后的模型" class="headerlink" title="用VisionAgent测试合并后的模型"></a>用VisionAgent测试合并后的模型</h3><p>修改一下 &#x2F;root&#x2F;code&#x2F;VisionAgent&#x2F;examples&#x2F;react_web_demo.py的92行<br><img src="/../asset_lagentsft/sft006.png"><br>    pip install modelscope&#x3D;&#x3D;1.9.5<br>    pip install transformers&#x3D;&#x3D;4.35.2<br>    pip install streamlit&#x3D;&#x3D;1.24.0<br>    pip install sentencepiece&#x3D;&#x3D;0.1.99<br>    pip install accelerate&#x3D;&#x3D;0.24.1<br>    streamlit run &#x2F;root&#x2F;code&#x2F;lagent&#x2F;examples&#x2F;react_web_demo.py –server.address 127.0.0.1 –server.port 6006</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1408,13 +2173,13 @@ Final Answer: Camila Morrone is Leo DiCaprio&#39;s girlfriend and her current ag
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">286k</span>
+    <span title="站点总字数">320k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">8:40</span>
+    <span title="站点阅读时长">9:41</span>
   </span>
 </div>
 <div class="busuanzi-count">
