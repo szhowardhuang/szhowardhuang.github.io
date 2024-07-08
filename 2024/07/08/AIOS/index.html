@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"szhowardhuang.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="一种称为AIOS（LLM代理操作系统）的新方法旨在改变基于大型语言模型的代理的开发和部署。通过集成到LLMs操作系统中，AIOS 创建了一个功能类似于大脑的操作系统，标志着向通用人工智能 （AGI） 迈出了一步。 AIOS的主要特点和优势：  资源分配优化：AIOS改善了资源分配，确保了LLM代理请求的高效利用。 无缝上下文切换：它简化了在代理之间切换上下文的过程，实现了平稳过渡并保持连续性。 并">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LLM代理操作系统 （AIOS）">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/07/08/AIOS/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="一种称为AIOS（LLM代理操作系统）的新方法旨在改变基于大型语言模型的代理的开发和部署。通过集成到LLMs操作系统中，AIOS 创建了一个功能类似于大脑的操作系统，标志着向通用人工智能 （AGI） 迈出了一步。 AIOS的主要特点和优势：  资源分配优化：AIOS改善了资源分配，确保了LLM代理请求的高效利用。 无缝上下文切换：它简化了在代理之间切换上下文的过程，实现了平稳过渡并保持连续性。 并">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_aios/01.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_aios/02.png">
+<meta property="article:published_time" content="2024-07-08T01:25:04.315Z">
+<meta property="article:modified_time" content="2024-07-08T02:31:31.460Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://szhowardhuang.github.io/asset_aios/01.png">
+
+
+<link rel="canonical" href="https://szhowardhuang.github.io/2024/07/08/AIOS/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://szhowardhuang.github.io/2024/07/08/AIOS/","path":"2024/07/08/AIOS/","title":"LLM代理操作系统 （AIOS）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>LLM代理操作系统 （AIOS） | 嵌入式老兵博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">嵌入式老兵博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#LLM%E5%86%85%E6%A0%B8"><span class="nav-number">1.</span> <span class="nav-text">LLM内核</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E4%BA%BA%E5%91%98%E5%8F%8B%E5%A5%BD%E7%9A%84%E7%95%8C%E9%9D%A2%E5%92%8C-SDK"><span class="nav-number">2.</span> <span class="nav-text">开发人员友好的界面和 SDK</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E5%B1%82%E6%9E%B6%E6%9E%84"><span class="nav-number">3.</span> <span class="nav-text">三层架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">4.</span> <span class="nav-text">实验结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AA%E6%9D%A5%E7%A0%94%E7%A9%B6%E6%96%B9%E5%90%91"><span class="nav-number">5.</span> <span class="nav-text">未来研究方向</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">6.</span> <span class="nav-text">结论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">7.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Howard Huang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/07/08/AIOS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="LLM代理操作系统 （AIOS） | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LLM代理操作系统 （AIOS）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-07-08 09:25:04 / 修改时间：10:31:31" itemprop="dateCreated datePublished" datetime="2024-07-08T09:25:04+08:00">2024-07-08</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>一种称为AIOS（LLM代理操作系统）的新方法旨在改变基于大型语言模型的代理的开发和部署。通过集成到LLMs操作系统中，AIOS 创建了一个功能类似于大脑的操作系统，标志着向通用人工智能 （AGI） 迈出了一步。</p>
+<p><strong>AIOS的主要特点和优势：</strong></p>
+<ol>
+<li>资源分配优化：AIOS改善了资源分配，确保了LLM代理请求的高效利用。</li>
+<li>无缝上下文切换：它简化了在代理之间切换上下文的过程，实现了平稳过渡并保持连续性。</li>
+<li>并发代理执行：AIOS 允许多个代理同时运行，从而提高整体系统性能和响应能力。</li>
+<li>全面的代理工具集：它为代理提供了广泛的工具供代理使用，从而为他们提供了扩展的功能。</li>
+<li>强大的访问控制：AIOS实施严格的访问控制措施，对代理权限进行管理，维护系统安全。</li>
+</ol>
+<p><img src="/../asset_aios/01.png" alt="Example of how an agent (i.e., Travel Agent) requires both LLM level and OS"></p>
+<p>代理（即旅行代理）如何需要LLM级别和操作系统级别的资源和功能来完成任务的示例</p>
+<h2 id="LLM内核"><a href="#LLM内核" class="headerlink" title="LLM内核"></a>LLM内核</h2><p>AIOS的核心是LLM内核，这是一个专门的组件，旨在通过一套专用模块管理LLM相关的活动：</p>
+<ul>
+<li>代理调度器：该模块优化了代理请求的调度，确保了LLM资源的高效利用。通过对请求队列进行优先级排序和管理，Agent Scheduler 可以最大限度地提高吞吐量并最小化延迟。</li>
+<li>上下文管理器：上下文管理器负责保存和恢复 LLM的生成进度，即使中断，也可以无缝恢复任务。它还管理上下文窗口，确保LLM上下文容量的最佳利用。</li>
+<li>内存管理器：AIOS 包括一个内存管理器，为每个代理的交互提供短期内存。这使代理能够保持本地状态并快速访问相关信息，从而提高他们的响应能力和性能。</li>
+<li>存储管理器：为了实现长期持久性，存储管理器可以安全地保存代理交互。这使代理能够访问历史数据，从过去的经验中学习，并根据广泛的知识做出明智的决策。</li>
+<li>工具管理器：工具管理器负责监督代理可以使用的外部 API 工具。通过集成各种工具，AIOS 使代理能够执行复杂的任务并访问丰富的信息和功能。</li>
+<li>访问管理器：为确保隐私和安全，访问管理器在代理之间实施严格的访问控制策略。它管理权限、身份验证和授权，防止未经授权的访问并保护敏感数据。</li>
+</ul>
+<h2 id="开发人员友好的界面和-SDK"><a href="#开发人员友好的界面和-SDK" class="headerlink" title="开发人员友好的界面和 SDK"></a>开发人员友好的界面和 SDK</h2><p>AIOS 提供了一个直观的LLM系统调用接口，允许开发人员轻松地与底层LLM内核进行交互。此外，AIOS SDK 提供了一套全面的工具和库，使开发人员能够轻松创建复杂的代理应用程序。SDK 抽象了复杂的功能，使代理开发更加易于访问和高效。</p>
+<h2 id="三层架构"><a href="#三层架构" class="headerlink" title="三层架构"></a>三层架构</h2><p>AIOS采用三层架构，保证模块化、可扩展性和性能：</p>
+<ol>
+<li>应用程序层：此层是开发和部署代理应用程序的地方。开发人员利用 AIOS SDK 创建可以执行各种任务的智能和交互式代理。</li>
+<li>内核层：内核层由两个主要组件组成 — 操作系统内核和LLM内核。操作系统内核处理常规操作系统任务，而LLM内核则专门用于管理LLM特定的活动，确保最佳性能和资源利用率。</li>
+<li>硬件层：硬件层包含系统的物理组件，例如 CPU、GPU、内存和存储设备。AIOS 有效地利用这些资源来提供无缝且高性能的代理执行环境。</li>
+</ol>
+<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><p>在AIOS上进行的实验表明，它能够同时运行多个代理，并具有出色的可靠性和效率。即使代理请求暂停和恢复，LLM响应也保持一致，从而确保了生成的输出的完整性。此外，AIOS的智能调度机制明显优于顺序代理执行，在等待和处理时间上实现了更好的平衡。</p>
+<p><img src="/../asset_aios/02.png" alt="AIOS architecture"></p>
+<p>AIOS 架构概述</p>
+<h2 id="未来研究方向"><a href="#未来研究方向" class="headerlink" title="未来研究方向"></a>未来研究方向</h2><p>虽然 AIOS 为LLM基于代理的开发和部署提供了一种开创性的方法，但未来还有几种令人兴奋的研究和改进途径：</p>
+<ul>
+<li>高级调度算法：开发考虑座席请求之间的依赖关系的调度算法，并根据优先级和紧急程度优化资源分配。</li>
+<li>高效的上下文管理：探索更高效地管理上下文的技术，例如上下文压缩和摘要，以最大限度地提高上下文窗口的LLM利用率。</li>
+<li>优化内存和存储：研究优化内存和存储架构的方法，以促进无缝代理协作，例如实施共享内存池和分层缓存机制。</li>
+<li>增强安全性和隐私性：不断增强 AIOS 的安全和隐私功能，包括高级加密技术、安全通信协议和强大的访问控制机制。</li>
+</ul>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>AIOS代表了开发和部署基于代理的LLM的一步。通过集成到LLMs操作系统中，AIOS为代理执行创造了一个智能高效的环境。凭借其全面的模块集、开发人员友好的界面和优化的架构，AIOS 为智能代理生态系统奠定了基础。</p>
+<p>随着研究人员继续探索和扩展AIOS的功能，我们可以预见未来，基于LLM智能体的代理将变得越来越复杂、自主，并成为各个领域不可或缺的一部分。AIOS开辟了许多可能性，为下一代智能系统铺平了道路，这些系统能够以前所未有的方式理解、推理并与世界互动。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a target="_blank" rel="noopener" href="https://medium.com/@simeon.emanuilov/llm-agent-operating-system-aios-and-the-future-of-llm-powered-agents-3d08b4e91c34">https://medium.com/@simeon.emanuilov/llm-agent-operating-system-aios-and-the-future-of-llm-powered-agents-3d08b4e91c34</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/07/04/knowledge-transfer-tutorial/" rel="prev" title="英文知识搬运教程">
+                  <i class="fa fa-angle-left"></i> 英文知识搬运教程
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Howard Huang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">322k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">9:45</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动-->
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
