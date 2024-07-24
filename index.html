@@ -119,7 +119,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-count">41</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -137,6 +137,362 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/07/24/GraphRAG01/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/07/24/GraphRAG01/" class="post-title-link" itemprop="url">GraphRAG系列1 - 简介GraphRAG</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-07-24 12:18:03 / 修改时间：12:35:36" itemprop="dateCreated datePublished" datetime="2024-07-24T12:18:03+08:00">2024-07-24</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>5.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>9 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>GraphRAG 是 Darren Edge 等人在《From Local to Global: A Graph RAG Approach to Query-Focused Summarization》一文中介绍的一种先进的基于图的检索增强生成 (GraphRAG) 方法。这种方法结合了图论、信息检索和LLMs。</p>
+<p>核心概念是文本中的实体表示为图中的节点，这些实体之间的关系表示节点之间的边。然后，该图按层次划分为社区，并汇总为社区报告。</p>
+<p>在查询时，我们必须设置探索社区的深度值来搜索相关社区。深度越深，计算&#x2F;LLM 调用就越多。</p>
+<p>一旦检索到相关社区，我们就可以使用这些社区的摘要报告来回答用户查询。</p>
+<p>下图描述了整个过程。</p>
+<p><img src="/../asset_graphrag01/graph_rag_1-20240724094652-8avbuls.png" alt="graph_rag_1.png">  </p>
+<h1 id="GraphRAG-的关键组件"><a href="#GraphRAG-的关键组件" class="headerlink" title="GraphRAG 的关键组件"></a>GraphRAG 的关键组件</h1><p>如上图所示，我们将 GraphRAG 流程分为以下三个关键部分。</p>
+<ol>
+<li> 提炼</li>
+<li> 嵌入</li>
+<li> 询问</li>
+</ol>
+<p>让我们分别了解这些组件。</p>
+<h2 id="提炼"><a href="#提炼" class="headerlink" title="提炼"></a>提炼</h2><p>在提取组件中，我们做了以下事情，</p>
+<ol>
+<li> 提取实体</li>
+<li>提取实体之间的关系</li>
+<li>提取实体的声明</li>
+<li>摘录关系的声明</li>
+</ol>
+<p>我们将通过一个例子来理解这一点。</p>
+<p>假设我们有以下文本。</p>
+<blockquote>
+<p>电影：《肖申克的救赎》两个被囚禁的男人多年来结下不解之缘，通过共同的正派行为找到安慰和最终的救赎。\n年份：1994\n导演：弗兰克·达拉邦特\n演员：[“蒂姆·罗宾斯”、“摩根·弗里曼” 、“鲍勃·冈顿”、“威廉·赛德勒”]\n证书：A</p>
+</blockquote>
+<p><strong>步骤 1：提取实体</strong></p>
+<ul>
+<li>肖申克的救赎（电影）</li>
+<li>弗兰克·达拉邦特（Frank Darabont）（人—导演）</li>
+<li>蒂姆·罗宾斯（人 — 演员）</li>
+<li>摩根·弗里曼（人 — 演员）</li>
+<li>鲍勃·冈顿（人—演员）</li>
+<li>威廉·赛德勒（人 — 演员）</li>
+<li> 1994 (年)</li>
+<li> 证书(A)</li>
+</ul>
+<p><strong>步骤 2：提取关系</strong></p>
+<ul>
+<li>肖申克的救赎 ——导演：弗兰克·达拉邦特</li>
+<li>肖申克的救赎 — 明星 — 蒂姆·罗宾斯</li>
+<li>肖申克的救赎 — 明星 — 摩根·弗里曼</li>
+<li>肖申克的救赎 ——明星——鲍勃·冈顿</li>
+<li>肖申克的救赎 — 明星 — 威廉·赛德勒</li>
+<li>肖申克的救赎 ——1994 年上映</li>
+<li>肖申克的救赎 — 有证书 — A</li>
+</ul>
+<p><strong>步骤 3-4：提取实体和关系的声明</strong></p>
+<ul>
+<li>肖申克的救赎：“两个被囚禁的男人多年来结下了不解之缘，通过共同的正派行为找到了安慰并最终得到救赎。”</li>
+<li>肖申克的救赎：1994 年上映</li>
+<li>肖申克的救赎：拥有 A 级证书</li>
+</ul>
+<p>中心节点将是电影的名称——肖申克的救赎。</p>
+<p>如果我们要绘制实体、关系和声明，它将如下图所示。</p>
+<p><img src="/../asset_graphrag01/01.png"></p>
+<h2 id="嵌入"><a href="#嵌入" class="headerlink" title="嵌入"></a>嵌入</h2><p>在处理所有文档的第一个组件（提取）所需的步骤后，提取的信息将嵌入到图表中。</p>
+<p>由于我们需要将电影嵌入到图表中，所以我们再看两个电影文本。</p>
+<blockquote>
+<p>“电影：‘盗梦空间’\n类型：[‘科幻’、‘动作’、‘惊悚片’]\n年份：2010年\n导演：克里斯托弗·诺兰\n演员：[‘莱昂纳多·迪卡普里奥’、‘约瑟夫·高登-莱维特’]\ n证书：PG-13”</p>
+<p>“电影：‘黑客帝国’\n类型：[‘科幻’、‘动作’]\n年份：1999年\n导演：沃卓斯基姐妹\n演员：[‘基努·里维斯’、‘劳伦斯·菲什伯恩’]\n证书：R”</p>
+</blockquote>
+<p><em><strong>盗梦空间的提取输出</strong></em></p>
+<p><strong>步骤 1：提取实体</strong></p>
+<ul>
+<li> 盗梦空间（电影）</li>
+<li>克里斯托弗·诺兰（人—导演）</li>
+<li>莱昂纳多·迪卡普里奥（人—演员）</li>
+<li>约瑟夫·高登-莱维特（人—演员）</li>
+<li> 2010年（年）</li>
+<li> PG-13（证书）</li>
+<li> 科幻（类型）</li>
+<li> 动作（类型）</li>
+<li> 惊悚片（类型）</li>
+</ul>
+<p><strong>步骤 2：提取关系</strong></p>
+<ul>
+<li>盗梦空间 — 导演 — 克里斯托弗·诺兰</li>
+<li>盗梦空间 — 明星 — 莱昂纳多·迪卡普里奥</li>
+<li>盗梦空间 — 明星 — 约瑟夫·高登-莱维特</li>
+<li>盗梦空间 — 发布于 — 2010</li>
+<li>盗梦空间 — 拥有证书 — PG-13</li>
+<li>盗梦空间 ——类型——科幻</li>
+<li>盗梦空间 ——类型——动作</li>
+<li>盗梦空间 — 类型 — 惊悚片</li>
+</ul>
+<p><strong>步骤 3-4：提取实体和关系的声明</strong></p>
+<ul>
+<li>盗梦空间：“一个熟练的小偷拥有从人们的头脑中‘提取’信息的罕见能力，他将获得一个重获旧生活的机会，作为完成一项被认为不可能完成的任务的报酬：‘盗梦空间’，将另一个人的想法植入目标的大脑中。”潜意识。”</li>
+<li>成立时间：2010年发布</li>
+<li>成立：拥有 PG-13 证书</li>
+<li>《盗梦空间》：是一部科幻电影</li>
+<li>《盗梦空间》：是一部动作片</li>
+<li>《盗梦空间》：是一部惊悚片</li>
+</ul>
+<p><em><strong>《黑客帝国》的提取输出</strong></em></p>
+<p><strong>步骤 1：提取实体</strong></p>
+<ul>
+<li> 黑客帝国（电影）</li>
+<li>沃卓斯基姐妹（个人 — 董事）</li>
+<li>基努·里维斯（人—演员）</li>
+<li>劳伦斯·菲什伯恩（人物 — 演员）</li>
+<li> 1999 (年)</li>
+<li> R（证书）</li>
+<li> 科幻（类型）</li>
+<li> 动作（类型）</li>
+</ul>
+<p><strong>步骤 2：提取关系</strong></p>
+<ul>
+<li>黑客帝国 — 导演 — 沃卓斯基姐妹</li>
+<li>黑客帝国 ——明星——基努·里维斯</li>
+<li>黑客帝国 ——明星——劳伦斯·菲什伯恩</li>
+<li>黑客帝国 — 发布于 — 1999 年</li>
+<li>黑客帝国 — 有证书 — R</li>
+<li>黑客帝国 ——类型——科幻</li>
+<li>黑客帝国 — 类型 — 动作</li>
+</ul>
+<p><strong>步骤 3-4：提取实体和关系的声明</strong></p>
+<ul>
+<li>《黑客帝国》：“一名计算机程序员发现他所知道的现实是机器创造的模拟，旨在征服人类，并加入叛乱以推翻他们。”</li>
+<li>《黑客帝国》：1999 年上映</li>
+<li>黑客帝国：拥有 R 证书</li>
+<li>《黑客帝国》：是一部科幻电影</li>
+<li>《黑客帝国》：是一部动作片</li>
+</ul>
+<p><strong>嵌入步骤 1：创建图表</strong></p>
+<p>现在我们有了所有三部电影的实体、关系和声明，我们可以将它们嵌入到如下图中。</p>
+<p><img src="/../asset_graphrag01/02.png">  </p>
+<p><strong>嵌入步骤 2-3：检测社区并建立层次结构</strong></p>
+<p>我们可以根据流派将图分为以下两个社区。</p>
+<ol>
+<li>戏剧和犯罪社区</li>
+<li>科幻与动作社区</li>
+</ol>
+<p><img src="/../asset_graphrag01/03.png">  </p>
+<p>我们可以使用分层社区检测算法（莱顿算法）将节点聚类成单独的社区。</p>
+<p>首先，让我们看看分层社区将如何出现。</p>
+<p><img src="/../asset_graphrag01/04.png">  </p>
+<p>我们有以下层次结构。</p>
+<ol>
+<li>C0 — 电影：该社区包含我们数据集中的所有电影。它代表了跨越不同类型、时期和主题的各种电影。这些电影具有共同的元素，如导演、演员、类型和发行年份，但在具体内容和风格上有所不同。</li>
+<li>C1 — 戏剧和犯罪：该社区专注于带有犯罪元素的戏剧故事讲述。</li>
+<li>C1 — 科幻与动作：这个社区结合了科幻与动作的元素。</li>
+<li>C2——纯科幻：这个子社区以《黑客帝国》为代表，专注于科幻概念，重点强调动作。</li>
+<li>C2——科幻惊悚片：以《盗梦空间》为代表的子社区，将科幻元素与心理惊悚片相结合。</li>
+</ol>
+<p>有了这个层次结构，我们就有了全局和局部分类。 C0 和 C1 集群&#x2F;组&#x2F;社区非常广泛（全球），而 C2 集群&#x2F;组&#x2F;社区非常具体（本地）。</p>
+<p><strong>嵌入步骤 4：总结社区</strong></p>
+<ol>
+<li>C1——戏剧和犯罪</li>
+</ol>
+<ul>
+<li>强烈的人物驱动叙事</li>
+<li>对人际关系和情感的探索</li>
+<li>正义、救赎、坚忍的主题</li>
+<li>刑事司法系统的现实写照</li>
+</ul>
+<ol start="2">
+<li>C1——科幻与动作</li>
+</ol>
+<ul>
+<li>未来或另类现实设置</li>
+<li>令人费解的概念和技术</li>
+<li>智力刺激和视觉奇观的融合</li>
+<li>探索现实和意识的本质</li>
+</ul>
+<ol start="3">
+<li>C2——纯科幻动作</li>
+</ol>
+<ul>
+<li>反乌托邦未来设定</li>
+<li>先进技术作为核心情节元素</li>
+<li>高辛烷值动作序列</li>
+<li>人与机器的主题</li>
+</ul>
+<ol start="4">
+<li>C2——科幻惊悚片</li>
+</ol>
+<ul>
+<li>复杂、层次分明的叙述</li>
+<li>心理操纵与探索</li>
+<li>现实与想象之间的界限变得模糊</li>
+<li>智力难题和令人费解的概念</li>
+</ul>
+<blockquote>
+<p>摘要报告还可以包含奖项、演员名录的表演、票房结果等。</p>
+</blockquote>
+<p><em>我们将绕一小段路，通过电影示例来了解莱顿算法。</em></p>
+<h1 id="关于莱顿算法"><a href="#关于莱顿算法" class="headerlink" title="关于莱顿算法"></a>关于莱顿算法</h1><blockquote>
+<p>Leiden算法是用于社区检测的Louvain方法的改进版本。它的工作原理是优化模块化——衡量社区内部链接与社区之间链接相比的密度。</p>
+</blockquote>
+<p>首先，让我们了解模块化。</p>
+<p>模块化是衡量网络划分为社区的程度的指标。我们可以将其视为，</p>
+<ul>
+<li>高度模块化意味着社区内部联系较多，不同社区之间联系较少。</li>
+<li>低模块化意味着连接分布更均匀，没有清晰的社区结构。</li>
+</ul>
+<p>对于我们的电影示例，高度模块化意味着社区内的电影具有许多共同的特征，例如科幻和动作社区。低模块化意味着戏剧和犯罪社区等共同特征较少。</p>
+<h2 id="分层社区检测步骤"><a href="#分层社区检测步骤" class="headerlink" title="分层社区检测步骤"></a>分层社区检测步骤</h2><p>让我们看看电影示例中的社区检测步骤。</p>
+<h3 id="步骤-1：从单个节点开始"><a href="#步骤-1：从单个节点开始" class="headerlink" title="步骤 1：从单个节点开始"></a>步骤 1：从单个节点开始</h3><p>首先将每部电影视为自己的社区。</p>
+<ul>
+<li>社区1：肖申克的救赎</li>
+<li>社区 2：盗梦空间</li>
+<li>社区 3：黑客帝国</li>
+</ul>
+<p><img src="/../asset_graphrag01/05.png"></p>
+<p> </p>
+<h3 id="步骤-2：将节点合并到社区中"><a href="#步骤-2：将节点合并到社区中" class="headerlink" title="步骤 2：将节点合并到社区中"></a>步骤 2：将节点合并到社区中</h3><p>查看电影之间的联系，例如共享类型或主题，如果可以提高模块化程度，请将它们合并。</p>
+<ul>
+<li>将《盗梦空间》和《黑客帝国》合并为科幻和动作社区。</li>
+<li>《肖申克的救赎》仍然属于自己的戏剧和犯罪社区。</li>
+</ul>
+<p><img src="/../asset_graphrag01/06.png"></p>
+<p> </p>
+<h3 id="步骤-3：创建第一级层次结构-C1-："><a href="#步骤-3：创建第一级层次结构-C1-：" class="headerlink" title="步骤 3：创建第一级层次结构 (C1)："></a>步骤 3：创建第一级层次结构 (C1)：</h3><ul>
+<li>C1 社区 1：戏剧与犯罪（肖申克的救赎）</li>
+<li>C1 社区 2：科幻与动作（盗梦空间、黑客帝国）</li>
+</ul>
+<p><img src="/../asset_graphrag01/07.png"></p>
+<p> </p>
+<h3 id="步骤-4：社区作为节点"><a href="#步骤-4：社区作为节点" class="headerlink" title="步骤 4：社区作为节点"></a>步骤 4：社区作为节点</h3><p>现在将社区视为节点。</p>
+<p><img src="/../asset_graphrag01/08.png"></p>
+<p> </p>
+<h3 id="步骤-5：在更高级别重复步骤-1、2-和-3"><a href="#步骤-5：在更高级别重复步骤-1、2-和-3" class="headerlink" title="步骤 5：在更高级别重复步骤 1、2 和 3"></a>步骤 5：在更高级别重复步骤 1、2 和 3</h3><p>寻找这些社区节点之间的联系。在这种情况下，没有足够的社区来进一步合并，因此我们在这里产生 C0 级别。</p>
+<h3 id="步骤-6：细化较低级别"><a href="#步骤-6：细化较低级别" class="headerlink" title="步骤 6：细化较低级别"></a>步骤 6：细化较低级别</h3><p>返回科幻和动作社区并查找子社区。</p>
+<ul>
+<li>根据《盗梦空间》和《黑客帝国》更具体的特征进行拆分。</li>
+</ul>
+<p><img src="/../asset_graphrag01/09.png"></p>
+<p> </p>
+<h3 id="步骤-7：创建第二级层次结构-C2"><a href="#步骤-7：创建第二级层次结构-C2" class="headerlink" title="步骤 7：创建第二级层次结构 (C2)"></a>步骤 7：创建第二级层次结构 (C2)</h3><ul>
+<li>C2 社区 1：纯科幻动作（黑客帝国）</li>
+<li>C2 社区 2：科幻惊悚片（盗梦空间）</li>
+</ul>
+<p><img src="/../asset_graphrag01/10.png"></p>
+<p> </p>
+<p>最后，我们有以下层次结构。</p>
+<p><img src="/../asset_graphrag01/11.png"></p>
+<h2 id="询问"><a href="#询问" class="headerlink" title="询问"></a>询问</h2><p>在查询部分，我们使用映射缩减方法（map-reduce）来使用映射操作查找相关社区。然后将映射输出提供给reduce（缩减器）以回答用户查询。</p>
+<p>让我们用一个示例查询来看看查询过程——我想看一部犯罪剧。</p>
+<p>以下是整个过程的样子。</p>
+<p><img src="/../asset_graphrag01/12.png"></p>
+<h3 id="映射阶段"><a href="#映射阶段" class="headerlink" title="映射阶段"></a>映射阶段</h3><p>我们首先进入地图阶段。在这里，每个社区报告都会传递给映射器，映射器将输出社区与给定查询以及电影的相关程度。</p>
+<p><img src="/../asset_graphrag01/13.png"></p>
+<p>每个社区的地图阶段的输出如下所示。</p>
+<ul>
+<li> 戏剧与犯罪C1：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;community&quot;: &quot;Drama &amp; Crime C1&quot;,</span><br><span class="line">    &quot;relevance_score&quot;: 95,</span><br><span class="line">    &quot;movies&quot;: [&quot;The Shawshank Redemption&quot;],</span><br><span class="line">    &quot;reason&quot;: &quot;Directly matches the crime drama genre request&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li> 科幻与动作 C1</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;community&quot;: &quot;Sci-Fi &amp; Action C1&quot;,</span><br><span class="line">    &quot;relevance_score&quot;: 10,</span><br><span class="line">    &quot;movies&quot;: [&quot;Inception&quot;, &quot;The Matrix&quot;],</span><br><span class="line">    &quot;reason&quot;: &quot;Does not match the crime drama genre request&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li> 纯科幻动作C2</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;community&quot;: &quot;Pure Sci-Fi Action C2&quot;,</span><br><span class="line">    &quot;relevance_score&quot;: 5,</span><br><span class="line">    &quot;movies&quot;: [&quot;The Matrix&quot;],</span><br><span class="line">    &quot;reason&quot;: &quot;Does not match the crime drama genre request&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li> 科幻惊悚片 C2</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;community&quot;: &quot;Sci-Fi Thriller C2&quot;,</span><br><span class="line">    &quot;relevance_score&quot;: 15,</span><br><span class="line">    &quot;movies&quot;: [&quot;Inception&quot;],</span><br><span class="line">    &quot;reason&quot;: &quot;Has some thriller elements but not crime drama&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="缩减阶段"><a href="#缩减阶段" class="headerlink" title="缩减阶段"></a>缩减阶段</h3><p>映射阶段的输出与用户查询一起传递到缩减器，以获取相关建议和其他建议的列表。</p>
+<p><img src="/../asset_graphrag01/14.png"></p>
+<p>以下是reduce 阶段的输出的样子。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;relevant_communities&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;community&quot;: &quot;Drama &amp; Crime C1&quot;,</span><br><span class="line">            &quot;relevance_score&quot;: 95,</span><br><span class="line">            &quot;movies&quot;: [&quot;The Shawshank Redemption&quot;]</span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    &quot;other_suggestions&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;community&quot;: &quot;Sci-Fi Thriller C2&quot;,</span><br><span class="line">            &quot;relevance_score&quot;: 15,</span><br><span class="line">            &quot;movies&quot;: [&quot;Inception&quot;]</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此外，我们可以通过 LLM 向用户查询和相关社区提供电影详细信息和建议来传达此输出。我们可以提示 LLM 根据用户查询和相关电影以及额外建议来个性化输出。</p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>在这篇博客中，我们介绍了 GrapRAG 及其关键组件——提取、嵌入和查询。除此之外，我们还了解了使用莱顿算法进行分层社区检测。在接下来的博客中，我们将利用这些知识为基于内容的电影推荐系统开发 GraphRAG 模块 - GraphRAG4Recommendation。</p>
+<p><a target="_blank" rel="noopener" href="https://pub.towardsai.net/graphrag-gpt-4o-mini-is-the-rag-heaven-b9191dbd44e1">GraphRAG + GPT-4o-Mini is the RAG Heaven | by Vatsal Saglani | Jul, 2024 | Towards AI</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -2341,166 +2697,8 @@ ERROR: Could not build wheels for box2d-py, which is required to install pyproje
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/05/13/gymnasium-introduce/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Howard Huang">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/05/13/gymnasium-introduce/" class="post-title-link" itemprop="url">Gymnasium 介绍</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2024-05-13 15:12:51 / 修改时间：15:48:36" itemprop="dateCreated datePublished" datetime="2024-05-13T15:12:51+08:00">2024-05-13</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>5.8k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>11 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>前面介绍了强化学习的例子，觉得有必要介绍gymnasium环境。 作为强化学习最常用的工具，gym一直在不停地升级和折腾，比较大的变化就是2021年接口从gym库变成了gymnasium库。</p>
-<h3 id="step和观察结果"><a href="#step和观察结果" class="headerlink" title="step和观察结果"></a>step和观察结果</h3><p>总体来说，对于gymnasium我们只需要做两件事情：一个是初始化环境，另一个就是通过step函数不停地给环境做输入，然后观察对应的结果。</p>
-<p>初始化环境分为两步。<br>第一步是创建gymnasium中所支持的环境，比如我们使用经典的让一个杆子不倒的CartPole环境：</p>
-<pre><code>import gymnasium as gym
-env = gym.make(&quot;CartPole-v1&quot;)
-</code></pre>
-<p>第二步，我们就可以通过env的reset函数来进行环境的初始化：</p>
-<pre><code>observation, info = env.reset()
-</code></pre>
-<p>我们可以将observation打印出来，它一个4元组，4个数值分别表示：</p>
-<ul>
-<li>小车位置</li>
-<li>小车速度</li>
-<li>棍的倾斜角度</li>
-<li>棍的角速度</li>
-</ul>
-<p>如果角度大于12度，或者小车位置超出了2.4，就意味着失败了，直接结束。</p>
-<p>小车的输入就是一个力，要么是向左的力，要么是向右的力。0是向左推小车，1是向右推小车。</p>
-<p>下面我们让代码跑起来。</p>
-<p>首先我们通过pip来安装gymnasium的包：</p>
-<pre><code>pip install gymnasium
-</code></pre>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gymnasium <span class="keyword">as</span> gym</span><br><span class="line"></span><br><span class="line">num_eval_episodes = <span class="number">4</span></span><br><span class="line"></span><br><span class="line">env = gym.make(<span class="string">&quot;CartPole-v1&quot;</span>, render_mode=<span class="string">&quot;rgb_array&quot;</span>)  <span class="comment"># replace with your environment</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(env.action_space)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> episode_num <span class="keyword">in</span> <span class="built_in">range</span>(num_eval_episodes):</span><br><span class="line">    obs, info = env.reset()</span><br><span class="line"></span><br><span class="line">    episode_over = <span class="literal">False</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">not</span> episode_over:</span><br><span class="line">        action = env.action_space.sample()  <span class="comment"># replace with actual agent</span></span><br><span class="line">        obs, reward, terminated, truncated, info = env.step(action)</span><br><span class="line"></span><br><span class="line">        episode_over = terminated <span class="keyword">or</span> truncated</span><br><span class="line">env.close()</span><br></pre></td></tr></table></figure>
-
-<p>env.action_space输出是Discrete(2)。也就是两个离散的值0和1。前面我们介绍了，这分别代表向左和向右推动小车。</p>
-<p>obs输出的4元组，我们前面也讲过了，像这样：<br>[ 0.0273956 -0.00611216 0.03585979 0.0197368 ]</p>
-<p>下面就是关键的step一步：</p>
-<pre><code>action = env.action_space.sample()  # replace with actual agent
-obs, reward, terminated, truncated, info = env.step(action)
-</code></pre>
-<p>CartPole的输入只有0和1两个值。我们采用sample()函数只是随机采用左右动的方式来试图让小车不倒。</p>
-<p>返回的5元组，obs就是位置4元组，reward是用于强化学习的奖励，在本例中只要是不死就是1. terminated就是是否游戏结束了。<br>Truncated在官方定义中用于处理比如超时等特殊结束的情况。<br>truncated, info对于CartPole来说没有用到。</p>
-<p>搭建好了gymnasium环境之后，我们就可以进行策略的升级与迭代了。<br>比如我们写死一个策略，如果位置小于0则向右推，反之则向左推：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">action_pos</span>(<span class="params">obs</span>): </span><br><span class="line">    pos, v, ang, va = obs</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> pos &lt;= <span class="number">0</span>: </span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>: </span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span> </span><br></pre></td></tr></table></figure>
-<p>用 action_pos(obs) 替换 env.action_space.sample() 即可。</p>
-<h3 id="与老gym的主要区别"><a href="#与老gym的主要区别" class="headerlink" title="与老gym的主要区别"></a>与老gym的主要区别</h3><p>目前版本与之前gym的最主要区别在于step返回值从原来的4元组变成了5元组。<br>原来是observation, reward, done, info，而现在done变成了 terminated增加了truncated。</p>
-<p>老版本的：</p>
-<pre><code>status, reward, done, info = env.step(0)
-</code></pre>
-<p>新版的：</p>
-<pre><code>observation, reward, terminated, truncated, info = env.step(0)
-</code></pre>
-<p>因而，原来处理done的地方需要改成terminated或truncated:</p>
-<pre><code>if terminated or truncated:
-    something()
-</code></pre>
-<p>另外，env.reset函数目前返回的是两个值，而不是原来的一个值：</p>
-<pre><code>obs,info = env.reset()
-</code></pre>
-<h3 id="gymnasium与强化学习算法库的结合"><a href="#gymnasium与强化学习算法库的结合" class="headerlink" title="gymnasium与强化学习算法库的结合"></a>gymnasium与强化学习算法库的结合</h3><p>stable-baselines3等强化学习库已经对gymnasium进行了支持，所以我们可以在stable-baselines3中直接使用gymnasium的环境。</p>
-<p>先安装库：</p>
-<pre><code>pip install gymnasium[atari]
-pip install gymnasium[accept-rom-license]
-pip install stable_baselines3
-</code></pre>
-<p>我们用DQN算法来训练乒乓球游戏：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gymnasium <span class="keyword">as</span> gym</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> stable_baselines3 <span class="keyword">import</span> DQN</span><br><span class="line"><span class="keyword">from</span> stable_baselines3.dqn <span class="keyword">import</span> CnnPolicy</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">game = <span class="string">&#x27;ALE/Pong-v5&#x27;</span></span><br><span class="line"></span><br><span class="line">env = gym.make(game,render_mode=<span class="string">&quot;rgb_array&quot;</span>)</span><br><span class="line"></span><br><span class="line">save_file = <span class="string">&#x27;dqn_&#x27;</span>+game;</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(env.action_space)</span><br><span class="line">model = DQN(CnnPolicy, env, verbose=<span class="number">1</span>,exploration_final_eps=<span class="number">0.01</span>,exploration_fraction=<span class="number">0.1</span>,gradient_steps=<span class="number">1</span>,learning_rate=<span class="number">0.0001</span>,buffer_size=<span class="number">10000</span>)</span><br><span class="line">model.set_env(env)</span><br><span class="line">model.learn(total_timesteps=<span class="number">1000000</span>, log_interval=<span class="number">10</span>)</span><br><span class="line">model.save(save_file)</span><br><span class="line"></span><br><span class="line">obs,info = env.reset()</span><br><span class="line"></span><br><span class="line">score = <span class="number">0</span></span><br><span class="line">rewards_sum = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    action, _states = model.predict(obs, deterministic=<span class="literal">True</span>)</span><br><span class="line">    obs, reward, terminated, truncated, info = env.step(action)</span><br><span class="line">    score = score + <span class="number">1</span></span><br><span class="line">    rewards_sum += reward</span><br><span class="line">    <span class="keyword">if</span> reward &gt; <span class="number">0</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;win!!!&#x27;</span>, reward)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> terminated <span class="keyword">or</span> truncated:</span><br><span class="line">        <span class="comment"># obs = env.reset()</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;finished&#x27;</span>, score)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;reward sum=&#x27;</span>, rewards_sum)</span><br><span class="line">        <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
-
-<p>上面的代码我们还可以做两处改进：</p>
-<p>如果存在save_file，我们可以直接加载模型，在原有模型上继续训练。<br>我们可以增加一个测试模式，观看训练后模型打游戏的真实效果。</p>
-<p>我们让PPO算法来玩乒乓球游戏了。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gymnasium <span class="keyword">as</span> gym</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> stable_baselines3 <span class="keyword">import</span> PPO</span><br><span class="line"><span class="keyword">from</span> stable_baselines3.dqn <span class="keyword">import</span> MlpPolicy</span><br><span class="line"><span class="keyword">from</span> stable_baselines3.dqn <span class="keyword">import</span> CnnPolicy</span><br><span class="line"></span><br><span class="line">game = <span class="string">&#x27;ALE/Pong-v5&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#eval = True</span></span><br><span class="line"><span class="built_in">eval</span> = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">cont = <span class="literal">True</span></span><br><span class="line"><span class="comment">#cont = False</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> (time.strftime(<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>, time.localtime()))</span><br><span class="line"></span><br><span class="line">start_time = time.time()</span><br><span class="line">start_date = datetime.now()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">eval</span>:</span><br><span class="line">    env = gym.make(game,render_mode=<span class="string">&quot;human&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    env = gym.make(game,render_mode=<span class="string">&quot;rgb_array&quot;</span>)</span><br><span class="line"></span><br><span class="line">save_file = <span class="string">&#x27;./dqn_&#x27;</span>+game;</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(env.action_space)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">eval</span>:</span><br><span class="line">    model = PPO.load(save_file)</span><br><span class="line">    model.set_env(env) </span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="keyword">if</span> cont:</span><br><span class="line">        model = PPO.load(save_file)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        model = PPO(<span class="string">&quot;MlpPolicy&quot;</span>, env, verbose=<span class="number">1</span>,learning_rate=<span class="number">2.5e-4</span>,clip_range=<span class="number">0.1</span>,vf_coef=<span class="number">0.5</span>,ent_coef=<span class="number">0.01</span>,n_steps=<span class="number">128</span>)    </span><br><span class="line">    model.set_env(env)</span><br><span class="line">    model.learn(total_timesteps=<span class="number">1000000</span>, log_interval=<span class="number">10</span>)</span><br><span class="line">    model.save(save_file)</span><br><span class="line"></span><br><span class="line">obs,info = env.reset()</span><br><span class="line"></span><br><span class="line">score = <span class="number">0</span></span><br><span class="line">rewards_sum = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    action, _states = model.predict(obs)</span><br><span class="line">    obs, reward, terminated, truncated, info = env.step(action)</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">eval</span>:</span><br><span class="line">        env.render()</span><br><span class="line"></span><br><span class="line">    score = score + <span class="number">1</span></span><br><span class="line">    rewards_sum += reward</span><br><span class="line">    <span class="keyword">if</span> reward &gt; <span class="number">0</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;win!!!&#x27;</span>, reward)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> terminated <span class="keyword">or</span> truncated:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;finished&#x27;</span>, score)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;reward sum=&#x27;</span>, rewards_sum)</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">duration = time.time() - start_time</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;duration=&#x27;</span>, duration)</span><br><span class="line"></span><br><span class="line">time_cost = datetime.now() - start_date</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;time cost=&#x27;</span>, time_cost)</span><br></pre></td></tr></table></figure>
-<h3 id="视频输出-从Monitor到RecordVideo"><a href="#视频输出-从Monitor到RecordVideo" class="headerlink" title="视频输出 - 从Monitor到RecordVideo"></a>视频输出 - 从Monitor到RecordVideo</h3><p>有时候我们希望把游戏的视频输出出来，gym曾经使用Monitor来实现。现在gymnasium则改用RecordVideo来实现。</p>
-<p>使用RecordVideo需要先安装moviepy库：</p>
-<pre><code>pip install moviepy
-</code></pre>
-<p>然后从gymnasium.wrappers包中引用RecordVideo：</p>
-<pre><code>from gymnasium.wrappers import RecordVideo
-</code></pre>
-<p>human模式是没有办法输出视频的，所以我们需要把human模式改成rgb_array模式。</p>
-<pre><code>env = gym.make(&quot;CartPole-v1&quot;, render_mode=&quot;rgb_array&quot;)
-</code></pre>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> gymnasium <span class="keyword">as</span> gym</span><br><span class="line"><span class="keyword">from</span> gymnasium.wrappers <span class="keyword">import</span> RecordEpisodeStatistics, RecordVideo</span><br><span class="line"></span><br><span class="line">training_period = <span class="number">250</span>  <span class="comment"># record the agent&#x27;s episode every 250</span></span><br><span class="line">num_training_episodes = <span class="number">10_000</span>  <span class="comment"># total number of training episodes</span></span><br><span class="line"></span><br><span class="line">env = gym.make(<span class="string">&quot;CartPole-v1&quot;</span>, render_mode=<span class="string">&quot;rgb_array&quot;</span>)  <span class="comment"># replace with your environment</span></span><br><span class="line">env = RecordVideo(env, video_folder=<span class="string">&quot;cartpole-agent&quot;</span>, name_prefix=<span class="string">&quot;training&quot;</span>,</span><br><span class="line">                  episode_trigger=<span class="keyword">lambda</span> x: x % training_period == <span class="number">0</span>)</span><br><span class="line">env = RecordEpisodeStatistics(env)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> episode_num <span class="keyword">in</span> <span class="built_in">range</span>(num_training_episodes):</span><br><span class="line">    obs, info = env.reset()</span><br><span class="line"></span><br><span class="line">    episode_over = <span class="literal">False</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">not</span> episode_over:</span><br><span class="line">        action = env.action_space.sample()  <span class="comment"># replace with actual agent</span></span><br><span class="line">        obs, reward, terminated, truncated, info = env.step(action)</span><br><span class="line"></span><br><span class="line">        episode_over = terminated <span class="keyword">or</span> truncated</span><br><span class="line"></span><br><span class="line">    logging.info(<span class="string">f&quot;episode-<span class="subst">&#123;episode_num&#125;</span>&quot;</span>, info[<span class="string">&quot;episode&quot;</span>])</span><br><span class="line">env.close()</span><br></pre></td></tr></table></figure>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a target="_blank" rel="noopener" href="https://gymnasium.farama.org/">https://gymnasium.farama.org/</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
@@ -2522,13 +2720,13 @@ pip install stable_baselines3
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">322k</span>
+    <span title="站点总字数">327k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">9:45</span>
+    <span title="站点阅读时长">9:54</span>
   </span>
 </div>
 <div class="busuanzi-count">

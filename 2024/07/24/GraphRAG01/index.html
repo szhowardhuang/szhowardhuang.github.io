@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"szhowardhuang.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="GraphRAG 是 Darren Edge 等人在《From Local to Global: A Graph RAG Approach to Query-Focused Summarization》一文中介绍的一种先进的基于图的检索增强生成 (GraphRAG) 方法。这种方法结合了图论、信息检索和LLMs。 核心概念是文本中的实体表示为图中的节点，这些实体之间的关系表示节点之间的边。然后，该">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GraphRAG系列1 - 简介GraphRAG">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/07/24/GraphRAG01/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="GraphRAG 是 Darren Edge 等人在《From Local to Global: A Graph RAG Approach to Query-Focused Summarization》一文中介绍的一种先进的基于图的检索增强生成 (GraphRAG) 方法。这种方法结合了图论、信息检索和LLMs。 核心概念是文本中的实体表示为图中的节点，这些实体之间的关系表示节点之间的边。然后，该">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag01/graph_rag_1-20240724094652-8avbuls.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag01/01.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag01/02.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag01/03.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag01/04.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag01/05.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag01/06.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag01/07.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag01/08.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag01/09.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag01/10.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag01/11.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag01/12.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag01/13.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag01/14.png">
+<meta property="article:published_time" content="2024-07-24T04:18:03.196Z">
+<meta property="article:modified_time" content="2024-07-24T04:35:36.595Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://szhowardhuang.github.io/asset_graphrag01/graph_rag_1-20240724094652-8avbuls.png">
+
+
+<link rel="canonical" href="https://szhowardhuang.github.io/2024/07/24/GraphRAG01/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://szhowardhuang.github.io/2024/07/24/GraphRAG01/","path":"2024/07/24/GraphRAG01/","title":"GraphRAG系列1 - 简介GraphRAG"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>GraphRAG系列1 - 简介GraphRAG | 嵌入式老兵博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">嵌入式老兵博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#GraphRAG-%E7%9A%84%E5%85%B3%E9%94%AE%E7%BB%84%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">GraphRAG 的关键组件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%90%E7%82%BC"><span class="nav-number">1.1.</span> <span class="nav-text">提炼</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B5%8C%E5%85%A5"><span class="nav-number">1.2.</span> <span class="nav-text">嵌入</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E8%8E%B1%E9%A1%BF%E7%AE%97%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">关于莱顿算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B1%82%E7%A4%BE%E5%8C%BA%E6%A3%80%E6%B5%8B%E6%AD%A5%E9%AA%A4"><span class="nav-number">2.1.</span> <span class="nav-text">分层社区检测步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-1%EF%BC%9A%E4%BB%8E%E5%8D%95%E4%B8%AA%E8%8A%82%E7%82%B9%E5%BC%80%E5%A7%8B"><span class="nav-number">2.1.1.</span> <span class="nav-text">步骤 1：从单个节点开始</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-2%EF%BC%9A%E5%B0%86%E8%8A%82%E7%82%B9%E5%90%88%E5%B9%B6%E5%88%B0%E7%A4%BE%E5%8C%BA%E4%B8%AD"><span class="nav-number">2.1.2.</span> <span class="nav-text">步骤 2：将节点合并到社区中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-3%EF%BC%9A%E5%88%9B%E5%BB%BA%E7%AC%AC%E4%B8%80%E7%BA%A7%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84-C1-%EF%BC%9A"><span class="nav-number">2.1.3.</span> <span class="nav-text">步骤 3：创建第一级层次结构 (C1)：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-4%EF%BC%9A%E7%A4%BE%E5%8C%BA%E4%BD%9C%E4%B8%BA%E8%8A%82%E7%82%B9"><span class="nav-number">2.1.4.</span> <span class="nav-text">步骤 4：社区作为节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-5%EF%BC%9A%E5%9C%A8%E6%9B%B4%E9%AB%98%E7%BA%A7%E5%88%AB%E9%87%8D%E5%A4%8D%E6%AD%A5%E9%AA%A4-1%E3%80%812-%E5%92%8C-3"><span class="nav-number">2.1.5.</span> <span class="nav-text">步骤 5：在更高级别重复步骤 1、2 和 3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-6%EF%BC%9A%E7%BB%86%E5%8C%96%E8%BE%83%E4%BD%8E%E7%BA%A7%E5%88%AB"><span class="nav-number">2.1.6.</span> <span class="nav-text">步骤 6：细化较低级别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4-7%EF%BC%9A%E5%88%9B%E5%BB%BA%E7%AC%AC%E4%BA%8C%E7%BA%A7%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84-C2"><span class="nav-number">2.1.7.</span> <span class="nav-text">步骤 7：创建第二级层次结构 (C2)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%A2%E9%97%AE"><span class="nav-number">2.2.</span> <span class="nav-text">询问</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%98%A0%E5%B0%84%E9%98%B6%E6%AE%B5"><span class="nav-number">2.2.1.</span> <span class="nav-text">映射阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%A9%E5%87%8F%E9%98%B6%E6%AE%B5"><span class="nav-number">2.2.2.</span> <span class="nav-text">缩减阶段</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">3.</span> <span class="nav-text">结论</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Howard Huang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/07/24/GraphRAG01/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="GraphRAG系列1 - 简介GraphRAG | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          GraphRAG系列1 - 简介GraphRAG
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-07-24 12:18:03 / 修改时间：12:35:36" itemprop="dateCreated datePublished" datetime="2024-07-24T12:18:03+08:00">2024-07-24</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>5.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>9 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>GraphRAG 是 Darren Edge 等人在《From Local to Global: A Graph RAG Approach to Query-Focused Summarization》一文中介绍的一种先进的基于图的检索增强生成 (GraphRAG) 方法。这种方法结合了图论、信息检索和LLMs。</p>
+<p>核心概念是文本中的实体表示为图中的节点，这些实体之间的关系表示节点之间的边。然后，该图按层次划分为社区，并汇总为社区报告。</p>
+<p>在查询时，我们必须设置探索社区的深度值来搜索相关社区。深度越深，计算&#x2F;LLM 调用就越多。</p>
+<p>一旦检索到相关社区，我们就可以使用这些社区的摘要报告来回答用户查询。</p>
+<p>下图描述了整个过程。</p>
+<p><img src="/../asset_graphrag01/graph_rag_1-20240724094652-8avbuls.png" alt="graph_rag_1.png">  </p>
+<h1 id="GraphRAG-的关键组件"><a href="#GraphRAG-的关键组件" class="headerlink" title="GraphRAG 的关键组件"></a>GraphRAG 的关键组件</h1><p>如上图所示，我们将 GraphRAG 流程分为以下三个关键部分。</p>
+<ol>
+<li> 提炼</li>
+<li> 嵌入</li>
+<li> 询问</li>
+</ol>
+<p>让我们分别了解这些组件。</p>
+<h2 id="提炼"><a href="#提炼" class="headerlink" title="提炼"></a>提炼</h2><p>在提取组件中，我们做了以下事情，</p>
+<ol>
+<li> 提取实体</li>
+<li>提取实体之间的关系</li>
+<li>提取实体的声明</li>
+<li>摘录关系的声明</li>
+</ol>
+<p>我们将通过一个例子来理解这一点。</p>
+<p>假设我们有以下文本。</p>
+<blockquote>
+<p>电影：《肖申克的救赎》两个被囚禁的男人多年来结下不解之缘，通过共同的正派行为找到安慰和最终的救赎。\n年份：1994\n导演：弗兰克·达拉邦特\n演员：[“蒂姆·罗宾斯”、“摩根·弗里曼” 、“鲍勃·冈顿”、“威廉·赛德勒”]\n证书：A</p>
+</blockquote>
+<p><strong>步骤 1：提取实体</strong></p>
+<ul>
+<li>肖申克的救赎（电影）</li>
+<li>弗兰克·达拉邦特（Frank Darabont）（人—导演）</li>
+<li>蒂姆·罗宾斯（人 — 演员）</li>
+<li>摩根·弗里曼（人 — 演员）</li>
+<li>鲍勃·冈顿（人—演员）</li>
+<li>威廉·赛德勒（人 — 演员）</li>
+<li> 1994 (年)</li>
+<li> 证书(A)</li>
+</ul>
+<p><strong>步骤 2：提取关系</strong></p>
+<ul>
+<li>肖申克的救赎 ——导演：弗兰克·达拉邦特</li>
+<li>肖申克的救赎 — 明星 — 蒂姆·罗宾斯</li>
+<li>肖申克的救赎 — 明星 — 摩根·弗里曼</li>
+<li>肖申克的救赎 ——明星——鲍勃·冈顿</li>
+<li>肖申克的救赎 — 明星 — 威廉·赛德勒</li>
+<li>肖申克的救赎 ——1994 年上映</li>
+<li>肖申克的救赎 — 有证书 — A</li>
+</ul>
+<p><strong>步骤 3-4：提取实体和关系的声明</strong></p>
+<ul>
+<li>肖申克的救赎：“两个被囚禁的男人多年来结下了不解之缘，通过共同的正派行为找到了安慰并最终得到救赎。”</li>
+<li>肖申克的救赎：1994 年上映</li>
+<li>肖申克的救赎：拥有 A 级证书</li>
+</ul>
+<p>中心节点将是电影的名称——肖申克的救赎。</p>
+<p>如果我们要绘制实体、关系和声明，它将如下图所示。</p>
+<p><img src="/../asset_graphrag01/01.png"></p>
+<h2 id="嵌入"><a href="#嵌入" class="headerlink" title="嵌入"></a>嵌入</h2><p>在处理所有文档的第一个组件（提取）所需的步骤后，提取的信息将嵌入到图表中。</p>
+<p>由于我们需要将电影嵌入到图表中，所以我们再看两个电影文本。</p>
+<blockquote>
+<p>“电影：‘盗梦空间’\n类型：[‘科幻’、‘动作’、‘惊悚片’]\n年份：2010年\n导演：克里斯托弗·诺兰\n演员：[‘莱昂纳多·迪卡普里奥’、‘约瑟夫·高登-莱维特’]\ n证书：PG-13”</p>
+<p>“电影：‘黑客帝国’\n类型：[‘科幻’、‘动作’]\n年份：1999年\n导演：沃卓斯基姐妹\n演员：[‘基努·里维斯’、‘劳伦斯·菲什伯恩’]\n证书：R”</p>
+</blockquote>
+<p><em><strong>盗梦空间的提取输出</strong></em></p>
+<p><strong>步骤 1：提取实体</strong></p>
+<ul>
+<li> 盗梦空间（电影）</li>
+<li>克里斯托弗·诺兰（人—导演）</li>
+<li>莱昂纳多·迪卡普里奥（人—演员）</li>
+<li>约瑟夫·高登-莱维特（人—演员）</li>
+<li> 2010年（年）</li>
+<li> PG-13（证书）</li>
+<li> 科幻（类型）</li>
+<li> 动作（类型）</li>
+<li> 惊悚片（类型）</li>
+</ul>
+<p><strong>步骤 2：提取关系</strong></p>
+<ul>
+<li>盗梦空间 — 导演 — 克里斯托弗·诺兰</li>
+<li>盗梦空间 — 明星 — 莱昂纳多·迪卡普里奥</li>
+<li>盗梦空间 — 明星 — 约瑟夫·高登-莱维特</li>
+<li>盗梦空间 — 发布于 — 2010</li>
+<li>盗梦空间 — 拥有证书 — PG-13</li>
+<li>盗梦空间 ——类型——科幻</li>
+<li>盗梦空间 ——类型——动作</li>
+<li>盗梦空间 — 类型 — 惊悚片</li>
+</ul>
+<p><strong>步骤 3-4：提取实体和关系的声明</strong></p>
+<ul>
+<li>盗梦空间：“一个熟练的小偷拥有从人们的头脑中‘提取’信息的罕见能力，他将获得一个重获旧生活的机会，作为完成一项被认为不可能完成的任务的报酬：‘盗梦空间’，将另一个人的想法植入目标的大脑中。”潜意识。”</li>
+<li>成立时间：2010年发布</li>
+<li>成立：拥有 PG-13 证书</li>
+<li>《盗梦空间》：是一部科幻电影</li>
+<li>《盗梦空间》：是一部动作片</li>
+<li>《盗梦空间》：是一部惊悚片</li>
+</ul>
+<p><em><strong>《黑客帝国》的提取输出</strong></em></p>
+<p><strong>步骤 1：提取实体</strong></p>
+<ul>
+<li> 黑客帝国（电影）</li>
+<li>沃卓斯基姐妹（个人 — 董事）</li>
+<li>基努·里维斯（人—演员）</li>
+<li>劳伦斯·菲什伯恩（人物 — 演员）</li>
+<li> 1999 (年)</li>
+<li> R（证书）</li>
+<li> 科幻（类型）</li>
+<li> 动作（类型）</li>
+</ul>
+<p><strong>步骤 2：提取关系</strong></p>
+<ul>
+<li>黑客帝国 — 导演 — 沃卓斯基姐妹</li>
+<li>黑客帝国 ——明星——基努·里维斯</li>
+<li>黑客帝国 ——明星——劳伦斯·菲什伯恩</li>
+<li>黑客帝国 — 发布于 — 1999 年</li>
+<li>黑客帝国 — 有证书 — R</li>
+<li>黑客帝国 ——类型——科幻</li>
+<li>黑客帝国 — 类型 — 动作</li>
+</ul>
+<p><strong>步骤 3-4：提取实体和关系的声明</strong></p>
+<ul>
+<li>《黑客帝国》：“一名计算机程序员发现他所知道的现实是机器创造的模拟，旨在征服人类，并加入叛乱以推翻他们。”</li>
+<li>《黑客帝国》：1999 年上映</li>
+<li>黑客帝国：拥有 R 证书</li>
+<li>《黑客帝国》：是一部科幻电影</li>
+<li>《黑客帝国》：是一部动作片</li>
+</ul>
+<p><strong>嵌入步骤 1：创建图表</strong></p>
+<p>现在我们有了所有三部电影的实体、关系和声明，我们可以将它们嵌入到如下图中。</p>
+<p><img src="/../asset_graphrag01/02.png">  </p>
+<p><strong>嵌入步骤 2-3：检测社区并建立层次结构</strong></p>
+<p>我们可以根据流派将图分为以下两个社区。</p>
+<ol>
+<li>戏剧和犯罪社区</li>
+<li>科幻与动作社区</li>
+</ol>
+<p><img src="/../asset_graphrag01/03.png">  </p>
+<p>我们可以使用分层社区检测算法（莱顿算法）将节点聚类成单独的社区。</p>
+<p>首先，让我们看看分层社区将如何出现。</p>
+<p><img src="/../asset_graphrag01/04.png">  </p>
+<p>我们有以下层次结构。</p>
+<ol>
+<li>C0 — 电影：该社区包含我们数据集中的所有电影。它代表了跨越不同类型、时期和主题的各种电影。这些电影具有共同的元素，如导演、演员、类型和发行年份，但在具体内容和风格上有所不同。</li>
+<li>C1 — 戏剧和犯罪：该社区专注于带有犯罪元素的戏剧故事讲述。</li>
+<li>C1 — 科幻与动作：这个社区结合了科幻与动作的元素。</li>
+<li>C2——纯科幻：这个子社区以《黑客帝国》为代表，专注于科幻概念，重点强调动作。</li>
+<li>C2——科幻惊悚片：以《盗梦空间》为代表的子社区，将科幻元素与心理惊悚片相结合。</li>
+</ol>
+<p>有了这个层次结构，我们就有了全局和局部分类。 C0 和 C1 集群&#x2F;组&#x2F;社区非常广泛（全球），而 C2 集群&#x2F;组&#x2F;社区非常具体（本地）。</p>
+<p><strong>嵌入步骤 4：总结社区</strong></p>
+<ol>
+<li>C1——戏剧和犯罪</li>
+</ol>
+<ul>
+<li>强烈的人物驱动叙事</li>
+<li>对人际关系和情感的探索</li>
+<li>正义、救赎、坚忍的主题</li>
+<li>刑事司法系统的现实写照</li>
+</ul>
+<ol start="2">
+<li>C1——科幻与动作</li>
+</ol>
+<ul>
+<li>未来或另类现实设置</li>
+<li>令人费解的概念和技术</li>
+<li>智力刺激和视觉奇观的融合</li>
+<li>探索现实和意识的本质</li>
+</ul>
+<ol start="3">
+<li>C2——纯科幻动作</li>
+</ol>
+<ul>
+<li>反乌托邦未来设定</li>
+<li>先进技术作为核心情节元素</li>
+<li>高辛烷值动作序列</li>
+<li>人与机器的主题</li>
+</ul>
+<ol start="4">
+<li>C2——科幻惊悚片</li>
+</ol>
+<ul>
+<li>复杂、层次分明的叙述</li>
+<li>心理操纵与探索</li>
+<li>现实与想象之间的界限变得模糊</li>
+<li>智力难题和令人费解的概念</li>
+</ul>
+<blockquote>
+<p>摘要报告还可以包含奖项、演员名录的表演、票房结果等。</p>
+</blockquote>
+<p><em>我们将绕一小段路，通过电影示例来了解莱顿算法。</em></p>
+<h1 id="关于莱顿算法"><a href="#关于莱顿算法" class="headerlink" title="关于莱顿算法"></a>关于莱顿算法</h1><blockquote>
+<p>Leiden算法是用于社区检测的Louvain方法的改进版本。它的工作原理是优化模块化——衡量社区内部链接与社区之间链接相比的密度。</p>
+</blockquote>
+<p>首先，让我们了解模块化。</p>
+<p>模块化是衡量网络划分为社区的程度的指标。我们可以将其视为，</p>
+<ul>
+<li>高度模块化意味着社区内部联系较多，不同社区之间联系较少。</li>
+<li>低模块化意味着连接分布更均匀，没有清晰的社区结构。</li>
+</ul>
+<p>对于我们的电影示例，高度模块化意味着社区内的电影具有许多共同的特征，例如科幻和动作社区。低模块化意味着戏剧和犯罪社区等共同特征较少。</p>
+<h2 id="分层社区检测步骤"><a href="#分层社区检测步骤" class="headerlink" title="分层社区检测步骤"></a>分层社区检测步骤</h2><p>让我们看看电影示例中的社区检测步骤。</p>
+<h3 id="步骤-1：从单个节点开始"><a href="#步骤-1：从单个节点开始" class="headerlink" title="步骤 1：从单个节点开始"></a>步骤 1：从单个节点开始</h3><p>首先将每部电影视为自己的社区。</p>
+<ul>
+<li>社区1：肖申克的救赎</li>
+<li>社区 2：盗梦空间</li>
+<li>社区 3：黑客帝国</li>
+</ul>
+<p><img src="/../asset_graphrag01/05.png"></p>
+<p> </p>
+<h3 id="步骤-2：将节点合并到社区中"><a href="#步骤-2：将节点合并到社区中" class="headerlink" title="步骤 2：将节点合并到社区中"></a>步骤 2：将节点合并到社区中</h3><p>查看电影之间的联系，例如共享类型或主题，如果可以提高模块化程度，请将它们合并。</p>
+<ul>
+<li>将《盗梦空间》和《黑客帝国》合并为科幻和动作社区。</li>
+<li>《肖申克的救赎》仍然属于自己的戏剧和犯罪社区。</li>
+</ul>
+<p><img src="/../asset_graphrag01/06.png"></p>
+<p> </p>
+<h3 id="步骤-3：创建第一级层次结构-C1-："><a href="#步骤-3：创建第一级层次结构-C1-：" class="headerlink" title="步骤 3：创建第一级层次结构 (C1)："></a>步骤 3：创建第一级层次结构 (C1)：</h3><ul>
+<li>C1 社区 1：戏剧与犯罪（肖申克的救赎）</li>
+<li>C1 社区 2：科幻与动作（盗梦空间、黑客帝国）</li>
+</ul>
+<p><img src="/../asset_graphrag01/07.png"></p>
+<p> </p>
+<h3 id="步骤-4：社区作为节点"><a href="#步骤-4：社区作为节点" class="headerlink" title="步骤 4：社区作为节点"></a>步骤 4：社区作为节点</h3><p>现在将社区视为节点。</p>
+<p><img src="/../asset_graphrag01/08.png"></p>
+<p> </p>
+<h3 id="步骤-5：在更高级别重复步骤-1、2-和-3"><a href="#步骤-5：在更高级别重复步骤-1、2-和-3" class="headerlink" title="步骤 5：在更高级别重复步骤 1、2 和 3"></a>步骤 5：在更高级别重复步骤 1、2 和 3</h3><p>寻找这些社区节点之间的联系。在这种情况下，没有足够的社区来进一步合并，因此我们在这里产生 C0 级别。</p>
+<h3 id="步骤-6：细化较低级别"><a href="#步骤-6：细化较低级别" class="headerlink" title="步骤 6：细化较低级别"></a>步骤 6：细化较低级别</h3><p>返回科幻和动作社区并查找子社区。</p>
+<ul>
+<li>根据《盗梦空间》和《黑客帝国》更具体的特征进行拆分。</li>
+</ul>
+<p><img src="/../asset_graphrag01/09.png"></p>
+<p> </p>
+<h3 id="步骤-7：创建第二级层次结构-C2"><a href="#步骤-7：创建第二级层次结构-C2" class="headerlink" title="步骤 7：创建第二级层次结构 (C2)"></a>步骤 7：创建第二级层次结构 (C2)</h3><ul>
+<li>C2 社区 1：纯科幻动作（黑客帝国）</li>
+<li>C2 社区 2：科幻惊悚片（盗梦空间）</li>
+</ul>
+<p><img src="/../asset_graphrag01/10.png"></p>
+<p> </p>
+<p>最后，我们有以下层次结构。</p>
+<p><img src="/../asset_graphrag01/11.png"></p>
+<h2 id="询问"><a href="#询问" class="headerlink" title="询问"></a>询问</h2><p>在查询部分，我们使用映射缩减方法（map-reduce）来使用映射操作查找相关社区。然后将映射输出提供给reduce（缩减器）以回答用户查询。</p>
+<p>让我们用一个示例查询来看看查询过程——我想看一部犯罪剧。</p>
+<p>以下是整个过程的样子。</p>
+<p><img src="/../asset_graphrag01/12.png"></p>
+<h3 id="映射阶段"><a href="#映射阶段" class="headerlink" title="映射阶段"></a>映射阶段</h3><p>我们首先进入地图阶段。在这里，每个社区报告都会传递给映射器，映射器将输出社区与给定查询以及电影的相关程度。</p>
+<p><img src="/../asset_graphrag01/13.png"></p>
+<p>每个社区的地图阶段的输出如下所示。</p>
+<ul>
+<li> 戏剧与犯罪C1：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;community&quot;: &quot;Drama &amp; Crime C1&quot;,</span><br><span class="line">    &quot;relevance_score&quot;: 95,</span><br><span class="line">    &quot;movies&quot;: [&quot;The Shawshank Redemption&quot;],</span><br><span class="line">    &quot;reason&quot;: &quot;Directly matches the crime drama genre request&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li> 科幻与动作 C1</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;community&quot;: &quot;Sci-Fi &amp; Action C1&quot;,</span><br><span class="line">    &quot;relevance_score&quot;: 10,</span><br><span class="line">    &quot;movies&quot;: [&quot;Inception&quot;, &quot;The Matrix&quot;],</span><br><span class="line">    &quot;reason&quot;: &quot;Does not match the crime drama genre request&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li> 纯科幻动作C2</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;community&quot;: &quot;Pure Sci-Fi Action C2&quot;,</span><br><span class="line">    &quot;relevance_score&quot;: 5,</span><br><span class="line">    &quot;movies&quot;: [&quot;The Matrix&quot;],</span><br><span class="line">    &quot;reason&quot;: &quot;Does not match the crime drama genre request&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li> 科幻惊悚片 C2</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;community&quot;: &quot;Sci-Fi Thriller C2&quot;,</span><br><span class="line">    &quot;relevance_score&quot;: 15,</span><br><span class="line">    &quot;movies&quot;: [&quot;Inception&quot;],</span><br><span class="line">    &quot;reason&quot;: &quot;Has some thriller elements but not crime drama&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="缩减阶段"><a href="#缩减阶段" class="headerlink" title="缩减阶段"></a>缩减阶段</h3><p>映射阶段的输出与用户查询一起传递到缩减器，以获取相关建议和其他建议的列表。</p>
+<p><img src="/../asset_graphrag01/14.png"></p>
+<p>以下是reduce 阶段的输出的样子。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;relevant_communities&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;community&quot;: &quot;Drama &amp; Crime C1&quot;,</span><br><span class="line">            &quot;relevance_score&quot;: 95,</span><br><span class="line">            &quot;movies&quot;: [&quot;The Shawshank Redemption&quot;]</span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    &quot;other_suggestions&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;community&quot;: &quot;Sci-Fi Thriller C2&quot;,</span><br><span class="line">            &quot;relevance_score&quot;: 15,</span><br><span class="line">            &quot;movies&quot;: [&quot;Inception&quot;]</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此外，我们可以通过 LLM 向用户查询和相关社区提供电影详细信息和建议来传达此输出。我们可以提示 LLM 根据用户查询和相关电影以及额外建议来个性化输出。</p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>在这篇博客中，我们介绍了 GrapRAG 及其关键组件——提取、嵌入和查询。除此之外，我们还了解了使用莱顿算法进行分层社区检测。在接下来的博客中，我们将利用这些知识为基于内容的电影推荐系统开发 GraphRAG 模块 - GraphRAG4Recommendation。</p>
+<p><a target="_blank" rel="noopener" href="https://pub.towardsai.net/graphrag-gpt-4o-mini-is-the-rag-heaven-b9191dbd44e1">GraphRAG + GPT-4o-Mini is the RAG Heaven | by Vatsal Saglani | Jul, 2024 | Towards AI</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/07/08/AIOS/" rel="prev" title="LLM代理操作系统 （AIOS）">
+                  <i class="fa fa-angle-left"></i> LLM代理操作系统 （AIOS）
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Howard Huang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">327k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">9:54</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动-->
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

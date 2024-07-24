@@ -119,7 +119,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-count">41</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -137,6 +137,148 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/03/02/self-RAG/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/03/02/self-RAG/" class="post-title-link" itemprop="url">self-RAG如何革新工业LLMs</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-03-02 10:00:16 / 修改时间：15:46:40" itemprop="dateCreated datePublished" datetime="2024-03-02T10:00:16+08:00">2024-03-02</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>9 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>让我们面对现实吧 - 原始的RAG非常愚蠢。无法保证返回的回答是相关的。了解使用Self-RAG如何显著的提供帮助。</p>
+<p>大型语言模型（LLMs）已经准备好彻底改变各个行业。让我们以金融领域为例，LLMs可以用来研究大量文件，并在短时间内找到趋势，而且成本只是分析师完成同样任务的一小部分。但是这里有个问题——你得到的答案往往只是部分和不完整的。举个例子，假设你有一份包含公司X过去15年年度收入的文件，但是分散在不同的部分。在下面所示的标准检索增强生成（RAG）架构中，通常会检索前k个文件，或选择固定上下文长度内的文件。</p>
+<p><img src="/../asset_selfrag/01.png"></p>
+<p>然而，这可能会有几个问题。一个问题是前k个文档中可能不包含所有的答案 - 例如，可能只对应于最近的5年或10年。另一个问题是，在文档片段和提示之间计算相似度并不总是产生相关的上下文。在这种情况下，你可能会得到一个错误的答案。</p>
+<p>一个真正的问题是，你开发了一个在你测试的简单情况下运行良好的基本RAG应用程序，但当你将这个原型展示给利益相关者并且他们提出一些非常规的问题时，它就会失败</p>
+<p>这就是self RAG发挥作用的地方！作者们开发了一种巧妙的方法，通过对经过微调的语言模型（Llama2–7B和13B）输出特殊标记[检索]、[无检索]、[相关]、[不相关]、[不支持&#x2F;矛盾]、[部分支持]、[效用]等，来决定一个上下文是否相关&#x2F;不相关，语言模型生成的文本是否得到支持，以及生成的效用。</p>
+<p><img src="/../asset_selfrag/02.png"></p>
+<h3 id="训练self-RAG"><a href="#训练self-RAG" class="headerlink" title="训练self RAG"></a>训练self RAG</h3><p>Self-RAG在一个两个步骤的层次化过程中进行训练。第一步，训练了一个简单的语言模型，用于分类生成的输出（仅prompt或prompt+RAG增强输出），并在末尾添加相关的特殊标记。这个“评价模型”是通过GPT-4的注释进行训练的。具体来说，使用了一种类型特定的指令来提示GPT-4（“给定一条指令，判断从网络上找到一些外部文档是否有助于生成更好的回答。”）。</p>
+<p>在第二步中，生成模型使用标准的下一个标记预测目标来学习生成延续，以及用于检索&#x2F;评价生成结果的特殊标记。不像其他微调或RLHF方法，他们的后续训练可能会影响模型输出并使未来的生成结果带有偏见。通过这种简单的方法，模型只被训练成适当地生成特殊标记，而不改变底层的语言模型！这真是太棒了！</p>
+<h3 id="推理"><a href="#推理" class="headerlink" title="推理"></a>推理</h3><p>对于推理，<a target="_blank" rel="noopener" href="https://github.com/AkariAsai/self-rag">self-RAG存储库</a> 建议使用 <a target="_blank" rel="noopener" href="https://github.com/vllm-project/vllm">vllm</a> 一个用于LLM推理的库。</p>
+<p>您可以按照以下方式加载库并进行查询：</p>
+<pre><code>from vllm import LLM, SamplingParams
+model = LLM(&quot;selfrag/selfrag_llama2_7b&quot;, download_dir=&quot;/gscratch/h2lab/akari/model_cache&quot;, dtype=&quot;half&quot;)
+sampling_params = SamplingParams(temperature=0.0, top_p=1.0, max_tokens=100, skip_special_tokens=False)
+
+def format_prompt(input, paragraph=None):
+    prompt = &quot;### Instruction:\n&#123;0&#125;\n\n### Response:\n&quot;.format(input)
+    if paragraph is not None:
+        prompt += &quot;[Retrieval]&lt;paragraph&gt;&#123;0&#125;&lt;/paragraph&gt;&quot;.format(paragraph)
+    return prompt
+
+query_1 = &quot;Leave odd one out: twitter, instagram, whatsapp.&quot;
+query_2 = &quot;Can you tell me the difference between llamas and alpacas?&quot;
+queries = [query_1, query_2]
+# for a query that doesn&#39;t require retrieval
+preds = model.generate([format_prompt(query) for query in queries], sampling_params)
+for pred in preds:
+    print(&quot;Model prediction: &#123;0&#125;&quot;.format(pred.outputs[0].text))
+</code></pre>
+<p>对于需要检索的查询，您可以按照下面的示例提供必要的信息作为字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">paragraph=&quot;&quot;&quot;Llamas range from 200 to 350 lbs., while alpacas weigh in at 100 to 175 lbs.&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">def format_prompt_p(input, paragraph=paragraph):</span><br><span class="line">  prompt = &quot;### Instruction:\n&#123;0&#125;\n\n### Response:\n&quot;.format(input)</span><br><span class="line">  if paragraph is not None:</span><br><span class="line">    prompt += &quot;[Retrieval]&lt;paragraph&gt;&#123;0&#125;&lt;/paragraph&gt;&quot;.format(paragraph)</span><br><span class="line">  return prompt</span><br><span class="line"></span><br><span class="line">query_1 = &quot;Leave odd one out: twitter, instagram, whatsapp.&quot;</span><br><span class="line">query_2 = &quot;Can you tell me the differences between llamas and alpacas?&quot;</span><br><span class="line">queries = [query_1, query_2]</span><br><span class="line"></span><br><span class="line"># for a query that doesn&#x27;t require retrieval</span><br><span class="line">preds = model.generate([format_prompt_p(query) for query in queries], sampling_params)</span><br><span class="line">for pred in preds:</span><br><span class="line">  print(&quot;Model prediction: &#123;0&#125;&quot;.format(pred.outputs[0].text))</span><br></pre></td></tr></table></figure>
+<pre><code>[Irrelevant]Whatsapp is the odd one out.
+[No Retrieval]Twitter and Instagram are both social media platforms, 
+while Whatsapp is a messaging app.[Utility:5]
+
+[Relevant]Llamas are larger than alpacas, with males weighing up to 350 pounds.
+[Partially supported][Utility:5]
+</code></pre>
+<p>在上面的例子中，对于第一个查询（与social media platforms有关），段落上下文是无关的，如检索结果开头的[Irrelevant]标记所示。然而，对于第二个查询（与llamas and alpacas有关），外部上下文是相关的。正如您所看到的，它在生成的上下文中包含了这些信息，由[Relevant]标记标记。</p>
+<p>但在下面的例子中，上下文“I like Avocado。”与提示无关。如下所示，模型预测对于两个查询都开始为[Irrelevant]，并且只使用内部信息来回答提示。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">paragraph=&quot;&quot;&quot;I like Avocado.&quot;&quot;&quot;</span><br><span class="line">def format_prompt_p(input, paragraph=paragraph):</span><br><span class="line">  prompt = &quot;### Instruction:\n&#123;0&#125;\n\n### Response:\n&quot;.format(input)</span><br><span class="line">  if paragraph is not None:</span><br><span class="line">    prompt += &quot;[Retrieval]&lt;paragraph&gt;&#123;0&#125;&lt;/paragraph&gt;&quot;.format(paragraph)</span><br><span class="line">  return prompt</span><br><span class="line"></span><br><span class="line">query_1 = &quot;Leave odd one out: twitter, instagram, whatsapp.&quot;</span><br><span class="line">query_2 = &quot;Can you tell me the differences between llamas and alpacas?&quot;</span><br><span class="line">queries = [query_1, query_2]</span><br><span class="line"></span><br><span class="line"># for a query that doesn&#x27;t require retrieval</span><br><span class="line">preds = model.generate([format_prompt_p(query) for query in queries], sampling_params)</span><br><span class="line">for pred in preds:</span><br><span class="line">  print(&quot;Model prediction: &#123;0&#125;&quot;.format(pred.outputs[0].text))</span><br></pre></td></tr></table></figure>
+<pre><code>Model prediction: [Irrelevant]Twitter is the odd one out.[Utility:5]
+
+[Irrelevant]Sure![Continue to Use Evidence]
+Alpacas are a much smaller than llamas.
+They are also bred specifically for their fiber.[Utility:5]
+</code></pre>
+<h3 id="另外"><a href="#另外" class="headerlink" title="另外"></a>另外</h3><p>Self RAG相对于普通的LLM有几个优点。</p>
+<ul>
+<li>自适应通道检索：通过这种方式，LLM可以持续检索上下文，直到找到所有相关的上下文（当然是在上下文窗口内）。</li>
+<li>更相关的检索：很多时候，嵌入模型在检索相关上并不是最好的。Self RAG可能通过相关&#x2F;不相关的特殊标记来解决这个问题。</li>
+<li>超越其他类似模型：Self-RAG超越其他类似模型，并且在许多任务中令人惊讶地超越了ChatGPT。如果使用ChatGPT未经训练的数据进行比较，例如更多专有的工业数据，将会很有趣。</li>
+<li>不改变基础语言模型：对我来说，这是一个巨大的升级销售点——因为我们知道微调和强化学习很容易导致偏见模型。自我RAG似乎通过添加特殊标记来解决这个问题，同时保持文本生成方式不变。</li>
+</ul>
+<p>尽管还有改进的空间，但在处理固定上下文长度方面还有一些问题。这可能通过在Self-RAG中添加摘要组件来实现。另一个令人兴奋的方向是OpenAI最近发布的上下文长度窗口的增加 - GPT-4 128k上下文窗口更新。然而，正如论坛中提到的，这个上下文窗口代表输入长度，而输出限制仍然是4k个标记。</p>
+<p>RAG代表着行业在数据上应用LLMs的一种最令人兴奋的方式，以产生真正的业务影响。然而，对于语言模型的RAG特定调优还不够多。我对这个领域未来的改进感到兴奋。</p>
+<p>推理代码在这个GitHub仓库中：<br><a target="_blank" rel="noopener" href="https://github.com/skandavivek/self-RAG">https://github.com/skandavivek/self-RAG</a></p>
+<h3 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h3><p><a target="_blank" rel="noopener" href="https://towardsdatascience.com/how-self-rag-could-revolutionize-industrial-llms-b33d9f810264">https://towardsdatascience.com/how-self-rag-could-revolutionize-industrial-llms-b33d9f810264</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -2185,105 +2327,8 @@ Final Answer: Camila Morrone is Leo DiCaprio&#39;s girlfriend and her current ag
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/01/15/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Howard Huang">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/01/15/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2024-01-15 21:00:16 / 修改时间：21:50:01" itemprop="dateCreated datePublished" datetime="2024-01-15T21:00:16+08:00">2024-01-15</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>367</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
@@ -2305,13 +2350,13 @@ Final Answer: Camila Morrone is Leo DiCaprio&#39;s girlfriend and her current ag
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">322k</span>
+    <span title="站点总字数">327k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">9:45</span>
+    <span title="站点阅读时长">9:54</span>
   </span>
 </div>
 <div class="busuanzi-count">
