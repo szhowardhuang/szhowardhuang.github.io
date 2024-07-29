@@ -119,7 +119,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-count">42</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -137,6 +137,161 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/07/29/GraphRAG02/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/07/29/GraphRAG02/" class="post-title-link" itemprop="url">GraphRAG系列2 - GraphRAG和基于语义/关键字的传统RAG的比较</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-07-29 17:23:22 / 修改时间：17:34:02" itemprop="dateCreated datePublished" datetime="2024-07-29T17:23:22+08:00">2024-07-29</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="了解基于语义-关键字的-RAG"><a href="#了解基于语义-关键字的-RAG" class="headerlink" title="了解基于语义&#x2F;关键字的 RAG"></a>了解基于语义&#x2F;关键字的 RAG</h1><p>在基于语义&#x2F;关键字的 RAG 中，我们将传统的信息检索策略与语言生成相结合，以产生更准确且上下文相关的响应。</p>
+<h2 id="基于语义-关键字的-RAG-的组成部分"><a href="#基于语义-关键字的-RAG-的组成部分" class="headerlink" title="基于语义&#x2F;关键字的 RAG 的组成部分"></a>基于语义&#x2F;关键字的 RAG 的组成部分</h2><p>以下是基于语义&#x2F;关键字的 RAG 的组件。</p>
+<ol>
+<li>文档语料库是充当知识库的文本或文档的集合。</li>
+<li>嵌入模型将文本转换为捕获语义的向量表示。</li>
+<li>一个矢量数据库，用于存储和索引文档的嵌入表示。</li>
+<li>检索器根据查询找到相关文档。</li>
+<li>一种（大）语言模型，用于根据检索到的信息和查询生成响应。</li>
+</ol>
+<p>以下流程代表传统的 RAG（基于语义&#x2F;关键字）流程。</p>
+<p><img src="/../asset_graphrag02/01.png"></p>
+<p>现在，我们不会太深入地讨论分块策略或检索策略（例如查询分解、重新排名等）的细节。这些确实有助于提高最终输出的质量。</p>
+<p>我们现在了解 GraphRAG 和传统 RAG（基于语义&#x2F;关键字）的基础知识以及各自方法的组成部分。现在是时候通过示例来比较这些方法了。</p>
+<p>我们将使用相同的电影场景并假设比较两种方法。</p>
+<h1 id="比较"><a href="#比较" class="headerlink" title="比较"></a>比较</h1><p>我们将在以下几点上比较这些方法。</p>
+<ol>
+<li> 知识表示</li>
+<li> 检索机制</li>
+<li> 上下文理解</li>
+<li> 可扩展性</li>
+<li> 查询解释</li>
+<li> 信息综合</li>
+</ol>
+<h2 id="1-知识表示"><a href="#1-知识表示" class="headerlink" title="1. 知识表示"></a>1. 知识表示</h2><ul>
+<li>在 GraphRAG 中，我们将电影、演员、导演和主题表示为相互关联的实体。例如，《黑客帝国》与科幻和动作类型相关，“沃卓斯基姐妹”担任导演，“基努·里维斯”担任演员。</li>
+<li>在传统的 RAG 中，我们可能会将《黑客帝国》存储为文本块：“《黑客帝国》是一部 1999 年的科幻动作片，由沃卓斯基姐妹执导，由基努·里维斯主演。”</li>
+</ul>
+<p><img src="/../asset_graphrag02/02.png"></p>
+<p>GraphRAG 的优势在于它可以轻松回答诸如“《黑客帝国》中还有哪些科幻电影明星演员？”之类的问题。通过遍历图表。</p>
+<p>如果没有具体的文本提及此类联系，传统的 RAG 将难以解决这个问题。为了使这种传统的 RAG 能够处理此类查询，我们可能需要实现某种查询分解和依赖性规划。</p>
+<h2 id="2-检索机制"><a href="#2-检索机制" class="headerlink" title="2. 检索机制"></a>2. 检索机制</h2><ul>
+<li>在 GraphRAG 中，如果我们有一个像“科幻反乌托邦电影”这样的查询，检索可以从与“科幻”节点相似或具有“科幻”节点的社区开始，并遍历到具有“反乌托邦”这样的节点的更本地化的社区，最终检索到电影——《黑客帝国》。</li>
+<li>而在传统的 RAG 中，如果没有文本块与电影“黑客帝国”或其他电影一起提及“科幻”或“反乌托邦”，那么输出可能非常通用，即与关键字“科幻”相关，或者可能有一些主题是“反乌托邦”（在大块中提到）但不是“科幻”的电影。</li>
+</ul>
+<p><img src="/../asset_graphrag02/03.png"></p>
+<p>因此，即使查询词与存储的文本不完全匹配，GraphRAG 也可以找到相关内容。</p>
+<h2 id="3-上下文理解"><a href="#3-上下文理解" class="headerlink" title="3. 上下文理解"></a>3. 上下文理解</h2><ul>
+<li>GraphRAG 可以理解《盗梦空间》和《黑客帝国》是相关的，因为它们共享“科幻”类型和“令人费解的概念”主题，即使在任何文本块中都没有明确提及。</li>
+<li>传统的 RAG 可能无法连接这两部电影，除非有特定的文本块来比较它们。</li>
+</ul>
+<p><img src="/../asset_graphrag02/04.png"></p>
+<p>在这种情况下，两部电影（《盗梦空间》和《黑客帝国》）之间的关系是通过这些电影共享的类型和主题来暗示的。在图中，这两部电影之间会有联系，甚至可能形成一个社区。因此，GraphRAG 的隐式上下文理解可以帮助提供更有洞察力的建议。</p>
+<h2 id="4-可扩展性"><a href="#4-可扩展性" class="headerlink" title="4. 可扩展性"></a>4. 可扩展性</h2><ul>
+<li>随着我们的电影数据库的增长，GraphRAG 中的层次结构 (C0 — C1 — C2) 可实现高效导航。我们可以快速将其范围从“电影”缩小到“科幻与动作”再到“纯科幻动作”。这也取决于我们如何设计检索器——基于实体或通过社区报告的映射缩减。</li>
+<li>在传统 RAG 的情况下，我们在回答广泛的查询时可能会遇到困难，因为可能存在许多与查询的各个部分类似的不相关但匹配的块。然后我们需要引入重新排名来过滤垃圾块。</li>
+</ul>
+<p>因此，GraphRAG 可以更有效地处理大型、复杂的数据集，尤其是探索性查询。</p>
+<h2 id="5-查询解释"><a href="#5-查询解释" class="headerlink" title="5. 查询解释"></a>5. 查询解释</h2><ul>
+<li>对于像“像《盗梦空间》这样的电影，但更注重动作片”这样的查询，GraphRAG 通过社区报告的映射缩减，可以理解它需要寻找“科幻惊悚片”类别中但更接近“纯科幻动作片”的类别的电影，可能暗示“黑客帝国”。</li>
+<li>对于相同的查询，传统的 RAG 可能难以捕捉查询的细微差别，并且可能会返回同时提及“盗梦空间”和“动作”的电影。</li>
+</ul>
+<p><img src="/../asset_graphrag02/05.png"></p>
+<p>因此，GraphRAG 可以处理更细微的、依赖于上下文的查询。</p>
+<h2 id="6-信息综合"><a href="#6-信息综合" class="headerlink" title="6.信息综合"></a>6.信息综合</h2><ul>
+<li>对于关于“从 90 年代到 2010 年代科幻电影的演变”的查询，GraphRAG 通过社区报告的 map-reduce 可以收集与“科幻”电影及其发行年份相关的信息。然后有效地利用这些信息来回答如此广泛的问题。</li>
+<li>传统的 RAG 可能会获得类似于“科幻”、“90 年代”或“2010 年代”的内容，但很难将进化叙事贯穿其中。</li>
+</ul>
+<p><img src="/../asset_graphrag02/06.png"></p>
+<p>凭借遍历相关实体的能力，GraphRAG 可以为复杂查询提供更全面的综合响应。</p>
+<h1 id="没有一种RAG适合所有情况"><a href="#没有一种RAG适合所有情况" class="headerlink" title="没有一种RAG适合所有情况"></a>没有一种RAG适合所有情况</h1><p>虽然 GraphRAG 是回答更细致、更广泛和探索性问题的更好方法，但在许多用例中传统 RAG 更适合。</p>
+<p>GraphRAG 在令牌数量、嵌入和检索时间方面都非常昂贵。</p>
+<p>如果 GraphRAG 在本地系统上与 LLMs 一起使用，那么成本因素不是问题，但与计算文档块的嵌入相比，索引（提取 + 嵌入）时间仍然相当长。</p>
+<p>对于以下情况，传统 RAG 仍然是更好的选择：</p>
+<ol>
+<li>简单、基于事实的查询：对于诸如“黑客帝国是哪一年发行的？”之类的问题，传统的 RAG 会更快、更直接。</li>
+<li>更容易实施：对于较小的数据集或更简单的用例，传统的 RAG 可能更容易设置和维护。</li>
+</ol>
+<p>对于基于内容的电影推荐，用GraphRAG 实现的原因很简单，上面的比较中的不同查询示例已经对此进行了解释。</p>
+<p>我们希望我们的 RAG 方法能够回答高度广泛（全球的）、细致入微（本地的）和复杂的查询。使用传统的 RAG 方法很难一致地满足如此广泛的查询。</p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>虽然 GraphRAG 在理解电影领域的上下文、关系和复杂查询方面具有显着优势，但传统 RAG 仍然占有一席之地，特别是对于更简单、更直接的用例。</p>
+<p><a target="_blank" rel="noopener" href="https://pub.towardsai.net/graphrag-gpt-4o-mini-is-the-rag-heaven-8da0741d509b">GraphRAG + GPT-4o-Mini is the RAG Heaven | by Vatsal Saglani | Jul, 2024 | Towards AI</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -2569,134 +2724,6 @@ ERROR: Could not build wheels for box2d-py, which is required to install pyproje
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/05/19/rpa-agent/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Howard Huang">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/05/19/rpa-agent/" class="post-title-link" itemprop="url">从 RPA 到企业 AI 代理</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-05-19 16:18:05" itemprop="dateCreated datePublished" datetime="2024-05-19T16:18:05+08:00">2024-05-19</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-05-20 10:37:30" itemprop="dateModified" datetime="2024-05-20T10:37:30+08:00">2024-05-20</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>2.4k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>4 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>RPA(机器人流程自动化) 又称软件机器人，它使用自动化技术模拟人类的后台任务，如提取数据、填写表单和移动文件等等。 它结合了 API 和用户界面 (UI) 互动，整合并执行企业与生产力应用之间的重复性任务。 通过部署用于模拟人工流程的脚本，RPA 工具可以在各个不相关的软件系统中自动执行各项活动和事务。</p>
-<p>AI 代理是一种由LLMs实现的新软件范式。代理可以推理、协作和行动，类似于人类的工作方式。代理不仅仅是自动化的一种逐步改进方式，而且是一种完全新的突破性技术，需要掌握新的技能和工具。它们将范围从战术任务级自动化扩展到自动化和增强复杂的知识工作。</p>
-<h2 id="RPA-和人工智能"><a href="#RPA-和人工智能" class="headerlink" title="RPA 和人工智能"></a>RPA 和人工智能</h2><p>机器人流程自动化经常被误认为是人工智能 (AI)，但两者截然不同。 AI 结合了认知自动化、机器学习 (ML)、自然语言处理 (NLP) 、推理、假设生成和分析。</p>
-<p>关键区别在于 RPA 是流程驱动的，AI 则是数据驱动的。 RPA 机器人只遵循最终用户定义的流程，而 AI 机器人则使用机器学习来识别数据中的模式，特别是非结构化数据，并持续进行学习。 换句话说，AI 旨在模拟人类智能，而 RPA 则仅用于复制人类指导的任务。 虽然人工智能和 RPA 工具的使用能够最大程度地减少人工干预，但它们实现流程自动化的方式是不同的。 </p>
-<p>也就是说，RPA 和 AI 彼此还起到很好的互补作用。 AI 可以帮助 RPA 更全面地自动完成任务，并处理更复杂的用例。 RPA 则有助于更迅速地对 AI 洞察采取行动，而不是等待人工实施。</p>
-<p>当企业需要加速将AI融入到一线活动和决策中时，许多企业发现RPA可以作为AI的“最后一英里”交付系统。配置的机器人可以将机器学习模型应用到自动化决策流程和分析中，将机器智能深入到日常操作。</p>
-<p>企业自动化的演变:</p>
-<ul>
-<li>自动化任务 — RPA</li>
-<li>自动化流程 — 自动化即代码</li>
-<li>自动化工作 — 智能人工智能代理</li>
-</ul>
-<h2 id="超越-RPA-和智能自动化"><a href="#超越-RPA-和智能自动化" class="headerlink" title="超越 RPA 和智能自动化"></a>超越 RPA 和智能自动化</h2><p>企业自动化正在经历一场演变。它始于机器人流程自动化（RPA）, RPA 的崛起得益于录制和播放方式的 UI 自动化，它打造了围绕低代码业务的应用的繁荣。</p>
-<p>如今，每家大公司都建立了围绕自动化的中心，并扩展到通常被称为智能自动化（IA）的领域。</p>
-<p>IA 并不是一个明确定义的术语，通常是从 RPA 到 API 自动化以及通过 OCR 进行文档处理的技术混合体。它标志着超越点对点自动化，转向使用工具进行流程自动化，这些工具通常将编码与低代码混合，并需要专业技能来部署。然而，基本原则仍然相同 — RPA 和 IA 纯粹基于规则，并适用于明确定义、高度结构化的流程。</p>
-<p>AI 代理，使用完全不同的代理规划和执行工作流程。他们可以通过灵活的推理能力来实现理解本地非结构化数据和非结构化流程。这使得代理不仅适用于无法用简单规则捕捉的工作，而且适用于用自然语言描述的手册和工作指南。这也使代理比预先编程的机器人更具弹性 — 代理可以在遇到错误时自行纠正或与人类联系以获得反馈。</p>
-<p><img src="/../asset_rpaagent/01.png"></p>
-<h2 id="从战术自动化到战略人工智能代理"><a href="#从战术自动化到战略人工智能代理" class="headerlink" title="从战术自动化到战略人工智能代理"></a>从战术自动化到战略人工智能代理</h2><p>尽管人工智能代理采取了一种与企业自动化非常不同的方法，但它们并不标志着 RPA 的终结。如果您的任务需要每天向生产 ERP 系统输入一千条记录，或将十万份电子健康记录迁移到新系统，那么试图使用代理来解决重复的例行任务是没有意义的。</p>
-<p>AI 代理扩展了企业自动化的范围，超出了以前可能的范围。由于 AI 代理是一个仍在形成中的新类别，想象代理使用案例的最简单方法是通过代理推理扩展现有的自动化例程。随着时间的推移，AI 代理将扩展到企业核心业务工作流程，这些工作流程是企业的核心。</p>
-<p><img src="/../asset_rpaagent/02.png"><br>AI 代理和企业自动化用例的层次结构</p>
-<p>上面的插图显示了三种不同类别的自动化使用案例。在底部，有大量不需要复杂决策但在自定义环境下运行的战术性工作。也就是说，这项工作是在与企业高度相关的数据、文件和系统上运行的。</p>
-<p>这是 RPA 运作的地方，也是开始实践第一个 AI 代理项目的好地方。寻找在 RPA 例行程序之前和之后出现的工作流中的机会，并通过代理扩大自动化范围。使用 AI 代理来扩大自动化的范围，超越标准 RPA 所能实现的范围。</p>
-<p>往上一层，我们有涉及标准决策的工作，这些决策是在标准背景下进行的。这通常是由 ServiceNow 或 Salesforce 等平台和记录系统来做的工作。在这里，您最好通过从这些供应商购买人工智能和自动化解决方案，并依赖于他们创新数据和流程的能力来服务企业。现在每个应用程序都有一个协助机器人，它帮助企业自动化其业务流程。</p>
-<p>最后，在金字塔的顶端，我们有最战略性的工作类别，这是企业业务和运营的核心。这项工作涉及复杂的决策，并且在特定的背景下运作。没有人能够从外部进来教你如何更好地做这项工作，因为这就是公司存在的原因。这就是专为企业定制的人工智能代理将产生最大影响的地方。</p>
-<p>代理可以与人类一起工作，或完全取代一些人类任务，并使人们专注于更有生产力的工作。由于智能 AI 代理仍处于早期阶段，所以要达到这项最有价值和战略性的工作需要时间，但现在是开始建立所需技能和平台的时候了。</p>
-<h2 id="案例：-ERP-低代码平台-RPA-AI"><a href="#案例：-ERP-低代码平台-RPA-AI" class="headerlink" title="案例： ERP+低代码平台+RPA+AI"></a>案例： ERP+低代码平台+RPA+AI</h2><p><img src="/../asset_rpaagent/03.png"></p>
-<p>在此架构中，ERP系统可以继续保持不变，低代码平台则通过无代码或低代码快速开发，快速部署上线的特性，以小步快跑，快速迭代的方式，实现企业创新与管理改善。</p>
-<p>每个企业的采购申请可能存在比较大的差异，因此很多ERP系统的标准功能都无法满足企业的个性需求,比如定制审批流程.</p>
-<h3 id="识别需要与ERP系统交互的数据"><a href="#识别需要与ERP系统交互的数据" class="headerlink" title="识别需要与ERP系统交互的数据:"></a>识别需要与ERP系统交互的数据:</h3><ul>
-<li>一是物料数据从ERP同步到低代码平台，以便在低代码平台发起申请时用户可以选择采购物料。</li>
-<li>二是将低代码平台审批通过的采购申请返回ERP系统形成PO（采购订单）</li>
-</ul>
-<h3 id="正常方式"><a href="#正常方式" class="headerlink" title="正常方式:"></a>正常方式:</h3><p>通过低代码平台的JDBC Binder做数据库层面的集成或者通过ERP系统的Web Service接口完成上述的数据交互</p>
-<h3 id="另类方式"><a href="#另类方式" class="headerlink" title="另类方式:"></a>另类方式:</h3><p>用RPA完成低代码平台与ERP系统的数据交互. </p>
-<ul>
-<li>让RPA定时在ERP系统中查询新增的物料和更新的物料，然后将这些值更新到低代码平台中。</li>
-<li>低代码平台中采购审批通过的数据，通过低代码平台流程工具触发RPA机器人，在SAP系统中创建新的PO（采购订单）。</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -2720,13 +2747,13 @@ ERROR: Could not build wheels for box2d-py, which is required to install pyproje
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">327k</span>
+    <span title="站点总字数">329k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">9:54</span>
+    <span title="站点阅读时长">9:59</span>
   </span>
 </div>
 <div class="busuanzi-count">

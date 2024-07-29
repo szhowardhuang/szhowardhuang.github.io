@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"szhowardhuang.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="了解基于语义&#x2F;关键字的 RAG在基于语义&#x2F;关键字的 RAG 中，我们将传统的信息检索策略与语言生成相结合，以产生更准确且上下文相关的响应。 基于语义&#x2F;关键字的 RAG 的组成部分以下是基于语义&#x2F;关键字的 RAG 的组件。  文档语料库是充当知识库的文本或文档的集合。 嵌入模型将文本转换为捕获语义的向量表示。 一个矢量数据库，用于存储和索引文档的嵌入表示。 检">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GraphRAG系列2 - GraphRAG和基于语义&#x2F;关键字的传统RAG的比较">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/07/29/GraphRAG02/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="了解基于语义&#x2F;关键字的 RAG在基于语义&#x2F;关键字的 RAG 中，我们将传统的信息检索策略与语言生成相结合，以产生更准确且上下文相关的响应。 基于语义&#x2F;关键字的 RAG 的组成部分以下是基于语义&#x2F;关键字的 RAG 的组件。  文档语料库是充当知识库的文本或文档的集合。 嵌入模型将文本转换为捕获语义的向量表示。 一个矢量数据库，用于存储和索引文档的嵌入表示。 检">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag02/01.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag02/02.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag02/03.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag02/04.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag02/05.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_graphrag02/06.png">
+<meta property="article:published_time" content="2024-07-29T09:23:22.850Z">
+<meta property="article:modified_time" content="2024-07-29T09:34:02.890Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://szhowardhuang.github.io/asset_graphrag02/01.png">
+
+
+<link rel="canonical" href="https://szhowardhuang.github.io/2024/07/29/GraphRAG02/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://szhowardhuang.github.io/2024/07/29/GraphRAG02/","path":"2024/07/29/GraphRAG02/","title":"GraphRAG系列2 - GraphRAG和基于语义/关键字的传统RAG的比较"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>GraphRAG系列2 - GraphRAG和基于语义/关键字的传统RAG的比较 | 嵌入式老兵博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">嵌入式老兵博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%86%E8%A7%A3%E5%9F%BA%E4%BA%8E%E8%AF%AD%E4%B9%89-%E5%85%B3%E9%94%AE%E5%AD%97%E7%9A%84-RAG"><span class="nav-number">1.</span> <span class="nav-text">了解基于语义&#x2F;关键字的 RAG</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E8%AF%AD%E4%B9%89-%E5%85%B3%E9%94%AE%E5%AD%97%E7%9A%84-RAG-%E7%9A%84%E7%BB%84%E6%88%90%E9%83%A8%E5%88%86"><span class="nav-number">1.1.</span> <span class="nav-text">基于语义&#x2F;关键字的 RAG 的组成部分</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AF%94%E8%BE%83"><span class="nav-number">2.</span> <span class="nav-text">比较</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%9F%A5%E8%AF%86%E8%A1%A8%E7%A4%BA"><span class="nav-number">2.1.</span> <span class="nav-text">1. 知识表示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%A3%80%E7%B4%A2%E6%9C%BA%E5%88%B6"><span class="nav-number">2.2.</span> <span class="nav-text">2. 检索机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E4%B8%8A%E4%B8%8B%E6%96%87%E7%90%86%E8%A7%A3"><span class="nav-number">2.3.</span> <span class="nav-text">3. 上下文理解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%8F%AF%E6%89%A9%E5%B1%95%E6%80%A7"><span class="nav-number">2.4.</span> <span class="nav-text">4. 可扩展性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%9F%A5%E8%AF%A2%E8%A7%A3%E9%87%8A"><span class="nav-number">2.5.</span> <span class="nav-text">5. 查询解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E4%BF%A1%E6%81%AF%E7%BB%BC%E5%90%88"><span class="nav-number">2.6.</span> <span class="nav-text">6.信息综合</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B2%A1%E6%9C%89%E4%B8%80%E7%A7%8DRAG%E9%80%82%E5%90%88%E6%89%80%E6%9C%89%E6%83%85%E5%86%B5"><span class="nav-number">3.</span> <span class="nav-text">没有一种RAG适合所有情况</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">4.</span> <span class="nav-text">结论</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Howard Huang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">42</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/07/29/GraphRAG02/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="GraphRAG系列2 - GraphRAG和基于语义/关键字的传统RAG的比较 | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          GraphRAG系列2 - GraphRAG和基于语义/关键字的传统RAG的比较
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-07-29 17:23:22 / 修改时间：17:34:02" itemprop="dateCreated datePublished" datetime="2024-07-29T17:23:22+08:00">2024-07-29</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="了解基于语义-关键字的-RAG"><a href="#了解基于语义-关键字的-RAG" class="headerlink" title="了解基于语义&#x2F;关键字的 RAG"></a>了解基于语义&#x2F;关键字的 RAG</h1><p>在基于语义&#x2F;关键字的 RAG 中，我们将传统的信息检索策略与语言生成相结合，以产生更准确且上下文相关的响应。</p>
+<h2 id="基于语义-关键字的-RAG-的组成部分"><a href="#基于语义-关键字的-RAG-的组成部分" class="headerlink" title="基于语义&#x2F;关键字的 RAG 的组成部分"></a>基于语义&#x2F;关键字的 RAG 的组成部分</h2><p>以下是基于语义&#x2F;关键字的 RAG 的组件。</p>
+<ol>
+<li>文档语料库是充当知识库的文本或文档的集合。</li>
+<li>嵌入模型将文本转换为捕获语义的向量表示。</li>
+<li>一个矢量数据库，用于存储和索引文档的嵌入表示。</li>
+<li>检索器根据查询找到相关文档。</li>
+<li>一种（大）语言模型，用于根据检索到的信息和查询生成响应。</li>
+</ol>
+<p>以下流程代表传统的 RAG（基于语义&#x2F;关键字）流程。</p>
+<p><img src="/../asset_graphrag02/01.png"></p>
+<p>现在，我们不会太深入地讨论分块策略或检索策略（例如查询分解、重新排名等）的细节。这些确实有助于提高最终输出的质量。</p>
+<p>我们现在了解 GraphRAG 和传统 RAG（基于语义&#x2F;关键字）的基础知识以及各自方法的组成部分。现在是时候通过示例来比较这些方法了。</p>
+<p>我们将使用相同的电影场景并假设比较两种方法。</p>
+<h1 id="比较"><a href="#比较" class="headerlink" title="比较"></a>比较</h1><p>我们将在以下几点上比较这些方法。</p>
+<ol>
+<li> 知识表示</li>
+<li> 检索机制</li>
+<li> 上下文理解</li>
+<li> 可扩展性</li>
+<li> 查询解释</li>
+<li> 信息综合</li>
+</ol>
+<h2 id="1-知识表示"><a href="#1-知识表示" class="headerlink" title="1. 知识表示"></a>1. 知识表示</h2><ul>
+<li>在 GraphRAG 中，我们将电影、演员、导演和主题表示为相互关联的实体。例如，《黑客帝国》与科幻和动作类型相关，“沃卓斯基姐妹”担任导演，“基努·里维斯”担任演员。</li>
+<li>在传统的 RAG 中，我们可能会将《黑客帝国》存储为文本块：“《黑客帝国》是一部 1999 年的科幻动作片，由沃卓斯基姐妹执导，由基努·里维斯主演。”</li>
+</ul>
+<p><img src="/../asset_graphrag02/02.png"></p>
+<p>GraphRAG 的优势在于它可以轻松回答诸如“《黑客帝国》中还有哪些科幻电影明星演员？”之类的问题。通过遍历图表。</p>
+<p>如果没有具体的文本提及此类联系，传统的 RAG 将难以解决这个问题。为了使这种传统的 RAG 能够处理此类查询，我们可能需要实现某种查询分解和依赖性规划。</p>
+<h2 id="2-检索机制"><a href="#2-检索机制" class="headerlink" title="2. 检索机制"></a>2. 检索机制</h2><ul>
+<li>在 GraphRAG 中，如果我们有一个像“科幻反乌托邦电影”这样的查询，检索可以从与“科幻”节点相似或具有“科幻”节点的社区开始，并遍历到具有“反乌托邦”这样的节点的更本地化的社区，最终检索到电影——《黑客帝国》。</li>
+<li>而在传统的 RAG 中，如果没有文本块与电影“黑客帝国”或其他电影一起提及“科幻”或“反乌托邦”，那么输出可能非常通用，即与关键字“科幻”相关，或者可能有一些主题是“反乌托邦”（在大块中提到）但不是“科幻”的电影。</li>
+</ul>
+<p><img src="/../asset_graphrag02/03.png"></p>
+<p>因此，即使查询词与存储的文本不完全匹配，GraphRAG 也可以找到相关内容。</p>
+<h2 id="3-上下文理解"><a href="#3-上下文理解" class="headerlink" title="3. 上下文理解"></a>3. 上下文理解</h2><ul>
+<li>GraphRAG 可以理解《盗梦空间》和《黑客帝国》是相关的，因为它们共享“科幻”类型和“令人费解的概念”主题，即使在任何文本块中都没有明确提及。</li>
+<li>传统的 RAG 可能无法连接这两部电影，除非有特定的文本块来比较它们。</li>
+</ul>
+<p><img src="/../asset_graphrag02/04.png"></p>
+<p>在这种情况下，两部电影（《盗梦空间》和《黑客帝国》）之间的关系是通过这些电影共享的类型和主题来暗示的。在图中，这两部电影之间会有联系，甚至可能形成一个社区。因此，GraphRAG 的隐式上下文理解可以帮助提供更有洞察力的建议。</p>
+<h2 id="4-可扩展性"><a href="#4-可扩展性" class="headerlink" title="4. 可扩展性"></a>4. 可扩展性</h2><ul>
+<li>随着我们的电影数据库的增长，GraphRAG 中的层次结构 (C0 — C1 — C2) 可实现高效导航。我们可以快速将其范围从“电影”缩小到“科幻与动作”再到“纯科幻动作”。这也取决于我们如何设计检索器——基于实体或通过社区报告的映射缩减。</li>
+<li>在传统 RAG 的情况下，我们在回答广泛的查询时可能会遇到困难，因为可能存在许多与查询的各个部分类似的不相关但匹配的块。然后我们需要引入重新排名来过滤垃圾块。</li>
+</ul>
+<p>因此，GraphRAG 可以更有效地处理大型、复杂的数据集，尤其是探索性查询。</p>
+<h2 id="5-查询解释"><a href="#5-查询解释" class="headerlink" title="5. 查询解释"></a>5. 查询解释</h2><ul>
+<li>对于像“像《盗梦空间》这样的电影，但更注重动作片”这样的查询，GraphRAG 通过社区报告的映射缩减，可以理解它需要寻找“科幻惊悚片”类别中但更接近“纯科幻动作片”的类别的电影，可能暗示“黑客帝国”。</li>
+<li>对于相同的查询，传统的 RAG 可能难以捕捉查询的细微差别，并且可能会返回同时提及“盗梦空间”和“动作”的电影。</li>
+</ul>
+<p><img src="/../asset_graphrag02/05.png"></p>
+<p>因此，GraphRAG 可以处理更细微的、依赖于上下文的查询。</p>
+<h2 id="6-信息综合"><a href="#6-信息综合" class="headerlink" title="6.信息综合"></a>6.信息综合</h2><ul>
+<li>对于关于“从 90 年代到 2010 年代科幻电影的演变”的查询，GraphRAG 通过社区报告的 map-reduce 可以收集与“科幻”电影及其发行年份相关的信息。然后有效地利用这些信息来回答如此广泛的问题。</li>
+<li>传统的 RAG 可能会获得类似于“科幻”、“90 年代”或“2010 年代”的内容，但很难将进化叙事贯穿其中。</li>
+</ul>
+<p><img src="/../asset_graphrag02/06.png"></p>
+<p>凭借遍历相关实体的能力，GraphRAG 可以为复杂查询提供更全面的综合响应。</p>
+<h1 id="没有一种RAG适合所有情况"><a href="#没有一种RAG适合所有情况" class="headerlink" title="没有一种RAG适合所有情况"></a>没有一种RAG适合所有情况</h1><p>虽然 GraphRAG 是回答更细致、更广泛和探索性问题的更好方法，但在许多用例中传统 RAG 更适合。</p>
+<p>GraphRAG 在令牌数量、嵌入和检索时间方面都非常昂贵。</p>
+<p>如果 GraphRAG 在本地系统上与 LLMs 一起使用，那么成本因素不是问题，但与计算文档块的嵌入相比，索引（提取 + 嵌入）时间仍然相当长。</p>
+<p>对于以下情况，传统 RAG 仍然是更好的选择：</p>
+<ol>
+<li>简单、基于事实的查询：对于诸如“黑客帝国是哪一年发行的？”之类的问题，传统的 RAG 会更快、更直接。</li>
+<li>更容易实施：对于较小的数据集或更简单的用例，传统的 RAG 可能更容易设置和维护。</li>
+</ol>
+<p>对于基于内容的电影推荐，用GraphRAG 实现的原因很简单，上面的比较中的不同查询示例已经对此进行了解释。</p>
+<p>我们希望我们的 RAG 方法能够回答高度广泛（全球的）、细致入微（本地的）和复杂的查询。使用传统的 RAG 方法很难一致地满足如此广泛的查询。</p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>虽然 GraphRAG 在理解电影领域的上下文、关系和复杂查询方面具有显着优势，但传统 RAG 仍然占有一席之地，特别是对于更简单、更直接的用例。</p>
+<p><a target="_blank" rel="noopener" href="https://pub.towardsai.net/graphrag-gpt-4o-mini-is-the-rag-heaven-8da0741d509b">GraphRAG + GPT-4o-Mini is the RAG Heaven | by Vatsal Saglani | Jul, 2024 | Towards AI</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/07/24/GraphRAG01/" rel="prev" title="GraphRAG系列1 - 简介GraphRAG">
+                  <i class="fa fa-angle-left"></i> GraphRAG系列1 - 简介GraphRAG
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Howard Huang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">329k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">9:59</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动-->
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
