@@ -119,7 +119,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">42</span>
+          <span class="site-state-item-count">43</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -137,6 +137,298 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/05/20/voice-with-llama3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/05/20/voice-with-llama3/" class="post-title-link" itemprop="url">用llama3实现语音助手</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-05-20 15:51:55" itemprop="dateCreated datePublished" datetime="2024-05-20T15:51:55+08:00">2024-05-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-05-27 17:28:26" itemprop="dateModified" datetime="2024-05-27T17:28:26+08:00">2024-05-27</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>13k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>24 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="技术栈"><a href="#技术栈" class="headerlink" title="技术栈"></a>技术栈</h2><p>Whisper: 由 OpenAI 开发，Whisper 擅长将口语转录为文本。其理解和处理多种语言的能力使其成为任何基于语音的应用程序的必不可少的工具。</p>
+<p>LangChain 用于协调组件处理模型和数据库的复杂用户交互。</p>
+<p>矢量数据库（Qdrant）：Qdrant 旨在高效处理高维数据，使其非常适用于依赖机器学习和大规模数据检索的应用程序。</p>
+<p>检索增强生成（RAG）：RAG 结合了检索和生成模型的优点，使我们的语音助手能够利用大量信息数据库生成明智和具有上下文相关性的回应。</p>
+<h2 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h2><ul>
+<li><p>transformers（4.33.0）：提供了各种预构建模型，用于文本翻译和摘要等语言任务，使其成为语言项目的关键工具。</p>
+</li>
+<li><p>accelerate （0.22.0）：帮助在不需要改变太多代码的情况下，在不同类型的计算机硬件上运行机器学习模型，如 CPU 或 GPU。</p>
+</li>
+<li><p>einops (0.6.1)：使得在机器学习中使用的数据结构更易于处理和改变形状，有助于构建复杂模型。</p>
+</li>
+<li><p>langchain (0.0.300)：用于将不同的语言技术结合到一个应用程序中，特别适用于需要多个处理步骤的项目。</p>
+</li>
+<li><p>xformers（0.0.22.post7）：提供模型的部分，这些部分在学习和使用阶段都能够高效处理数据。</p>
+</li>
+<li><p>bitsandbytes-windows（windows版本）：有助于更快地训练深度学习模型，并且占用更少的内存，非常适合处理大型数据集。</p>
+</li>
+<li><p>sentence_transformers (2.2.2)：基于 transformers 库构建详细特征，对于需要理解文本之间相似性的任务非常重要。</p>
+</li>
+</ul>
+<p>让我们首先建立一个虚拟环境并安装库。打开命令行界面 ，然后运行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Create a virtual environment</span></span><br><span class="line">conda create -n llama3-whisper python=3.11</span><br><span class="line">conda activate llama3-whisper</span><br></pre></td></tr></table></figure>
+
+<p>我的CUDA版本是12.1，如果在线安装torch 持续中断失败，可以去下载 <a target="_blank" rel="noopener" href="https://download.pytorch.org/whl/">wheel</a> 文件，然后本地安装。</p>
+<p>在线安装torch：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 --index-url https://download.pytorch.org/whl/cu121</span><br></pre></td></tr></table></figure>
+
+<p>本地安装torch，进入wheel文件所在的目录:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pip install <span class="string">&quot;torch-2.1.0+cu121-cp311-cp311-win_amd64.whl&quot;</span> </span><br><span class="line">pip install <span class="string">&quot;torchaudio-2.1.0+cu121-cp311-cp311-win_amd64.whl&quot;</span></span><br><span class="line">pip install <span class="string">&quot;torchvision-0.16.0+cu121-cp311-cp311-win_amd64.whl&quot;</span></span><br></pre></td></tr></table></figure>
+<p>安装完torch后，安装xformers， 因为xformers和torch的版本对应没有文档，所以要一起安装来约束xformers：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0  xformers  --index-url https://download.pytorch.org/whl/cu121</span><br></pre></td></tr></table></figure>
+
+<p>约束后，可以看到安装的xformers版本，所以可以用以下命令直接安装xformers。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install xformers==0.0.22.post7 --index-url https://download.pytorch.org/whl/cu121</span><br></pre></td></tr></table></figure>
+
+<p>继续安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Install dependencies</span></span><br><span class="line">pip3 install openai</span><br><span class="line">pip3 install transformers==4.33.0 </span><br><span class="line">pip3 install accelerate==0.22.0 </span><br><span class="line">pip3 install einops==0.6.1 </span><br><span class="line">pip3 install langchain==0.0.300 </span><br><span class="line">pip3 install bitsandbytes-windows</span><br><span class="line">pip3 install sentence_transformers==2.2.2</span><br><span class="line">pip3 install arxiv</span><br><span class="line">pip3 install huggingface_hub</span><br><span class="line">pip3 install optimum</span><br><span class="line">pip3 install <span class="string">&quot;git+https://github.com/PanQiWei/AutoGPTQ.git@v0.7.1&quot;</span> </span><br></pre></td></tr></table></figure>
+
+<p>为了准备从 PDF 文件中提取数据、执行 OCR 并创建嵌入，以进行高级数据处理和检索，我们还需要安装一些软件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">pip3 install unstructured</span><br><span class="line">pip3 install <span class="string">&quot;unstructured[pdf]&quot;</span></span><br><span class="line">pip3 install poppler-utils</span><br><span class="line">pip3 install pytesseract</span><br><span class="line">pip3 install grpcio-tools==1.60.1</span><br><span class="line">pip3 install qdrant-client==1.7.2</span><br><span class="line">pip3 install WhisperSpeech</span><br><span class="line">pip3 install rich</span><br></pre></td></tr></table></figure>
+<p>由于我的win10在线安装tesseract-ocr不成功，改成<a target="_blank" rel="noopener" href="https://github.com/simonflueckiger/tesserocr-windows_build/releases">wheel</a>安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install tesserocr-2.7.0-cp311-cp311-win_amd64.whl</span><br></pre></td></tr></table></figure>
+
+<p>设置系统环境变量，window如下图：<br><img src="/../asset_voicellama3/01.png"></p>
+<p>注册Hugging Face，生成token. 登录 Hugging Face Hub, 预先下载模型，并保存到本地。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Loging to Huggingface Hub</span></span><br><span class="line">huggingface-cli login</span><br><span class="line">huggingface-cli download --resume-download astronomer/Llama-3-8B-Instruct-GPTQ-4-Bit</span><br></pre></td></tr></table></figure>
+
+<h2 id="导入库"><a href="#导入库" class="headerlink" title="导入库"></a>导入库</h2><p>导入必要的库，包括模型交互、文档处理和嵌入管理。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> urllib.error <span class="keyword">import</span> HTTPError</span><br><span class="line"><span class="keyword">import</span> arxiv</span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> cuda, bfloat16</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> transformers</span><br><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> AutoTokenizer, AutoModelForCausalLM, GPTQConfig</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> langchain.llms <span class="keyword">import</span> HuggingFacePipeline</span><br><span class="line"><span class="keyword">from</span> langchain.document_loaders <span class="keyword">import</span> PyPDFLoader,DirectoryLoader,WebBaseLoader</span><br><span class="line"><span class="keyword">from</span> langchain.text_splitter <span class="keyword">import</span> RecursiveCharacterTextSplitter,CharacterTextSplitter</span><br><span class="line"><span class="keyword">from</span> langchain.embeddings <span class="keyword">import</span> HuggingFaceEmbeddings</span><br><span class="line"><span class="keyword">from</span> langchain.chains <span class="keyword">import</span> RetrievalQA</span><br><span class="line"><span class="keyword">from</span> langchain.vectorstores <span class="keyword">import</span> Qdrant</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"><span class="keyword">from</span> openai <span class="keyword">import</span> OpenAI</span><br><span class="line"><span class="keyword">from</span> whisperspeech.pipeline <span class="keyword">import</span> Pipeline</span><br><span class="line"><span class="keyword">from</span> rich.console <span class="keyword">import</span> Console</span><br><span class="line"><span class="keyword">from</span> rich.markdown <span class="keyword">import</span> Markdown</span><br></pre></td></tr></table></figure>
+
+<h2 id="处理语音助手的数据"><a href="#处理语音助手的数据" class="headerlink" title="处理语音助手的数据"></a>处理语音助手的数据</h2><p>为 AI 应用构建数据管道, 数据管道对于高效管理和处理应用程序中的数据至关重要，特别是启用了带 RAG 的语音助手等复杂应用程序。</p>
+<p>这些管道通常涉及五个关键阶段：</p>
+<ul>
+<li><p>收集： 在这个阶段，数据从各种来源收集，包括数据存储、数据流和应用程序。对于语音助手来说，这意味着从用户互动、音频输入以及内部和外部数据库收集数据。数据可以来自语音助手需要交互的远程设备、应用程序或业务系统。典型的工具有 Apache Nifi、Apache Flume、Talend 和自定义 API。</p>
+</li>
+<li><p>摄取：在摄取过程中，收集的数据被加载到系统中，并在事件队列中进行组织。对于语音助手，这涉及捕获音频输入，将其转录为文本，并将其排队等待进一步处理。摄取过程确保所有传入数据都准备好进行实时或批处理。典型工具包括 Apache Kafka、AWS Kinesis、Google Cloud Pub&#x2F;Sub、Apache Airflow。</p>
+</li>
+<li><p>存储：在摄取后，组织好的数据存储在各种存储解决方案中，如数据仓库、数据湖和数据湖屋。在语音助手的背景下，这包括存储转录、用户查询以及从 RAG 系统检索的文档。存储系统确保数据可供未来处理和分析。典型工具有 Amazon S3、Google Cloud Storage、Azure Data Lake、Snowflake、Apache Hudi、Delta Lake。</p>
+</li>
+<li><p>处理：在这个阶段，数据经历转换任务，如聚合、清洗和操作，以确保它符合所需的标准。对于语音助手，这意味着将文本数据转换为向量，压缩它，并将其分区以实现高效检索。为了确保数据始终是最新和准确的，使用批处理（一次处理大型数据集）和流处理（实时处理数据）技术。典型的工具有 Apache Spark、Apache Flink、Databricks、AWS Glue、Google Cloud Dataflow。</p>
+</li>
+<li><p>消费：最后阶段涉及将处理后的数据提供给用户使用。在语音助手的背景下，这意味着使系统能够准确理解和回应用户的查询。它还可以支持决策引擎和面向用户的应用程序，使语音助手能够对用户请求提供相关和及时的响应。典型工具有 Tableau、Power BI、Looker、Elasticsearch、Kibana、Apache Superset、自定义仪表板。</p>
+</li>
+</ul>
+<p>让我们创建一个目录，搜索并下载“LLM”搜索词的Arxiv论文：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">dirpath = <span class="string">&quot;arxiv_papers&quot;</span></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(dirpath):</span><br><span class="line">   os.makedirs(dirpath)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">download_papers</span>():</span><br><span class="line">    search = arxiv.Search(</span><br><span class="line">    query = <span class="string">&quot;LLM&quot;</span>, <span class="comment"># your query length is limited by ARXIV_MAX_QUERY_LENGTH which is 300 characters</span></span><br><span class="line">    max_results = <span class="number">10</span>,</span><br><span class="line">    sort_by = arxiv.SortCriterion.LastUpdatedDate, <span class="comment"># you can also use SubmittedDate or Relevance</span></span><br><span class="line">    sort_order = arxiv.SortOrder.Descending</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> result <span class="keyword">in</span> search.results():</span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                result.download_pdf(dirpath=dirpath)</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f&quot;-&gt; Paper id <span class="subst">&#123;result.get_short_id()&#125;</span> with title &#x27;<span class="subst">&#123;result.title&#125;</span>&#x27; is downloaded.&quot;</span>)</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">except</span> FileNotFoundError:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;File not found&quot;</span>)</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">except</span> HTTPError:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;Forbidden&quot;</span>)</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">except</span> ConnectionResetError <span class="keyword">as</span> e:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;Connection reset by peer&quot;</span>)</span><br><span class="line">                time.sleep(<span class="number">5</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="RAG简要概述"><a href="#RAG简要概述" class="headerlink" title="RAG简要概述"></a>RAG简要概述</h2><p>RAG 工作流帮助我们管理和利用来自各种来源的数据，以提供准确和相关的结果。</p>
+<p><img src="/../asset_voicellama3/02.png"></p>
+<ul>
+<li><p>数据加载：从不同来源收集数据，如文本文件、PDF、网站、数据库或 API。例如，Llama Hub 提供许多连接器，使这一步骤更容易。</p>
+</li>
+<li><p>索引：在索引阶段，系统将原始数据转换为向量嵌入，并对其进行组织。</p>
+<ul>
+<li><p>矢量化：每个文档或数据片段都被转换为一个高维向量，利用句子转换器等模型捕捉语义含义。</p>
+</li>
+<li><p>结构化：这些向量然后被组织成一个高效的数据结构，通常是一个 n 维树或哈希映射，从而实现快速的相似性搜索。</p>
+</li>
+</ul>
+</li>
+<li><p>存储：保存索引数据和标签，这样您以后就不必再次整理它。</p>
+</li>
+<li><p>查询: 在查询阶段，系统根据查询向量检索最相关的文档。</p>
+<ul>
+<li>向量匹配：将查询转换为向量，并使用余弦相似度或其他距离度量标准与索引向量进行比较。</li>
+<li>检索：系统检索与查询向量最接近的文档，确保系统能够提供的响应在语境上和用户的请求相关。</li>
+</ul>
+</li>
+<li><p>评估: 评估可能会因其随机性而变得相当具有挑战性。然而，可以用度量标准和工具进行客观评估。</p>
+</li>
+</ul>
+<p>一些示例指标可能包括：忠实度、答案相关性、上下文精度、召回率、相关性和实体召回、答案语义相似度、答案正确性。</p>
+<h2 id="文本分割器"><a href="#文本分割器" class="headerlink" title="文本分割器"></a>文本分割器</h2><p>使用 text_splitter 来管理大型文本文档，将它们分成更小、更易管理的块：</p>
+<ul>
+<li><p>RecursiveCharacterTextSplitter 递归地将文本分割成更小的片段，适用于非常大的文本。它有 2 个主要参数：</p>
+<ul>
+<li>chunk_size ：每个块的最大字符数（例如，1000 个字符）。</li>
+<li>chunk_overlap ：保持上下文的重叠块大小（例如，100 个字符）。</li>
+</ul>
+<p>  这通常最适合于没有自然分割点的非常大的文本，并通过保持块之间的重叠来防止上下文丢失，确保后续处理具有连续性。</p>
+</li>
+<li><p>CharacterTextSplitter 根据指定的字符分隔符拆分文本，非常适合具有自然分隔的文本。它有 3 个主要参数</p>
+<ul>
+<li>separator ：用于分隔的字符（例如， \n 用于换行）。</li>
+<li>chunk_size 和 chunk_overlap ：类似于递归分割器，定义块的大小和重叠。</li>
+</ul>
+<p>  适用于具有明确分界点的文本，如脚本或具有明确定义部分的文档，通过在自然断点处分割文本来确保数据完整性，有助于保持意义和上下文，而无需重叠。</p>
+</li>
+</ul>
+<h2 id="文档加载器"><a href="#文档加载器" class="headerlink" title="文档加载器"></a>文档加载器</h2><p>文档加载器在处理自然语言处理工作流中的不同数据源时至关重要。有以下几种：</p>
+<ul>
+<li>DirectoryLoader: 从指定目录加载所有文件，通常用于处理多个文本或 PDF 文件。</li>
+<li>WebBaseLoader：从指定的 URL 检索文本，从中提取网络内容以进行处理。</li>
+<li>PyPDFLoader：专注于从单个 PDF 文件中提取文本以进行进一步分析。</li>
+<li>TextLoader：专门设计用于加载纯文本文件，直接读取文本数据以供立即使用。</li>
+</ul>
+<p>所有的加载器都用于收集数据，然后对数据进行处理，可能用于生成嵌入。</p>
+<p>我们将使用 DirectoryLoader 和 RecursiveCharacterTextSplitter 来高效地分块和管理多个文件。</p>
+<p>分割器和文档加载器的结合使用：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">document_loader_spilter</span>():</span><br><span class="line">    papers = []</span><br><span class="line">    loader = DirectoryLoader(dirpath, glob=<span class="string">&quot;./*.pdf&quot;</span>, loader_cls=PyPDFLoader)</span><br><span class="line">    papers = loader.load()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Total number of pages loaded:&quot;</span>, <span class="built_in">len</span>(papers)) <span class="comment"># Total number of pages loaded: 410</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># This merges all papes from all papers into single text block for chunking</span></span><br><span class="line">    full_text = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> paper <span class="keyword">in</span> papers:</span><br><span class="line">        full_text = full_text + paper.page_content</span><br><span class="line">        </span><br><span class="line">    full_text = <span class="string">&quot; &quot;</span>.join(l <span class="keyword">for</span> l <span class="keyword">in</span> full_text.splitlines() <span class="keyword">if</span> l)</span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">len</span>(full_text))</span><br><span class="line"></span><br><span class="line">    text_splitter = RecursiveCharacterTextSplitter(</span><br><span class="line">        chunk_size = <span class="number">500</span>,</span><br><span class="line">        chunk_overlap  = <span class="number">50</span></span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    paper_chunks = text_splitter.create_documents([full_text])</span><br><span class="line">    <span class="keyword">return</span> paper_chunks</span><br></pre></td></tr></table></figure>
+
+<h2 id="模型配置"><a href="#模型配置" class="headerlink" title="模型配置"></a>模型配置</h2><p>配置了一个用于语言生成任务的 Meta LLaMA 3 模型,由于我的显卡只有8GB显存，所以只能使用 4-bit 模型。</p>
+<p>配置：</p>
+<ul>
+<li>model_id ：标识具有 80 亿参数的特定 Meta LLaMA 模型，用于高级语言任务。</li>
+<li>device ：将模型设置为在 GPU（ “cuda” ）上运行，提高处理速度和效率。</li>
+<li>dtype ：使用 torch.float16 来优化内存和计算速度。</li>
+</ul>
+<p>初始化:</p>
+<ul>
+<li>tokenizer ：从 Hugging Face 加载一个分词器，将文本预处理为模型可以理解的标记。</li>
+<li>model ：使用 AutoModelForCausalLM.from_pretrained 配置初始化模型，用于因果语言建模，模型根据先前文本预测下一个单词。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">load_llm_model</span>():</span><br><span class="line">    model_id = <span class="string">&quot;astronomer/Llama-3-8B-Instruct-GPTQ-4-Bit&quot;</span></span><br><span class="line">    device = <span class="string">&quot;cuda&quot;</span></span><br><span class="line">    dtype = torch.float16</span><br><span class="line">    </span><br><span class="line">    tokenizer = AutoTokenizer.from_pretrained(model_id)</span><br><span class="line">    model = AutoModelForCausalLM.from_pretrained(model_id, device_map=device, torch_dtype=dtype)</span><br><span class="line">    <span class="keyword">return</span> model, tokenizer</span><br></pre></td></tr></table></figure>
+
+<h2 id="设置查询管道并初始化管道"><a href="#设置查询管道并初始化管道" class="headerlink" title="设置查询管道并初始化管道"></a>设置查询管道并初始化管道</h2><p>现在我们使用 Hugging Face的 transformers 库设置一个 query_pipeline ，旨在简化预训练模型和分词器的使用：</p>
+<ul>
+<li>model ：指定预训练语言模型。</li>
+<li>tokenizer ：将输入文本转换为标记。</li>
+<li>torch_dtype ：使用 torch.float16 进行高效计算。</li>
+<li>max_length ：将输出限制在 1024 个标记。</li>
+<li>device_map ：自动优化模型层的分配到可用硬件。</li>
+</ul>
+<p>然后使用我们配置的 query_pipeline 初始化一个 HuggingFacePipeline 对象，以便简化文本生成。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">load_query_pipeline</span>(<span class="params">model, tokenizer</span>):</span><br><span class="line">    query_pipeline = transformers.pipeline(</span><br><span class="line">            <span class="string">&quot;text-generation&quot;</span>,</span><br><span class="line">            model=model,</span><br><span class="line">            tokenizer=tokenizer,</span><br><span class="line">            torch_dtype=torch.float16,</span><br><span class="line">            max_length=<span class="number">1024</span>,</span><br><span class="line">            device_map=<span class="string">&quot;auto&quot;</span>,)</span><br><span class="line"></span><br><span class="line">    llm = HuggingFacePipeline(pipeline=query_pipeline)</span><br><span class="line">    <span class="keyword">return</span> llm</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="处理模型加载并回退到本地资源"><a href="#处理模型加载并回退到本地资源" class="headerlink" title="处理模型加载并回退到本地资源"></a>处理模型加载并回退到本地资源</h2><p>我们现在将从 Hugging Face 的存储库中加载 sentence-transformers&#x2F;all-mpnet-base-v2 嵌入模型，配置为在 CUDA 设备上运行。</p>
+<p>如果此过程遇到任何问题，比如连接问题或访问限制，您也可以添加异常以返回使用本地存储的嵌入模型。</p>
+<p>通过这种方法，我们的应用程序可以在主要来源不可用时继续使用备用模型进行处理，这有助于我们在不同的运行环境中保持稳健性。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">load_embeddings_model</span>():</span><br><span class="line">    model_name = <span class="string">&quot;sentence-transformers/all-mpnet-base-v2&quot;</span></span><br><span class="line">    model_kwargs = &#123;<span class="string">&quot;device&quot;</span>: <span class="string">&quot;cuda&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># try to access the sentence transformers from HuggingFace: https://huggingface.co/api/models/sentence-transformers/all-mpnet-base-v2</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        embeddings = HuggingFaceEmbeddings(model_name=model_name, model_kwargs=model_kwargs)</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> ex:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Exception: &quot;</span>, ex)</span><br><span class="line">        <span class="comment"># # alternatively, we will access the embeddings models locally</span></span><br><span class="line">        <span class="comment"># local_model_path = &quot;/kaggle/input/sentence-transformers/minilm-l6-v2/all-MiniLM-L6-v2&quot;</span></span><br><span class="line">        <span class="comment"># print(f&quot;Use alternative (local) model: &#123;local_model_path&#125;\n&quot;)</span></span><br><span class="line">        <span class="comment"># embeddings = HuggingFaceEmbeddings(model_name=local_model_path, model_kwargs=model_kwargs)</span></span><br><span class="line">    <span class="keyword">return</span> embeddings</span><br></pre></td></tr></table></figure>
+
+<h2 id="集成-Qdrant-用于嵌入式存储和检索"><a href="#集成-Qdrant-用于嵌入式存储和检索" class="headerlink" title="集成 Qdrant 用于嵌入式存储和检索"></a>集成 Qdrant 用于嵌入式存储和检索</h2><p>我们将使用 Qdrant 作为我们的向量数据库，因为它在处理向量相似性搜索、可扩展性和灵活的向量数据管理方面具有出色的能力。</p>
+<p>此外，Qdrant 支持本地和云存储选项，以便您可以适应各种本地和云环境。</p>
+<p>我们已经安装了 Qdrant，并且正在从 LangChain 的向量存储中导入它</p>
+<p>Qdrant.from_documents 方法通过将文档及其对应的嵌入作为输入来简化流程。</p>
+<p>然后将 vectordb 对象转换为一个具有 vectordb.as_retriever() 的检索器。该检索器被配置为根据向量相似性查询向量数据库，以便检索相关文档，这对于有效的信息检索至关重要。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">create_retriever</span>():</span><br><span class="line">    documents=document_loader_spilter()</span><br><span class="line">    embeddings=load_embeddings_model()</span><br><span class="line"></span><br><span class="line">    vectordb = Qdrant.from_documents(</span><br><span class="line">        documents,</span><br><span class="line">        embeddings,</span><br><span class="line">        path=<span class="string">&quot;Qdrant_Persist&quot;</span>,</span><br><span class="line">        collection_name=<span class="string">&quot;voice_assistant_documents&quot;</span>,</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    retriever = vectordb.as_retriever()</span><br><span class="line">    <span class="keyword">return</span> retriever</span><br></pre></td></tr></table></figure>
+
+<p>使用的参数的详细说明：</p>
+<ul>
+<li>documents ：生成嵌入的原始文档。</li>
+<li>embeddings ：从文档中提取的嵌入已准备好被索引和存储。</li>
+<li>path ：指定的本地目录，Qdrant 数据库将在其中持久保存数据，确保嵌入数据安全存储并易于将来检索。</li>
+<li>collection_name ：Qdrant 中数据集的标签，有助于组织和检索特定组的嵌入。</li>
+</ul>
+<p>如果想要在 Qdrant 向量数据库中重用持久化数据, 创建一个 QdrantClient 实例，指向存储我们数据库文件的路径，从而实现对持久化数据的访问。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> qdrant_client <span class="keyword">import</span> QdrantClient</span><br><span class="line"></span><br><span class="line">client = QdrantClient(path = <span class="string">&quot;Qdrant_Persist&quot;</span>)</span><br><span class="line"></span><br><span class="line">vectordb = Qdrant(</span><br><span class="line">    client=client,</span><br><span class="line">    collection_name=<span class="string">&quot;voice_assistant_documents&quot;</span>,</span><br><span class="line">    embeddings=embeddings,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h2 id="设置检索器"><a href="#设置检索器" class="headerlink" title="设置检索器"></a>设置检索器</h2><p>用我们 Qdrant 向量数据库中存储的嵌入来建立一个检索式问答（QA）系统</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">model, tokenizer=load_llm_model()</span><br><span class="line">llm=load_query_pipeline(model, tokenizer)</span><br><span class="line">retriever=create_retriever()</span><br><span class="line">qa = RetrievalQA.from_chain_type(</span><br><span class="line">    llm=llm,</span><br><span class="line">    chain_type=<span class="string">&quot;stuff&quot;</span>,</span><br><span class="line">    retriever=retriever,</span><br><span class="line">    verbose=<span class="literal">True</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>然后我们初始化一个 RetrievalQA 实例，它是我们 AI 链中的一部分。该实例使用检索器来获取与查询相关的信息。这里， llm 代表我们的语言模型， chain_type 设置为”stuff”，表示此链将处理的任务或操作类型， verbose&#x3D;True 在操作期间启用详细输出，提供有关检索过程的见解。</p>
+<h2 id="测试和可视化-RAG-系统"><a href="#测试和可视化-RAG-系统" class="headerlink" title="测试和可视化 RAG 系统"></a>测试和可视化 RAG 系统</h2><p>我们实现了用于测试和可视化检索增强生成（RAG）系统的功能：</p>
+<ul>
+<li>colorize_text 功能: 为“Reasoning”、“Question”、“Answer”和“Total time”等关键术语添加颜色，以获得清晰且视觉上吸引人的输出。</li>
+<li>test_rag 功能: 接受 QA 系统 ( qa ) 和查询字符串。它测量响应时间，检索答案，并在 Markdown 中显示格式化结果，突出关键元素以便阅读。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">colorize_text</span>(<span class="params">text</span>):</span><br><span class="line">    <span class="keyword">for</span> word, color <span class="keyword">in</span> <span class="built_in">zip</span>([<span class="string">&quot;Reasoning&quot;</span>, <span class="string">&quot;Question&quot;</span>, <span class="string">&quot;Answer&quot;</span>, <span class="string">&quot;Total time&quot;</span>], [<span class="string">&quot;blue&quot;</span>, <span class="string">&quot;red&quot;</span>, <span class="string">&quot;green&quot;</span>, <span class="string">&quot;magenta&quot;</span>]):</span><br><span class="line">        text = text.replace(<span class="string">f&quot;<span class="subst">&#123;word&#125;</span>:&quot;</span>, <span class="string">f&quot;\n\n**&lt;font color=&#x27;<span class="subst">&#123;color&#125;</span>&#x27;&gt;<span class="subst">&#123;word&#125;</span>:&lt;/font&gt;**&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> text</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_rag</span>(<span class="params">qa, query</span>):</span><br><span class="line">    console = Console()</span><br><span class="line"></span><br><span class="line">    time_start = time()</span><br><span class="line">    response = qa.run(query)</span><br><span class="line">    time_end = time()</span><br><span class="line">    total_time = <span class="string">f&quot;<span class="subst">&#123;<span class="built_in">round</span>(time_end-time_start, <span class="number">3</span>)&#125;</span> sec.&quot;</span></span><br><span class="line"></span><br><span class="line">    full_response =  <span class="string">f&quot;Question: <span class="subst">&#123;query&#125;</span>\nAnswer: <span class="subst">&#123;response&#125;</span>\nTotal time: <span class="subst">&#123;total_time&#125;</span>&quot;</span></span><br><span class="line">    colored_text = colorize_text(full_response)</span><br><span class="line">    console.<span class="built_in">print</span>(Markdown(colored_text))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> response</span><br></pre></td></tr></table></figure>
+
+<h2 id="Llama-3-和-Whisper-的文本转语音处理"><a href="#Llama-3-和-Whisper-的文本转语音处理" class="headerlink" title="Llama 3 和 Whisper 的文本转语音处理"></a>Llama 3 和 Whisper 的文本转语音处理</h2><p><img src="/../asset_voicellama3/03.png"></p>
+<ul>
+<li>知识库到向量数据库：最初，知识库中的文档通过嵌入模型进行处理。该模型将文本数据转换为数字向量，然后存储在像 Qdrant 这样的向量数据库中。这种设置通过将文档的语义含义表示为高维空间中的点，实现了高效的检索。</li>
+<li>用户查询处理：当用户提交查询时，它首先与嵌入模型交互，将查询转换为其向量表示。</li>
+<li>检索：然后使用查询向量从向量数据库中获取与之最相似的前 K 个向量（上下文）。这个过程被称为“检索”，有助于识别与用户查询相关的知识库中最相关的文档或数据片段。</li>
+<li>阅读和响应生成：然后将检索到的上下文输入到 Meta Llama 3 LLM中，该系统会阅读和理解这些上下文中与用户查询相关的信息。然后生成一个响应，旨在提供最准确和相关的信息。然后 Whisper 将文本转换为音频响应。</li>
+</ul>
+<p>首先定义“Whisper”管道。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pipe = Pipeline(s2a_ref=<span class="string">&#x27;WhisperSpeech/WhisperSpeech:s2a-q4-tiny-en+pl.model&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>为windows系统，我们定义一个函数，用于将音频张量转换为音频文件。</p>
+<p>然后通过我们的查询来使用 Llama 3 进行文本生成，接着我们可以使用 Whisper 进行音频生成。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">generate_audio_for_windows</span>(<span class="params">audio_tensor,wav_file_path</span>):</span><br><span class="line">    <span class="keyword">from</span> pydub <span class="keyword">import</span> AudioSegment</span><br><span class="line">    <span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">    <span class="comment"># generate uses CUDA if available; therefore, it&#x27;s necessary to move to CPU before converting to NumPy array</span></span><br><span class="line">    audio_np = (audio_tensor.cpu().numpy() * <span class="number">32767</span>).astype(np.int16)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(audio_np.shape) == <span class="number">1</span>:</span><br><span class="line">        audio_np = np.expand_dims(audio_np, axis=<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        audio_np = audio_np.T</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Array shape:&quot;</span>, audio_np.shape)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Array dtype:&quot;</span>, audio_np.dtype)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        audio_segment = AudioSegment(</span><br><span class="line">            audio_np.tobytes(), </span><br><span class="line">            frame_rate=<span class="number">24000</span>, </span><br><span class="line">            sample_width=<span class="number">2</span>, </span><br><span class="line">            channels=<span class="number">1</span></span><br><span class="line">        )</span><br><span class="line">        audio_segment.export(wav_file_path, <span class="built_in">format</span>=<span class="string">&#x27;wav&#x27;</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Audio file generated: <span class="subst">&#123;wav_file_path&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Error writing audio file: <span class="subst">&#123;e&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">query = <span class="string">&quot;How LLMs can be used to understand and interact with the complex 3D world&quot;</span></span><br><span class="line">aud = test_rag(qa, query)</span><br><span class="line"></span><br><span class="line">audio_tensor = pipe.generate(<span class="string">f&quot;<span class="subst">&#123;aud&#125;</span>&quot;</span>)</span><br><span class="line">generate_audio_for_windows(audio_tensor, <span class="string">f&quot;output.wav&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查询处理：我们从查询“如何LLMs用于理解和与复杂的 3D 世界互动”开始，通过使用模型（ qa ）的检索增强生成（RAG）系统进行处理。该系统的响应已准备用于语音合成。</li>
+<li>语音合成：使用 whisper 模型与语音，我们将文本响应转换为音频并保存为 output.wav 。</li>
+<li>语音转文本：可以使用 whisper 模型将音频文件转录回文本，以验证语音合成的准确性。</li>
+</ul>
+<p><img src="/../asset_voicellama3/04.png"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://medium.com/@datadrifters/llama-3-powered-voice-assistant-integrating-local-rag-withdrant-whisper-and-langchain-b4d075b00ac5">https://medium.com/@datadrifters/llama-3-powered-voice-assistant-integrating-local-rag-withdrant-whisper-and-langchain-b4d075b00ac5</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1777,141 +2069,6 @@ INFERENCE(env, policy, device)
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/04/04/langchain-chess/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Howard Huang">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/04/04/langchain-chess/" class="post-title-link" itemprop="url">使用LangChain最新的结构化输出功能构建国际象棋代理</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-04-04 17:16:15" itemprop="dateCreated datePublished" datetime="2024-04-04T17:16:15+08:00">2024-04-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-04-06 23:50:32" itemprop="dateModified" datetime="2024-04-06T23:50:32+08:00">2024-04-06</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>6.3k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>11 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>LangChain最近添加了一个API来返回结构化输出。它使用每个 LLM 提供商的函数调用功能。要使用它，您只需为所需的输出定义一个 pydantic 模型。</p>
-<p>结构化输出是构建大型系统的关键，其中各个部分使用 JSON 相互通信。有点类似于 Web 应用程序的后端 API 和前端如何进行通信。</p>
-<p>使用 LangChain 的结构化输出功能来构建一个国际象棋代理并使其与 Stockfish 下棋。方法如下。</p>
-<p>pip install -U python-dotenv langchain-openai chess</p>
-<p>首先，我需要定义我的国际象棋代理将输出什么。在与 Stockfish 的比赛中，我的代理应该至少输出其下一步行动，给定的输入包含棋盘状态、游戏中的行动历史记录以及对计划下一步行动有用的其他数据。</p>
-<p>我决定将国际象棋代理的下一步棋定义为包含该棋步的 pydantic 类，以及解释该棋步的推理。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">from langchain_openai import ChatOpenAI</span><br><span class="line">import chess</span><br><span class="line">import chess.engine</span><br><span class="line">from langchain_core.pydantic_v1 import BaseModel, Field</span><br><span class="line">from dotenv import load_dotenv</span><br><span class="line">import os</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">load_dotenv()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class NextMove(BaseModel):</span><br><span class="line">    move: str = Field(..., description=&quot;Best next move to win the chess game. It should be in Standard Algebraic Notation. Always plan 5 moves ahead before deciding the best next move.&quot;)</span><br><span class="line">    reasoning: str = Field(..., description=&quot;Reasoning explaining why the move is the best&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">model = ChatOpenAI(model=&quot;gpt-4&quot;)</span><br><span class="line">chess_agent = model.with_structured_output(NextMove)</span><br></pre></td></tr></table></figure>
-<p>接下来，我需要定义我将使用的 Stockfish 引擎的版本。<br>我还在 play_game() 函数中定义了游戏的逻辑。<br>我添加了短期记忆，以便国际象棋代理可以记住过去的比赛，并有可能利用这些知识来提高水平。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"># Initialize a chess board and the chess engine</span><br><span class="line">engine = chess.engine.SimpleEngine.popen_uci(r&quot;F:\stockfish\stockfish\stockfish-windows-x86-64-avx2.exe&quot;)</span><br><span class="line"></span><br><span class="line"># Configure Stockfish to a specific skill level, e.g., 10</span><br><span class="line">engine.configure(&#123;&quot;Skill Level&quot;: 0&#125;)</span><br><span class="line"></span><br><span class="line">file_path = os.path.expanduser(&#x27;~\\learning_chess.txt&#x27;)</span><br><span class="line">try:</span><br><span class="line">    with open(file_path, &#x27;r&#x27;) as file:</span><br><span class="line">        past_game_performance = file.read()</span><br><span class="line">except FileNotFoundError:</span><br><span class="line">    print(f&quot;The file &#123;file_path&#125; does not exist. Creating a new one.&quot;)</span><br><span class="line">    with open(file_path, &#x27;w&#x27;) as file:</span><br><span class="line">        file.write(&quot;Initial content\n&quot;)</span><br><span class="line">        past_game_performance = &quot;Initial content\n&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def play_game():</span><br><span class="line">    moves = []  # Variable to store the list of moves</span><br><span class="line">    board = chess.Board()</span><br><span class="line"></span><br><span class="line">    def get_agent_move(board):</span><br><span class="line">        feedback = &quot;&quot;</span><br><span class="line">        while True:</span><br><span class="line"></span><br><span class="line">            prompt = f&quot;&quot;&quot;Current board: &#123;board&#125;\nMove history: &#123;moves&#125;</span><br><span class="line">            Choose the next move for black in UCI format. The available legal moves are &#123;list(board.legal_moves)&#125;.</span><br><span class="line">            The move you select should be among the legal moves in UCI format like this:&#x27;Move.from_uci(&#x27;g7g5&#x27;)&#x27; &#123;feedback&#125; Only reply with the move and nothing else.</span><br><span class="line">            Take into your past performance against stockfish: &#123;past_game_performance&#125;&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">            # No streaming</span><br><span class="line">            response = chess_agent.invoke(prompt)</span><br><span class="line"></span><br><span class="line">            next_move = response.move</span><br><span class="line"></span><br><span class="line">            try:</span><br><span class="line">                move = chess.Move.from_uci(next_move)</span><br><span class="line"></span><br><span class="line">                if move in board.legal_moves:</span><br><span class="line">                    return move</span><br><span class="line">                else:</span><br><span class="line">                    feedback = f&quot;Agent&#x27;s generated move &#123;move&#125; is not valid currently.&quot;</span><br><span class="line">            except:</span><br><span class="line">                feedback = &quot;Failed to parse the Agent&#x27;s generated move. Retrying...&quot;</span><br><span class="line"></span><br><span class="line">    while not board.is_game_over():</span><br><span class="line">        if board.turn:  # True for white&#x27;s turn, False for black&#x27;s turn</span><br><span class="line">            result = engine.play(board, chess.engine.Limit(time=2.0))</span><br><span class="line">            board.push(result.move)</span><br><span class="line">            moves.append(result.move.uci())  # Store UCI move in the list</span><br><span class="line">        else:</span><br><span class="line">            move = get_agent_move(board)</span><br><span class="line">            board.push(move)</span><br><span class="line">            moves.append(move.uci())  # Store UCI move in the list</span><br><span class="line">        print(board)</span><br><span class="line">        print(&quot;\n\n&quot;)</span><br><span class="line"></span><br><span class="line">    # Check the result of the game</span><br><span class="line">    winner = &quot;&quot;</span><br><span class="line">    if board.is_checkmate():</span><br><span class="line">        if board.turn:</span><br><span class="line">            winner = &quot;Black&quot;</span><br><span class="line">        else:</span><br><span class="line">            winner = &quot;White&quot;</span><br><span class="line">    elif board.is_stalemate() or board.is_insufficient_material() or board.is_seventyfive_moves() or board.is_fivefold_repetition() or board.is_variant_draw():</span><br><span class="line">        winner = &quot;Draw&quot;</span><br><span class="line"></span><br><span class="line">    # Write the result in the short term memory</span><br><span class="line">    with open(file_path, &#x27;a&#x27;) as file:</span><br><span class="line">        file.write(f&quot;\n&#123;&#x27; &#x27;.join(moves)&#125; =&gt; Winner: &#123;&#x27;AI Agent&#x27; if winner == &#x27;Black&#x27; else &#x27;Stockfish&#x27;&#125;&quot;)</span><br><span class="line"></span><br><span class="line">    if winner == &quot;Black&quot;:</span><br><span class="line">        return &quot;Agent wins by checkmate.&quot;</span><br><span class="line">    elif winner == &quot;White&quot;:</span><br><span class="line">        return &quot;Stockfish wins by checkmate.&quot;</span><br><span class="line">    else:</span><br><span class="line">        return &quot;The game is a draw.&quot;</span><br></pre></td></tr></table></figure>
-<p>在提供的代码片段中，我概述了基于 GPT-4 的自定义 AI 代理与 Stockfish 国际象棋引擎之间国际象棋游戏的设置和执行。以下是代码各段中发生的情况的细分：</p>
-<ul>
-<li><p>初始化国际象棋引擎：使用该chess.engine.SimpleEngine方法初始化 Stockfish 国际象棋引擎，指定系统上安装的 Stockfish 可执行文件的路径。</p>
-</li>
-<li><p>配置Stockfish技能等级：通过该 engine.configure 方法将Stockfish引擎的技能等级设置为0 。这部分有一个错误；要将技能等级设置为 10，则应{“Skill Level”: 10}改为{“Skill Level”: 0}。</p>
-</li>
-<li><p>读取过去的游戏表现：过去游戏的表现是从learning_chess.txt文本文件加载。该信息用于告知人工智能代理在游戏过程中的决策。</p>
-</li>
-<li><p>玩游戏函数：该函数封装了AI代理和Stockfish引擎之间下棋的逻辑。它在一个名为 moves 的列表中跟踪游戏期间所做的动作moves，并利用一个chess.Board()对象来管理游戏状态。</p>
-</li>
-<li><p>获取代理移动函数：在该play_game函数中，有一个嵌套函数get_agent_move，旨在确定 AI 代理的下一步移动。它生成一个提示，包括当前棋盘状态、走棋历史和合法走棋，然后等待国际象棋代理（假设是 LLM 或类似的 AI 模型）的响应。该响应被解析并验证为合法的国际象棋棋步。</p>
-</li>
-<li><p>游戏循环：游戏以循环方式进行，其中 Stockfish 在其回合中进行移动（白色），而 AI 代理在其回合中进行移动（黑色）。由于将死、平局或其他平局情况，将进行移动直至游戏结束。</p>
-</li>
-<li><p>确定并记录游戏结果：游戏结束时，根据游戏的最终状态确定结果。此结果将附加到learning_chess.txt文件中，用最新的游戏动作和结果更新人工智能代理的“短期记忆”。</p>
-</li>
-<li><p>返回游戏结果：最后，该函数返回一条字符串消息，指示 AI 代理是否获胜、Stockfish 获胜，或者游戏是否以平局结束。</p>
-</li>
-</ul>
-<p>然后我决定比赛 3 次，看看 GPT-4 能否在国际象棋方面有所改进并击败 Stockfish 16。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"># Number of games to play</span><br><span class="line">n_games = 3</span><br><span class="line"></span><br><span class="line"># Initialize a dictionary to store the results</span><br><span class="line">results = &#123;&quot;Agent wins&quot;: 0, &quot;Stockfish wins&quot;: 0, &quot;Draw&quot;: 0&#125;</span><br><span class="line"></span><br><span class="line"># Run the game n times</span><br><span class="line">for i in range(n_games):</span><br><span class="line">    # print(f&quot;Starting game &#123;i+1&#125;...&quot;)</span><br><span class="line">    result = play_game()</span><br><span class="line">    print(result)</span><br><span class="line"></span><br><span class="line">    # Update the results dictionary based on the outcome of the game</span><br><span class="line">    if &quot;Agent wins&quot; in result:</span><br><span class="line">        results[&quot;Agent wins&quot;] += 1</span><br><span class="line">    elif &quot;Stockfish wins&quot; in result:</span><br><span class="line">        results[&quot;Stockfish wins&quot;] += 1</span><br><span class="line">    else:</span><br><span class="line">        results[&quot;Draw&quot;] += 1</span><br><span class="line"></span><br><span class="line">    # print(f&quot;Game &#123;i+1&#125; finished.\n\n&quot;)</span><br><span class="line"></span><br><span class="line"># Print the final results</span><br><span class="line">print(&quot;Final results after playing&quot;, n_games, &quot;games:&quot;)</span><br><span class="line">print(&quot;Agent won:&quot;, results[&quot;Agent wins&quot;], &quot;games&quot;)</span><br><span class="line">print(&quot;Stockfish won:&quot;, results[&quot;Stockfish wins&quot;], &quot;games&quot;)</span><br><span class="line">print(&quot;Draw:&quot;, results[&quot;Draw&quot;], &quot;games&quot;)</span><br></pre></td></tr></table></figure>
-<p>开始比赛：</p>
-<p><img src="/../asset_chessopenai/01.png"></p>
-<p><a href="/../asset_chessopenai/chess_record.txt">比赛记录文本</a></p>
-<p>g1f3 e7e5 d2d4 e5d4 d1d4 g8f6 e2e4 b8c6 d4d3 d7d5 e4e5 f6e4 c1e3 f8e7 b1c3 e4c3 d3c3 c6e5 c3e5 f7f6 e5d4 e8g8 d4d2 c8f5 a1d1 f5e4 f3d4 e4g6 f1d3 f8f7 d3e2 d8d7 d4f3 d7e6 f3d4 e6e5 c2c4 e5e4 f2f3 e4f3 e2f3 e7d6 f3d5 d6f4 e3f4 g6d3 d2d3 g8h8 h1f1 f7f8 f4c7 f8g8 f1f3 g7g6 d4e6 g8g7 f3f6 g7g8 d3d4 g8g7 e1d2 g7f7 f6f7 h8g8 e6c5 a8f8 d4g7 &#x3D;&gt; Winner: Stockfish</p>
-<p>在尝试了几种策略之后，我得出的结论是 GPT-4 不可能成为国际象棋中的 Stockfish 引擎。</p>
-<p>该实验揭示了几个关键点：</p>
-<ul>
-<li><p>专业化与泛化： Stockfish 在国际象棋方面的专业化使其比 GPT-4 等更通用的 AI 模型更具优势，这强调了特定于任务的编程在某些领域仍然具有显着优势。</p>
-</li>
-<li><p>人工智能学习和适应：利用过去的游戏表现来指导未来的决策是迈向更具适应性的人工智能系统的一步。尽管 GPT-4 没有超越 Stockfish，但结合过去结果的学习方法对于能够随着时间的推移学习和进化的 AI 的发展至关重要。</p>
-</li>
-<li><p>AI模型之间的协作： GPT-4和LangChain的结构化输出的实验预示着不同AI技术协同工作以解决复杂问题的未来。将专用引擎与通用模型集成可以产生利用两种方法优势的创新解决方案。</p>
-</li>
-</ul>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://medium.com/ai-advances/can-gpt-4-beat-the-stockfish-engine-lets-use-langchain-to-find-out-0b25133ed563">https://medium.com/ai-advances/can-gpt-4-beat-the-stockfish-engine-lets-use-langchain-to-find-out-0b25133ed563</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1935,13 +2092,13 @@ INFERENCE(env, policy, device)
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">329k</span>
+    <span title="站点总字数">333k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">9:59</span>
+    <span title="站点阅读时长">10:05</span>
   </span>
 </div>
 <div class="busuanzi-count">
