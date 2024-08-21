@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"szhowardhuang.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="基础模型的级联：将 SAM 2 与 GPT-4o 串联在一起 什么是分段任何模型 2 (SAM 2)？ SAM 2 可以在任何图像或视频中对物体进行分割，而无需重新训练。  Segment Anything Model 2 (SAM 2) [1] 是 Meta 推出的原始 Segment Anything Model [2] 的高级版本，旨在对图像和视频中的对象进行分割（见图 1）。  图 1.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SAM 2 + GPT-4o — 通过视觉提示的级联基础模型">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/08/19/sam2/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="基础模型的级联：将 SAM 2 与 GPT-4o 串联在一起 什么是分段任何模型 2 (SAM 2)？ SAM 2 可以在任何图像或视频中对物体进行分割，而无需重新训练。  Segment Anything Model 2 (SAM 2) [1] 是 Meta 推出的原始 Segment Anything Model [2] 的高级版本，旨在对图像和视频中的对象进行分割（见图 1）。  图 1.">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_sam2/image-20240819101159-0d6a8fb.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_sam2/777.gif">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_sam2/image-20240819101518-dy5rc8o.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_sam2/778.gif">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_sam2/image-20240819101642-iujmz3w.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_sam2/image-20240819101657-n9kgjur.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_sam2/image-20240819101715-jisv1hu.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_sam2/779.gif">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_sam2/image-20240819102127-incadh1.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_sam2/780.gif">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_sam2/image-20240819102856-xjc84yb.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_sam2/image-20240819102914-ffj44wv.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_sam2/image-20240819102926-12e5v4q.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_sam2/image-20240819102948-9huihaa.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_sam2/image-20240819103001-8yezi31.png">
+<meta property="article:published_time" content="2024-08-19T01:36:15.000Z">
+<meta property="article:modified_time" content="2024-08-19T02:41:27.000Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://szhowardhuang.github.io/asset_sam2/image-20240819101159-0d6a8fb.png">
+
+
+<link rel="canonical" href="https://szhowardhuang.github.io/2024/08/19/sam2/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://szhowardhuang.github.io/2024/08/19/sam2/","path":"2024/08/19/sam2/","title":"SAM 2 + GPT-4o — 通过视觉提示的级联基础模型"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>SAM 2 + GPT-4o — 通过视觉提示的级联基础模型 | 嵌入式老兵博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">嵌入式老兵博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%88%86%E6%AE%B5%E4%BB%BB%E4%BD%95%E6%A8%A1%E5%9E%8B-2-SAM-2-%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">什么是分段任何模型 2 (SAM 2)？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-SAM-2-%E5%8A%9F%E8%83%BD%E6%91%98%E8%A6%81"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 SAM 2 功能摘要</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SAM-2-%E6%9C%89%E4%BB%80%E4%B9%88%E7%89%B9%E5%88%AB%E4%B9%8B%E5%A4%84%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">SAM 2 有什么特别之处？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-%E6%88%91%E8%AF%A5%E5%A6%82%E4%BD%95%E8%BF%90%E8%A1%8C-SAM-2%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">3. 我该如何运行 SAM 2？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-%E5%85%88%E5%86%B3%E6%9D%A1%E4%BB%B6"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 先决条件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-%E8%AE%BE%E7%BD%AE"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-%E4%B8%8B%E8%BD%BD-SAM-2-%E6%A3%80%E6%9F%A5%E7%82%B9"><span class="nav-number">3.3.</span> <span class="nav-text">3.3. 下载 SAM-2 检查点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-%E5%88%9B%E5%BB%BA%E9%A2%84%E6%B5%8B%E5%99%A8"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 创建预测器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%90%E5%8F%96%E8%A7%86%E9%A2%91%E4%B8%AD%E7%9A%84%E5%B8%A7%E5%B9%B6%E6%8E%A2%E7%B4%A2%E6%95%B0%E6%8D%AE"><span class="nav-number">3.5.</span> <span class="nav-text">提取视频中的帧并探索数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-6-%E4%BD%BF%E7%94%A8%E5%9D%90%E6%A0%87%E5%AE%9A%E4%B9%89%E8%A6%81%E5%88%86%E5%89%B2%E7%9A%84%E5%AF%B9%E8%B1%A1"><span class="nav-number">3.6.</span> <span class="nav-text">3.6 使用坐标定义要分割的对象</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E7%BA%A7%E8%81%94%E5%9F%BA%E7%A1%80%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.</span> <span class="nav-text">4. 级联基础模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-%E5%9F%BA%E7%A1%80%E6%A8%A1%E5%9E%8B%E4%BD%9C%E4%B8%BA%E8%A7%86%E8%A7%89%E6%8F%90%E7%A4%BA%E5%B7%A5%E5%85%B7"><span class="nav-number">5.</span> <span class="nav-text">5. 基础模型作为视觉提示工具</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89%E7%AE%A1%E9%81%93-2-0%EF%BC%9A%E4%B8%80%E7%A7%8D%E6%96%B0%E8%8C%83%E5%BC%8F"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 计算机视觉管道 2.0：一种新范式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-%E8%A7%86%E8%A7%89%E6%8F%90%E7%A4%BA%E4%BD%9C%E4%B8%BA%E5%9F%BA%E7%A1%80%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%B2%98%E5%90%88%E5%89%82%E7%9A%84%E6%8C%91%E6%88%98"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 视觉提示作为基础模型的粘合剂的挑战</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-GPT-4o-SAM-2"><span class="nav-number">6.</span> <span class="nav-text">6. GPT-4o + SAM 2</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1-%E8%A7%86%E8%A7%89%E6%8F%90%E7%A4%BA%E7%AE%A1%E9%81%93"><span class="nav-number">6.1.</span> <span class="nav-text">6.1 视觉提示管道</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-YOLO-%E4%B8%96%E7%95%8C-SAM-2"><span class="nav-number">7.</span> <span class="nav-text">7. YOLO 世界 + SAM 2</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7-1-%E9%9B%B6%E6%A0%B7%E6%9C%AC%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89%EF%BC%9AYOLO-%E4%B8%96%E7%95%8C"><span class="nav-number">7.1.</span> <span class="nav-text">7.1 零样本计算机视觉：YOLO-世界</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-%E7%BB%93%E8%AE%BA"><span class="nav-number">8.</span> <span class="nav-text">8. 结论</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Howard Huang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/08/19/sam2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="SAM 2 + GPT-4o — 通过视觉提示的级联基础模型 | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SAM 2 + GPT-4o — 通过视觉提示的级联基础模型
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-08-19 09:36:15 / 修改时间：10:41:27" itemprop="dateCreated datePublished" datetime="2024-08-19T09:36:15+08:00">2024-08-19</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>7.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>13 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><img src="/../asset_sam2/image-20240819101159-0d6a8fb.png" alt="image.png"></p>
+<p>基础模型的级联：将 SAM 2 与 GPT-4o 串联在一起</p>
+<h1 id="什么是分段任何模型-2-SAM-2-？"><a href="#什么是分段任何模型-2-SAM-2-？" class="headerlink" title="什么是分段任何模型 2 (SAM 2)？"></a>什么是分段任何模型 2 (SAM 2)？</h1><blockquote>
+<p>SAM 2 可以在任何图像或视频中对物体进行分割，而无需重新训练。</p>
+</blockquote>
+<p>Segment Anything Model 2 (SAM 2) [1] 是 Meta 推出的原始 Segment Anything Model [2] 的高级版本，旨在对图像和视频中的对象进行分割（见图 1）。</p>
+<p><img src="/../asset_sam2/777.gif"></p>
+<p>图 1. 行人（蓝色面具）和汽车（黄色面具）使用 SAM 2 进行分割和跟踪。</p>
+<p>在开放源代码的 Apache 2.0 许可证下发布的 SAM 2 在计算机视觉方面代表了一个重要的飞跃，允许对对象进行实时的可提示分割。</p>
+<p>SAM 2 以其在图像分割中的准确性和在视频分割中的卓越性能而著称，与之前的模型相比，所需的交互时间显著减少：我们展示了 SAM 2 如何只需 3 个点就能在整个视频中分割对象！</p>
+<p>Meta 还推出了 SA-V 数据集，与 SAM 2 一起，包含超过 51,000 个视频和超过 600,000 个掩模。这一数据集促进了其在医学成像、卫星图像、海洋科学和内容创作等多个领域的应用。</p>
+<h2 id="1-1-SAM-2-功能摘要"><a href="#1-1-SAM-2-功能摘要" class="headerlink" title="1.1 SAM 2 功能摘要"></a>1.1 SAM 2 功能摘要</h2><p>SAM 2 的主要特征总结在图 2 中。</p>
+<p><img src="/../asset_sam2/image-20240819101518-dy5rc8o.png" alt="image.png"></p>
+<h1 id="SAM-2-有什么特别之处？"><a href="#SAM-2-有什么特别之处？" class="headerlink" title="SAM 2 有什么特别之处？"></a>SAM 2 有什么特别之处？</h1><p>SAM 2 的新颖之处在于它解决了视频数据的复杂性，例如物体运动、变形、遮挡和光照变化，这些在静态图像中是不存在的。</p>
+<p>这使得 SAM 2 成为混合现实、机器人技术、自动驾驶汽车和视频编辑应用中的关键工具。</p>
+<p><img src="/../asset_sam2/778.gif"></p>
+<p>图 3. SAM 2 的实际应用：原始视频中的球被移除（左上角），并创建了一个没有球的新视频（右下角）</p>
+<p>SAM 2 的关键创新是：</p>
+<ol>
+<li>图像和视频的统一模型: SAM 2 将图像视为单帧视频，使其能够无缝处理这两种类型的输入。这种统一是通过利用内存来回忆之前处理过的视频信息，从而实现跨帧的准确分割。</li>
+<li>可提示的视觉分割任务：SAM 2 将图像分割任务推广到视频领域，通过在视频的任何帧中输入提示（点、框或掩码）来定义时空掩码（masklet）。它可以立即进行预测并在时间上传播这些预测，通过额外的提示迭代地细化分割。</li>
+<li>高级数据集 (SA-V): SAM 2 是在 SA-V 数据集上训练的，该数据集比现有的视频分割数据集大得多。这个广泛的数据集使得 SAM 2 在视频分割方面达到了最先进的性能。</li>
+</ol>
+<h1 id="3-我该如何运行-SAM-2？"><a href="#3-我该如何运行-SAM-2？" class="headerlink" title="3. 我该如何运行 SAM 2？"></a>3. 我该如何运行 SAM 2？</h1><p>您可以检查 SAM 2 仓库，或者使用 这个 Jupyter Notebook 在您自己的机器上设置模型。在本节中，我们描述后者的方法。</p>
+<h2 id="3-1-先决条件"><a href="#3-1-先决条件" class="headerlink" title="3.1 先决条件"></a>3.1 先决条件</h2><ul>
+<li>一台配有 GPU 的机器（Google Colab 可以）。</li>
+<li>一个用于从视频中提取帧的库（例如，ffmpeg）</li>
+</ul>
+<h2 id="3-2-设置"><a href="#3-2-设置" class="headerlink" title="3.2 设置"></a>3.2 设置</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">import os</span><br><span class="line">HOME = os.getcwd()</span><br><span class="line"></span><br><span class="line"># Clone the repository</span><br><span class="line">!git clone https://github.com/facebookresearch/segment-anything-2.git</span><br><span class="line">%cd &#123;HOME&#125;/segment-anything-2</span><br><span class="line"></span><br><span class="line"># install the python libraries for &quot;segment-anything-2&quot;</span><br><span class="line">!pip install -e . -q</span><br><span class="line">!pip install -e &quot;.[demo]&quot; -q</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-3-下载-SAM-2-检查点"><a href="#3-3-下载-SAM-2-检查点" class="headerlink" title="3.3. 下载 SAM-2 检查点"></a>3.3. 下载 SAM-2 检查点</h2><p>我们只会下载最大的模型，但也有更小的选项可供选择。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!wget -q https://dl.fbaipublicfiles.com/segment_anything_2/072824/sam2_hiera_large.pt -P &#123;HOME&#125;/checkpoints</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-4-创建预测器"><a href="#3-4-创建预测器" class="headerlink" title="3.4 创建预测器"></a>3.4 创建预测器</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">from sam2.build_sam import build_sam2_video_predictor</span><br><span class="line"></span><br><span class="line">sam2_checkpoint = f&quot;&#123;HOME&#125;/checkpoints/sam2_hiera_large.pt&quot;</span><br><span class="line">model_cfg = &quot;sam2_hiera_l.yaml&quot;</span><br><span class="line"></span><br><span class="line">predictor = build_sam2_video_predictor(model_cfg, sam2_checkpoint)</span><br></pre></td></tr></table></figure>
+
+<h2 id="提取视频中的帧并探索数据"><a href="#提取视频中的帧并探索数据" class="headerlink" title="提取视频中的帧并探索数据"></a>提取视频中的帧并探索数据</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># Extract the frames</span><br><span class="line">video_path = f&quot;&#123;HOME&#125;/segment-anything-2/SAM2_gymnastics.mp4&quot;</span><br><span class="line">output_path = f&quot;&#123;HOME&#125;/segment-anything-2/outputs/gymnastics&quot;</span><br><span class="line">!ffmpeg -i &#123;video_path&#125; -q:v 2 -start_number 0 &#123;output_path&#125;/&#x27;%05d.jpg&#x27;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># `video_dir` a directory of JPEG f÷/rames with filenames like `&lt;frame_index&gt;.jpg`</span><br><span class="line">video_dir = f&quot;&#123;HOME&#125;/segment-anything-2/outputs/gymnastics&quot;</span><br><span class="line"></span><br><span class="line"># scan all the JPEG frame names in this directory</span><br><span class="line">frame_names = [</span><br><span class="line">    p for p in os.listdir(video_dir)</span><br><span class="line">    if os.path.splitext(p)[-1] in [&quot;.jpg&quot;, &quot;.jpeg&quot;, &quot;.JPG&quot;, &quot;.JPEG&quot;]</span><br><span class="line">]</span><br><span class="line">frame_names.sort(key=lambda p: int(os.path.splitext(p)[0]))</span><br><span class="line"></span><br><span class="line"># take a look at the first video frame</span><br><span class="line">frame_idx = 0</span><br><span class="line">plt.figure(figsize=(12, 8))</span><br><span class="line">plt.title(f&quot;frame &#123;frame_idx&#125;&quot;)</span><br><span class="line">plt.imshow(Image.open(os.path.join(video_dir, frame_names[frame_idx])))</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../asset_sam2/image-20240819101642-iujmz3w.png" alt="image.png"></p>
+<p>图 4 在这个阶段，我们只是探索我们视频的第一帧。</p>
+<h2 id="3-6-使用坐标定义要分割的对象"><a href="#3-6-使用坐标定义要分割的对象" class="headerlink" title="3.6 使用坐标定义要分割的对象"></a>3.6 使用坐标定义要分割的对象</h2><p>我们定义一个函数来帮助我们提供 x, y 坐标的列表：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">def refine_mask_with_coordinates(coordinates, ann_frame_idx, ann_obj_id, show_result=True):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Refine a mask by adding new points using a SAM predictor.</span><br><span class="line"></span><br><span class="line">    Args:</span><br><span class="line">    coordinates (list): List of [x, y] coordinates, </span><br><span class="line">        e.g., [[210, 350], [250, 220]]</span><br><span class="line">    ann_frame_idx (int): The index of the frame being processed</span><br><span class="line">    ann_obj_id (int): A unique identifier for the object being segmented</span><br><span class="line">    show_result (bool): Whether to display the result (default: True)</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    # Convert the list of coordinates to a numpy array</span><br><span class="line">    points = np.array(coordinates, dtype=np.float32)</span><br><span class="line"></span><br><span class="line">    # Create labels array (assuming all points are positive clicks)</span><br><span class="line">    labels = np.ones(len(coordinates), dtype=np.int32)</span><br><span class="line"></span><br><span class="line">    # Add new points to the predictor</span><br><span class="line">    _, out_obj_ids, out_mask_logits = predictor.add_new_points(</span><br><span class="line">        inference_state=inference_state,</span><br><span class="line">        frame_idx=ann_frame_idx,</span><br><span class="line">        obj_id=ann_obj_id,</span><br><span class="line">        points=points,</span><br><span class="line">        labels=labels,</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    if show_result:</span><br><span class="line">        # Display the results</span><br><span class="line">        plt.figure(figsize=(12, 8))</span><br><span class="line">        plt.title(f&quot;Frame &#123;ann_frame_idx&#125;&quot;)</span><br><span class="line">        plt.imshow(Image.open(os.path.join(video_dir, frame_names[ann_frame_idx])))</span><br><span class="line">        show_points(points, labels, plt.gca())</span><br><span class="line">        show_mask((out_mask_logits[0] &gt; 0.0).cpu().numpy(), plt.gca(), obj_id=out_obj_ids[0])</span><br><span class="line">        plt.show()</span><br></pre></td></tr></table></figure>
+
+<p>我们建立状态并提供我们旨在分割的对象的坐标：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">inference_state = predictor.init_state(video_path=video_dir)</span><br><span class="line"></span><br><span class="line">refine_mask_with_coordinates([[950, 700], [950, 600], [950, 500]], 0, 1)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../asset_sam2/image-20240819101657-n9kgjur.png" alt="image.png"></p>
+<p>图 5. 通过三个坐标（绿色星星），模型自动识别整个物体。</p>
+<p>如图 5 所示，三个点足以让模型为个体的整个身体分配一个掩码。在某些情况下，仅 1 或 2 个点也可以。</p>
+<p>现在我们在所有帧上运行该过程（图 6）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># run propagation throughout the video and collect the results in a dict</span><br><span class="line">video_segments = &#123;&#125;  # video_segments contains the per-frame segmentation results</span><br><span class="line">for out_frame_idx, out_obj_ids, out_mask_logits in predictor.propagate_in_video(inference_state):</span><br><span class="line">    video_segments[out_frame_idx] = &#123;</span><br><span class="line">        out_obj_id: (out_mask_logits[i] &gt; 0.0).cpu().numpy()</span><br><span class="line">        for i, out_obj_id in enumerate(out_obj_ids)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"># render the segmentation results every few frames</span><br><span class="line">vis_frame_stride = 30</span><br><span class="line">plt.close(&quot;all&quot;)</span><br><span class="line">for out_frame_idx in range(0, len(frame_names), vis_frame_stride):</span><br><span class="line">    plt.figure(figsize=(6, 4))</span><br><span class="line">    plt.title(f&quot;frame &#123;out_frame_idx&#125;&quot;)</span><br><span class="line">    plt.imshow(Image.open(os.path.join(video_dir, frame_names[out_frame_idx])))</span><br><span class="line">    for out_obj_id, out_mask in video_segments[out_frame_idx].items():</span><br><span class="line">        show_mask(out_mask, plt.gca(), obj_id=out_obj_id)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../asset_sam2/image-20240819101715-jisv1hu.png" alt="image.png"></p>
+<p>图 6。一旦 SAM 2 识别出一个对象，它可以在整个视频中自动跟踪同一对象。</p>
+<p>最后，我们使用 ffmpeg 将帧合并生成视频。最终结果如图 7 所示。</p>
+<p><img src="/../asset_sam2/779.gif"></p>
+<p>图 7. 上：原始视频，下：运行 SAM 2 后的 视频</p>
+<p>SAM 2 在图像和视频中准确快速地分割物体的能力可以彻底改变计算机视觉系统的创建方式。</p>
+<h1 id="4-级联基础模型"><a href="#4-级联基础模型" class="headerlink" title="4. 级联基础模型"></a>4. 级联基础模型</h1><p>级联基础模型简单来说就是组装一个管道，在这个管道中，你将一个模型的输出作为后续模型的输入。</p>
+<p>你可能会问，“但这种方法有什么新颖之处？”🤔 答案在于基础模型的零-shot [2] 特性。像 GPT-4o 或 SAM 2 这样的模型被称为零-shot，这意味着它们可以在没有先前训练步骤的情况下进行推理。因此，这些模型可以从系统的角度进行连接，如图 2 所示。</p>
+<p><img src="/../asset_sam2/image-20240819102127-incadh1.png" alt="image.png"></p>
+<p>事实上，一些研究方法如 CaFO [3]结合了多个预训练的基础模型（CLIP、DINO、DALL-E、GPT-3），通过利用多样的预训练知识和生成合成数据来增强少样本视觉识别。</p>
+<h1 id="5-基础模型作为视觉提示工具"><a href="#5-基础模型作为视觉提示工具" class="headerlink" title="5. 基础模型作为视觉提示工具"></a>5. 基础模型作为视觉提示工具</h1><h2 id="5-1-计算机视觉管道-2-0：一种新范式"><a href="#5-1-计算机视觉管道-2-0：一种新范式" class="headerlink" title="5.1 计算机视觉管道 2.0：一种新范式"></a>5.1 计算机视觉管道 2.0：一种新范式</h2><p>我们之前探讨过 什么是视觉提示。它指的是使用视觉信息（如图像、边界框或点）作为基础模型的输入或“提示”，这些模型可以处理视觉和文本信息。</p>
+<p>Tenyks 的一个关键优势是视觉搜索。我们每天处理数以万计的查询，使用视觉提示。例如，图 3 显示了如何选择一个对象的边界框，以便在您的数据中搜索细粒度的细节。</p>
+<p><img src="/../asset_sam2/780.gif"></p>
+<p>图 3. 使用视觉提示搜索物体（例如，校车），即使不存在该物体的类别</p>
+<p>正如我们之前所论述的，在 Tenyks，我们认为视觉领域的传统流程正处于一个过渡的开始，流程中的许多阶段（例如，标注、训练）将被包含基础模型的模块所取代，这将形成一个所谓的计算机视觉管道 2.0。</p>
+<h2 id="5-2-视觉提示作为基础模型的粘合剂的挑战"><a href="#5-2-视觉提示作为基础模型的粘合剂的挑战" class="headerlink" title="5.2 视觉提示作为基础模型的粘合剂的挑战"></a>5.2 视觉提示作为基础模型的粘合剂的挑战</h2><p>现在，当你开始将基础模型连接在一起时，你会立即注意到，基于这种范式构建一个稳健的系统与在周末构建一个原型是截然不同的。</p>
+<p>以下是您一开始就可能遇到的一些主要挑战：</p>
+<ol>
+<li>性能和可扩展性</li>
+</ol>
+<ul>
+<li>确保系统能够实时处理大量数据和请求。</li>
+<li>随着运营规模的扩大，保持准确性和速度。</li>
+</ul>
+<ol start="2">
+<li>集成与兼容性</li>
+</ol>
+<ul>
+<li>将多模型系统无缝集成到现有基础设施中。</li>
+<li>确保与各种数据格式、API 和遗留系统的互操作性。</li>
+</ul>
+<ol start="3">
+<li>可靠性与错误处理</li>
+</ol>
+<ul>
+<li>开发强大的错误检测和纠正机制。</li>
+<li>实施冗余以保持运营连续性。</li>
+</ul>
+<h1 id="6-GPT-4o-SAM-2"><a href="#6-GPT-4o-SAM-2" class="headerlink" title="6. GPT-4o + SAM 2"></a>6. GPT-4o + SAM 2</h1><h2 id="6-1-视觉提示管道"><a href="#6-1-视觉提示管道" class="headerlink" title="6.1 视觉提示管道"></a>6.1 视觉提示管道</h2><p><img src="/../asset_sam2/image-20240819102856-xjc84yb.png" alt="image.png"></p>
+<p>我们的设置：利用 GPT-4o 提取视觉信息，这些信息将作为 SAM 2 的输入。</p>
+<p>上图显示了一个由两个步骤组成的简单管道。假设 GPT-4o足够强大，可以处理如下提示：</p>
+<blockquote>
+<p>“对于给定的图像，请提供三组（x,y）坐标的体操运动员。”</p>
+<p>“对于给定的图像，请提供体操运动员的边界框坐标。”</p>
+</blockquote>
+<p>下图 显示了 GPT-4o 的结果。</p>
+<p><img src="/../asset_sam2/image-20240819102914-ffj44wv.png" alt="image.png"></p>
+<p>当查询 (x,y) 坐标时，来自 GPT-4o 的结果相当 不准确。</p>
+<p>图 7 显示了这种行为在 200 个 GPT-4o 的 API 请求中是一致的。</p>
+<p><img src="/../asset_sam2/image-20240819102926-12e5v4q.png" alt="image.png"></p>
+<p>图 7 在使用 GPT-4 进行视觉理解的 200 次尝试中，仅有 5 次准确识别了(x,y)坐标。所有的边界框结果均不正确。</p>
+<p>所以，我们真的不能在2024年使用任何优秀的基础模型作为第二个基础模型的输入吗？ </p>
+<h1 id="7-YOLO-世界-SAM-2"><a href="#7-YOLO-世界-SAM-2" class="headerlink" title="7. YOLO 世界 + SAM 2"></a>7. YOLO 世界 + SAM 2</h1><h2 id="7-1-零样本计算机视觉：YOLO-世界"><a href="#7-1-零样本计算机视觉：YOLO-世界" class="headerlink" title="7.1 零样本计算机视觉：YOLO-世界"></a>7.1 零样本计算机视觉：YOLO-世界</h2><p>尽管我们希望被打击，因为意识到GPT-4o不足以从图像中提供视觉答案，但我们找到了一种合格的专用模型：YOLO-World [4]。</p>
+<p>图8 显示了在给定文本输入（即类别）的情况下，该模型如何准确预测每个给定输入的边界框！</p>
+<p>YOLO-World 的词汇甚至包括这个词：体操运动员！(见图 8 右侧的 0.93 mAP)。</p>
+<p><img src="/../asset_sam2/image-20240819102948-9huihaa.png" alt="image.png"></p>
+<p>图 8. YOLO-World 根据一些文本输入（即类别）给出的预测</p>
+<ul>
+<li>🔥 剧透警告： 我们将在即将发布的帖子中讨论更多关于 YOLO-World（零样本）与 YOLO v8（微调）的内容！</li>
+</ul>
+<p>YOLO-World 是一种零样本模型，用于物体检测，可以在不需要针对特定物体类别进行先前训练的情况下，检测和定位图像中的物体。</p>
+<p>我们使用 YOLO-World 为 SAM 2 提供边界框，如图 9 所示。</p>
+<p><img src="/../asset_sam2/image-20240819103001-8yezi31.png" alt="image.png"></p>
+<p>图 9. 最终管道，包括YOLO-World和 SAM 2 连接在一起</p>
+<p>我们需要提供给整个系统的唯一输入是 YOLO-World 词汇的类定义，在这种情况下是“体操运动员”。这个词足以让 YOLO-World 为 SAM 2 提供边界框坐标。</p>
+<p>查看这个 Jupyter Notebook 以获取实施的详细信息。最终结果如图 8 所示。</p>
+<h1 id="8-结论"><a href="#8-结论" class="headerlink" title="8. 结论"></a>8. 结论</h1><p>在关于 SAM 2 的系列中，我们描述并设置了 Segment Anything Model 2（SAM 2）。然后，我们使用视觉提示将两个基础模型级联（即，我们将模型 A 的输出作为模型 B 的输入）。</p>
+<p>我们发现市场上领先的 MLLMs，GPT-4o ，在提供给定图像的物体坐标或边界框方面相当不准确。相反，我们发现专门的模型（例如，YOLO-World）更适合这个工作。</p>
+<p>构建原型是一回事，但实际上，有一些挑战即使是最优秀的机器学习团队也难以应对（例如，集成、可靠性以及在连接基础模型时的适应性）。</p>
+<p>正如我们之前所论述的，计算机视觉领域出现了一个新的范式：视觉处理流程中的一些传统阶段可能会被（零样本）基础模型所取代，这些模型将随着时间的推移不断改进。</p>
+<p>我们还要等多久才能从即将推出的 GPT 家族成员那里获得精确的边界框坐标？ 可能不会太久。</p>
+<p><a target="_blank" rel="noopener" href="https://medium.com/@tenyks_blogger/sam-2-gpt-4o-cascading-foundation-models-via-visual-prompting-part-2-b592b5cd8d4a">SAM 2 + GPT-4o — 通过视觉提示的级联基础模型 — 第二部分 | 作者：The Tenyks Blogger | 2024 年 8 月 | Medium — SAM 2 + GPT-4o — Cascading Foundation Models via Visual Prompting — Part 2 | by The Tenyks Blogger | Aug, 2024 | Medium</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/08/14/llmsClinical07/" rel="prev" title="第七章 未来将至">
+                  <i class="fa fa-angle-left"></i> 第七章 未来将至
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/08/21/Phi-3-mini-4k-graph/" rel="next" title="Phi-3-mini-4k 用于图谱实体关系提取">
+                  Phi-3-mini-4k 用于图谱实体关系提取 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Howard Huang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">488k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">14:48</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动-->
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

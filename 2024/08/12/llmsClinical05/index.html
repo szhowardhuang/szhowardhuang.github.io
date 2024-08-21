@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"szhowardhuang.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="基于前几章讨论的面向患者和临床的用例，本章将拓展视野。我们将讨论如何部署大型语言模型（LLMs）来加速治疗药物的发现，通过探索科学文献和寻找有前景的分子。通过考察一系列用例，我们将探讨LLMs和生成性人工智能如何在制药研究和公共卫生等领域帮助不同的医疗保健利益相关者。 制药研究与开发人类生物学的本质使其难以解读，而寻找新药物则反映了这一复杂性。每个声明可能需要十年或更长时间来验证，每个声明的成本至">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第五章 LLMs 在药物研发、公共卫生及其他领域">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/08/12/llmsClinical05/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="基于前几章讨论的面向患者和临床的用例，本章将拓展视野。我们将讨论如何部署大型语言模型（LLMs）来加速治疗药物的发现，通过探索科学文献和寻找有前景的分子。通过考察一系列用例，我们将探讨LLMs和生成性人工智能如何在制药研究和公共卫生等领域帮助不同的医疗保健利益相关者。 制药研究与开发人类生物学的本质使其难以解读，而寻找新药物则反映了这一复杂性。每个声明可能需要十年或更长时间来验证，每个声明的成本至">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_llmsclinical05/01.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_llmsclinical05/02.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_llmsclinical05/03.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_llmsclinical05/04.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_llmsclinical05/05.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_llmsclinical05/06.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_llmsclinical05/07.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_llmsclinical05/08.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_llmsclinical05/09.png">
+<meta property="article:published_time" content="2024-08-12T03:28:19.000Z">
+<meta property="article:modified_time" content="2024-08-21T06:06:06.000Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://szhowardhuang.github.io/asset_llmsclinical05/01.png">
+
+
+<link rel="canonical" href="https://szhowardhuang.github.io/2024/08/12/llmsClinical05/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://szhowardhuang.github.io/2024/08/12/llmsClinical05/","path":"2024/08/12/llmsClinical05/","title":"第五章 LLMs 在药物研发、公共卫生及其他领域"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>第五章 LLMs 在药物研发、公共卫生及其他领域 | 嵌入式老兵博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">嵌入式老兵博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%B6%E8%8D%AF%E7%A0%94%E7%A9%B6%E4%B8%8E%E5%BC%80%E5%8F%91"><span class="nav-number">1.</span> <span class="nav-text">制药研究与开发</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8D%AF%E7%89%A9%E5%8F%91%E7%8E%B0"><span class="nav-number">1.1.</span> <span class="nav-text">药物发现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E7%8C%AE%E7%BB%BC%E8%BF%B0"><span class="nav-number">1.2.</span> <span class="nav-text">文献综述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%B4%E5%BA%8A%E8%AF%95%E9%AA%8C%E6%8B%9B%E5%8B%9F"><span class="nav-number">1.3.</span> <span class="nav-text">临床试验招募</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%B6%E8%8D%AF%E5%95%86%E4%B8%9A"><span class="nav-number">1.4.</span> <span class="nav-text">制药商业</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%AC%E5%85%B1%E5%8D%AB%E7%94%9F"><span class="nav-number">2.</span> <span class="nav-text">公共卫生</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%96%BE%E7%97%85%E7%9B%91%E6%B5%8B"><span class="nav-number">2.1.</span> <span class="nav-text">疾病监测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%81%A5%E5%BA%B7%E6%95%99%E8%82%B2%E4%B8%8E%E4%BF%83%E8%BF%9B"><span class="nav-number">2.2.</span> <span class="nav-text">健康教育与促进</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%83%E7%90%86%E5%81%A5%E5%BA%B7"><span class="nav-number">2.3.</span> <span class="nav-text">心理健康</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%81%BE%E5%AE%B3%E5%87%86%E5%A4%87%E4%B8%8E%E5%BA%94%E5%AF%B9"><span class="nav-number">2.4.</span> <span class="nav-text">灾害准备与应对</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E5%9B%A0%E7%BB%84%E5%AD%A6"><span class="nav-number">3.</span> <span class="nav-text">基因组学</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">4.</span> <span class="nav-text">摘要</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Howard Huang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/08/12/llmsClinical05/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="第五章 LLMs 在药物研发、公共卫生及其他领域 | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          第五章 LLMs 在药物研发、公共卫生及其他领域
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-08-12 11:28:19" itemprop="dateCreated datePublished" datetime="2024-08-12T11:28:19+08:00">2024-08-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-08-21 14:06:06" itemprop="dateModified" datetime="2024-08-21T14:06:06+08:00">2024-08-21</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>14k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>25 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>基于前几章讨论的面向患者和临床的用例，本章将拓展视野。我们将讨论如何部署大型语言模型（LLMs）来加速治疗药物的发现，通过探索科学文献和寻找有前景的分子。通过考察一系列用例，我们将探讨LLMs和生成性人工智能如何在制药研究和公共卫生等领域帮助不同的医疗保健利益相关者。</p>
+<h1 id="制药研究与开发"><a href="#制药研究与开发" class="headerlink" title="制药研究与开发"></a>制药研究与开发</h1><p>人类生物学的本质使其难以解读，而寻找新药物则反映了这一复杂性。每个声明可能需要十年或更长时间来验证，每个声明的成本至少为十亿美元——平均而言，从实验室到药房货架，开发一种新药物需要 10 到 15 年及超过 10 亿美元的费用。研究人员常常经历失眠的夜晚和多年的反复尝试，以实现他们的目标，即使在他人怀疑他们时，他们仍希望找到改变生命限制或致命疾病进程的方法，最终为更多患者提供他们应得的健康生活。</p>
+<p>配备多方面的人才和完善的工具，各类人类科学家就像分子建筑师 (图 5-1) 一样，构建成千上万全新的分子对象。药物开发也分为几个阶段：临床前、临床和批准销售药物。</p>
+<p>所有这些阶段都有其自身的挑战，但一旦一个化合物克服了一个障碍，它就会进入下一个阶段。这种选择性的审查和淘汰过程促进了强大、全面且有效的药物的诞生，使其值得问世。因此，每一种新药在上市之前都经历了从发现、临床到监管批准的多阶段旅程。每个阶段都有其自身的障碍，候选分子必须在进入下一个阶段之前满足某些要求。事实上，这一严格的过程主要是为了确保最终上市的新药的安全性和有效性。</p>
+<p><img src="/../asset_llmsclinical05/01.png">图 5-1. 制药研究与开发，分子建筑师</p>
+<p>随着他们试图处理复杂且不断扩展的数据集，这些数据集变得越来越难以管理和解释，LLMs 很可能在制药研发中扮演重要角色。这些数据集包括：</p>
+<ul>
+<li>临床前数据： 在对人类进行药物测试之前，先在老鼠、蚂蟥和蟑螂上进行测试。</li>
+<li>临床试验数据：在对研究药品进行的人体临床试验的所有试验阶段（1 至 3）中生成的数据（临床试验结果），包括安全性和有效性；药代动力学；生物标志物（例如，循环肿瘤细胞）；患者报告的结果测量。</li>
+<li>真实世界数据 (RWD)：关于药物使用、结果和不良反应的信息，这些信息来自实际护理，包括电子健康记录和保险索赔数据。</li>
+<li>基因组数据：包括对人类遗传学和基因组学进行测序或分析的数据，以识别新的药物靶点或生物标志物。</li>
+<li>文献数据：从期刊文章、专利和会议海报中提取的数据，旨在帮助药物发现的化合物和靶点。</li>
+<li>文献数据库：包含来自科学文献的药物、靶点、临床试验等经过整理的信息的数据库，如 ChEMBL、DrugBank 和 PubChem。</li>
+</ul>
+<p>制药研发中使用的数据集大小可能会因具体数据类型、研究阶段和整体项目范围而显著不同。例如，生物数据如基因：像 RefSeq这样的数据库包含数百万个注释的人类基因序列，每个序列的长度从几百到几千个碱基对不等。蛋白质数据银行（PDB）保存了数十万个蛋白质结构，文件大小从千字节到兆字节不等。单细胞测序实验的数据可以生成数 TB 的信息，而组织成像研究的数据量可能从 GB 到 PB 不等。化学数据，如小分子，包含数百万个潜在药物候选分子的库，每个分子的数据信息（结构、性质）通常占用 GB 的空间。</p>
+<p>单个患者的临床数据，例如电子健康记录，可能从数百万到超过十亿位或字节不等。一个包含数百或数千名患者的临床试验可能需要数十或数百太字节的存储空间。影像学或其他高级生物标志物测量的复杂性可能使数据量增大数百倍。分析疾病情感或提及的社交媒体研究可能在千兆字节范围内，但大规模研究可能涉及太字节。</p>
+<p>在这个规模下，数据的摄取和整合需要完全自动化。LLMs 可以扫描和解析来自不同来源的数据，包括临床试验数据、科学文献、公共数据库和电子健康记录。它们还可以清理和对齐不同格式和约定的数据。一旦数据被组织并放置在一致的结构中，LLM 可以构建表示数据集中实体之间关系的知识图谱。它可以帮助研究人员创建实体的地图，并轻松地在它们之间跳转，收集所需的所有信息。最后，LLM 可以分析大量数据，以发现隐藏的模式、趋势和相关性。</p>
+<p>行业内正在进行大量努力，以构建专注于研发过程的LLMs和生成式人工智能。例如，Nvidia 最近推出了一款名为 &#x3D;&#x3D;MegaMolBART&#x3D;&#x3D; 的LLM，谷歌也有一个与医学相关的模型。Med-PaLM 和 Meta 的 ESM-2突显了生成式人工智能将加速发现过程。</p>
+<p>无论是我们对症状的描述，还是医生对类似病例的历史，人工智能与医疗保健的关系都是理想的匹配，而LLMs提供了开启这一价值的关键。随着我们在LLMs方面的能力发展，LLMs的工业应用只会变得越来越多和深远——我们已经朝着更具针对性、高效和有效的医疗保健方法的未来迈进。</p>
+<h2 id="药物发现"><a href="#药物发现" class="headerlink" title="药物发现"></a>药物发现</h2><p>通过将LLMs作为一个有价值的早期输入，我们可以帮助加快新药发现的速度，同时负责任地实施药物发现的开发方面。LLMS和生成性人工智能或许能引领下一代药物发现（图 5-2）。LLMs可能会预测药物候选者的特性，这些候选者可能不需要广泛且昂贵的动物测试，而人工智能可以处理来自此类实验的大型数据集。</p>
+<p><img src="/../asset_llmsclinical05/02.png">图 5-2. 药物发现</p>
+<p>化学数据库存在， catalog 了数百万种已知药物和天然化合物的结构和性质，以及它们的文献记录的性质和效果。LLMs 可以在这样的数据库、已发表的研究论文和临床试验数据上进行训练，以检测不同类型的药物具有哪些性质以及可能导致哪些结果之间的相关性。</p>
+<p>关于各种化合物可能有多毒的数据可以被挖掘并用于训练LLMs，以根据新合成药物的特性检测患者的毒性风险。通过分析这些大型数据集，LLMs可以学习药物的化学结构、其在生物系统中的行为以及其潜在影响之间的相关性。它可以通过识别过去数据中的模式有效地推断疗效。LLMs可以评估给定药物候选物与靶标（蛋白质分子）结合的可能性，并可能预测其对某种疾病的疗效。因此，LLM可以掌握新识别的化学物质与已知毒性化合物之间的结构相似性，并将其作为尚待调查的潜在安全问题反馈。</p>
+<p>已知有毒性的药物可能与新候选药物共享某种特定的结构特征，这使得具有相同结构的分子可能出现危险的副作用。现有药物的副作用数据也可以通过LLM进行捕获，并作为新候选药物的潜在副作用进行报告。新化合物可能最终可用作药物——甚至该候选药物可能会被优先考虑进一步资助——但对潜在严重不良反应的认识可能会使研究人员意识到某些候选药物比其他药物更具风险，从而促使他们寻找更合适的试验对象。</p>
+<p>训练好的LLM可以用来预测所给分子结构的性质。为此，您需要向LLM提供潜在药物结构的信息，以便它预测其性质。LLM处理这些信息，然后得出确认或否定其作为新药适用性的信息。LLM可能会给出感兴趣性质的预测值（例如，疗效评分，高毒性风险），甚至能够建议结构上的变化，以增强药物的期望性质。LLM的预测并不总是正确的。</p>
+<p>这些预测可能带有或不带有一定的信心水平，作为指导是有价值的，因此不应将其作为对化合物进行实验测试的替代。此外，在依赖LLM预测之前，验证和进一步调查的必要性不容忽视。LLMs正在不断发展。随着越来越多的数据可用和训练策略的改善，预计LLM预测的准确性和可靠性将随着时间的推移而提高。</p>
+<h2 id="文献综述"><a href="#文献综述" class="headerlink" title="文献综述"></a>文献综述</h2><p>文献综述基本上是一项粗暴的任务，这将发挥LLM的优势：在大量论文中扫描关键词（图 5-3）。</p>
+<p><img src="/../asset_llmsclinical05/03.png">图 5-3。LLMs 帮助审阅大量文件</p>
+<p>LLMs 可以将众多研究的关键发现浓缩成简明的摘要，使研究人员能够快速掌握特定主题的当前知识状态。这为研究人员节省了宝贵的时间和精力，相较于手动审阅无数论文。LLMs 通过分析大型数据集，可以检测不同研究之间的模式和联系。这种检测帮助研究人员识别新兴趋势、潜在的知识空白以及与其他研究领域之间的关系。</p>
+<p>LLMs 有助于提高准确性和全面性，并减少偏见。手动文献审查可能会受到无意识偏见的影响，研究人员可能会无意中优先考虑支持他们现有假设的研究。然而，LLMs 可以提供更客观的方法，分析所有相关文献，而不考虑其潜在发现。</p>
+<p>手动审查可能耗时且容易出现人为错误，例如遗漏相关研究或误解信息。LLMs可以提供一种更一致和可靠的数据处理方式，降低错误风险。LLMs可以搜索多种语言和数据库，可能帮助研究人员发现来自不同地区和研究小组的研究，促进更全面的审查过程，融入多样化的视角。</p>
+<p>LLMs 可以帮助研究人员在他们的研究团队内分享和发现相关文献，并与不同机构的同事合作。这可以加快研究的进程，确保每个人都了解最新的进展，并防止重复劳动。</p>
+<p>LLMs 可以根据个人研究者的兴趣和研究重点定制和个性化文献综述体验，通过过滤掉不相关的信息，节省他们的时间和精力。</p>
+<p>LLMs在准确性和可解释性方面存在局限性。LLMs依赖于其训练数据的准确性和质量。此外，理解它们如何得出结论可能具有挑战性，这需要仔细评估和人类专业知识。基础数据中的偏见可能会反映在LLM的输出中。解决这些偏见并确保负责任的使用至关重要。</p>
+<p>总体而言，LLMs为药品研发中的文献综述提供了有价值的工具，能够简化和增强这一过程。它们处理大量数据、减少偏见和促进协作的能力，对加速科学发现和药物开发具有重要潜力。</p>
+<h2 id="临床试验招募"><a href="#临床试验招募" class="headerlink" title="临床试验招募"></a>临床试验招募</h2><p>招募临床试验参与者需要找到既感兴趣的人员，又符合特定研究标准的人。通常这需要以下步骤：</p>
+<ol>
+<li>通过研究患者群体识别潜在参与者，并了解目标人群的特征，包括年龄、性别和医疗状况。</li>
+<li>使用标准来识别那些可以和不能根据健康状况、病史和当前药物进行研究的人。</li>
+<li>根据研究的不同，可能会向医生或患者倡导团体进行宣传，或进行招募广告。</li>
+<li>一旦潜在参与者被确定，这些候选人将收到材料——从宣传册或网站到社交媒体活动——这些材料概述了研究，说明了目的，提到了谁在监督，以及可能的好处和风险。</li>
+<li>接下来是预筛选，这涉及到初步评估，以查看某人是否符合一套非常基本的标准，这可能使他或她有资格。</li>
+<li>教育潜在参与者并获得知情同意，在与研究人员进行详细讨论时，研究人员会解释研究内容，回答问题并解决疑虑。所有参与的受试者都被要求签署一份同意文件，表明他们理解研究的性质并自愿选择参与。</li>
+<li>资格必须通过更详细的医学评估来评估，以确定该人是否满足纳入标准。</li>
+<li>一旦确认资格，参与者将正式注册参加研究。</li>
+</ol>
+<p>参与者的招募必须遵循规定，并具备伦理性，以保护参与者的权利和安全。招募方法需要根据环境（例如，临床与社区）和相关患者群体（例如，儿童与成人）进行调整，并通过多种沟通渠道（例如，面对面、在线、电话）进行。招募通常很困难，往往需要多种方法才能达到足够的参与者目标数量。</p>
+<p>生成性人工智能和LLMs可以帮助简化研究方案的招聘。结合LLMs的自然语言处理（NLP）可以通过实现前期检查和资格筛选的自动化来促进参与者的高效招聘。LLMs固有的执行 NLP 和理解的能力使得可以使用互动聊天（见图 5-4）或在线智能问卷来预先接触研究参与者，以收集与参与者人口统计相关的必要信息并进行初步资格检查。这种自动化的预筛选程序可以减少传统参与者招聘中手动“冷拨打”过程所需的努力，从而加快参与者招聘阶段，并允许更精细地将参与者与各自的研究匹配。</p>
+<p><img src="/../asset_llmsclinical05/04.png">图 5-4. 使用 LLM 聊天机器人来简化临床试验招募</p>
+<p>LLMs 可以根据人口统计、病史、语言和其他因素个性化患者沟通。这将有助于提高适当的参与度和共鸣。生成性人工智能和 LLMs 可以以简化的方式呈现试验的目的、潜在好处和风险，同时保留涵盖整个临床情况所需的复杂性。这将有助于消除混淆、促进讨论并提高决策能力。</p>
+<p>参与的障碍包括交通困难或儿童看护挑战。换句话说，LLMs 可以扫描过去的招募数据，以发现参与的障碍——例如，如果人们因为工作或上学而无法参与研究，如果他们不会说英语，或者如果他们没有交通工具。由此，他们可以识别出人口特征（例如，生活经历）或调整试验的后勤或设计，以帮助管理这些障碍。通过提供翻译和多语言宣传，LLMs 可以通过招募更多人来增加参与度，并确保代表性不足的社区能够参与。</p>
+<p>临床试验招募面临几个挑战：</p>
+<ul>
+<li>确定足够的受试者是一个主要障碍，特别是对于罕见疾病或具有严格资格标准的试验。试验可能因需要更多样化的参与而受到延迟，因此结果可能会偏差，因为它们可能无法推广到更广泛的人群。此外，患者可能会因复杂的试验方案、旅行要求和漫长的程序而感到负担，从而导致参与减少和退出。</li>
+<li>研究、开发和监管障碍使试验成本高昂，限制了可及性和创新。</li>
+<li>冗长复杂的协议增加了行政负担和出错的可能性。</li>
+<li>在不同国家之间应对各种监管要求可能耗时且资源密集。</li>
+<li>在涉及多个地点和记录多样化人群时，以统一的方式记录数据尤其困难。</li>
+<li>确保数据完整性和防止在试验过程中不当行为至关重要。</li>
+<li>确保参与者充分理解参与的风险和收益至关重要。保护儿童或孕妇等弱势群体需要额外的伦理保障。考虑所有人群如何获得公平的临床试验机会也很重要。</li>
+</ul>
+<p>LLMs和生成性人工智能的前景可以通过多方面的新方法来提升临床试验招募的旧模式，以缓解瓶颈：改善研发、协助患者招募和参与、帮助试验设计和分析，甚至让人们看到潜在的监管合规性改善。一些新方法包括：</p>
+<ul>
+<li>通过自动化文档生成来简化研发。GenAI 可以自动生成研究方案、临床总结和监管报告，为研究人员节省大量时间和资源。</li>
+<li>GenAI 可以在大量研究信息的数据集中发现模式，并帮助研究人员优先考虑相关信息，指导他们的决策并加速发现。</li>
+<li>GenAI 可以分析患者数据，并提供以往临床试验的见解，以创建有针对性和个性化的宣传活动，鼓励参与相关试验。</li>
+<li>人工智能驱动的虚拟助手和聊天机器人可以用来回答患者的问题，并在整个试验过程中提供持续支持，从而提高参与度和留存率。</li>
+<li>GenAI 可以使用虚拟模拟建模各种试验场景，以预测结果，从而设计高效有效的研究。</li>
+</ul>
+<p>在实时情况下，人工智能可能会分析大量试验数据，发现安全信号、疗效标志以及可能出现的趋势，从而实现实时决策。提高合规性是应用LLM的另一个好处，因为可以进行自动化的监管报告：对于法律或操作上要求的报告，使用基准并通过机器学习生成文本的系统可以实时创建准确且合规的报告，从而减少潜在错误并缩短审批过程。</p>
+<p>人工智能可以处理试验数据，同时审查法规，以识别可能使合规性面临风险的因素，并在任何违规行为发生之前加以处理。</p>
+<p>GenAI 为提高临床试验的效率、有效性和包容性带来了令人印象深刻的可能性，但在整个临床试验生命周期中需要更大的伦理警惕。LLMs和 GenAI 并不是为了取代人类决策者。相反，它们应该作为一种工具来增强人类能力，并促进在整个临床试验过程中负责任的决策。</p>
+<h2 id="制药商业"><a href="#制药商业" class="headerlink" title="制药商业"></a>制药商业</h2><p>这里有一个准备好进行创新的领域：过于冗长、过于无聊的药品广告。很快我们将看到大量的LLMs和生成式人工智能，这将为制药公司提供多种方式来丰富产品向医疗专业人员和患者的传播。</p>
+<p>一些经历的幽默卡通描绘在图 5-5卡通中。这幅卡通是对直接面向消费者的药品广告的讽刺，这些广告通常在深夜或清晨时段的电视上播出。男人恼怒的反应很能说明人们如何体验直接面向消费者（DTC）的药品广告。消费者值得更好的。</p>
+<p><img src="/../asset_llmsclinical05/05.png">图 5-5. 深夜药品广告</p>
+<p>LLMs 可以帮助消费者理解和解读我们在深夜电视上观看的充满动作的药品广告中传达的信息，这些广告宣传处方药，并且法律要求提供关于限制和可能副作用的信息，这些信息通常复杂、令人困惑，甚至可能对普通观众来说有些过于繁琐。LLMs 可以将药品广告中常见的医学术语和词汇翻译成更自然的文本，让消费者理解药物的必要性、作用原理和潜在副作用。</p>
+<p>许多制药公司采用一种销售模式，依赖制药代表的销售团队直接拜访医生，向他们推销公司的产品。这种被称为“制药零售”的一对一营销方式，涉及销售代表前往与医生会面，目的是说服他们开处方使用自己公司的药物，通过宣传他们了解到的药物的好处和疗效。零售是一种密集的、针对性的营销策略，制药公司用它来推广并直接影响医生开出的处方。</p>
+<p>此外，制药代表可能会向医疗提供者提问，并将这些问题转交给医学事务团队，以请求对医生问题的具体科学回答；制药代表成为制药公司的人工代表。获得医生接触权限的代表可能会更加高效。</p>
+<p>现在想象制药公司和医疗服务提供者与客户——提供者、患者和其他相关方——直接沟通和互动，以使信息交换按照他们的需求进行。设想提供者能够立即获取他们所需的信息，以提供最佳的患者护理。想象一个基础设施，使这一切对提供者和患者都变得更容易，并让更多患者更好地获得他们所需的治疗和疗法。对个别提供者、患者和公司而言合理的制药客户互动意味着对所有人来说更好的价值。适时的正确数据可能意味着适时的正确干预。</p>
+<p>制药公司的未来商业模式需要在方法上进行根本性的转变。这种新模式要求制药公司：</p>
+<ul>
+<li>认真倾听市场需求</li>
+<li>预测趋势和挑战</li>
+<li>主动采取措施应对这些需求和挑战</li>
+</ul>
+<p>这个不断发展的模型应该专注于客户特定的参与。它应该在整个组织中嵌入，而不仅仅是销售代表的责任。这些变化代表了一次重大的转型，而不仅仅是小的调整。未来的制药商业模型将：</p>
+<ul>
+<li>将关注点从开处方者扩展到所有医疗保健利益相关者，包括患者、支付方和医疗保健系统</li>
+<li>从以产品为中心的方式转向以客户为中心的方式，优先考虑解决特定医疗需求的方案</li>
+<li>采用以医疗保健为中心的焦点，摆脱传统的销售代表驱动模式，转向一种更全面的方法，考虑整个医疗保健生态系统</li>
+</ul>
+<p>这一转型旨在为医疗系统中的所有利益相关者创造更多价值，同时适应不断变化的市场动态和客户期望。</p>
+<p>利用电子健康记录、索赔数据和处方数据等多种数据来源，制药公司将利用人工智能来理解和帮助患者及医疗提供者提供变革性的体验。通过深度学习，LLM 系统可以处理这些大型数据资产，从而为战略提供信息。</p>
+<p>通过从这个过程中获得的学习，生成性人工智能可以为每个利益相关者创造完全个性化的互动：对于患者，可以量身定制关于他们病情的教育；对于提供者，生成性人工智能可以生成定制的面板信息，以促进更好的处方。因此，以洞察和互动为驱动的商业战略利用人机协作的过程，加速发现增值疗法，同时不断转变商业模式。LLM 知识和生成性创造力因此更好地服务和吸引不同的利益相关者，以提供更好的获取、教育和结果。</p>
+<p>新模型需要全面转变，以更加以患者为中心、信任挖掘、情境感知、个性化并具规模化。这意味着要从以产品驱动和销售主导的干扰模型演变为以情境驱动和战略及技术主导的人物模型。这将使制药营销能够利用数据并持续收集更多数据。尽管数据驱动和全渠道营销在制药行业并不是新概念，但基于生成性人工智能的商业模型需要对营销策略进行根本性的重新设计。这种新方法要求以客户为中心的组织，目标是真正的个性化。为了实现这一目标，当前的营销方法需要提炼为两个核心组成部分：</p>
+<ul>
+<li>产品策略：开发和阐明产品的独特价值</li>
+<li>客户体验创造：打造个性化体验，以向客户展示这一价值</li>
+</ul>
+<p>这种“简化点击”或简化方法允许更专注和实用的方式，使制药公司能够利用生成性人工智能制定与个别客户产生共鸣的量身定制的营销策略。</p>
+<p>GenAI 和 LLMs 也可以在未来两到五年内通过以下方式颠覆营销：分析来自不同内部和外部来源的大量上述数据，以创建个性化的目标营销活动，并创造创新的新营销方法。</p>
+<p>我们建议创建一个 GenAI 聊天机器人或“倾听引擎”，以实现对客户的全面理解和更深层次的个性化服务。我们的倾听引擎由一个单一的智能数据平台组成，汇集了所有新旧客户体验数据点的洞察，并结合了优惠&#x2F;行动号召的有效性，在需要时进行倾听和响应。</p>
+<p>利用建立在集成基础设施上的先进数据处理能力，监听引擎可以将来自传统和新数据源的输入和反馈汇聚到一个单一平台，并与学习机器学习引擎融合。这使得组织能够利用以前未开发的数据流，发现优化客户体验的新投资领域，或揭示客户健康的关键信号，以便在大规模上采取预防性的客户恢复行动。</p>
+<p>这些可以通过个性化的交易和对话与客户提供高度规模化和个性化的互动。因此，我们提出的更好理解客户关系的设备基础在于整合新旧数据源。然而，为了实现这种更深层次的关系映射，需要新的架构能力。这些新系统最复杂的使用方式是整合新数据源的洞察，以创建个性化的、针对性的营销活动和新的创新营销方法。</p>
+<p>但倾听只是故事的一半。公司正在投资和部署基于生成性人工智能和人工智能的系统，这些系统可以将这些洞察转化为以战略为导向的建议，关于“什么”和“如何”进行沟通。采用基于人工智能的商业模式使商业团队在竞争激烈的市场中处于差异化的位置。通过使用生成性人工智能，公司可以推动增长、成功推出和灵活性的商业目标，同时实现更好地服务患者的关键社会目标，通过更有效地解决医疗需求，从而改善健康结果。</p>
+<p>一个LLM可以生成关于特定疾病、药物方案和可能治疗的准确且更简洁的教育材料，使用户能够获得做出更明智健康决策所需的信息。LLMs甚至可以被构建成一个机器人或其他人工智能助手，患者可以就任何他们想要的话题进行提问或查询，并获得个性化的信息。此外，患者还可以直接从制药公司获取信息——快速且非正式。</p>
+<p>LLMs 可以评估过去的市场数据和新兴趋势，以预测特定类型营销活动的目标市场覆盖率，使公司能够以最具成本效益的方式设计和优化营销活动。LLMs 可能用于根据监管指南评估营销材料的内容准确性和道德信息。</p>
+<h1 id="公共卫生"><a href="#公共卫生" class="headerlink" title="公共卫生"></a>公共卫生</h1><p>公共卫生是一个专业实践和科学领域。它通过多种方法保护和改善人们和社区的健康，包括促进健康生活方式、预防疾病和伤害，以及提供医疗服务的获取。</p>
+<p>公共卫生可以分为几个子类别：疾病监测；健康教育与促进；心理健康；以及公共卫生准备与应对。</p>
+<p>公共卫生包括为确保人、社区和人群的身体、心理和社会福祉而采取的所有组织措施。</p>
+<h2 id="疾病监测"><a href="#疾病监测" class="headerlink" title="疾病监测"></a>疾病监测</h2><p>使用LLMs可以通过快速梳理来自各种来源的大量健康数据，识别可能表明即将爆发或疾病趋势变化的细微信号，从而实现更快、更好的疾病监测。例如，LLM可能会扫描多年的急诊室记录、新闻报道、社交媒体帖子和区域内的搜索引擎查询，捕捉与传染病历史活动相关的病例描述中的微妙语言变化。它们可以标记来自LLM的相关数据，这些数据在早期发现新感染方面远远超过当代监测。</p>
+<p>图 5-6 是一个示例，使用图标表示“监视”这一主题下的许多分类因素。</p>
+<p><img src="/../asset_llmsclinical05/06.png">图 5-6. 疾病监测</p>
+<p>图标之间的箭头表明，监测是一种跟踪和监控这些健康决定因素之间关系和互动的行为。图表的主要观点是，公共卫生监测是一个复杂的系统，通过收集和分析关于广泛健康决定因素的数据，以评估和应对人群中的健康问题和威胁。</p>
+<p>一旦训练完成，LLMs可以在数据库中搜索关于症状和疾病的社交媒体和在线论坛的评论和报告。当它们发现相关的关键词、短语和地点时，可以向公共卫生官员标记疾病爆发的早期指标，使官员能够动员资源调查可能的爆发，以防止其发展成大规模流行病。</p>
+<p>内置于LLMs的生成式人工智能功能可以帮助展示疾病传播的场景。图 5-7 说明了疾病的传播是如何从一个人开始并扩散到许多人的。</p>
+<p><img src="/../asset_llmsclinical05/07.png">图 5-7. 建模传染病</p>
+<p>对传染病进行建模场景使研究人员能够模拟干预策略（如疫苗接种活动、旅行限制或社交距离措施）的潜在影响。目标是利用模拟场景来识别和设计有效且有针对性的干预措施。借助电子健康记录和公共卫生数据库以及旅行记录等数据，LLMs可以发现人眼难以察觉的模式，并对疫情爆发及其传播的最有效途径做出预测，以便官员能够将资源应用于最需要的地方。</p>
+<p>LLMs 可以与接触追踪系统一起使用，其中 LLMs 筛选通话记录、旅行历史和其他信息，以确定谁可能接触过该疾病，或创建风险评估，其中使用年龄、地址和潜在健康状况等数据来开发生成性人工智能模型，以预测谁可能面临特定疾病的风险</p>
+<h2 id="健康教育与促进"><a href="#健康教育与促进" class="headerlink" title="健康教育与促进"></a>健康教育与促进</h2><p>LLMs 可以筛选大量的医学文献和健康数据，生成针对不同受众的健康教育材料。一个人类作者无法将数千万篇研究论文摘要、数千个临床试验和数百个人口数据集中的见解综合成信息手册、网站和健康材料。</p>
+<p>生成性式工智能工具还可以帮助将健康教育内容调整为特定读者。通过向人工智能提供个人或群体写作的样本，它可以模仿他们的语气和语言模式，使信息更加易于理解。这有助于克服常常阻碍健康沟通的读写和计算障碍。生成的文本将显得更为熟悉，而非临床化，从而使人们更好地理解风险、预防选项、症状、治疗等信息。</p>
+<p>插图 (图 5-8) 描绘了一位健康教育者或医生，其角色涉及使用数据、研究和先进技术（例如，LLMs）来教育他人关于健康主题并提供医疗指导。LLMs 和生成式人工智能都可以制作互动媒体、聊天机器人和对话应用程序，用作健康教育者。这些可以在各个群体中大规模提供个性化的健康建议。</p>
+<p><img src="/../asset_llmsclinical05/08.png">图 5-8.现代健康教育的多面性</p>
+<p>此外，随着研究的发展，LLMs和生成性人工智能可以迅速更新各种健康教育资源，包括小册子、视频、播客和互动工具。这种动态性使公众能够及时了解饮食、锻炼、吸烟、心理健康、常见疾病和疾病流行病学等领域的范式转变。</p>
+<p>虽然LLMs为公共健康教育提供了一个有前景的途径，但重要的是要记住，它们不能替代人类的专业知识。确保这些模型生成的信息的准确性和可信度，以及保持人类的监督和解决其中可能存在的偏见，是负责任实施的关键方面。</p>
+<h2 id="心理健康"><a href="#心理健康" class="headerlink" title="心理健康"></a>心理健康</h2><p>心理健康是公共健康的重要组成部分。LLMs和生成式人工智能正在为使用LLM驱动的聊天机器人和虚拟助手提供 24&#x2F;7 的基本心理健康信息和资源的更大可及性和早期干预开辟空间，特别是在心理健康支持获取有限的地区。</p>
+<p>生成式人工智能生成针对性和无限内容的能力可以被利用来创建个性化的聊天机器人和治疗工具，这些工具可以根据个人的具体需求调整其响应和干预。它可以被设计来尝试以下活动：</p>
+<ul>
+<li>LLMs 可以识别用户输入中的情感困扰，并以同理心的语句作出回应，这是一种源自认知行为疗法的技术。</li>
+<li>LLMs 可以个性化教育，并指引学习者寻求帮助，无论是自助书籍、支持小组还是专业帮助。</li>
+<li>聊天机器人可以被编程来与你联系，跟踪你的成功，并鼓励你练习应对机制和自我管理策略。</li>
+<li>LLMs 可以用于设计以心理健康问题为中心的学习和宣传材料及活动，促进寻求帮助的正常化，并减轻污名。这包括为不同背景的年轻人和成年人创建合适的内容。</li>
+</ul>
+<p>然而，我们必须指出，这些技术并不完美，需要谨慎实施。LLMs和生成式人工智能技术不能替代心理健康专业人员的工作。它们并不旨在治疗严重的心理健康问题。数据保护是另一个主要问题。一旦开发者和临床医生制作了预测或治疗心理疾病的模型，谁可以访问这些模型？如何使这些模型的开发更加透明，并进行透明的同行评审？患者数据集是否会被严格匿名化，如何保证这一点？在心理健康方面，必须理解和解决一整套伦理挑战。</p>
+<h2 id="灾害准备与应对"><a href="#灾害准备与应对" class="headerlink" title="灾害准备与应对"></a>灾害准备与应对</h2><p>在危机期间——无论是来自飓风、野火还是疾病爆发——公共卫生组织必须迅速启动多层次的应对计划。一个LLM可以被训练快速分析成千上万份描述资源和程序的文件，这些文件涉及在无数场景下的供应、设施、人员和流程，并绘制出针对事件优化的协调策略蓝图。这可以在几秒钟内完成，以便后续人类审查和行动。</p>
+<p>同样，生成性人工智能可以提出超出历史上常见的任何灾难场景。通过生成模拟灾难（如 6 级飓风、新型流感病毒），应对规划者可以在真正的悲剧到来之前进行压力测试，找出救援策略中的低效之处。生成性人工智能的场景创建能力提供了与准备相关的极端创造力。</p>
+<p>LLMs 可以发挥作用的任务之一是生成自然听起来的文本通信，例如公共服务公告、社交媒体警报和包含位置优化的“了解您的风险”以及应对灾害威胁的行为指导的小册子。清晰及时的沟通可以挽救生命，而这正是人工智能通过自动生成针对脆弱人群或残疾人士等群体量身定制的内容所能提供的。</p>
+<p>在危机发生前、期间和之后，LLM或生成式人工智能模型可以获取关于威胁和应对措施的最新信息。通过人工智能监测和建模提供的更早预警，预防性响应可以更快发生。即使是快速的人工智能内容生产，在更早地向公众传达时，也能提供对新兴风险的更全面了解。通过这种方式，公共卫生机构可以超越灾难，避免在应对潜在公共健康风险时以往必须面对的人力资源转移的滞后时间。</p>
+<h1 id="基因组学"><a href="#基因组学" class="headerlink" title="基因组学"></a>基因组学</h1><p>基因组学在理解和治疗各种疾病方面具有巨大的潜力。随着基因组学研究的成熟，今天和未来，分析和解释这庞大的数据量可能会非常具有挑战性。LLMs 正在学习基因组学的语言。</p>
+<p>分析、理解和应用基因组学的知识需要筛选大量数据集，这些数据集涵盖 DNA 序列、基因表达模式、蛋白质结构以及与性状和疾病的复杂关联（图 5-9）。通过吸收数百万篇论文和数据集，LLMs可以揭示遗传学中的隐藏联系，以推动发现和实际应用。</p>
+<p><img src="/../asset_llmsclinical05/09.png">图 5-9.利用基因组学改善患者健康</p>
+<p>例如，一个LLM可以将一个几乎未被研究的基因序列与一篇提出其在癌症通路中作用的晦涩学术论文联系起来。或者，它可以在历史医疗记录中找到突变与临床结果之间的相关性。这些见解加速了基础生物学向临床遗传学和针对每位患者基因组量身定制的个性化医学的转化。</p>
+<p>强大的生成式人工智能系统可以在设计潜在实验以验证基因关联、模拟潜在基因治疗的试验以及估计不同基因特征的治疗效果方面提供很大帮助。</p>
+<p>DNA 测序技术和 CRISPR 基因编辑7使科学家能够选择性地修改生物体的 DNA，并且这些技术也在以惊人的速度发展。这些技术为更有效的基因研究、潜在的新疗法甚至遗传疾病的治愈打开了大门。</p>
+<p>但日益增加的基因组数据、设想新疗法的丰富机会以及从根本上重塑整个医疗系统的潜力，都受到了一种现象的阻碍，许多人对此意识到得太晚：大数据在没有大人工智能的情况下是毫无意义的。</p>
+<p>这里是LLMs和其他形式的创造性计算分析的地方，包括通过大量基因组信息揭示模式、预测未来结果和生成新假设的人工智能工具，这些工具已经准备好大幅加速新药靶点、新疾病机制和新治疗途径的发现。</p>
+<p>此外，针对人工智能驱动工具的自然语言接口可以帮助缩小基因组发现与如何使用这些发现之间的临床差距。将基因组数据与其他患者信息（既往病史、生活方式和环境暴露）相连接，LLMs 可以生成个性化的风险档案、治疗方案或精准医疗策略。这些方法可以开启下一代医疗保健，在开处方时考虑患者独特的基因组构成。未来，医生可以根据个体独特的基因组量身定制治疗，可能加速康复并最小化不良反应。</p>
+<p>人工智能可以帮助实现基因组洞察的民主化，不仅仅是通过加速发现和为个性化医疗提供基础。如果基因组数据能够通过易于使用的界面或基础人工智能（例如由LLMs驱动的智能聊天机器人）在病床旁呈现，医疗界以及患者自己都可以学习以易于理解的方式访问和互动这些信息。患者将能够利用可用的基因组数据做出关于自己健康的明智决策，参与科学研究和临床试验，并倡导精准医疗。</p>
+<p>但要让基因组医学发挥其潜力，并让基因组学通过人工智能实现其全部承诺，解决一系列关于伦理、法律和社会的问题至关重要。毕竟，这些数据是关于人类的，不能忽视对数据隐私的担忧、知情同意的问题或对基因组技术的公平获取。</p>
+<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>LLMs 和生成式人工智能在推动制药研发和公共卫生工作方面具有广泛的应用。在药物发现中，它们可以分析药物化合物、蛋白质结构和效果之间的联系，以识别有前景的候选药物。在文献分析中，LLMs 能够快速综合数百万篇论文的见解，以得出药物项目成功的概率。在临床试验中，LLMs 通过评估基因组和健康记录来增强目标患者群体的招募。在商业方面，生成性人工智能制作增强的营销材料，以突出已证明的药物益处并改善药物的接受度。</p>
+<p>在疾病监测中，LLMs 通过大规模获取人口健康信号来检测疾病传播的早期预警信号。对于公共卫生教育，LLMs 动态生成针对个人的风险、症状和预防的可获取材料。围绕心理健康信息和减少污名，生成性人工智能合成适应文化细微差别的内容。灾难准备利用生成性危机模拟，并结合 LLM 对应对措施的分析，以优化应急计划。</p>
+<p>基因组工作流程正处于通过LLMs和生成实验实现指数效率提升的良好时机。大规模连接 DNA 数据与性状和疾病为转化医学和个性化医学提供了洞察。人工智能通过合成 DNA 数据集的生成加速了遗传工具的创建。总体而言，人类与人工智能的合作为全球社会带来了变革性医疗进步的可能性。</p>
+<p>本章强调了多个高影响力的细分领域，在这些领域中，嵌入LLMs和生成式问题解决将推动医疗研发、治疗获取、预防教育、公共卫生韧性和基因组进步的飞跃。技术成熟度、数据增长和紧迫的现实世界优先事项与时效性交汇，积极追求这些LLM人工智能机会。</p>
+<p>1 “研究与开发政策框架，”PhRMA 基金会，2024 年 1 月 22 日，<a target="_blank" rel="noopener" href="https://phrma.org/en/policy-issues/Research-and-Development-Policy-Framework%E3%80%82">https://phrma.org/en/policy-issues/Research-and-Development-Policy-Framework。</a></p>
+<p>2 “RefSeq: NCBI 参考序列数据库，”国家医学图书馆，访问日期 2024 年 6 月 28 日，<a target="_blank" rel="noopener" href="https://www.ncbi.nlm.nih.gov/refseq%E3%80%82">https://www.ncbi.nlm.nih.gov/refseq。</a></p>
+<p>3 wwPDB，访问日期为 2024 年 6 月 28 日，<a target="_blank" rel="noopener" href="https://www.wwpdb.org./">https://www.wwpdb.org。</a></p>
+<p>4 “MegaMolBART，”英伟达，2023 年 11 月 27 日，<a target="_blank" rel="noopener" href="https://catalog.ngc.nvidia.com/orgs/nvidia/teams/clara/models/megamolbart%E3%80%82">https://catalog.ngc.nvidia.com/orgs/nvidia/teams/clara/models/megamolbart。</a></p>
+<p>5 “ESM 元基因组图谱：蛋白质宇宙‘暗物质’的首次视角，” Meta，2022 年 11 月 1 日，<a target="_blank" rel="noopener" href="https://ai.meta.com/blog/protein-folding-esmfold-metagenomics%E3%80%82">https://ai.meta.com/blog/protein-folding-esmfold-metagenomics。</a></p>
+<p>6 安东尼·科斯塔和尼古拉斯·洛佩斯·卡兰萨，“基因组 LLMs 在多种任务中表现优越并具有良好的泛化能力，”Nvidia Developer，2023 年 1 月 12 日，<a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/genomic-llms-show-superior-performance-and-generalization-across-diverse-tasks%E3%80%82">https://developer.nvidia.com/blog/genomic-llms-show-superior-performance-and-generalization-across-diverse-tasks。</a></p>
+<p>7 迈克·史密斯，“CRISPR”，国家人类基因组研究所，2024 年 6 月 28 日，<a target="_blank" rel="noopener" href="https://www.genome.gov/genetics-glossary/CRISPR%E3%80%82">https://www.genome.gov/genetics-glossary/CRISPR。</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/08/11/llmsClinical04/" rel="prev" title="第四章 LLM 及生成式人工智能的患者和临床潜力">
+                  <i class="fa fa-angle-left"></i> 第四章 LLM 及生成式人工智能的患者和临床潜力
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/08/13/llmsClinical06/" rel="next" title="第六章 掌舵LLMs的伦理">
+                  第六章 掌舵LLMs的伦理 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Howard Huang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">488k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">14:48</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动-->
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

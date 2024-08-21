@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"szhowardhuang.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="一个 3D 数据科学项目涉及数据工程、数据分析和可视化技术的结合，这些技术专门用于处理三维数据。 从收集初始数据到自动化 3D 沉浸式体验，让我涵盖整个过程。我将介绍所有必要的程序、资源和方法，以确保高效的工作流程和出色的结果。 让我深入探讨六个主要步骤：项目范围、数据获取、数据预处理、数据分析、可视化和部署，如下所示。  1. 定义项目范围和目标 假设你想听我的意见。在深入技术设置之前，我想做">
+<meta property="og:type" content="article">
+<meta property="og:title" content="终极指南：3D 数据科学系统和工具">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/08/07/3D-Data-Science-Systems/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="一个 3D 数据科学项目涉及数据工程、数据分析和可视化技术的结合，这些技术专门用于处理三维数据。 从收集初始数据到自动化 3D 沉浸式体验，让我涵盖整个过程。我将介绍所有必要的程序、资源和方法，以确保高效的工作流程和出色的结果。 让我深入探讨六个主要步骤：项目范围、数据获取、数据预处理、数据分析、可视化和部署，如下所示。  1. 定义项目范围和目标 假设你想听我的意见。在深入技术设置之前，我想做">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/01.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/02.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/03.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/04.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/05.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/06.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/07.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/08.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/09.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/10.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/11.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/12.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/13.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/14.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/15.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/16.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/17.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/18.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/19.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/20.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/21.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/22.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/23.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/24.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/25.png">
+<meta property="article:published_time" content="2024-08-07T06:49:30.753Z">
+<meta property="article:modified_time" content="2024-08-07T06:47:59.800Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://szhowardhuang.github.io/asset_3Ddatascience/01.png">
+
+
+<link rel="canonical" href="https://szhowardhuang.github.io/2024/08/07/3D-Data-Science-Systems/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://szhowardhuang.github.io/2024/08/07/3D-Data-Science-Systems/","path":"2024/08/07/3D-Data-Science-Systems/","title":"终极指南：3D 数据科学系统和工具"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>终极指南：3D 数据科学系统和工具 | 嵌入式老兵博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">嵌入式老兵博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E5%AE%9A%E4%B9%89%E9%A1%B9%E7%9B%AE%E8%8C%83%E5%9B%B4%E5%92%8C%E7%9B%AE%E6%A0%87"><span class="nav-number">1.</span> <span class="nav-text">1. 定义项目范围和目标</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86"><span class="nav-number">2.</span> <span class="nav-text">2. 数据采集</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-1-%E6%95%B0%E6%8D%AE%E6%9D%A5%E6%BA%90"><span class="nav-number">3.</span> <span class="nav-text">2.1. 数据来源</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">3.1.</span> <span class="nav-text">数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3D-%E4%BB%93%E5%BA%93"><span class="nav-number">3.2.</span> <span class="nav-text">3D 仓库</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-2-%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F"><span class="nav-number">4.</span> <span class="nav-text">2.2. 数据格式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86"><span class="nav-number">5.</span> <span class="nav-text">3. 数据预处理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-1-%E6%95%B0%E6%8D%AE%E6%B8%85%E7%90%86"><span class="nav-number">6.</span> <span class="nav-text">3.1. 数据清理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-2-%E6%95%B0%E6%8D%AE%E8%BD%AC%E6%8D%A2"><span class="nav-number">7.</span> <span class="nav-text">3.2. 数据转换</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90"><span class="nav-number">8.</span> <span class="nav-text">4. 数据分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-1-%E6%8E%A2%E7%B4%A2%E6%80%A7%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90-EDA"><span class="nav-number">9.</span> <span class="nav-text">4.1. 探索性数据分析 (EDA)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%9F%E8%AE%A1%E5%88%86%E6%9E%90"><span class="nav-number">9.1.</span> <span class="nav-text">统计分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="nav-number">9.2.</span> <span class="nav-text">可视化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-2-%E6%A8%A1%E5%9E%8B%E6%9E%84%E5%BB%BA"><span class="nav-number">10.</span> <span class="nav-text">4.2. 模型构建</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E5%B1%82%E6%AC%A1%E4%B8%8E%E6%A8%A1%E5%9E%8B"><span class="nav-number">10.1.</span> <span class="nav-text">数据分析层次与模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AI-%E6%A8%A1%E5%9E%8B%E7%B2%92%E5%BA%A6"><span class="nav-number">10.2.</span> <span class="nav-text">AI 模型粒度</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="nav-number">11.</span> <span class="nav-text">5. 可视化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-2-%E5%8F%AF%E8%A7%86%E5%8C%96%E6%8A%80%E6%9C%AF"><span class="nav-number">12.</span> <span class="nav-text">5.2. 可视化技术</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E4%BA%92%E5%BC%8F%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="nav-number">12.1.</span> <span class="nav-text">交互式可视化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E7%94%BB"><span class="nav-number">12.2.</span> <span class="nav-text">动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%87%E6%B3%A8"><span class="nav-number">12.3.</span> <span class="nav-text">标注</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-%E9%83%A8%E7%BD%B2%E4%B8%8E%E7%BB%B4%E6%8A%A4"><span class="nav-number">13.</span> <span class="nav-text">6. 部署与维护</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-1-%E9%83%A8%E7%BD%B2"><span class="nav-number">14.</span> <span class="nav-text">6.1. 部署</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-2-%E7%BB%B4%E6%8A%A4"><span class="nav-number">15.</span> <span class="nav-text">6.2. 维护</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">16.</span> <span class="nav-text">结论</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Howard Huang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/08/07/3D-Data-Science-Systems/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="终极指南：3D 数据科学系统和工具 | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          终极指南：3D 数据科学系统和工具
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-08-07 14:49:30 / 修改时间：14:47:59" itemprop="dateCreated datePublished" datetime="2024-08-07T14:49:30+08:00">2024-08-07</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>7.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>13 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><img src="/../asset_3Ddatascience/01.png" alt="The 3D Data Science Systems core components and intersecting disciplines."></p>
+<p>一个 3D 数据科学项目涉及数据工程、数据分析和可视化技术的结合，这些技术专门用于处理三维数据。</p>
+<p>从收集初始数据到自动化 3D 沉浸式体验，让我涵盖整个过程。我将介绍所有必要的程序、资源和方法，以确保高效的工作流程和出色的结果。</p>
+<p>让我深入探讨六个主要步骤：项目范围、数据获取、数据预处理、数据分析、可视化和部署，如下所示。</p>
+<p><img src="/../asset_3Ddatascience/02.png" alt="A pyramid with six layers representing the steps in a 3D data science project: Project Scope, Data Acquisition, Data Preprocessing, Data Analysis, Visualization, and Deployment."></p>
+<h1 id="1-定义项目范围和目标"><a href="#1-定义项目范围和目标" class="headerlink" title="1. 定义项目范围和目标"></a>1. 定义项目范围和目标</h1><p><img src="/../asset_3Ddatascience/03.png"></p>
+<p>假设你想听我的意见。在深入技术设置之前，我想做一件事：清楚地定义 3D 数据科学项目的范围和目标。这一步就像在旅行前绘制航线，确保我们做好准备，专注于一个明确的目的地。这包括：</p>
+<ul>
+<li>识别问题: 理解您希望通过 3D 数据解决的具体问题。</li>
+<li>目标设定：弄清楚你希望实现的目标，无论是新知识、预测还是视觉表现。</li>
+<li>确定交付成果：指定预期的输出，如报告、模型或交互式可视化。</li>
+</ul>
+<p><img src="/../asset_3Ddatascience/04.png" alt="A staircase with three steps. The first step is “Identify Problem”. The second step is labeled “Set Objectives”. The third step is labeled “Determine Deliverables”. This is for “Setting Up a 3D Data Science Project”"></p>
+<h1 id="2-数据采集"><a href="#2-数据采集" class="headerlink" title="2. 数据采集"></a>2. 数据采集</h1><p><img src="/../asset_3Ddatascience/05.png"></p>
+<p>在设置 3D 数据科学项目时，初始和关键的步骤之一是数据获取。在这个阶段，识别和收集来自各种来源的相关 3D 数据，并确保其格式兼容，对于项目的成功至关重要。</p>
+<p>让我们深入探讨 3D 数据采集的基础构件。</p>
+<h1 id="2-1-数据来源"><a href="#2-1-数据来源" class="headerlink" title="2.1. 数据来源"></a>2.1. 数据来源</h1><p>首先，我们应该从可靠的来源识别并收集必要的 3D 数据。</p>
+<p><img src="/../asset_3Ddatascience/06.png" alt="The Main 3D Data Sources: Public Dataset, 3D Cameras, 3D Scanners, Generative AI."></p>
+<p> 常见来源包括：</p>
+<ul>
+<li>3D 相机：您可以将图像转换为 3D 模型。一个著名的例子是 Kinect：<a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/windows/apps/design/devices/kinect-for-windows%EF%BC%88%E6%B6%88%E8%B4%B9%E7%BA%A7%E6%B7%B1%E5%BA%A6%E4%BC%A0%E6%84%9F%E5%99%A8%EF%BC%89">https://learn.microsoft.com/en-us/windows/apps/design/devices/kinect-for-windows（消费级深度传感器）</a></li>
+<li>3D 扫描仪：捕捉物体物理形状的设备（例如，激光雷达，如 Velodyne：<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Velodyne_Lidar%EF%BC%89%E3%80%82">https://en.wikipedia.org/wiki/Velodyne_Lidar）。</a></li>
+<li>生成性人工智能：通过使用生成性人工智能生成 3D 数据的工具。（例如，<a target="_blank" rel="noopener" href="https://buaacyw.github.io/mesh-anything/%EF%BC%89">https://buaacyw.github.io/mesh-anything/）</a></li>
+<li>公共数据集：像 ShapeNet、ModelNet 或来自研究机构的自定义数据集等存储库。为了最好地帮助您在旅程中，我编制了一份参考数据集的列表，以帮助进行 3D 数据管理工作。</li>
+</ul>
+<h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p>这里有一些带有公开可用数据集的选项：</p>
+<ul>
+<li>斯坦福大规模数据集 (S3DIS): <a target="_blank" rel="noopener" href="https://cvgl.stanford.edu/resources.html">https://cvgl.stanford.edu/resources.html</a> （包括室内场景的 LiDAR 和 RGB 数据）</li>
+<li>NuScenes: <a target="_blank" rel="noopener" href="https://www.nuscenes.org/">https://www.nuscenes.org/</a> （大规模自动驾驶数据集，包含激光雷达、相机图像等）</li>
+<li>Waymo 开放数据集： <a target="_blank" rel="noopener" href="https://waymo.com/open/">https://waymo.com/open/</a> （用于自动驾驶汽车的大规模数据集，包括激光雷达和摄像头数据）</li>
+<li>Thing3D: <a target="_blank" rel="noopener" href="https://www.thingiverse.com/">https://www.thingiverse.com/</a> （大型 3D 模型数据集，专注于现实世界的物体）</li>
+<li>ShapeNet: <a target="_blank" rel="noopener" href="https://shapenet.org/qaforum/">https://shapenet.org/qaforum/</a> （一个用于各种类别 3D 模型的热门数据集）</li>
+<li>StyleGAN2: <a target="_blank" rel="noopener" href="https://developer.nvidia.com/blog/synthesizing-high-resolution-images-with-stylegan2/">https://developer.nvidia.com/blog/synthesizing-high-resolution-images-with-stylegan2/</a> （用于创建高保真图像的生成模型，可间接用于生成 3D 模型）</li>
+<li>DreamGAN: <a target="_blank" rel="noopener" href="https://github.com/NVlabs/denoising-diffusion-gan/blob/main/train_ddgan.py">https://github.com/NVlabs/denoising-diffusion-gan/blob/main/train_ddgan.py</a> （用于创建 3D 形状的生成模型）</li>
+<li>美国国家海洋和大气管理局 + 国家环境信息中心： <a target="_blank" rel="noopener" href="https://www.ncei.noaa.gov/">https://www.ncei.noaa.gov/</a> （提供地理空间数据，包括三维高程数据）</li>
+</ul>
+<h2 id="3D-仓库"><a href="#3D-仓库" class="headerlink" title="3D 仓库"></a><strong>3D 仓库</strong></h2><p>您还可以利用 OpenRepositories，使用各种许可证下可用的数据：</p>
+<ul>
+<li>Sketchfab: <a target="_blank" rel="noopener" href="https://sketchfab.com/">https://sketchfab.com/</a> （分享和发现 3D 模型的平台）</li>
+<li>TurboSquid： <a target="_blank" rel="noopener" href="https://www.turbosquid.com/">https://www.turbosquid.com/</a> （3D 模型市场）</li>
+</ul>
+<p>现在您更好地了解了如何获取 3D 数据，让我们来谈谈格式。</p>
+<h1 id="2-2-数据格式"><a href="#2-2-数据格式" class="headerlink" title="2.2. 数据格式"></a>2.2. 数据格式</h1><p>实际上，我们通常会使用多种格式的交响乐 🎺，每种格式都有其自身的优缺点。选择合适的格式取决于目的——快速的 3D 打印可能更适合简单的格式，而令人惊叹的虚拟现实体验可能需要更丰富、更详细的选项。因此，确保数据以兼容的格式进行分析和可视化是至关重要的。让我描绘一下我最喜欢的五种文件格式，如下所示：</p>
+<p><img src="/../asset_3Ddatascience/07.png" alt="A diagram illustrating various 3D model file formats. A pyramid is shown with lines extending outward to different shapes representing the formats: OBJ, PLY, STL, GLTF, and LAS. by Florent Poux"></p>
+<ol>
+<li>OBJ（波前对象）： 一种流行且广泛支持的 3D 网格格式。它使用顶点（空间中的点）、面（形成平面表面的顶点集合）和纹理坐标定义对象的基本几何形状。虽然简单且易于人类阅读，但 OBJ 缺乏关于材料和动画的信息。它是基本 3D 模型或在不同软件程序之间交换数据的中间格式的良好选择。了解更多：维基百科</li>
+<li>PLY（多边形文件格式）： 一种多功能格式，可以处理 3D 网格（如 OBJ）和点云（表示 3D 空间的数据点集合）。PLY 比 OBJ 提供了更多的灵活性，允许您为每个顶点或点存储额外的属性，如颜色和强度。这使得它成为科学数据和需要额外信息的应用的良好选择。然而，与像 OBJ 这样的简单格式相比，某些软件对 PLY 的支持可能较少。了解更多：斯坦福</li>
+<li>STL（立体光刻）： 3D 打印的首选格式。STL 文件将 3D 物体的表面几何形状表示为一组微小的三角形。这种简单的表示方式使得 3D 打印机能够轻松理解并转换为物理层。然而，STL 文件缺乏关于颜色、纹理或动画的信息。它们非常适合传达物体的基本形状以进行打印，但对于具有丰富视觉细节的复杂场景则不太理想。</li>
+<li>GLTF（GL 传输格式）： 一种现代格式，旨在高效地在网络上传输 3D 模型。GLTF 结合了 JSON（基于文本的数据格式）和二进制数据（模型信息的压缩表示），在文件大小和细节之间实现了良好的平衡。它支持网格、材质、纹理和动画等特性，是在网页或应用程序中嵌入互动 3D 内容的绝佳选择。了解更多信息：Khronos Group</li>
+<li>LAS（激光档案系统）： 专门设计用于管理大型地理空间点云数据集。LAS 文件通常包含表示地球表面物体或地形位置的 3D 点，通常由 LiDAR 扫描仪（基于激光的成像系统）捕获。这些文件还可以存储额外的信息，如强度值（激光束的反射率），这对于地形分析非常有帮助。LAS 是地理空间数据的行业标准，广泛应用于测量、制图和环境建模等领域。了解更多信息：ASPRS</li>
+</ol>
+<p>考虑到这一点，您可以独立于您的应用案例处理 90%的场景。</p>
+<p>🦚 Florent 的备注：在某些情况下，特别是在医学成像或地理空间应用中，您可以通过利用体素集合获得好处。在这种情况下，您可能需要调整这些格式或利用更纯粹的版本。如果这听起来有趣，您可以查看下面的文章。</p>
+<p><a target="_blank" rel="noopener" href="https://towardsdatascience.com/how-to-automate-voxel-modelling-of-3d-point-cloud-with-python-459f4d43a227?source=post_page-----e92aaa8185eb--------------------------------">如何使用 Python 自动化 3D 点云的体素建模动手教程，将大型点云转换为 3D 体素🧊，使用 Python 和 open3d。解锁自动化工作流程……towardsdatascience.com</a></p>
+<h1 id="3-数据预处理"><a href="#3-数据预处理" class="headerlink" title="3. 数据预处理"></a>3. 数据预处理</h1><p><img src="/../asset_3Ddatascience/08.png"></p>
+<p>清洗和转换 3D 数据是建模和分析之前的重要第一步，以确保数据适合进一步处理。这个阶段被称为数据预处理，涉及数据清理、标准化和特征提取等任务。让我们探讨在有效分析和模型开发中预处理 3D 数据所涉及的基本步骤和技术。</p>
+<h1 id="3-1-数据清理"><a href="#3-1-数据清理" class="headerlink" title="3.1. 数据清理"></a>3.1. 数据清理</h1><p>数据从来都不是完美的。让我坦诚地说：有时候，它看起来就像一个幼儿把意大利面晚餐扔到了扫描仪上。朋友们，这一部分就是关于数据清理的。</p>
+<p>这是我们处理异常数据点、修补漏洞的地方，通常将那团意大利面般的混乱转变为一个平滑、适度熟的数据库，随时准备应对我们投入的任何内容。虽然这可能不是工作中最引人注目的部分，但相信我，干净的数据是任何成功 3D 项目的秘密武器。</p>
+<p> 这可能涉及：</p>
+<ul>
+<li>去除异常值: 识别和消除显著偏离常规的数据点。</li>
+<li>填补缺失值：使用插值或其他技术填补数据中的空白。</li>
+<li>过滤噪声：噪声与异常值不同，是一个会影响您分析的数据点。应予以处理。</li>
+</ul>
+<p><img src="/../asset_3Ddatascience/09.png" alt="A funnel-shaped diagram illustrating the data cleaning process. Raw data enters the top of the funnel, and through the steps of identifying outliers, filtering noise, and filling missing values, clean data emerges at the bottom."></p>
+<p>通常，在这个阶段之后，您会得到一个相对“干净”的初始输入版本。一旦达到这一点，我们就可以开始“转换”我们的数据集。</p>
+<h1 id="3-2-数据转换"><a href="#3-2-数据转换" class="headerlink" title="3.2. 数据转换"></a>3.2. 数据转换</h1><p>在这个阶段，我们需要调整数据，以便更有效地进行分析。以下是一些此过程的示例：</p>
+<p><img src="/../asset_3Ddatascience/10.png" alt="The four main steps of 3D data pre-processing."></p>
+<p>如您所见，我们有四个主要步骤：</p>
+<ul>
+<li>标准化：将信息调整到标准范围内。</li>
+<li>重采样：调整数据的分辨率。</li>
+<li>特征提取：从原始数据中识别和提取相关特征。</li>
+<li>旋转、平移、缩放: 调整您的 3D 数据集在空间中的位置</li>
+</ul>
+<p>在这个阶段，我认为有这个高层次的概述而不深入探讨是好的。这在许多情况下应该非常有用，特别是在（3D）数据分析的任务中。</p>
+<h1 id="4-数据分析"><a href="#4-数据分析" class="headerlink" title="4. 数据分析"></a>4. 数据分析</h1><p><img src="/../asset_3Ddatascience/11.png"></p>
+<p>在这个阶段，我们构建模型以理解数据并寻找隐藏的模式和关联。这涉及统计分析、可视化和模型构建等技术，包括应用人工智能、机器学习和深度学习，从三维数据中发现有价值的见解。</p>
+<p>让我从探索性数据分析开始。</p>
+<h1 id="4-1-探索性数据分析-EDA"><a href="#4-1-探索性数据分析-EDA" class="headerlink" title="4.1. 探索性数据分析 (EDA)"></a>4.1. 探索性数据分析 (EDA)</h1><p>探索性数据分析（EDA）提供了一个非常简单的工具箱，用于在深入复杂建模或分析之前了解您的 3D 数据。以下是我们始终使用的两种关键技术的简要介绍，如下所示：</p>
+<p><img src="/../asset_3Ddatascience/12.png" alt="A diagram comparing two methods of data analysis. The left side shows a speech bubble with “Statistical Analysis”. The right side shows a speech bubble with “Visualization” to create 3D plots and graphs to visualize the data."></p>
+<h2 id="统计分析"><a href="#统计分析" class="headerlink" title="统计分析"></a><strong>统计分析</strong></h2><p>这涉及使用描述性统计来总结您的 3D 数据的关键特征。可以将其视为绘制数据的基本肖像，以了解其中心趋势和分布。技术包括提取中心趋势、均值、中位数、分布、范围或其他分布指标。</p>
+<h2 id="可视化"><a href="#可视化" class="headerlink" title="可视化"></a><strong>可视化</strong></h2><p>虽然数字很重要，但有时一幅图（或者说，一个 3D 图！）要有效得多。可视化就是创建信息丰富且互动的图表，以探索数据中的关系和模式。我们通常依赖于 3D 散点图（可视化多个变量在 3D 空间中的相互关系）、直方图或热图。</p>
+<p>现在我们已经通过探索性数据分析（EDA）探索了 3D 数据，是时候构建一些模型并揭示它们更深层的含义了！</p>
+<h1 id="4-2-模型构建"><a href="#4-2-模型构建" class="headerlink" title="4.2. 模型构建"></a>4.2. 模型构建</h1><p>模型帮助我们从探索转向解释！理解 3D 模型（非几何模型）构建的世界是很重要的，在这里我们将使用复杂的技术来提取隐藏的模式，揭示数据中的真实含义。我们可以利用多种方法，从传统的统计分析到前沿的人工智能（AI），构建能够分析、解释甚至预测基于您宝贵的 3D 信息的未来结果的模型。</p>
+<h2 id="数据分析层次与模型"><a href="#数据分析层次与模型" class="headerlink" title="数据分析层次与模型"></a>数据分析层次与模型</h2><p>首先，让我谈谈我们进行的“类型”分析：</p>
+<p><img src="/../asset_3Ddatascience/13.png" alt="A diagram illustrating different levels of data analysis. The diagram is divided into four quadrants: Simple Regression Analysis, Complex Classification of Data Points, Simple 3D Object Detection, and Complex Semantic/Instance Segmentation. The axes represent complexity and breadth."></p>
+<p>如您所见，我们有四个主要部分：</p>
+<ul>
+<li>回归分析： 该技术找到“最佳拟合”模型，以描述数据中变量之间的关系。想象一下散点图中的趋势线——这就是回归的实际应用。</li>
+<li>数据点的分类: 将基本实体整理成预定义数量的类别</li>
+<li>3D 物体检测：在数据集中识别和定位特定数量的类别，使用 3D 边界框</li>
+<li>S语义 &#x2F; 实例分割: 更进一步，在基础实体层面进行工作（点云的点、网格的面、体素模型的体素，……）</li>
+</ul>
+<p>通过使用人工智能。但人工智能的细致程度如何？</p>
+<h2 id="AI-模型粒度"><a href="#AI-模型粒度" class="headerlink" title="AI 模型粒度"></a>AI 模型粒度</h2><p>我们总是想知道这些模型中的“魔法”是如何发生的。AI 模型的架构定义了它在您的 3D 数据中捕获的内容，并在其有效性中发挥着至关重要的作用。让我定义一下下面所示的四个主要类别：</p>
+<p><img src="/../asset_3Ddatascience/14.png" alt="The granularity of AI Models used in 3D Data Science."></p>
+<p>尽可能简单地说：</p>
+<ul>
+<li>人工智能：试图模仿非人工智能</li>
+<li>机器学习：这涉及应用上述提到的明确定义的算法（回归、分类等）来从您的数据中学习。可以把机器学习想象成一个勤奋学习教科书（数据）的学生，以便学习和做出预测。</li>
+<li>深度学习：这是机器学习的一个子领域，使用人工神经网络，特别是专门设计用于处理 3D 数据的卷积神经网络（CNN）。想象一下，深度学习就像一个拥有超能力的学生，能够从远超传统机器学习算法能力的大型数据集中学习复杂的模式。</li>
+<li>transformers：这些利用编码&#x2F;解码架构来完美融合全局和局部特征，更有效地把握上下文和局部变化。这对于理解上下文和 3D 场景中不同部分之间的关系等任务特别有用。</li>
+</ul>
+<p>🦚 Florent 的笔记：选择最佳的模型构建技术和人工智能方法取决于您的具体任务和数据。以下是一些一般性指导。对于简单的关系，回归分析或基本的机器学习算法可能就足够了。对于复杂的对象分类或分割，深度学习方法如卷积神经网络（CNN）或变换器（Transformers）通常更受欢迎。</p>
+<p>现在，我们可以全力投入到 3D 可视化中！</p>
+<h1 id="5-可视化"><a href="#5-可视化" class="headerlink" title="5. 可视化"></a>5. 可视化</h1><p><img src="/../asset_3Ddatascience/15.png"></p>
+<p>现在让我们进入引人入胜的 3D 数据可视化领域，在这里我们利用可用的工具和库来创建迷人且互动的 3D 数据可视化。这包括基于 Python 的可视化选项以及基于 Web 的 3D 图形，满足我们项目的各种可视化需求。这是我试图缩小范围的尝试：</p>
+<p><img src="/../asset_3Ddatascience/16.png" alt="A diagram illustrating tools and libraries for 3D visualization. The central box labeled “3D Visualization Tools and Libraries” is connected to three other boxes: “Python (Py)”, “Web (WebGL)”, and “Software”. The Python box lists Matplotlib, Open3D, and Pyvista. The Web box lists Three.js, Potree, and Cesium. The Software box lists CloudCompare, Blender, and Unity."></p>
+<p>正如您所见，当涉及到可视化这些 3D 数据时，我们有一整套选择可供使用，这取决于您是想进行快速的 Python 探索还是完整的网页体验。</p>
+<p><strong>使用 Python：</strong></p>
+<ul>
+<li>Matplotlib (<a target="_blank" rel="noopener" href="https://matplotlib.org/)%EF%BC%9A%E8%BF%99%E4%B8%AA%E8%80%81%E7%89%8C%E5%B7%A5%E5%85%B7%E6%98%AF%E5%9F%BA%E6%9C%AC">https://matplotlib.org/)：这个老牌工具是基本</a> 3D 绘图甚至一些交互式 3D 可视化的绝佳选择。它是理解基础知识的坚实基础。</li>
+<li>Open3D (<a target="_blank" rel="noopener" href="https://open3d.org/)%EF%BC%9A%E5%A6%82%E6%9E%9C%E4%BD%A0%E6%83%B3%E8%A6%81%E4%B8%80%E4%B8%AA%E7%9B%B4%E6%8E%A5%E9%9B%86%E6%88%90%E5%9C%A8%E4%BD%A0%E7%9A%84">https://open3d.org/)：如果你想要一个直接集成在你的</a> Python 环境中的流畅 3D 查看器，Open3D 就是你的好帮手。它让你轻松地探索和操作你的数据。</li>
+<li>Pyvista (<a target="_blank" rel="noopener" href="https://docs.pyvista.org/">https://docs.pyvista.org/</a>): 这个家伙提供了良好的功能组合，能够很好地处理各种 3D 数据格式。当你需要比 Matplotlib 更多的功能时，它是一个不错的选择。</li>
+</ul>
+<p><strong>用于网络（WebGL）：</strong></p>
+<ul>
+<li>Three.js (<a target="_blank" rel="noopener" href="https://threejs.org/)%EF%BC%9A%E6%83%B3%E8%A6%81%E6%8C%91%E6%88%98%E8%87%AA%E5%B7%B1%EF%BC%8C%E5%88%9B%E5%BB%BA%E4%B8%80%E4%BA%9B%E7%9C%9F%E6%AD%A3%E5%85%88%E8%BF%9B%E7%9A%84%E5%9F%BA%E4%BA%8E%E7%BD%91%E9%A1%B5%E7%9A%84">https://threejs.org/)：想要挑战自己，创建一些真正先进的基于网页的</a> 3D 图形吗？Three.js 是你的游乐场。它是一个强大的库，让你构建令人惊叹的互动体验。但请注意，它的学习曲线较陡。</li>
+<li>Potree (<a target="_blank" rel="noopener" href="https://github.com/potree/potree">https://github.com/potree/potree</a>) : 需要在网上实时流式传输您的点云数据吗？那就看看 Potree 吧。这是一个专门为此目的设计的出色工具。</li>
+<li>铯(<a target="_blank" rel="noopener" href="https://cesium.com/">https://cesium.com</a>) : 处理包含 3D 元素的地理空间数据？铯可以满足您的需求。它是一个构建互动 3D 地图和可视化的综合平台。</li>
+</ul>
+<p><strong>使用软件：</strong></p>
+<ul>
+<li>CloudCompare (<a target="_blank" rel="noopener" href="https://www.cloudcompare.org/">https://www.cloudcompare.org/</a>) — 如果你是点云的纯粹主义者并且想要一个专用的软件解决方案，CloudCompare 是一个免费的开源强大工具。它提供了丰富的工具用于处理、编辑和分析你的点云数据。</li>
+<li>Blender (<a target="_blank" rel="noopener" href="https://www.blender.org/)%EF%BC%9A%E6%9C%89%E6%97%B6%E5%80%99%E4%BD%A0%E5%8F%AA%E6%83%B3%E7%9B%B4%E6%8E%A5%E4%B8%8E%E5%8F%AF%E8%A7%86%E5%8C%96%E6%9C%AC%E8%BA%AB%E6%89%93%E4%BA%A4%E9%81%93%E3%80%82Blender%EF%BC%8C%E4%B8%80%E4%B8%AA%E6%B5%81%E8%A1%8C%E7%9A%84">https://www.blender.org/)：有时候你只想直接与可视化本身打交道。Blender，一个流行的</a> 3D 创作套件，是艺术家和爱好者创建其 3D 数据惊人渲染的绝佳选择。</li>
+<li>Unity (<a target="_blank" rel="noopener" href="https://unity.com/)%EF%BC%9A%E6%83%B3%E5%BE%97%E6%9B%B4%E5%A4%A7%E5%90%97%EF%BC%9FUnity">https://unity.com/)：想得更大吗？Unity</a> 是一个游戏引擎，允许您创建沉浸式 3D 体验。虽然它有一定的学习曲线，但它可以成为展示您的 3D 数据的强大工具，以一种真正引人入胜的方式。</li>
+</ul>
+<p>请记住，这只是可用工具的一部分。最适合您的选择将取决于您具体的项目需求和技能水平。最主要的问题是：您需要互动性吗？下面的图表应该能帮助您回答这个问题。</p>
+<p><img src="/../asset_3Ddatascience/17.png" alt="What are the pros and cons of using interactive 3D Visualizations"></p>
+<p>最后，关于可视化技术呢？</p>
+<h1 id="5-2-可视化技术"><a href="#5-2-可视化技术" class="headerlink" title="5.2. 可视化技术"></a>5.2. 可视化技术</h1><p>您已经构建了您的 3D 模型，现在是展示它们的时候了！有效的 3D 可视化技术超越了静态图像——它们允许观众探索、互动并真正理解您的数据。您可以考虑这个第一个问题：</p>
+<p><img src="/../asset_3Ddatascience/18.png" alt="The different ways to visualize 3D Data (interactive VS Static)"></p>
+<p>从 3D 中，您可以推导出三个主要主题：</p>
+<p><img src="/../asset_3Ddatascience/19.png"></p>
+<h2 id="交互式可视化"><a href="#交互式可视化" class="headerlink" title="交互式可视化"></a><strong>交互式可视化</strong></h2><p>想象一下用户旋转一个 3D 模型，放大细节，甚至操控其组件。互动可视化创造了一个引人入胜的体验，让观众从不同的角度探索您的数据，获得更深入的见解。</p>
+<p><img src="/../asset_3Ddatascience/20.png"></p>
+<p>这对于产品演示、建筑漫游和科学数据探索非常有用。正如我们之前看到的，您可以利用 Three.js 和 Unity。</p>
+<h2 id="动画"><a href="#动画" class="headerlink" title="动画"></a>动画</h2><p>有时候，静态的 3D 模型或互动但静态的体验并不足够。动画增加了时间的力量，使您能够展示数据中的变化、过程或模拟。这在可视化天气模式、生物学中的生长过程或工程中的动态模拟时非常受欢迎。在这里，Blender 是您的好帮手：</p>
+<h2 id="标注"><a href="#标注" class="headerlink" title="标注"></a>标注</h2><p>虽然设计良好的可视化效果已经传达了很多信息，但有时添加清晰的标签、注释或标注可以进一步增强理解。注释可以突出特定特征，解释复杂概念，或引导观众理解您的数据。</p>
+<p><img src="/../asset_3Ddatascience/21.png" alt="A diagram outlining the process of creating, viewing, and editing 3D annotations. The left side shows the creation process, including selecting a point on a model and adding comments and annotations. The right side shows the viewing and editing options, including viewing by anyone and editing or deleting by the creator. The bottom section highlights benefits such as easier collaboration and improved communication."></p>
+<p>它们在需要指出医学扫描中的关键特征、解释复杂机器模型中的组件或在科学可视化中提供额外信息时特别有用。我建议利用 CloudCompare 来完成这个任务。</p>
+<p>很好，我们几乎涵盖了 3D 数据科学应用的所有组件。但最后一步是进行部署和维护。</p>
+<h1 id="6-部署与维护"><a href="#6-部署与维护" class="headerlink" title="6. 部署与维护"></a>6. 部署与维护</h1><p><img src="/../asset_3Ddatascience/22.png"></p>
+<p>现在您已经构建并可视化了令人惊叹的 3D 模型，是时候将它们部署到现实世界中！本节将处理 3D 部署和维护的关键方面，确保您的模型可访问、功能齐全且保持最新。</p>
+<h1 id="6-1-部署"><a href="#6-1-部署" class="headerlink" title="6.1. 部署"></a>6.1. 部署</h1><p>您 3D 模型的部署方法取决于其预期用途和目标受众。以下是一些常见策略：</p>
+<p><img src="/../asset_3Ddatascience/23.png" alt="The three main families (web, desktop tools and cloud platforms)."></p>
+<ul>
+<li>网络应用程序：它们非常适合让任何有互联网连接的人访问您的 3D 模型。用户可以直接在网页浏览器中查看，无需下载任何特殊软件。Flask 和 Django 是两个流行的框架。</li>
+<li>桌面应用程序：它们提供比网络应用程序更具互动性的体验。它们可以在用户的计算机上本地安装，并可能提供在网络浏览器环境中无法实现的额外功能。我通常使用像 PyQt 或 Electron 这样的工具。</li>
+<li>云服务：云平台提供了一种可扩展且具有成本效益的方式来部署和管理您的 3D 模型。这些平台提供基础设施、存储和计算资源，可以按需访问，让您专注于构建应用程序，而无需担心管理底层硬件和软件。我建议利用像 AWS、AZURE 或 Google Cloud 这样的平台。</li>
+</ul>
+<p>很好。现在你已经了解了如何推广你的应用程序，最后一个阶段是如何保持它的相关性和无错误。</p>
+<h1 id="6-2-维护"><a href="#6-2-维护" class="headerlink" title="6.2. 维护"></a>6.2. 维护</h1><p>就像任何创作一样，您的 3D 模型需要持续的维护，以保持其准确性和功能性。以下是一些关键做法，以确保您的 3D 项目继续提供价值。</p>
+<p><img src="/../asset_3Ddatascience/24.png" alt="How to maintain your model performance and accuracy."></p>
+<ul>
+<li>监控: 定期检查模型的性能和准确性。</li>
+<li>更新中: 根据需要整合新数据并优化模型。</li>
+<li>文档: 保持全面的文档以供将来参考和协作。</li>
+</ul>
+<p>通过遵循这些实践并利用提供的资源，您可以确保您的 3D 数据科学应用保持良好的维护和准确性，并在未来几年继续提供价值！</p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>恭喜你！你已经掌握了六步指南，并且正在朝着构建有影响力的 3D 数据科学应用程序的方向迈进，如下所示。</p>
+<p><img src="/../asset_3Ddatascience/25.png" alt="The linear path to deploy 3D experiences based on your data."></p>
+<p>该设置需要在各个阶段进行仔细的规划和执行，从数据获取到部署。这种结构化的方法可以带来有意义的洞察、高质量的预测和三维可视化。</p>
+<p><a target="_blank" rel="noopener" href="https://towardsdatascience.com/ultimate-guide-3d-data-science-systems-and-tools-e92aaa8185eb">蓝图指南：3D 数据科学系统和工具 | 数据科学前沿 — Blueprint Guide: 3D Data Science Systems and Tools | Towards Data Science</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/08/01/Parquet_file_format/" rel="prev" title="Parquet 文件格式">
+                  <i class="fa fa-angle-left"></i> Parquet 文件格式
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/08/08/llmclinical/" rel="next" title="医疗保健的LLMs和生成式人工智能 --- 目录">
+                  医疗保健的LLMs和生成式人工智能 --- 目录 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Howard Huang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">488k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">14:48</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动-->
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

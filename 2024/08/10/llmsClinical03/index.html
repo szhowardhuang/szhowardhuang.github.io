@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"szhowardhuang.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="尼迪叹了口气，工作后瘫坐在沙发上。49 岁，离婚，住在伊利诺伊州芝加哥南郊的她，已经习惯了独自忙碌，照顾自己的房子、工作和青少年孩子。这些天，她感到厌倦了。她的手开始在身体上无意识地移动。她按了一下左胸的一部分。那是什么？她又按了一下；左胸侧面有一个小肿块。她担忧地用手指抚摸着它。她的心开始加速跳动——这不正常。第二天早上，她第一时间和医生联系，并在那周得到了预约。等待是折磨。什么时候我才能被倾听">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第三章 超越白大褂">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/08/10/llmsClinical03/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="尼迪叹了口气，工作后瘫坐在沙发上。49 岁，离婚，住在伊利诺伊州芝加哥南郊的她，已经习惯了独自忙碌，照顾自己的房子、工作和青少年孩子。这些天，她感到厌倦了。她的手开始在身体上无意识地移动。她按了一下左胸的一部分。那是什么？她又按了一下；左胸侧面有一个小肿块。她担忧地用手指抚摸着它。她的心开始加速跳动——这不正常。第二天早上，她第一时间和医生联系，并在那周得到了预约。等待是折磨。什么时候我才能被倾听">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_03BeyondWhiteCoats/01.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_03BeyondWhiteCoats/02.png">
+<meta property="article:published_time" content="2024-08-10T06:32:19.000Z">
+<meta property="article:modified_time" content="2024-08-21T06:10:44.000Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://szhowardhuang.github.io/asset_03BeyondWhiteCoats/01.png">
+
+
+<link rel="canonical" href="https://szhowardhuang.github.io/2024/08/10/llmsClinical03/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://szhowardhuang.github.io/2024/08/10/llmsClinical03/","path":"2024/08/10/llmsClinical03/","title":"第三章 超越白大褂"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>第三章 超越白大褂 | 嵌入式老兵博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">嵌入式老兵博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8C%BB%E7%96%97%E4%BF%9D%E5%81%A5%E4%B8%AD%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E7%8E%B0%E7%8A%B6"><span class="nav-number">1.</span> <span class="nav-text">医疗保健中的自动化现状</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#LLMs%E5%9C%A8%E5%8C%BB%E7%96%97%E4%BF%9D%E5%81%A5%E4%B8%AD%E7%9A%84%E6%89%BF%E8%AF%BA"><span class="nav-number">1.1.</span> <span class="nav-text">LLMs在医疗保健中的承诺</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%8E%86%E5%8F%B2%E4%BD%BF%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">机器学习的历史使用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8LLMs%E5%92%8C%E7%94%9F%E6%88%90%E5%BC%8F%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E8%BF%9B%E8%A1%8C%E5%8C%BB%E7%96%97%E8%87%AA%E5%8A%A8%E5%8C%96"><span class="nav-number">2.</span> <span class="nav-text">使用LLMs和生成式人工智能进行医疗自动化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E9%94%81%E5%8C%BB%E5%AD%A6%E7%A7%98%E5%AF%86%EF%BC%9ALLMs-%E5%A6%82%E4%BD%95%E9%9D%A9%E6%96%B0%E8%8D%AF%E7%89%A9%E5%8F%91%E7%8E%B0"><span class="nav-number">2.1.</span> <span class="nav-text">解锁医学秘密：LLMs 如何革新药物发现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B6%85%E8%B6%8A-X-%E5%85%89%EF%BC%9ALLMs-%E7%9C%8B%E5%88%B0%E6%88%91%E4%BB%AC%E6%89%80%E5%BF%BD%E8%A7%86%E7%9A%84%E4%B8%9C%E8%A5%BF"><span class="nav-number">2.1.1.</span> <span class="nav-text">超越 X 光：LLMs 看到我们所忽视的东西</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B5%E5%AD%90%E5%81%A5%E5%BA%B7%E8%AE%B0%E5%BD%95%E7%9A%84%E5%8F%91%E5%B1%95%EF%BC%9ALLMs-%E9%87%8D%E5%86%99%E5%8C%BB%E7%96%97%E6%96%87%E6%A1%A3"><span class="nav-number">2.1.2.</span> <span class="nav-text">电子健康记录的发展：LLMs 重写医疗文档</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%94%81%E5%8C%BB%E5%AD%A6%E9%87%91%E7%9F%BF%EF%BC%9ALLMs-%E7%9F%BF%E8%97%8F%E6%96%87%E6%9C%AC%E4%B8%AD%E7%9A%84%E9%9A%90%E8%97%8F%E5%AE%9D%E7%9F%B3"><span class="nav-number">2.1.3.</span> <span class="nav-text">解锁医学金矿：LLMs 矿藏文本中的隐藏宝石</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E5%92%8C%E7%AE%A1%E7%90%86%E5%8C%BB%E7%96%97%E4%BF%9D%E5%81%A5"><span class="nav-number">3.</span> <span class="nav-text">自动化和管理医疗保健</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%8C%BB%E7%96%97%E5%8A%A9%E6%89%8B"><span class="nav-number">3.1.</span> <span class="nav-text">人工智能医疗助手</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E5%8C%BB%E7%96%97%E7%B3%BB%E7%BB%9F%E7%9A%84%E8%A7%92%E5%BA%A6%E8%87%AA%E5%8A%A8%E5%8C%96%E8%A1%8C%E6%94%BF%E4%BB%BB%E5%8A%A1"><span class="nav-number">3.2.</span> <span class="nav-text">从医疗系统的角度自动化行政任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E5%92%8C%E8%B4%A6%E5%8D%95"><span class="nav-number">3.3.</span> <span class="nav-text">编码和账单</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%B4%E5%BA%8A%E8%BF%87%E7%A8%8B"><span class="nav-number">3.4.</span> <span class="nav-text">临床过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E5%8C%BB%E7%96%97%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-number">3.5.</span> <span class="nav-text">优化医疗工作流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AC%E5%8F%98%E4%B8%B4%E5%BA%8A%E8%AF%95%E9%AA%8C%E6%A0%BC%E5%B1%80"><span class="nav-number">3.6.</span> <span class="nav-text">转变临床试验格局</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">4.</span> <span class="nav-text">摘要</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Howard Huang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/08/10/llmsClinical03/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="第三章 超越白大褂 | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          第三章 超越白大褂
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-08-10 14:32:19" itemprop="dateCreated datePublished" datetime="2024-08-10T14:32:19+08:00">2024-08-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-08-21 14:10:44" itemprop="dateModified" datetime="2024-08-21T14:10:44+08:00">2024-08-21</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>16k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>30 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>尼迪叹了口气，工作后瘫坐在沙发上。49 岁，离婚，住在伊利诺伊州芝加哥南郊的她，已经习惯了独自忙碌，照顾自己的房子、工作和青少年孩子。这些天，她感到厌倦了。她的手开始在身体上无意识地移动。她按了一下左胸的一部分。那是什么？她又按了一下；左胸侧面有一个小肿块。她担忧地用手指抚摸着它。她的心开始加速跳动——这不正常。第二天早上，她第一时间和医生联系，并在那周得到了预约。等待是折磨。什么时候我才能被倾听，什么时候我们才能确定？她试图保持忙碌，不去想它，但她的思绪一次又一次地回到这个问题上，游走在它可能是什么的想法中。</p>
+<p>在医院，医生切除了肿块并进行了乳腺 X 光检查。医生表示需要进行活检以确定肿块是否恶性，然后一切就会明朗。尼迪感到焦虑和恐惧，身体虚弱。一周后，医院打来电话提供活检报告。结果是乳腺癌。尼迪感到一阵拳头般的痛击袭来。</p>
+<p>尼迪是一位第一代移民，在美国没有家人、朋友或任何正式的支持系统。她甚至不知道每年需要进行乳腺 X 光检查。她不知道如何处理保险要求，比如预授权、自付额或需要提供给保险公司的索赔文件。她从未预约过医生，更不用说化疗或放疗了——而这一切发生在她恶心最严重的时候。</p>
+<p>她不得不自己开车去，常常在她因低血细胞计数而导致的发烧或严重感染感到不适的时候。她仍然需要照顾她的两个青少年，他们不能开车，并且有自己的问题。尼迪快要失去希望了，她快用完钱了。她感到自己辜负了孩子们，并为自己的身体感到困扰。在接下来的几个月里，她将经历一系列的就诊、阅读和搜索，并制定行动计划。尼迪的癌症是 III B 期，已经扩散到她的淋巴结和锁骨。她的预后不佳，手术和放疗效果有限。然而，她可以选择一个她的肿瘤科医生认为可能适合的临床试验。此外，她的肿瘤科医生建议她调查聚焦超声，这是一种用于乳腺癌的新型治疗方法。</p>
+<p>尼迪的故事让我们看到了当前医疗保健的状态，包括患者及其支持者所承受的焦虑和负担。本章展示了今天医疗保健中自动化的现实，以及大型语言模型（LLMs）和生成式人工智能将如何进一步推动患者医疗保健的演变。本章的主要目标是让读者理解自动化以及在LLMs和生成式人工智能解决方案中的技术飞跃如何开始扰乱医疗保健流程、工作流程和运营效率的数字化转型。</p>
+<h1 id="医疗保健中的自动化现状"><a href="#医疗保健中的自动化现状" class="headerlink" title="医疗保健中的自动化现状"></a>医疗保健中的自动化现状</h1><p>接下来的故事——尼迪试图理解她的癌症诊断并弄清楚医疗系统——尽管她年纪尚轻，却是非常真实的。当尼迪准备进行 CT 扫描时，我们被提醒了一个严酷的事实：尽管医疗领域取得了非凡的突破，医疗管理仍然停留在 1960 年代。在过去的半个世纪里，几乎所有地方的生产力都爆炸性增长，但在医疗行业，仍然没有人使用纸张书写，没有系统将数据存储在孤岛中，没有客户服务依赖于电话和文书工作。此外，3.8 万亿美元的资金流入并穿过美国医疗系统。然而，作为现代效率引擎的自动化似乎在医疗图表和机构惯性中迷失了方向。</p>
+<p>成本是真实的。尼迪的苦难——解读术语、讨价还价付额——不仅仅是尼迪的苦难。这是普通人面对复杂医疗系统的经历，充满了让医生和患者之间产生隔阂的术语、低效的转诊和转移，以及充满悲剧和喜剧的错误的案例管理。大量时间被转移到治愈之外，时间浪费在跳过官僚障碍、在分隔的大厅中协调预约，以及忍受血压飙升的缓慢电话排队和患者门户的考验中。</p>
+<p>这种浪费不仅令人烦恼，而且代价高昂。每花费的医疗保健美元中有 48 美分——仅在 2015 年就约为 9500 亿美元——用于非临床任务。在过去 50 年中，美国其他行业的生产力大幅提高，但医疗保健是一个主要的例外。</p>
+<p>尼迪的故事向我们展示了一个破碎系统的人类代价。作为一个被困在这个功能失调结构中的普通工人，我们看到它如何浪费她的时间，损害她的福祉，并消耗她对抗疾病所需的精力。</p>
+<h2 id="LLMs在医疗保健中的承诺"><a href="#LLMs在医疗保健中的承诺" class="headerlink" title="LLMs在医疗保健中的承诺"></a>LLMs在医疗保健中的承诺</h2><p>然而，仍然有希望的曙光。如果LLMs和生成式人工智能能够融入现实世界的系统，它们可以执行繁琐的行政任务；它们可以预约和发送个性化的信息。人工智能可以捕捉目前锁定在医疗记录中的信息，并允许这些信息随着患者的移动而转移，只需患者的触碰，而不是被困在患者被转诊的机构中。当涉及到与保险公司的接口时，大多数人会更希望由人工智能来掌舵，让患者和医生能够专注于健康护理的事务。</p>
+<p>尼迪的挑战性经历突显了系统性问题，迫使脆弱群体在没有足够支持的情况下应对复杂的健康之旅。然而，正是自动化和人工智能在试图最终突破这一持久的生产力边界时，可能会带来改变。医疗保健的高度定制化特性，涉及人类生命，导致其对变革采取保守态度。诊断和治疗不适合大规模标准化。处理保险等不同系统需要人类助手。临床医生面临的判断是深具情境性的，通过多年的实践经验获得。简单来说，信息不对称和不可转移性使得医疗保健在深度手工且未被算法触及的过程中免受宏观优化的影响。</p>
+<p>但绩效疲劳也是一种成本，包括医生的倦怠、获取医疗服务的财务障碍，以及因缺乏能力而导致的可预防死亡。像 COVID-19 这样的冲击帮助揭示了现有医疗保健生产力的问题。走出疫情的过渡期可能会激发急需的现代化，并与一波LLMs和生成式人工智能相一致。自动化可以帮助处理占用过度工作人员时间的日常琐事。基于人工智能的诊断助手可以减少错误率，并用数据增强人类判断。最重要的是，智能协调将保护像 Nidhi 这样的患者，免于在很大程度上独自与过于繁忙的官僚体系作斗争。</p>
+<p>新技术如LLMs需要谨慎管理，但如果以深思熟虑的方式应用——以伦理为核心——它们可能会导致护理的转变，健康专业人员将从孤立的“修复者”转变为基于团队的“协调者”，为患者提供更全面、主动和以人为本的护理。</p>
+<p>尼迪的故事是一个行动的号召。它提醒我们，尽管科技改变了我们的生活、工作和沟通方式，但医疗保健仍然停留在过去的模式中。我们应该利用自动化的潜力，不仅仅是为了提高医疗系统的效率，而是为了建立一个以人为中心、赋权患者并承认健康价值的医疗系统。</p>
+<h2 id="机器学习的历史使用"><a href="#机器学习的历史使用" class="headerlink" title="机器学习的历史使用"></a>机器学习的历史使用</h2><p>医疗行业几十年来一直对各种形式的机器学习抱有希望的乐观态度。我们被承诺人工智能将帮助解决该领域的许多问题。部分原因是机器学习能够读取大量数据集，识别模式，并预测结果，以帮助和加速患者护理的许多方面。它可以被用来跟踪、追踪、处理数据，并最终优化效率。原则上，这应该转化为更好的患者结果、更有效的运营和更高的成本效率。一些机器学习模型确实在帮助实现这一目标——从提高诊断准确性到通过识别大量影像或患者数据中的模式来预测患者再入院的风险。但传统机器学习的影响是有限的，并未提供与LLMs相同的颠覆性好处。</p>
+<p>付款方和健康计划利用机器学习的应用来预测昂贵疾病的发生和发展。健康组织内部可能有数百个机器学习模型被构建用于预测和接触某些疾病人群，例如以下情况：</p>
+<ul>
+<li> 糖尿病</li>
+<li> 充血性心力衰竭</li>
+<li> 艾滋病</li>
+<li> 双相情感障碍</li>
+<li> 哮喘</li>
+<li> 慢性肾衰竭</li>
+<li> 关节退化</li>
+<li> 类风湿性关节炎</li>
+<li> 慢性阻塞性肺病</li>
+<li> 高血压</li>
+<li> 关节退化</li>
+<li>炎症性肠病</li>
+<li> 心房颤动</li>
+<li> 高脂血症</li>
+</ul>
+<p>尽管如此，机器学习的预测与临床医生在床边的方式之间存在根本冲突，机器学习建议支付方尽早和预防性地发现昂贵的合并症，而临床医生更倾向于为患者今天做最好的事情，即使这意味着放弃未来可能的优化。支付方正在大量投资于分析，试图根据历史相关性识别那些更可能“进展为高成本状态”的患者。预测可以在早期谨慎管理的疾病的发生，将使支付方能够引导患者的治疗路径，从而以较低的长期费用保持健康。</p>
+<p>进一步的冲突产生是因为预测依赖于对丰富背景的解释，而有限的数据导致干预措施的过度规定。社会因素强有力地影响着发展轨迹，过于专注于生理学，导致对贫困群体的偏见，因为忽视了为什么某一群体可能会经历比另一群体更差的结果，然后才将其标记为高成本的负担。</p>
+<p>早期干预通过预防性、积极的行动，勤勉地促进了那些获得回报者的利益。影响力和权力的复杂平衡需要监督，以确保预测模型尊重影响个人的心理、经济和环境复杂性，而不仅仅是精算可靠性，从而对个人风险进行建模，以便于管理和负担得起。健康的最终责任必须由每个人自己承担。</p>
+<p>这些孤立组织中以人工智能&#x2F;机器学习为中心的方法输出同样狭窄、缓慢、昂贵且存在偏见，而假设的利用人工智能进行再造的未来依然没有变化。为什么？因为大多数医疗保健机器学习严重依赖于需要稀缺专家进行长时间和细致清理、标记和格式化的专业训练数据。构建、维护和解释这些机器学习模型消耗了进行变革所需的资源，而医疗保健高管将人工智能视为过于承诺而未能兑现的问题使情况更加复杂。这些高管从未考虑过他们可能是一个因素，某种自我实现的预言，因为他们优先考虑成本和短期利润。</p>
+<p>与之前的其他人工智能不同，LLMs如Gemini、ChatGPT 和Claude利用互联网规模的文本数据来模仿科学发现的过程以及临床呈现的变异。这些模型从文献中学习医生的思维方式，而不是从特定输入格式生成的训练数据。生成式人工智能还可以用于创建人工但逼真的数据，以扩展模型。结合LLMs和生成技术，可能会创造出改善诊断、治疗计划和个性化干预所需的灵活性、适应性和持续学习，从而在各地以盈利的方式大规模实现。</p>
+<h1 id="使用LLMs和生成式人工智能进行医疗自动化"><a href="#使用LLMs和生成式人工智能进行医疗自动化" class="headerlink" title="使用LLMs和生成式人工智能进行医疗自动化"></a>使用LLMs和生成式人工智能进行医疗自动化</h1><p>有几种方式可以让LLMs和生成式人工智能帮助像 Nidhi 这样的人：</p>
+<ul>
+<li>LLMs 可以驱动对话式人工智能助手，充当智能患者护理协调员。在从 Nidhi 那里了解到她需要解决的问题后，这些协调员可能能够自动处理许多实际安排，例如预约安排、交通安排、获取支付方授权、预防性医疗措施的提醒等。</li>
+<li>生成式人工智能可以根据 Nidhi 的生活方式和需求（例如她的照顾责任）提供个性化的护理计划。这条自我护理的路径将通过可行的建议来优化结果，从而简化并赋予她意义。</li>
+<li>LLM 聊天机器人可以让尼迪向一个富有同情心和道德感的倾听者表达她的恐惧和挫折。对于那些感到不堪重负的人来说，除了信息之外，情感和社会支持也可以提供帮助。</li>
+<li>生成模型可能有助于制定计划，以帮助尼迪的家庭克服因她的疾病而造成的交通需求、咨询、家务、临时照护以及其他家庭空缺和日程中的空白。</li>
+</ul>
+<p>换句话说，无论是促进协调、提供医疗决策建议、提供富有同理心的治疗支持、动态应对症状，还是管理繁琐的日常生活，LLMs 和生成式人工智能都可以帮助像尼迪这样的患者专注于康复和预防。</p>
+<p>从自动化诊所行政任务到生成个性化护理计划，LLMs和生成式人工智能在医疗保健中的承诺不再仅仅是理论。</p>
+<p>萨拉·瓦伊齐（Sara Vaezy），普罗维登斯的首席战略和数字官，表示生成式人工智能将在“未来几年”改变“医疗保健的每一个方面”。生成式人工智能模型，如 ChatGPT，正在推动包括医疗保健在内的大量行业进入一个转折点。普罗维登斯的创新传统包括测试将生成式人工智能融入患者体验的可能性，以保持其使命的真实性。普罗维登斯采取了自上而下的方法，从一开始就设计具有公平性和安全性保护措施的人工智能基础设施，同时也采取了自下而上的方法，从基层识别脆弱的体验和用例，在那里进行试点或测试。医疗保健系统有四个重点领域：</p>
+<ul>
+<li>改善临床护理流程</li>
+<li>为消费者和患者创造更好的体验</li>
+<li>为后勤行政任务的员工打造更好的体验</li>
+<li>改善后台办公功能</li>
+</ul>
+<p>例如，生成式人工智能可以帮助在患者预约之前收集数据，提供临床决策支持，并自动化重复性工作。普罗维登斯制定了一项人工智能战略，基于这样的理念：机器终将超越人类能力，这要求护理团队在他们独特的任务上磨练技能。</p>
+<p>为了快速和大规模地实现生成式人工智能，普罗维登斯支持这一目标，制定灵活的战略和计划，与科技公司建立战略合作伙伴关系，并提供变更管理，以教育和培训团队成员适应新的工作流程。医疗保健的管理者有责任安全、公平、可靠和合乎道德地在医疗技术中实施生成式人工智能，以支持患者以新的方式。</p>
+<p>美国医疗公司（HCA）——美国最大的营利性医疗系统和全球最大的医院运营商——正在部署几种生成式人工智能解决方案，以帮助“&#x3D;&#x3D;重新构想如何提供护理”。HCA 正在使用临床生成式人工智能系统来帮助自动化工作流程&#x3D;&#x3D;，并通过使用LLMs来现代化患者交接的各个方面，从而减少文档的低效率和医生的负担。在一项试点项目中，HCA 将使用来自谷歌的LLM来自动生成详细报告，并通过自动化经过人工验证的患者交接来节省护士的时间。</p>
+<p>虽然LLMs在医疗保健中的自动化仍在进行中，但它有潜力改变护理服务的交付。工作流程、效率和患者护理通过自动化索赔处理和多个行政任务等不同方式得到了提升。</p>
+<h2 id="解锁医学秘密：LLMs-如何革新药物发现"><a href="#解锁医学秘密：LLMs-如何革新药物发现" class="headerlink" title="解锁医学秘密：LLMs 如何革新药物发现"></a>解锁医学秘密：LLMs 如何革新药物发现</h2><p>识别有吸引力的药物靶点。不再依赖人类直觉，LLMs 可以在海量数据中筛选出隐藏的疾病机制、蛋白质相互作用模式、“基因指纹”，并激发对新药物靶点的搜索，验证它们的潜力，甚至推动个性化医学的发展。LLMs 可以分析你的基因，为你量身定制药物，开辟治疗你疾病的新途径。</p>
+<p>超越这种原始洞察——创造新事物——是对LLMs的重新利用，即在现有药物和缺乏治疗的疾病之间找到意想不到的联系。也被称为药物再利用，这种魔力可以以惊人的速度和相对于传统方法的低成本开发新疗法，传统方法是先合成新药，然后进行测试。</p>
+<h3 id="超越-X-光：LLMs-看到我们所忽视的东西"><a href="#超越-X-光：LLMs-看到我们所忽视的东西" class="headerlink" title="超越 X 光：LLMs 看到我们所忽视的东西"></a>超越 X 光：LLMs 看到我们所忽视的东西</h3><p>医学成像与医学本身一样古老，但人眼只能看到整体图像的一小部分。LLMs是一种新型侦探，每个侦探都具备前所未有的视觉信息能力和能够处理文本的工具。关于病症的文本和图像线索可以被转化为新的医学分析师的角色。</p>
+<p>这些图像不仅仅是图片；它们是编织的、活跃的、三维的事物。扩张的主动脉根、脑膜瘤、颈动脉狭窄——这些在肉眼（甚至是最有经验的放射科医生）看来可能隐藏的事物被揭示出来。噪声中的模式变得可见，模糊的诊断得以明确。或者我们可以说，LLM对其医生用户说：“嘿，伙计们！还记得上个月扫描中那个微小的纹理吗？我们一直在反复审查？恰好有一篇论文描述了一种具有完全相同纹理的罕见疾病。”那个模糊的症状突然找到了它的原因。治疗的道路突然打开。</p>
+<p>LLMs 帮助从医学文献、病史和注释图像中构建疾病的情境化图像。情境评估通常是临床医生指导治疗决策的最有价值的信息，它也可以帮助患者更好地理解他们的疾病，通过对扫描结果真正含义的解读，消除神秘感。这感觉有点像魔法。</p>
+<p>医学不再仅仅关注身体，而是透视身体。在LLMs的洞察指导下，它可以达到一个新的诊断潜力水平，使诊断更加精准，治疗更加专注，患者在面对疾病时更加有力和聪明。</p>
+<p>今天，深度学习是医学影像领域的最先进技术。在不久的将来，LLMs 将成为焦点，因为它们正在成熟。</p>
+<h3 id="电子健康记录的发展：LLMs-重写医疗文档"><a href="#电子健康记录的发展：LLMs-重写医疗文档" class="headerlink" title="电子健康记录的发展：LLMs 重写医疗文档"></a>电子健康记录的发展：LLMs 重写医疗文档</h3><p>传统的电子健康记录（EHR）曾经不过是数字文件柜，存储数据但在分析或预防护理方面几乎没有提供帮助。这一切即将改变。随着LLMs的兴起，一个全新的人工智能时代可能即将到来：电子健康记录可能成为同事，利用其预测和分析能力来释放电子健康记录的全部潜力。</p>
+<p>LLMs 具备通过挖掘以前的数据集来发现模式、逆境发生的概率或未来的警示信号，从而预测未来或至少未来的可能性的能力。可以将其想象成一个水晶球，显示哪些患者易患某种疾病、可能再次入院或可能遭受某种不良事件。凭借这一能力，临床护理可以根据患者的情况进行调整。</p>
+<p>&#x3D;&#x3D;无需自己翻阅大量医学期刊。LLMs 已为您完成了这项工作。您提供患者数据，他们将其与他们在庞大数据库中存储的所有相关患者数据进行比较，然后他们会说类似以下的话：“供您参考，医生，这就是其他患有您患者病情的人所做的。选项 A 似乎比选项 B 更常用，而选项 C 几乎从未使用。”&#x3D;&#x3D;</p>
+<p>现在，他们正在将这种LLM魔法引入电子健康记录（EHR）。这些模型浏览患者记录，寻找关于药物不依从性的线索，触发警报以标记潜在的问题情况，并使医生能够及早干预。现在，一个充满无限可能的未来开始了，从个性化医疗到预防护理。</p>
+<p>电子健康记录（EHR）正在超越仅在处理索赔或完成临床测试时更新的静态文档。随着LLMs的整合，电子健康记录正在转变为动态、智能的系统。这些先进的电子健康记录将持续分析来自各种来源的大量数据，提供实时洞察，并推动更明智的医疗决策。这是医疗保健即将到来的未来。</p>
+<h3 id="解锁医学金矿：LLMs-矿藏文本中的隐藏宝石"><a href="#解锁医学金矿：LLMs-矿藏文本中的隐藏宝石" class="headerlink" title="解锁医学金矿：LLMs 矿藏文本中的隐藏宝石"></a>解锁医学金矿：LLMs 矿藏文本中的隐藏宝石</h3><p>一旦在页面上涂写，这些文本现在成为了等待解读的生物信息矿藏。使用LLMs训练的临床文本语料库，人们可以发现语言模式，指示可能基于种族、性别、社会经济地位和其他健康决定因素而发生的隐性偏见。例如，LLM可能会标记某些笔记，这些笔记对“X”组的语言框架呈现出比“Y”组更消极的表达。</p>
+<p>想象一下一个LLM在放射学报告中梳理丰富的背景信息，比如异常的描述、它们的位置和解释，同时在找到疾病特征匹配时发出警报。再也不用繁琐的手动解析了！LLMs可以即时索引和检索高价值的发现描述（那些最相关且可能影响诊断或治疗的），并为放射科医生提供帮助，使他们更容易做出诊断。最终，放射科医生有一个个人助手在他们的代表下不知疲倦地扫描报告，突出关键线索供专家关注。</p>
+<p>不仅仅是语言的问题。LLMs 还掌握了医学的语法，提炼出症状、诊断和治疗之间复杂的关系。随着我们通过在更大和更复杂的文本集上训练 LLMs 来微调这种理解，他们将能够预测相关的患者结果，高效地现代化临床研究，甚至定制患者护理旅程。</p>
+<h1 id="自动化和管理医疗保健"><a href="#自动化和管理医疗保健" class="headerlink" title="自动化和管理医疗保健"></a>自动化和管理医疗保健</h1><p>想象一个世界，在那里，穿越医疗迷宫不再是艰巨的壮举或令人畏惧的任务，而是一场晨间散步。进入你的个人医疗 AI 助手，由LLMs和生成式 AI 驱动，它是你在医生预约、保险表格和无尽电话中的不知疲倦的导航者。</p>
+<p>从个人的角度来看，导航医疗系统是一场噩梦。在我们以 Nidhi 为例的情况下，管理她的治疗需要她做到以下几点：</p>
+<ul>
+<li>由于管理她的医疗保健需要多个步骤，她必须安排预约，确保提供者接受她的保险并且是“网络内”的，以避免更高的费用。她需要了解自己的财务责任，包括共付额和免赔额。在接受治疗之前，她必须获得预授权并提交所需的文件。在整个过程中，她必须有效地向护理人员传达她的健康状况。</li>
+<li>她必须识别联邦、州、地方或私人机构提供的资源来支持她，最后但同样重要的是，找到一个可以在她对治疗和生活产生负面想法时与之交流的人。</li>
+</ul>
+<p>在多位医生之间管理癌症治疗对患者来说面临着巨大的挑战。正如尼迪的故事所示，在与癌症的身体和情感影响作斗争的同时，处理临床复杂性往往在没有广泛支持的情况下显得不堪重负。</p>
+<p>患者经常根据肿瘤特征和进展情况看外科医生、肿瘤科医生、放射技术人员和专科医生。每个临床视角对治疗计划的影响不同。患者在处理毁灭性的消息和虚弱的症状时，努力跟踪谁说了什么、评估冲突和记住下一步。</p>
+<p>预约常常被重复预定，因为办公室之间的协调出现问题。记录共享的延迟意味着患者成为医疗中介，试图及时传播测试结果。当可避免的并发症发生时，沟通的缺口让患者感到沮丧。</p>
+<p>在这段支离破碎的医疗旅程中，患者往往缺乏持续的情感支持，尽管安慰对康复有很大影响。个别临床医生很少关注患者整体健康的各个方面，包括恐惧、生活方式的变化以及超出其专业领域的心理健康问题。当患者在不同的医疗提供者之间转移时，护理的连续性往往会中断。</p>
+<p>尽管跨学科医学在统计上提高了生存率，但对已经脆弱的个体来说，支离破碎的治疗过程往往使他们容易被忽视。以患者为中心的协调，减少后勤负担并提供整体护理，可能会在结果上超越单纯的专业知识。人际关系在癌症斗争中无法被优化。&#x3D;&#x3D;全面的临床沟通和同理心被证明是医学中最重要的治疗手段&#x3D;&#x3D;。</p>
+<h2 id="人工智能医疗助手"><a href="#人工智能医疗助手" class="headerlink" title="人工智能医疗助手"></a>人工智能医疗助手</h2><p>尼迪，一位职场母亲，当她听到“III 期 B 型乳腺癌”这几个字时，感觉脚下的地面消失了。世界变得模糊，文书工作变成了象形文字，导航医疗系统就像穿着人字拖攀登珠穆朗玛峰。如果尼迪有一个私人助理来处理这些任务，那该多好？于是，“塔拉”出现了，她的人工智能医疗助理，在风暴中成为了一线希望（图 3-1）。</p>
+<p><img src="/../asset_03BeyondWhiteCoats/01.png">图 3-1 塔拉，人工智能医疗助手</p>
+<p>塔拉凭借LLMs和生成式人工智能成为了尼迪的救星。她不需要破解医学术语来解读报告和弄清楚自己发生了什么。塔拉将报告翻译成易于理解的笔记，然后列出可能的治疗方案和相关副作用。患者不再需要拨打数百个电话联系众多医生。塔拉负责在医院和诊所之间安排预约。</p>
+<p>塔拉开始接管尼迪的任务，成为尼迪的杰出项目经理。凭借LLMs的语言处理能力，塔拉同时扫描来自无数机构的文件，自动安排他们的预约，并像本能一样与保险公司讨价还价。没有电话的等待音乐，没有浪费时间。</p>
+<p>但塔拉不仅仅是一个物流大师。生成式人工智能分析了尼迪的医疗数据，测试药物和治疗之间的相互作用——并可以叠加以提高疗效。尼迪被治疗选择压得喘不过气来，但塔拉将选项解析得易于理解，以公正的数字声音回顾优缺点。塔拉问尼迪是否感到孤单，并鼓励她加入支持小组，如果尼迪感到焦虑，塔拉则是一个倾诉的对象和冷静的建议储存库。</p>
+<p>有塔拉在旁照看行政事务，她将大部分必要的管理工作委派给尼迪，为各种恢复创造了空间。预约得到了协调，药物提醒出现在尼迪的手机上，保险表格以机械的精确度在系统中流转，最重要的是，山上的路径被勾勒出来，危险点被标记。恢复的重担更轻松地落在一个人身上，而不是两个人，攀登所需的能量得到了更均匀的分配，使尼迪能够休息。通过这种方式，塔拉既在尼迪身边走着，又在前面走了几步。</p>
+<p>尼迪成功的故事因此也是一个技术故事。LLMs和生成式人工智能不仅仅提供了捷径或后勤解决方案，而是成为了尼迪真正的赋能工具——让她重新掌控自己的生活，&#x3D;&#x3D;专注于真正重要的事情：接受治疗以保持健康&#x3D;&#x3D;。</p>
+<p>这不仅仅是尼迪的故事。这是&#x3D;&#x3D;对未来护理的愿景，利用技术让患者掌控自己的健康，减轻他们的压力，简化整个过程&#x3D;&#x3D;。也许从有意义的对话参与的角度来看，LLMs在生成自然听起来的文本和理解文本方面表现出色，这是生成清晰可理解文本的重要一步。它们能够识别意图，推导上下文，并对语言中的细微差别表现出有用的敏感性。</p>
+<p>GenAI 使聊天机器人能够通过与用户的互动学习，并通过修改响应来适应个体偏好——例如，适应用户的语速和结构——并借鉴用户使用的对话内容（如俚语或幽默的评论），以帮助更有效地沟通。GenAI 还允许聊天机器人在特定内容或数据集上进行训练，以增强知识。GenAI 生成新文本序列的能力使聊天机器人能够与用户进行开放式对话，探索多个主题，并对用户的提示做出创造性的回应，同时使轮流发言、主题转换和响应形成更自然地成为互动的一部分。GenAI 还允许聊天机器人根据个体用户的需求和偏好进行个性化设置，提供记住用户信息、适应语言风格、提供个性化内容和推荐，以及以符合用户个性和特点的方式呈现信息等功能。</p>
+<p>塔拉，尼迪的个人助理，提供以下功能：</p>
+<ul>
+<li>24&#x2F;7 预约: 预约调度可以通过聊天机器人全天候处理，因此无需等待接听或创建在线账户进行预约。</li>
+<li>个性化日历安排: GenAI 可以了解患者的偏好，例如他们更喜欢看哪位医生、他们更喜欢哪个地点以及他们更喜欢何时就诊，并为他们提供建议选项。</li>
+<li>自动提醒: 人工智能将监控您的日程安排，并通过短信或电子邮件向您发送会议、约会和活动的提醒。这可以确保您不会重复预订或错过约会。</li>
+<li>保险和福利支票: 使用 GenAI，您可以实时了解患者是否有保险以及是否符合护理资格。</li>
+<li>多语言选项: 您可以通过提供双语或多语种聊天机器人来改善不同患者的可及性并消除障碍。</li>
+<li>陪伴聊天机器人: GenAI 可以用于制作专为对话和陪伴而调校的陪伴聊天机器人，特别是针对孤独或孤立的人，并且可以通过体验和模拟情感以及同情地支持患者度过生活中的困扰，成为一个对话伴侣。</li>
+</ul>
+<h2 id="从医疗系统的角度自动化行政任务"><a href="#从医疗系统的角度自动化行政任务" class="headerlink" title="从医疗系统的角度自动化行政任务"></a>从医疗系统的角度自动化行政任务</h2><p>美国拥有大约 6,000 家医院，超过 300,000 个医生集团，超过 1,000 家健康保险公司，以及一大堆需要遵守的健康代码，因此可以看出美国医疗系统是世界上行政管理最复杂的系统之一。甚至建议行政简化几乎是异端。</p>
+<p>美国的管理和账单&#x2F;保险成本显著高于其他任何国家，每年高达 1 万亿美元，超过德国、法国和意大利的医疗系统总和。众多健康保险公司，提供多种计划，涵盖不同的保障水平和不同的网络；在其中一个计划中，可能会有数百个选项，每个选项都有不同的免赔额、共付额和覆盖服务。每个计划都有其自身的福利、文件、支付方式和规则。数十万个医疗服务的服务代码，都需要与提供者协商价格，这在提供者和保险公司之间造成了文档和证明技术的军备竞赛。庞大的护理管理直接转化为系统的庞大行政费用，并加剧了医生的职业倦怠（图 3-2）。</p>
+<p><img src="/../asset_03BeyondWhiteCoats/02.png">图 3-2  倦怠的代价：医生在不断增加的压力下的烦恼</p>
+<p>人工智能和LLMs有助于减少医生的倦怠。它们可以让医疗专业人员专注于提供直接的病人护理，同时提高效率、准确性和病人满意度。例子包括：</p>
+<ul>
+<li><p>与患者助手的互动: </p>
+<p>LLMs 可以通过自动检查日历、寻找可用时间并向患者和提供者发送邀请来安排预约。正如患者尼迪使用了塔拉，一个人工智能助手聊天机器人，医生们也将使用聊天机器人，我们离人工智能驱动的聊天机器人与另一个人工智能驱动的聊天机器人互动以实现患者和提供者生态系统最佳结果的现实并不遥远。</p>
+</li>
+<li><p>管理病人记录: </p>
+<p>LLMs 可用于从病人记录中提取信息，例如人口统计、病史和药物，LLMs 可用于填充表格和报告。</p>
+</li>
+<li><p>生成报告: </p>
+<p>LLMs 可用于从医疗数据中生成报告，例如患者人口统计、治疗结果和质量指标。</p>
+</li>
+<li><p>生成保险索赔或事先授权请求等表格和信件: </p>
+<p>LLMs 可用于审查病人记录、识别可收费服务，并准确高效地完成保险索赔。</p>
+</li>
+<li><p>编码和账单: </p>
+<p>LLMs 可以协助医疗编码和账单处理，确保提供者获得准确的报销，并减少行政负担。</p>
+</li>
+</ul>
+<h2 id="编码和账单"><a href="#编码和账单" class="headerlink" title="编码和账单"></a>编码和账单</h2><p>编码和计费系统是健康收入周期的关键，但它们可能充满陷阱——代价高昂的不准确性、延误和其他干扰。医疗编码错误、错失的计费机会以及临床与计费系统之间缺乏整合只是一些罪魁祸首。</p>
+<p>这些关键挑战在编码和账单周期的每个环节都会出现——在医疗服务中医生与患者之间、在文档记录中、在编码和索赔提交期间，以及在支付入账时。拒付或少付可能源于简单的错误、行政流程中的低效、合规风险、编码错误，甚至是最不可能的欺诈预期。</p>
+<p>一些最重要的编码和账单挑战包括：</p>
+<ul>
+<li>上码: 对于某些专业，您处理的是复杂案例，这使得报告高级评估和管理代码更加高效。虽然这样做没问题，但您必须准确记录使用该编码的原因，以确保您没有使用不适当的高级代码。</li>
+<li>解耦: 这就是你在一个程序的不同部分使用多个代码，而不是整个程序的适当代码的时候。这可能是由于错误造成的，但当组织试图增加支付金额时也会发生，这就是为什么这通常会被审计的原因。</li>
+<li>不记录: 这意味着文档缺失或不充分。</li>
+<li>拼写错误和错误: 有时候你只是按错了键。一个常见的错误发生在编码时数字颠倒，或者信息被工作人员或患者错误地添加。</li>
+</ul>
+<p>LLMs 和生成式人工智能可以帮助解决以下编码和账单挑战：</p>
+<ul>
+<li><p>上码: </p>
+<p>LLMs 用作医疗编码推荐系统，利用 LLMs 对患者记录、医疗编码规则和账单进行分析，可以告诉我们正在处理的案例应该使用哪个最佳编码。审查文档，以确保所选择的代码支持临床证据，并确保文档的一致性和完整性。通过检查个别临床医生在案例层面的编码历史趋势，LLMs 可能能够发现过度编码趋势并标记案例以进行审计。</p>
+</li>
+<li><p>解耦: </p>
+<p>LLMs 将程序映射到正确的高级计费代码，确保程序组件通过单一代码仅记录一次。LLMs 可以为编码人员提供提示，在计费时列出有效的捆绑代码，从而减少对专业编码人员的需求。</p>
+</li>
+<li><p>不记录: </p>
+<p>LLMs 可以从音频录音或自由文本笔记生成病人记录和摘要，以便提供者能够捕捉所有关键信息以确保准确计费。LLMs 可以请求任何缺失的信息，以便正确编码索赔。</p>
+</li>
+<li><p>拼写错误和错误: </p>
+<p>LLMs 可以添加到账单和索赔工作流程中，以标记和修复常见的拼写错误、编码或患者信息错误，从而防止下游问题的发生。利用账单数据，LLMs 可以找出可能指向文书错误的异常峰值或离群值，然后进行检查和更正。</p>
+</li>
+</ul>
+<p>LLMs和生成式人工智能在编码和计费中的额外好处包括：</p>
+<ul>
+<li>降低劳动力成本: 自动化编码任务可以释放宝贵的员工时间用于更复杂的活动，从而提高整体效率。</li>
+<li>增强合规性: 提高编码准确性可以降低审计、罚款和声誉损害的风险。</li>
+<li>改善收入周期管理: 准确及时的账单可以为医疗机构带来更快的报销和改善的现金流。</li>
+<li>个性化患者沟通: LLMs 可以为患者生成清晰易懂的账单说明，促进透明度并减少与账单相关的咨询。</li>
+</ul>
+<p>通过解决这些挑战，LLMs和生成式人工智能可以促进更准确、高效和合规的编码和计费过程，最终使医疗服务提供者和患者都受益。</p>
+<p>随着LLMs和生成式人工智能的不断发展，我们可以期待看到更多创新的应用来自动化医疗行政任务。这将有助于提高医疗系统的效率、准确性和患者体验，使医疗专业人员能够专注于为患者提供高质量的护理。</p>
+<h2 id="临床过程"><a href="#临床过程" class="headerlink" title="临床过程"></a>临床过程</h2><p>临床过程中的自动化是利用技术加快和提高提供医疗服务的临床效率和有效性。新兴的人工智能技术，如自主智能，可以帮助自动化重复性任务，汇总和分析数据，并提供决策支持。在如此接近人类影响规模的自动化中，使用LLMS和生成式人工智能有望通过加快和增强临床护理的交付来改变医疗服务的提供。</p>
+<p>以下是一些自动化在临床流程中应用的例子：</p>
+<ul>
+<li>订单录入和结果报告: 自动化可以用于自动输入实验室测试、药物和其他服务的订单，并将结果发送回下单的提供者。</li>
+<li>临床文档: 自动化可以用于生成临床文档，例如进展记录、出院总结和药物核对报告。</li>
+</ul>
+<p>例如，每次尼迪接受治疗时，接收和出院的行政人员会审查她的病史，做笔记，并建议对她的财务、家庭地址和电话号码（如有）进行任何具体更改。医生、护士和技术人员会审查临床记录并提出建议。</p>
+<h2 id="优化医疗工作流程"><a href="#优化医疗工作流程" class="headerlink" title="优化医疗工作流程"></a>优化医疗工作流程</h2><p>电子病历（EMR）系统对临床工作流程产生了重大影响，尽管这种影响复杂，既有好处也有缺点。从积极的一面来看，电子病历标准化和数字化了患者数据，使护理团队能够高效访问。内置的临床决策支持、医嘱集、模板和警报也促进了基于证据的护理。无缝的记录改善了协调性，减少了重复服务。</p>
+<p>然而，批评者认为电子病历（EMR）优化工作流程是为了账单目的，而不是为了护理质量。医生在电脑上记录的时间增加，损害了医患关系。由于无关紧要的警报过多，导致警报疲劳。对独特临床思维的定制证明是困难的。</p>
+<p>最平衡的观点认为电子病历（EMR）是现有规范的放大器：它们强化并传播任何编码在其框架中的流程，这可能反映系统目标而非个别患者的需求。优化健康结果可能需要将数字基础设施与以关系和信任为中心的人际协调相结合。</p>
+<p>本质上，电子病历（EMR）通过强制标准化和数字化沟通强烈影响护理交付机制，但不应僵化地支配护理文化本身。医学核心的人际联系依赖于动态适应的工作流程，而不是仅仅优化效率的交易。EMR 临床决策支持旨在增强而不是取代经验丰富、具伦理的提供者与患者合作的判断。</p>
+<p>LLMs 和生成式人工智能可以通过几个关键方式帮助改善电子病历系统及其对临床工作流程的影响：</p>
+<ul>
+<li>自适应工作流程: LLMs 可以分析临床医生与患者的互动，并根据个性化需求和风格定制默认工作流程、医嘱集和决策树。</li>
+<li>自动化文档: 生成模型可以根据就诊记录和护理活动起草临床笔记和文书，准确反映独特的细节。</li>
+<li>人性化集成: 智能界面由富有同理心的LLMs驱动，使临床医生能够使用自然语言指令来下达测试、转诊等，而不是因鼠标点击而分散注意力。</li>
+<li>患者数据丰富化: 算法可以整合外部记录、基因组数据、可穿戴传感器数据等，以克服电子病历的局限性并提供决策支持。</li>
+</ul>
+<p>理想情况下，这些技术将增强以患者为中心的护理，捕捉细微差别，减少行政负担，并用最新的个性化发现补充机构知识，从而推动更好的结果。</p>
+<h2 id="转变临床试验格局"><a href="#转变临床试验格局" class="headerlink" title="转变临床试验格局"></a>转变临床试验格局</h2><p>将 Nidhi 纳入临床试验对她的肿瘤科医生来说是一个复杂的过程。他们必须首先确定合适的试验，仔细审查其方案，并根据 Nidhi 的病史仔细评估她的资格。这需要与试验团队合作，以了解潜在风险，并确保所有必要的文件准确提交。一旦 Nidhi 被纳入该过程，她必须遵循非常严格的协议，这可能持续三到五年。</p>
+<p>一些导致挑战的关键因素包括：</p>
+<ul>
+<li>患者招募与留存: 寻找符合所有试验标准的合格且愿意参与的患者可能非常困难且耗时。一旦招募到患者，保持他们在研究中的参与也可能具有挑战性。</li>
+<li>合规性: 关于知情同意、数据隐私、安全报告等方面的规则可能使试验的执行变得复杂且耗时，以确保合规。各国的法规不同，进一步增加了全球试验的复杂性。</li>
+<li>协议设计: 设计稳健的协议并选择合适的点以获得有用的结果既是一门科学，也是一门艺术，受到过去经验的启发。次优设计可能会使试验变得无效。</li>
+<li>质量和一致性: 确保所有参与地点在试验执行中的一致性，并保持高质量标准可能是一个巨大的挑战。即使在一个地点的失误也可能影响试验的有效性。</li>
+<li>物流复杂性: 从药物供应链到协调患者的随访访问，所有这些都需要涉及多个利益相关者的巨大物流协调。失误可能严重影响试验进展。</li>
+<li>数据管理: 收集、清理和管理大量多维患者数据可能会带来数据分析挑战。良好的数据管理对于得出正确的结论至关重要。</li>
+<li>数据质量与分析: 两者对于可靠的试验结果至关重要。只有完整或准确的数据才能确保整个研究的准确性。因此，在试验过程中保持高数据质量标准是至关重要的。</li>
+<li>数据分析复杂性: 分析来自不同来源的大型数据集需要先进的统计方法和专业知识。</li>
+<li>财务限制: 临床试验非常昂贵，费用高达数百万美元。资金不足或获得资金的延迟仍然是一个常见的瓶颈。</li>
+<li>伦理考虑和知情同意: 确保参与者充分理解参与的风险和收益是至关重要的。</li>
+<li>保护参与者的隐私和机密性: 保护敏感健康数据至关重要。</li>
+<li>平衡风险与收益: 研究人员必须仔细权衡新治疗的潜在好处与参与者的风险。</li>
+</ul>
+<p>克服这些挑战需要巨大的跨职能协调、全球流程标准化、严格的质量控制，以及利益相关者对共同目标的对齐——这绝非易事！</p>
+<p>LLMs 和 GenAI 可能在几个方面帮助临床试验：</p>
+<ul>
+<li>人工智能可以分析医疗记录和患者数据，以更快、更准确地识别符合条件的试验候选者。这使得试验能够更快地招募参与者。</li>
+<li>人工智能可以审查研究文献和过去的试验数据，以帮助设计研究方案，确定最佳终点、剂量考虑等。这可以帮助提高试验的质量和效率。</li>
+<li>人工智能可以在试验期间持续监测来自可穿戴设备、应用程序等的患者数据。它可以提前标记安全问题，改善合规性监测，并根据接收到的数据自适应调整试验过程。</li>
+<li>GenAI 可以分析复杂的多模态试验数据，以发现洞察，例如，通过关联基因组、表型和结果数据来识别生物标志物。它还可以检查数据质量并识别异常。这将导致从试验中获得更快、更丰富的洞察。</li>
+<li>解读临床试验结果所需的细微差别和背景信息是巨大的。使用LLMs可以吸收所有可用的医学研究和真实世界证据数据，以解读试验结果是否以及如何应更新医学实践或是否需要更多研究。这将导致更好的临床适用性和试验后的决策。</li>
+</ul>
+<p>LLMs 和 GenAI 可以使高质量、富有洞察力的临床试验的许多方面变得更快、更便宜和更好。它可能在未来提高临床试验的效率和可靠性方面发挥不可或缺的作用。</p>
+<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>本章探讨了自动化在过去几十年中在医疗保健领域加速但不均匀的渗透，受到该领域制度惯性的阻碍。然而，新兴的LLMs人工智能子类承诺提供一种多功能性和响应能力，最终通过革命性的生产力提升、洞察生成，甚至医疗工作流程的经济转型，克服了采用障碍。</p>
+<p>本章提供了各种基于LLM的创新小插曲，优化当前的痛点。智能助手减少了因与账单系统作斗争而浪费的行政时间，解放了过度劳累的员工。诊断LLMs挖掘全球语料库，将微妙的症状与超出任何从业者经验的罕见疾病联系起来。临床试验管理实现了受试者招募、方案设计和结果分析的自动化，以促进更优越的治疗发展。</p>
+<p>每个场景都突显了语言智能的人工智能如何通过生成式构建解决方案或从过于庞大且无结构的知识库中提取可操作的模式，来应对曾经顽固的低效问题。这一范式转变表明，医疗保健可能会效仿其他最近的颠覆性变革，从以往看似有前景但不切实际的自动化技术中实现大规模的生产力和卓越收益，这一过程得益于响应式算法解决方案的加速和普及。</p>
+<p>1 “全球首个聚焦超声癌症免疫治疗中心启动，”UVAHealth，2022 年 5 月 11 日，<a target="_blank" rel="noopener" href="https://newsroom.uvahealth.com/2022/05/11/worlds-1st-focused-ultrasound-cancer-immunotherapy-center-launched%E3%80%82">https://newsroom.uvahealth.com/2022/05/11/worlds-1st-focused-ultrasound-cancer-immunotherapy-center-launched。</a></p>
+<p>2 艾莉森·H·佩恩，“聚焦超声作为乳腺癌的非侵入性治疗”，犹他大学，2021 年 3 月 5 日，<a target="_blank" rel="noopener" href="https://discovery.med.utah.edu/2021/focused-ultrasound-as-a-non-invasive-treatment-for-breast-cancer%E3%80%82">https://discovery.med.utah.edu/2021/focused-ultrasound-as-a-non-invasive-treatment-for-breast-cancer。</a></p>
+<p>3 韩阿琳、李建亨和朴钟善，“价格透明度和竞争对医院成本的影响：关于全支付索赔数据库的研究，” BMC 健康服务研究 22, no. 1321 (2022), <a target="_blank" rel="noopener" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9636618%E3%80%82">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9636618。</a></p>
+<p>4 Nikhil R. Sahni, Brandon Carrus 和 David M. Cutler, “行政简化与节省两千五百亿美元医疗费用的潜力,” JAMA 326, no. 17 (2021): 1677–1678, <a target="_blank" rel="noopener" href="https://jamanetwork.com/journals/jama/fullarticle/2785480%E3%80%82">https://jamanetwork.com/journals/jama/fullarticle/2785480。</a></p>
+<p>5 Nikhil R. Sahni, Prakriti Mishra, Brandon Carrus 和 David M. Cutler, 行政简化：如何在美国医疗保健中节省两千五百亿美元 (麦肯锡公司, 2021 年 10 月), <a target="_blank" rel="noopener" href="https://www.mckinsey.com/~/media/mckinsey/industries/healthcare%20systems%20and%20services/our%20insights/administrative%20simplification%20how%20to%20save%20a%20quarter%20trillion%20dollars%20in%20us%20healthcare/administrative-simplification-how-to-save-a-quarter-trillion-dollars-in-us-healthcare.pdf">https://www.mckinsey.com/~/media/mckinsey/industries/healthcare%20systems%20and%20services/our%20insights/administrative%20simplification%20how%20to%20save%20a%20quarter%20trillion%20dollars%20in%20us%20healthcare/administrative-simplification-how-to-save-a-quarter-trillion-dollars-in-us-healthcare.pdf</a>.</p>
+<p>6 海伦·朱拉维尔，“用于早期疾病检测和医学诊断的 AI&#x2F;ML 算法，”Binariks，2023 年 12 月 19 日，<a target="_blank" rel="noopener" href="https://binariks.com/blog/ai-machine-learning-for-early-disease-detection%E3%80%82">https://binariks.com/blog/ai-machine-learning-for-early-disease-detection。</a></p>
+<p>7 “生成式人工智能：医疗保健的下一个前沿，”普罗维登斯，2023 年 9 月 17 日，<a target="_blank" rel="noopener" href="https://blog.providence.org/blog/generative-ai-the-next-frontier-of-health-care%E3%80%82">https://blog.providence.org/blog/generative-ai-the-next-frontier-of-health-care。</a></p>
+<p>8 Sai Balasubramanian，“HCA，全球最大的医疗保健组织之一，正在部署生成式人工智能，”福布斯，2023 年 8 月 30 日，<a target="_blank" rel="noopener" href="https://www.forbes.com/sites/saibala/2023/08/30/hca-one-of-the-largest-healthcare-organizations-in-the-world-is-deploying-generative-ai/?sh=7ac032bc51dc%E3%80%82">https://www.forbes.com/sites/saibala/2023/08/30/hca-one-of-the-largest-healthcare-organizations-in-the-world-is-deploying-generative-ai/?sh=7ac032bc51dc。</a></p>
+<p>9 刘正良等，“Radiology-GPT：一个用于放射学的大型语言模型，”arXiv，2023 年 6 月 14 日，<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2306.08666%E3%80%82">https://arxiv.org/abs/2306.08666。</a></p>
+<p>10 “关于美国医院的快速事实，2024”，美国医院协会，2024 年 1 月，<a target="_blank" rel="noopener" href="https://www.aha.org/statistics/fast-facts-us-hospitals%E3%80%82">https://www.aha.org/statistics/fast-facts-us-hospitals。</a></p>
+<p>11 “各州医生集团实践数量，” Definitive Healthcare，2024 年 1 月 5 日，<a target="_blank" rel="noopener" href="https://www.definitivehc.com/resources/healthcare-insights/number-physician-group-practices-by-state%E3%80%82">https://www.definitivehc.com/resources/healthcare-insights/number-physician-group-practices-by-state。</a></p>
+<p>12 全国保险监管协会，美国健康保险行业分析报告，2021 年，<a target="_blank" rel="noopener" href="https://content.naic.org/sites/default/files/inline-files/2020-Annual-Health-Insurance-Industry-Analysis-Report.pdf%E3%80%82">https://content.naic.org/sites/default/files/inline-files/2020-Annual-Health-Insurance-Industry-Analysis-Report.pdf。</a></p>
+<p>13 “2022 年部分国家人均健康支出,” Statista, 2024 年 5 月 22 日, <a target="_blank" rel="noopener" href="https://www.statista.com/statistics/236541/per-capita-health-expenditure-by-country%E3%80%82">https://www.statista.com/statistics/236541/per-capita-health-expenditure-by-country。</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/08/09/llmsClinical02/" rel="prev" title="第二章 窥视人工智能黑箱">
+                  <i class="fa fa-angle-left"></i> 第二章 窥视人工智能黑箱
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/08/11/llmsClinical04/" rel="next" title="第四章 LLM 及生成式人工智能的患者和临床潜力">
+                  第四章 LLM 及生成式人工智能的患者和临床潜力 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Howard Huang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">488k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">14:48</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动-->
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
