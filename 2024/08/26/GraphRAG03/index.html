@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.33/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"szhowardhuang.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="微软推出GraphRAG（图谱检索增强生成），我比较感兴趣GraphRAG的构建过程，参考源码做了一个测试。 测试数据是电影库，原始文本json数据263KB，json格式如下：UTF8字符是中文 123456789101112131415161718192021222324252627282930313233343536[    &#123;        &quot;genre&quot;:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GraphRAG系列3 - 实验">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/08/26/GraphRAG03/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="微软推出GraphRAG（图谱检索增强生成），我比较感兴趣GraphRAG的构建过程，参考源码做了一个测试。 测试数据是电影库，原始文本json数据263KB，json格式如下：UTF8字符是中文 123456789101112131415161718192021222324252627282930313233343536[    &#123;        &quot;genre&quot;:">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_graph03/image-20240802164047-36ty20q.png">
+<meta property="article:published_time" content="2024-08-26T04:19:48.347Z">
+<meta property="article:modified_time" content="2024-08-26T04:29:41.016Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://szhowardhuang.github.io/assets_graph03/image-20240802164047-36ty20q.png">
+
+
+<link rel="canonical" href="https://szhowardhuang.github.io/2024/08/26/GraphRAG03/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://szhowardhuang.github.io/2024/08/26/GraphRAG03/","path":"2024/08/26/GraphRAG03/","title":"GraphRAG系列3 - 实验"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>GraphRAG系列3 - 实验 | 嵌入式老兵博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">嵌入式老兵博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Howard Huang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">55</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/08/26/GraphRAG03/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="GraphRAG系列3 - 实验 | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          GraphRAG系列3 - 实验
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-08-26 12:19:48 / 修改时间：12:29:41" itemprop="dateCreated datePublished" datetime="2024-08-26T12:19:48+08:00">2024-08-26</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>11 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>微软推出GraphRAG（图谱检索增强生成），我比较感兴趣GraphRAG的构建过程，参考源码做了一个测试。</p>
+<p>测试数据是电影库，原始文本json数据263KB，json格式如下：UTF8字符是中文</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;genre&quot;: [</span><br><span class="line">            &quot;\u5267\u60c5&quot;</span><br><span class="line">        ],</span><br><span class="line">        &quot;title&quot;: &quot;\u8096\u7533\u514b\u7684\u6551\u8d4e&quot;,</span><br><span class="line">        &quot;year&quot;: 1994,</span><br><span class="line">        &quot;certificate&quot;: &quot;A&quot;,</span><br><span class="line">        &quot;overview&quot;: &quot;\u4e24\u540d\u88ab\u76d1\u7981\u7684\u7537\u5b50\u5728\u591a\u5e74\u4e2d\u5efa\u7acb\u4e86\u6df1\u539a\u7684\u53cb\u8c0a\uff0c\u901a\u8fc7\u5171\u540c\u7684\u5584\u884c\u627e\u5230\u5b89\u6170\u548c\u6700\u7ec8\u7684\u6551\u8d4e\u3002&quot;,</span><br><span class="line">        &quot;director&quot;: &quot;\u5f17\u5170\u514b\u00b7\u5fb7\u62c9\u90a6\u7279&quot;,</span><br><span class="line">        &quot;cast&quot;: [</span><br><span class="line">            &quot;\u8482\u59c6\u00b7\u7f57\u5bbe\u65af&quot;,</span><br><span class="line">            &quot;\u6469\u6839\u00b7\u5f17\u91cc\u66fc&quot;,</span><br><span class="line">            &quot;\u9c8d\u52c3\u00b7\u5188\u987f&quot;,</span><br><span class="line">            &quot;\u5a01\u5ec9\u00b7\u8428\u5fb7\u52d2&quot;</span><br><span class="line">        ],</span><br><span class="line">        &quot;llm_text&quot;: &quot;\u4e24\u540d\u88ab\u76d1\u7981\u7684\u7537\u5b50\u5728\u591a\u5e74\u4e2d\u5efa\u7acb\u4e86\u6df1\u539a\u7684\u53cb\u8c0a\uff0c\u901a\u8fc7\u5171\u540c\u7684\u5584\u884c\u627e\u5230\u5b89\u6170\u548c\u6700\u7ec8\u7684\u6551\u8d4e\u3002\nYear: 1994\nDirector: \u5f17\u5170\u514b\u00b7\u5fb7\u62c9\u90a6\u7279\nCast: [&#x27;\u8482\u59c6\u00b7\u7f57\u5bbe\u65af&#x27;, &#x27;\u6469\u6839\u00b7\u5f17\u91cc\u66fc&#x27;, &#x27;\u9c8d\u52c3\u00b7\u5188\u987f&#x27;, &#x27;\u5a01\u5ec9\u00b7\u8428\u5fb7\u52d2&#x27;]\nCertificate: A&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;genre&quot;: [</span><br><span class="line">            &quot;\u72af\u7f6a&quot;,</span><br><span class="line">            &quot;\u5267\u60c5&quot;</span><br><span class="line">        ],</span><br><span class="line">        &quot;title&quot;: &quot;\u6559\u7236&quot;,</span><br><span class="line">        &quot;year&quot;: 1972,</span><br><span class="line">        &quot;certificate&quot;: &quot;A&quot;,</span><br><span class="line">        &quot;overview&quot;: &quot;\u4e00\u4e2a\u6709\u7ec4\u7ec7\u72af\u7f6a\u738b\u671d\u7684\u5e74\u8fc8\u5bb6\u65cf\u9996\u9886\u5c06\u4ed6\u79d8\u5bc6\u5e1d\u56fd\u7684\u63a7\u5236\u6743\u8f6c\u4ea4\u7ed9\u4e0d\u60c5\u613f\u7684\u513f\u5b50\u3002&quot;,</span><br><span class="line">        &quot;director&quot;: &quot;\u5f17\u6717\u897f\u65af\u00b7\u798f\u7279\u00b7\u79d1\u6ce2\u62c9&quot;,</span><br><span class="line">        &quot;cast&quot;: [</span><br><span class="line">            &quot;\u9a6c\u9f99\u00b7\u767d\u5170\u5ea6&quot;,</span><br><span class="line">            &quot;\u963f\u5c14\u00b7\u5e15\u897f\u8bfa&quot;,</span><br><span class="line">            &quot;\u8a79\u59c6\u65af\u00b7\u51ef\u6069&quot;,</span><br><span class="line">            &quot;\u9edb\u5b89\u00b7\u57fa\u987f&quot;</span><br><span class="line">        ],</span><br><span class="line">        &quot;llm_text&quot;: &quot;\u4e00\u4e2a\u6709\u7ec4\u7ec7\u72af\u7f6a\u738b\u671d\u7684\u5e74\u8fc8\u5bb6\u65cf\u9996\u9886\u5c06\u4ed6\u79d8\u5bc6\u5e1d\u56fd\u7684\u63a7\u5236\u6743\u8f6c\u4ea4\u7ed9\u4e0d\u60c5\u613f\u7684\u513f\u5b50\u3002\nYear: 1972\nDirector: \u5f17\u6717\u897f\u65af\u00b7\u798f\u7279\u00b7\u79d1\u6ce2\u62c9\nCast: [&#x27;\u9a6c\u9f99\u00b7\u767d\u5170\u5ea6&#x27;, &#x27;\u963f\u5c14\u00b7\u5e15\u897f\u8bfa&#x27;, &#x27;\u8a79\u59c6\u65af\u00b7\u51ef\u6069&#x27;, &#x27;\u9edb\u5b89\u00b7\u57fa\u987f&#x27;]\nCertificate: A&quot;</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure>
+
+
+<p>构建图谱的过程如下：</p>
+<p>create_graph_data &#x3D;&#x3D;》process_movie &#x3D;&#x3D;》extractEntities ， extractRelations ，extractClaims</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">async def create_graph_data(llm: LocalLLM, model: str, movies: List[Dict]):</span><br><span class="line">    # G = nx.Graph()</span><br><span class="line">    usages = []</span><br><span class="line">    graph_data = []</span><br><span class="line">    semaphore = asyncio.Semaphore(5)</span><br><span class="line">    pbar = tqdm(total=len(movies), desc=&quot;Processing Movies&quot;, colour=&quot;blue&quot;)</span><br><span class="line"></span><br><span class="line">    async def process_movie_with_semaphore(movie: Dict):</span><br><span class="line">        async with semaphore:</span><br><span class="line">            try:</span><br><span class="line">                await process_movie(movie.get(&quot;title&quot;), movie.get(&quot;llm_text&quot;))</span><br><span class="line">                pbar.update(1)</span><br><span class="line">            except Exception as err:</span><br><span class="line">                logging.exception(f&quot;EXCEPTION: &#123;str(err)&#125;&quot;)</span><br><span class="line">                pbar.update(1)</span><br><span class="line"></span><br><span class="line">    async def process_movie(movie: str, movie_overview: str):</span><br><span class="line">        entities, eu = await extractEntities(llm, model, movie_overview)</span><br><span class="line">        relations, ru = await extractRelations(llm, model, entities)</span><br><span class="line">        claims, cu = await extractClaims(llm, model, movie_overview, entities,</span><br><span class="line">                                         relations)</span><br><span class="line">        usages.extend([eu, ru, cu])</span><br><span class="line">        graph_data.append(&#123;</span><br><span class="line">            &quot;movie&quot;: movie,</span><br><span class="line">            &quot;overview&quot;: movie_overview,</span><br><span class="line">            &quot;entities&quot;: entities,</span><br><span class="line">            &quot;relations&quot;: relations,</span><br><span class="line">            &quot;claims&quot;: claims</span><br><span class="line">        &#125;)</span><br><span class="line"></span><br><span class="line">    await asyncio.gather(</span><br><span class="line">        *[process_movie_with_semaphore(movie) for movie in movies])</span><br><span class="line"></span><br><span class="line">    return graph_data, usages</span><br></pre></td></tr></table></figure>
+
+
+<p>看一下 extractEntities ：</p>
+<p>extractEntities &#x3D;&#x3D;》系统提示词 EXTRACT.ENTITIES &#x3D;&#x3D;》llm.<strong>function_call</strong></p>
+<p>用大模型来抽取实体</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">async def extractEntities(llm: LocalLLM, model: str, content: str):</span><br><span class="line">    entities = []</span><br><span class="line">    usages = []</span><br><span class="line">    for gleaning in range(ALLOWED_GLEANINGS):</span><br><span class="line">        message_content = f&quot;‍```&#123;content&#125;‍```&quot;</span><br><span class="line">        messages = [&#123;</span><br><span class="line">            &quot;role&quot;: &quot;system&quot;,</span><br><span class="line">            &quot;content&quot;: EXTRACT.ENTITIES</span><br><span class="line">        &#125;, &#123;</span><br><span class="line">            &quot;role&quot;:</span><br><span class="line">            &quot;user&quot;,</span><br><span class="line">            &quot;content&quot;:</span><br><span class="line">            message_content if gleaning == 0 else</span><br><span class="line">            f&#x27;The following are the entities you provided: &#123;entities&#125;. You have missed some entities, please provide all the entities. &#123;message_content&#125;&#x27;</span><br><span class="line">        &#125;]</span><br><span class="line">        # output, usage = await llm.__complete__(messages, model)</span><br><span class="line">        output, usage = await llm.__function_call__(</span><br><span class="line">            messages,</span><br><span class="line">            model,</span><br><span class="line">            EntityTool.tools,</span><br><span class="line">            tool_choice=EntityTool.tool_choice)</span><br><span class="line">        entities_ = output.get(&quot;entities&quot;)</span><br><span class="line">        entities += entities_</span><br><span class="line">        usages += [usage]</span><br><span class="line">    usages = calculateUsages(usages)</span><br><span class="line">    return entities, usages</span><br></pre></td></tr></table></figure>
+
+
+<p>再看一下提示词：</p>
+<p>提示词里面告诉大模型要提取哪些实体，如何组织输出数据。 </p>
+<blockquote>
+<p>You are an AI assistant tasked with extracting entities from a movie description. Your goal is to identify the main movie and all related entities.</p>
+<p>Instructions:</p>
+<ol>
+<li><p>Identify the main movie entity.</p>
+</li>
+<li><p>Identify all related entities (actors, directors, genres, themes, studios, etc.).</p>
+</li>
+<li><p>For each entity, provide:</p>
+<ul>
+<li>Name: The name of the entity (capitalized)</li>
+<li>Type: The type of entity (Movie, Actor, Director, Genre, Theme, Studio, etc.)</li>
+<li>Description: A brief description of the entity</li>
+</ul>
+</li>
+</ol>
+<p>Output Format:<br>Provide the output as a JSON object with the movie as the main entity and other entities in a separate list:<br>{<br>    “related_entities”: [<br>        {“name”: “ENTITY_NAME”, “type”: “ENTITY_TYPE”, “description”: “ENTITY_DESCRIPTION”},<br>        …<br>    ]<br>}</p>
+<p>Text to analyze will be provided in triple backticks.</p>
+<p>Begin your analysis:</p>
+</blockquote>
+<p>抽取关系以及声明就不赘述，代码还有很多，具体大家自己看：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/vatsalsaglani/GraphRAG4Rec">vatsalsaglani&#x2F;GraphRAG4Rec: A naive implementation of GraphRAG for Movie Recommendation on IMDB Top 1000 movies dataset. (github.com)</a></p>
+<p>图谱构建好了之后，可以用浏览器查看.</p>
+<p><img src="/../assets_graph03/image-20240802164047-36ty20q.png" alt="image.png"></p>
+<p>然后就可以查询了，一次查询的token使用量很大，生成的token大概14776个token，大部分token在输入上面，prompt_tokens包含提示词和图谱本身的内容，用了78212个token。图谱检索增强生成这种方式效果不错, 消耗token成本依赖于进行查询的图谱数据的token数。</p>
+<blockquote>
+<p>{<br>“completion_tokens”:14776,<br>“prompt_tokens”:78212,<br>“total_tokens”:92988<br>}<br><br /></p>
+</blockquote>
+<p>附件包含源码和测试输出数据以及图谱。</p>
+<p><a href="/../assets_graph03/imdb-20240826121440-i7mfjx5.zip">imdb.zip</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/08/21/Phi-3-mini-4k-graph/" rel="prev" title="Phi-3-mini-4k 用于图谱实体关系提取">
+                  <i class="fa fa-angle-left"></i> Phi-3-mini-4k 用于图谱实体关系提取
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Howard Huang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">494k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">14:59</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动-->
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.33/fancybox/fancybox.umd.js" integrity="sha256-+2+qOqR8CKoHh/AsVR9k2qaDBKWjYNC2nozhYmv5j9k=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

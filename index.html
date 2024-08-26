@@ -120,7 +120,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">54</span>
+          <span class="site-state-item-count">55</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -138,6 +138,138 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/08/26/GraphRAG03/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/08/26/GraphRAG03/" class="post-title-link" itemprop="url">GraphRAG系列3 - 实验</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-08-26 12:19:48 / 修改时间：12:29:41" itemprop="dateCreated datePublished" datetime="2024-08-26T12:19:48+08:00">2024-08-26</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>11 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>微软推出GraphRAG（图谱检索增强生成），我比较感兴趣GraphRAG的构建过程，参考源码做了一个测试。</p>
+<p>测试数据是电影库，原始文本json数据263KB，json格式如下：UTF8字符是中文</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;genre&quot;: [</span><br><span class="line">            &quot;\u5267\u60c5&quot;</span><br><span class="line">        ],</span><br><span class="line">        &quot;title&quot;: &quot;\u8096\u7533\u514b\u7684\u6551\u8d4e&quot;,</span><br><span class="line">        &quot;year&quot;: 1994,</span><br><span class="line">        &quot;certificate&quot;: &quot;A&quot;,</span><br><span class="line">        &quot;overview&quot;: &quot;\u4e24\u540d\u88ab\u76d1\u7981\u7684\u7537\u5b50\u5728\u591a\u5e74\u4e2d\u5efa\u7acb\u4e86\u6df1\u539a\u7684\u53cb\u8c0a\uff0c\u901a\u8fc7\u5171\u540c\u7684\u5584\u884c\u627e\u5230\u5b89\u6170\u548c\u6700\u7ec8\u7684\u6551\u8d4e\u3002&quot;,</span><br><span class="line">        &quot;director&quot;: &quot;\u5f17\u5170\u514b\u00b7\u5fb7\u62c9\u90a6\u7279&quot;,</span><br><span class="line">        &quot;cast&quot;: [</span><br><span class="line">            &quot;\u8482\u59c6\u00b7\u7f57\u5bbe\u65af&quot;,</span><br><span class="line">            &quot;\u6469\u6839\u00b7\u5f17\u91cc\u66fc&quot;,</span><br><span class="line">            &quot;\u9c8d\u52c3\u00b7\u5188\u987f&quot;,</span><br><span class="line">            &quot;\u5a01\u5ec9\u00b7\u8428\u5fb7\u52d2&quot;</span><br><span class="line">        ],</span><br><span class="line">        &quot;llm_text&quot;: &quot;\u4e24\u540d\u88ab\u76d1\u7981\u7684\u7537\u5b50\u5728\u591a\u5e74\u4e2d\u5efa\u7acb\u4e86\u6df1\u539a\u7684\u53cb\u8c0a\uff0c\u901a\u8fc7\u5171\u540c\u7684\u5584\u884c\u627e\u5230\u5b89\u6170\u548c\u6700\u7ec8\u7684\u6551\u8d4e\u3002\nYear: 1994\nDirector: \u5f17\u5170\u514b\u00b7\u5fb7\u62c9\u90a6\u7279\nCast: [&#x27;\u8482\u59c6\u00b7\u7f57\u5bbe\u65af&#x27;, &#x27;\u6469\u6839\u00b7\u5f17\u91cc\u66fc&#x27;, &#x27;\u9c8d\u52c3\u00b7\u5188\u987f&#x27;, &#x27;\u5a01\u5ec9\u00b7\u8428\u5fb7\u52d2&#x27;]\nCertificate: A&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;genre&quot;: [</span><br><span class="line">            &quot;\u72af\u7f6a&quot;,</span><br><span class="line">            &quot;\u5267\u60c5&quot;</span><br><span class="line">        ],</span><br><span class="line">        &quot;title&quot;: &quot;\u6559\u7236&quot;,</span><br><span class="line">        &quot;year&quot;: 1972,</span><br><span class="line">        &quot;certificate&quot;: &quot;A&quot;,</span><br><span class="line">        &quot;overview&quot;: &quot;\u4e00\u4e2a\u6709\u7ec4\u7ec7\u72af\u7f6a\u738b\u671d\u7684\u5e74\u8fc8\u5bb6\u65cf\u9996\u9886\u5c06\u4ed6\u79d8\u5bc6\u5e1d\u56fd\u7684\u63a7\u5236\u6743\u8f6c\u4ea4\u7ed9\u4e0d\u60c5\u613f\u7684\u513f\u5b50\u3002&quot;,</span><br><span class="line">        &quot;director&quot;: &quot;\u5f17\u6717\u897f\u65af\u00b7\u798f\u7279\u00b7\u79d1\u6ce2\u62c9&quot;,</span><br><span class="line">        &quot;cast&quot;: [</span><br><span class="line">            &quot;\u9a6c\u9f99\u00b7\u767d\u5170\u5ea6&quot;,</span><br><span class="line">            &quot;\u963f\u5c14\u00b7\u5e15\u897f\u8bfa&quot;,</span><br><span class="line">            &quot;\u8a79\u59c6\u65af\u00b7\u51ef\u6069&quot;,</span><br><span class="line">            &quot;\u9edb\u5b89\u00b7\u57fa\u987f&quot;</span><br><span class="line">        ],</span><br><span class="line">        &quot;llm_text&quot;: &quot;\u4e00\u4e2a\u6709\u7ec4\u7ec7\u72af\u7f6a\u738b\u671d\u7684\u5e74\u8fc8\u5bb6\u65cf\u9996\u9886\u5c06\u4ed6\u79d8\u5bc6\u5e1d\u56fd\u7684\u63a7\u5236\u6743\u8f6c\u4ea4\u7ed9\u4e0d\u60c5\u613f\u7684\u513f\u5b50\u3002\nYear: 1972\nDirector: \u5f17\u6717\u897f\u65af\u00b7\u798f\u7279\u00b7\u79d1\u6ce2\u62c9\nCast: [&#x27;\u9a6c\u9f99\u00b7\u767d\u5170\u5ea6&#x27;, &#x27;\u963f\u5c14\u00b7\u5e15\u897f\u8bfa&#x27;, &#x27;\u8a79\u59c6\u65af\u00b7\u51ef\u6069&#x27;, &#x27;\u9edb\u5b89\u00b7\u57fa\u987f&#x27;]\nCertificate: A&quot;</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure>
+
+
+<p>构建图谱的过程如下：</p>
+<p>create_graph_data &#x3D;&#x3D;》process_movie &#x3D;&#x3D;》extractEntities ， extractRelations ，extractClaims</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">async def create_graph_data(llm: LocalLLM, model: str, movies: List[Dict]):</span><br><span class="line">    # G = nx.Graph()</span><br><span class="line">    usages = []</span><br><span class="line">    graph_data = []</span><br><span class="line">    semaphore = asyncio.Semaphore(5)</span><br><span class="line">    pbar = tqdm(total=len(movies), desc=&quot;Processing Movies&quot;, colour=&quot;blue&quot;)</span><br><span class="line"></span><br><span class="line">    async def process_movie_with_semaphore(movie: Dict):</span><br><span class="line">        async with semaphore:</span><br><span class="line">            try:</span><br><span class="line">                await process_movie(movie.get(&quot;title&quot;), movie.get(&quot;llm_text&quot;))</span><br><span class="line">                pbar.update(1)</span><br><span class="line">            except Exception as err:</span><br><span class="line">                logging.exception(f&quot;EXCEPTION: &#123;str(err)&#125;&quot;)</span><br><span class="line">                pbar.update(1)</span><br><span class="line"></span><br><span class="line">    async def process_movie(movie: str, movie_overview: str):</span><br><span class="line">        entities, eu = await extractEntities(llm, model, movie_overview)</span><br><span class="line">        relations, ru = await extractRelations(llm, model, entities)</span><br><span class="line">        claims, cu = await extractClaims(llm, model, movie_overview, entities,</span><br><span class="line">                                         relations)</span><br><span class="line">        usages.extend([eu, ru, cu])</span><br><span class="line">        graph_data.append(&#123;</span><br><span class="line">            &quot;movie&quot;: movie,</span><br><span class="line">            &quot;overview&quot;: movie_overview,</span><br><span class="line">            &quot;entities&quot;: entities,</span><br><span class="line">            &quot;relations&quot;: relations,</span><br><span class="line">            &quot;claims&quot;: claims</span><br><span class="line">        &#125;)</span><br><span class="line"></span><br><span class="line">    await asyncio.gather(</span><br><span class="line">        *[process_movie_with_semaphore(movie) for movie in movies])</span><br><span class="line"></span><br><span class="line">    return graph_data, usages</span><br></pre></td></tr></table></figure>
+
+
+<p>看一下 extractEntities ：</p>
+<p>extractEntities &#x3D;&#x3D;》系统提示词 EXTRACT.ENTITIES &#x3D;&#x3D;》llm.<strong>function_call</strong></p>
+<p>用大模型来抽取实体</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">async def extractEntities(llm: LocalLLM, model: str, content: str):</span><br><span class="line">    entities = []</span><br><span class="line">    usages = []</span><br><span class="line">    for gleaning in range(ALLOWED_GLEANINGS):</span><br><span class="line">        message_content = f&quot;‍```&#123;content&#125;‍```&quot;</span><br><span class="line">        messages = [&#123;</span><br><span class="line">            &quot;role&quot;: &quot;system&quot;,</span><br><span class="line">            &quot;content&quot;: EXTRACT.ENTITIES</span><br><span class="line">        &#125;, &#123;</span><br><span class="line">            &quot;role&quot;:</span><br><span class="line">            &quot;user&quot;,</span><br><span class="line">            &quot;content&quot;:</span><br><span class="line">            message_content if gleaning == 0 else</span><br><span class="line">            f&#x27;The following are the entities you provided: &#123;entities&#125;. You have missed some entities, please provide all the entities. &#123;message_content&#125;&#x27;</span><br><span class="line">        &#125;]</span><br><span class="line">        # output, usage = await llm.__complete__(messages, model)</span><br><span class="line">        output, usage = await llm.__function_call__(</span><br><span class="line">            messages,</span><br><span class="line">            model,</span><br><span class="line">            EntityTool.tools,</span><br><span class="line">            tool_choice=EntityTool.tool_choice)</span><br><span class="line">        entities_ = output.get(&quot;entities&quot;)</span><br><span class="line">        entities += entities_</span><br><span class="line">        usages += [usage]</span><br><span class="line">    usages = calculateUsages(usages)</span><br><span class="line">    return entities, usages</span><br></pre></td></tr></table></figure>
+
+
+<p>再看一下提示词：</p>
+<p>提示词里面告诉大模型要提取哪些实体，如何组织输出数据。 </p>
+<blockquote>
+<p>You are an AI assistant tasked with extracting entities from a movie description. Your goal is to identify the main movie and all related entities.</p>
+<p>Instructions:</p>
+<ol>
+<li><p>Identify the main movie entity.</p>
+</li>
+<li><p>Identify all related entities (actors, directors, genres, themes, studios, etc.).</p>
+</li>
+<li><p>For each entity, provide:</p>
+<ul>
+<li>Name: The name of the entity (capitalized)</li>
+<li>Type: The type of entity (Movie, Actor, Director, Genre, Theme, Studio, etc.)</li>
+<li>Description: A brief description of the entity</li>
+</ul>
+</li>
+</ol>
+<p>Output Format:<br>Provide the output as a JSON object with the movie as the main entity and other entities in a separate list:<br>{<br>    “related_entities”: [<br>        {“name”: “ENTITY_NAME”, “type”: “ENTITY_TYPE”, “description”: “ENTITY_DESCRIPTION”},<br>        …<br>    ]<br>}</p>
+<p>Text to analyze will be provided in triple backticks.</p>
+<p>Begin your analysis:</p>
+</blockquote>
+<p>抽取关系以及声明就不赘述，代码还有很多，具体大家自己看：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/vatsalsaglani/GraphRAG4Rec">vatsalsaglani&#x2F;GraphRAG4Rec: A naive implementation of GraphRAG for Movie Recommendation on IMDB Top 1000 movies dataset. (github.com)</a></p>
+<p>图谱构建好了之后，可以用浏览器查看.</p>
+<p><img src="/../assets_graph03/image-20240802164047-36ty20q.png" alt="image.png"></p>
+<p>然后就可以查询了，一次查询的token使用量很大，生成的token大概14776个token，大部分token在输入上面，prompt_tokens包含提示词和图谱本身的内容，用了78212个token。图谱检索增强生成这种方式效果不错, 消耗token成本依赖于进行查询的图谱数据的token数。</p>
+<blockquote>
+<p>{<br>“completion_tokens”:14776,<br>“prompt_tokens”:78212,<br>“total_tokens”:92988<br>}<br><br /></p>
+</blockquote>
+<p>附件包含源码和测试输出数据以及图谱。</p>
+<p><a href="/../assets_graph03/imdb-20240826121440-i7mfjx5.zip">imdb.zip</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -2662,106 +2794,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/08/08/llmclinical/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Howard Huang">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/08/08/llmclinical/" class="post-title-link" itemprop="url">医疗保健的LLMs和生成式人工智能 --- 目录</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-08-08 09:48:23" itemprop="dateCreated datePublished" datetime="2024-08-08T09:48:23+08:00">2024-08-08</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-08-21 14:03:21" itemprop="dateModified" datetime="2024-08-21T14:03:21+08:00">2024-08-21</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.2k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p><img src="/../assets_llmClinical/image-20240821113921-n1fo6nk.png" alt="image.png"></p>
-<p>LLMs and Generative AI for Healthcare</p>
-<h1 id="本书的组织结构"><a href="#本书的组织结构" class="headerlink" title="本书的组织结构"></a>本书的组织结构</h1><p>本书的内容分为七个章节，组织如下——反映了LLMs及其他生成式人工智能模型在医疗保健中的独特特征，以及它们的潜力、挑战和应用。</p>
-<h2 id="第一章：医生的黑色手提包"><a href="#第一章：医生的黑色手提包" class="headerlink" title="第一章：医生的黑色手提包"></a>第一章：医生的黑色手提包</h2><p>本章探讨了LLMs和生成式人工智能在医疗保健中的潜力，概述了LLMs的前景及其在医疗保健中的应用。除了描述LLMs的未来可能性外，本章还介绍了在医疗保健中使用LLMs的挑战。</p>
-<h2 id="第二章：窥视人工智能黑箱"><a href="#第二章：窥视人工智能黑箱" class="headerlink" title="第二章：窥视人工智能黑箱"></a>第二章：窥视人工智能黑箱</h2><p>在这里，读者将了解LLM的结构以及LLMs的工作原理。本章帮助读者理解LLMs的架构和基本工作原理，而不是对LLMs的无定形化，并解释LLMs是如何工作和生成内容的。</p>
-<h2 id="第三章：超越白大褂"><a href="#第三章：超越白大褂" class="headerlink" title="第三章：超越白大褂"></a>第三章：超越白大褂</h2><p>本章探讨了如何使用LLMs和生成式人工智能来自动化医疗保健中的更多任务。它考察了可以应用这项技术以改善运营和病人护理的领域。</p>
-<h2 id="第四章：LLM与生成式人工智能的患者和临床潜力"><a href="#第四章：LLM与生成式人工智能的患者和临床潜力" class="headerlink" title="第四章：LLM与生成式人工智能的患者和临床潜力"></a>第四章：LLM与生成式人工智能的患者和临床潜力</h2><p>在本章中，我们探讨生成式人工智能如何提升患者体验并影响临床决策：健康机器人礼宾服务；医生的笔记和就诊；健康计划向导；针对常见健康问题的应用，如黑人母亲健康；用药提醒；甚至口腔健康。除了常见的健康问题，我们还将探讨临床决策支持工具、临床洞察机器人和人工智能路边医生。我们也不能忘记远程患者监测、数字双胞胎、完全自动化的医生信件，以及生成式人工智能在健康公平中的作用。</p>
-<h2 id="第五章：LLMs-在药物研发、公共卫生及其他领域"><a href="#第五章：LLMs-在药物研发、公共卫生及其他领域" class="headerlink" title="第五章：LLMs 在药物研发、公共卫生及其他领域"></a>第五章：LLMs 在药物研发、公共卫生及其他领域</h2><p>本章介绍了LLMs在药物发现、临床试验设计与分析以及基因组研究中的应用。具体而言，我们讨论了LLMs在制药研发、公共卫生和基因组学中的多种应用，并进一步探讨了它们的好处和潜力。</p>
-<h2 id="第六章：掌舵LLMs的伦理"><a href="#第六章：掌舵LLMs的伦理" class="headerlink" title="第六章：掌舵LLMs的伦理"></a>第六章：掌舵LLMs的伦理</h2><p>本章重点讨论如何以负责任的方式开发用于医疗保健的LLMs，并设计以最大化积极影响。它首先讨论我们所说的“积极的人工智能想象”是什么意思，然后描述围绕LLMs的伦理考虑，包括偏见、隐私和非法使用的风险。它还讨论了一些应对这些问题的策略（例如，监测LLM行为、确保和保护隐私、促进LLMs的伦理使用的政策等）。它讨论了“人工智能与回形针问题”（即对齐），指出我们必须确保人工智能的目标与人类的目标一致。</p>
-<h2 id="第七章：未来将至"><a href="#第七章：未来将至" class="headerlink" title="第七章：未来将至"></a>第七章：未来将至</h2><p>最后一章提供了对LLMs未来的展望，包括对奇点的讨论以及 AGI 演变的潜力。最后一部分标题为“明天的展望”，提供了五个关于未来LLMs的预测，以及它们可能对我们的医疗保健和社会产生的影响。通过这一多样化的案例集合，本书提供了对LLMs和生成式人工智能在医疗保健中当前现实和未来机会的整体视角，赋予读者必要的知识和见解，以应对这些快速出现的技术的伦理、技术和社会影响。在阅读这七章后，读者将理解在医疗保健中使用LLMs和生成式人工智能的可能性、问题和伦理。希望章节之间的顺序能够引导读者深入理解这些工具如何在智能使用的情况下，转变医疗服务并改善患者结果。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -2785,13 +2817,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">488k</span>
+    <span title="站点总字数">494k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">14:48</span>
+    <span title="站点阅读时长">14:59</span>
   </span>
 </div>
 <div class="busuanzi-count">
