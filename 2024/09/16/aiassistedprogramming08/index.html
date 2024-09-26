@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.33/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"szhowardhuang.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在本章中，我们将深入一些实用的编码技巧。我们将从编码的基础开始——玩弄函数和类。然后，我们将进行一些重构，整理混乱的代码，使其运行得更顺畅。我们还将展示如何处理和创建数据。接着，我们将查看一些可以帮助创建精美前端的人工智能工具，轻松实现。 现实检查人工智能辅助编程工具很酷，对吧？但我们不要自欺欺人。它们不是能解决我们所有编码问题的魔法棒。为什么？因为这些工具就像课堂上那些只从公开笔记中学习的学生。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第8章  编码">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/09/16/aiassistedprogramming08/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="在本章中，我们将深入一些实用的编码技巧。我们将从编码的基础开始——玩弄函数和类。然后，我们将进行一些重构，整理混乱的代码，使其运行得更顺畅。我们还将展示如何处理和创建数据。接着，我们将查看一些可以帮助创建精美前端的人工智能工具，轻松实现。 现实检查人工智能辅助编程工具很酷，对吧？但我们不要自欺欺人。它们不是能解决我们所有编码问题的魔法棒。为什么？因为这些工具就像课堂上那些只从公开笔记中学习的学生。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0801-20240829151930-epotutb.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0802-20240829151931-ybgf6ne.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0803-20240829151931-zusn8r6.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0804-20240829151931-gqya3zj.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0805-20240829151932-t457xtm.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0806-20240829151932-b2xksvc.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0807-20240829151933-go70zoc.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0808-20240829151933-068po2k.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0809-20240829151933-sm5dma8.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0810-20240829151934-9sofry9.png">
+<meta property="article:published_time" content="2024-09-16T03:48:32.000Z">
+<meta property="article:modified_time" content="2024-09-26T03:55:46.000Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0801-20240829151930-epotutb.png">
+
+
+<link rel="canonical" href="https://szhowardhuang.github.io/2024/09/16/aiassistedprogramming08/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://szhowardhuang.github.io/2024/09/16/aiassistedprogramming08/","path":"2024/09/16/aiassistedprogramming08/","title":"第8章  编码"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>第8章  编码 | 嵌入式老兵博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">嵌入式老兵博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8E%B0%E5%AE%9E%E6%A3%80%E6%9F%A5"><span class="nav-number">1.</span> <span class="nav-text">现实检查</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%A4%E6%96%AD%E5%86%B3%E7%AD%96"><span class="nav-number">2.</span> <span class="nav-text">判断决策</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0"><span class="nav-number">3.</span> <span class="nav-text">学习</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B3%A8%E9%87%8A"><span class="nav-number">4.</span> <span class="nav-text">注释</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A8%A1%E5%9D%97%E5%8C%96%E7%BC%96%E7%A8%8B"><span class="nav-number">5.</span> <span class="nav-text">模块化编程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E9%A1%B9%E7%9B%AE"><span class="nav-number">6.</span> <span class="nav-text">启动项目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%85"><span class="nav-number">7.</span> <span class="nav-text">自动填充</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%87%8D%E6%9E%84"><span class="nav-number">8.</span> <span class="nav-text">重构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%8D%E8%80%85%E4%BB%A3%E7%A0%81"><span class="nav-number">8.1.</span> <span class="nav-text">忍者代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%90%E5%8F%96%E6%96%B9%E6%B3%95"><span class="nav-number">8.2.</span> <span class="nav-text">提取方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E8%A7%A3%E6%9D%A1%E4%BB%B6%E8%AF%AD%E5%8F%A5"><span class="nav-number">8.3.</span> <span class="nav-text">分解条件语句</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E5%91%BD%E5%90%8D"><span class="nav-number">8.4.</span> <span class="nav-text">重命名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%BB%E4%BB%A3%E7%A0%81"><span class="nav-number">8.5.</span> <span class="nav-text">死代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%BD%E6%95%B0"><span class="nav-number">9.</span> <span class="nav-text">函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B"><span class="nav-number">10.</span> <span class="nav-text">面向对象编程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A1%86%E6%9E%B6%E5%92%8C%E5%BA%93"><span class="nav-number">11.</span> <span class="nav-text">框架和库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE"><span class="nav-number">12.</span> <span class="nav-text">数据</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91"><span class="nav-number">13.</span> <span class="nav-text">前端开发</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CSS"><span class="nav-number">13.1.</span> <span class="nav-text">CSS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%9B%BE%E5%BD%A2"><span class="nav-number">13.2.</span> <span class="nav-text">创建图形</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B7%A5%E5%85%B7"><span class="nav-number">13.3.</span> <span class="nav-text">人工智能工具</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#API-%E6%8E%A5%E5%8F%A3"><span class="nav-number">14.</span> <span class="nav-text">API 接口</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">15.</span> <span class="nav-text">结论</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Howard Huang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/09/16/aiassistedprogramming08/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="第8章  编码 | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          第8章  编码
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-09-16 11:48:32" itemprop="dateCreated datePublished" datetime="2024-09-16T11:48:32+08:00">2024-09-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-09-26 11:55:46" itemprop="dateModified" datetime="2024-09-26T11:55:46+08:00">2024-09-26</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>16k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>29 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>在本章中，我们将深入一些实用的编码技巧。我们将从编码的基础开始——玩弄函数和类。然后，我们将进行一些重构，整理混乱的代码，使其运行得更顺畅。我们还将展示如何处理和创建数据。接着，我们将查看一些可以帮助创建精美前端的人工智能工具，轻松实现。</p>
+<h1 id="现实检查"><a href="#现实检查" class="headerlink" title="现实检查"></a>现实检查</h1><p>人工智能辅助编程工具很酷，对吧？但我们不要自欺欺人。它们不是能解决我们所有编码问题的魔法棒。为什么？因为这些工具就像课堂上那些只从公开笔记中学习的学生。它们是在互联网上各种代码的混合上训练的，老实说，并不是所有的代码都是顶尖的。这对你意味着什么？有时候，你可能会得到比感恩节火鸡还要臃肿的代码，或者像纸牌屋一样难以维护。有时候代码就是错的，不能满足你的需求，甚至更糟的是，让黑客轻松进入你的前门或占用你的网络资源。</p>
+<p>让我们看一个例子，其中ChatGPT生成了混乱的代码。图 8-1 显示了将两个已排序列表合并为一个单一已排序列表的代码。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0801-20240829151930-epotutb.png"></p>
+<p>图 8-1. 在被要求合并两个已排序列表时，ChatGPT 创建了一些混乱的代码</p>
+<p>这段人工智能生成的代码确实正确地合并了两个列表，但它采用了冗长的方法。它单独处理了空列表的情况，并使用两个额外的 while 循环来附加每个列表中的剩余元素。</p>
+<p>这就是你的编码智慧真正发挥作用的地方。你必须了解基础知识。你需要知道该问什么问题，以及在出现问题时该去哪里查找。</p>
+<p>图 8-2 显示了一种更好的方法。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0802-20240829151931-ybgf6ne.png"></p>
+<p> 图 8-2. 在一些人工帮助下，我们实现了更好的排序列表合并方法</p>
+<p>所以不要担心你可能听到的关于机器人取代开发者工作的悲观言论。诚然，这些人工智能模型一直在不断进步。它们在学习和成长。然而，它们距离编程的终极解决方案仍然很远。程序员仍然在这个领域中发挥着重要作用。人工智能辅助编程工具非常有帮助，但它们不会取代真正工程师的智慧和经验。</p>
+<p>当你与这些系统协作时，请记住：这是一种合作，而不是交接。保持敏锐，保持好奇，别忘了仔细检查这些人工智能工具提供的所有内容。它们是助手，而不是英雄。</p>
+<h1 id="判断决策"><a href="#判断决策" class="headerlink" title="判断决策"></a>判断决策</h1><p>有时候，自己编写代码比使用人工智能辅助编程工具更简单。毕竟，让人工智能理解你的需求可能需要多次尝试。但是随着你不断使用这些人工智能工具，你会逐渐掌握它们何时有用，何时自己独立完成更好。</p>
+<p>以 Dmitrii Ivashchenko 的经验为例，他是 MY.GAMES 的首席软件工程师，这是一家总部位于阿姆斯特丹的游戏公司，全球注册用户超过 10 亿。根据他说：</p>
+<blockquote>
+<p>一个例子是提示“用 Python 编写一个方法为 datetime 对象添加默认时区。”但是，你应该准备好很多方面会被省略，你要么自己处理边缘情况，要么与ChatGPT进行长时间的沟通指出它的错误。这里主要是初步评估解释一个任务所需的时间与自己实现它所需的时间。</p>
+</blockquote>
+<h1 id="学习"><a href="#学习" class="headerlink" title="学习"></a>学习</h1><p>使用类似ChatGPT的方式学习新语言、框架或库可以大有帮助。这可能比传统的方法如上课、无休止地谷歌搜索或观看一堆 YouTube 视频更快。</p>
+<p>您可以使用ChatGPT获取所有基本知识和代码语法的详细信息。此外，如果您更喜欢通过实践学习，可以请求代码示例以查看所有内容如何结合在一起。如果您已经知道一种编程语言，ChatGPT可以通过比较两者来使学习新语言变得更容易。假设您擅长 Python 但刚开始学习 JavaScript；它可以用 Python 术语解释主要区别。如果您需要更多资源，ChatGPT可以在互联网上搜索并推荐一些可靠的学习材料给您。</p>
+<p>以下是一些值得考虑的提示：</p>
+<blockquote>
+<p>对于不懂Python的人来说，我应该先学什么？</p>
+<p>初学者可以尝试哪些项目来提高我在 React 中的技能？</p>
+<p>请问您能推荐一些学习高级 SQL 查询的资源吗？</p>
+<p>提示：如何用 Python 和 JavaScript 实现一个基本的“待办事项”应用程序，以突出它们的区别？</p>
+<p>提示：我知道如何在 C++中使用循环。你能给我展示一下 Python 中的循环是如何工作的以便比较吗？</p>
+<p>找到 5 个有用的 YouTube 视频，展示如何学习 Rust。</p>
+</blockquote>
+<p>让我们看看伊瓦申科是如何处理这个问题的：</p>
+<blockquote>
+<p>如果你想快速掌握一门新语言或框架，可以立即开始在该技术上创建一个新项目。假设你想学习 Django。我们选择一个将在此技术上实现的项目——一个在线商店。首先，问ChatGPT如何开始开发一个新的 Django 项目。它会告诉你需要安装哪些依赖项，如何设置项目的初始配置，以及你需要处理哪些相关技术。然后我们继续更具体的请求，比如“Django 中的模型是如何组织的？”“如何在管理面板中添加新部分？”以及“如何迁移数据库？”通过逐渐获得新知识并提出越来越详细的问题，你几乎可以实现任何在之前不熟悉的技术上的项目。这就是我通过一个周末的高效工作掌握 Django 的方法。</p>
+</blockquote>
+<p>您也可以让ChatGPT创建有用的学习指南。以下是一个示例提示：</p>
+<blockquote>
+<p>创建一个JavaScript 学习指南：初学者级别</p>
+</blockquote>
+<p>您可以随后跟进：</p>
+<blockquote>
+<p>请为我创建一个学习计划。我应该学习哪些主题？练习题或测验呢？编码问题？资源链接？</p>
+</blockquote>
+<p>ChatGPT 甚至可以帮助你记住新概念。一种方法是使用助记设备，例如首字母缩略词。例如，假设你想记住 DevOps 的关键要素，包括持续集成、持续交付、微服务和基础设施即代码。这是 ChatGPT 建议的：</p>
+<blockquote>
+<p>CI-CD-MI (pronounced “Ci-Ci-D-Mi”)</p>
+</blockquote>
+<p>最后，你可以使用ChatGPT来获取 LeetCode 的帮助。想象一下：你坐在面试室里，面前可能有一个白板或一台笔记本电脑，然后他们给你出一个脑筋急转弯的算法或数据结构问题。这不仅仅是编码。他们在评估你思考的速度、解释思路的能力以及解决问题的风格。</p>
+<p>如果你想要提升自己，可以考虑注册 LeetCode。每月 35 美元。当然，ChatGPT 随时可以提供帮助。这是一个简单的提示：</p>
+<blockquote>
+<p>建议三个常见的 LeetCode 面试题。</p>
+</blockquote>
+<p>ChatGPT 然后出现了像两数之和、最长无重复子串和有效括号这样的挑战。你可以进一步深入，比如获取更长的解释或示例。</p>
+<h1 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h1><p>当你在与截止日期赛跑时，很容易省略代码注释或完全放弃它们。但人工智能辅助工具可以支持你。你会发现代码建议中已经包含注释。</p>
+<p>有趣的是，由于人工智能技术，拥有注释可能感觉有些过时。如果代码让你感到困惑，你可以直接让工具为你解析，不是吗？这确实是事实。</p>
+<p>其他内容：写作提示正成为新的评论方式。毕竟，大多数工具在评论行中包含提示。</p>
+<p>当然，如果你想给一些代码添加注释，可以使用简单的提示，比如：</p>
+<blockquote>
+<p>添加清晰且符合最佳编码实践的注释。</p>
+</blockquote>
+<p>是否注释由你决定。这里没有放之四海而皆准的规则。这完全取决于什么对你和你的团队有效。但有一点是肯定的——使用人工智能辅助工具在代码上添加注释非常简单。</p>
+<h1 id="模块化编程"><a href="#模块化编程" class="headerlink" title="模块化编程"></a>模块化编程</h1><p>模块化编程是高效和有效软件开发的基石。通过模块化编程，代码更加有组织，更易于理解，也更容易跟上进度。这也使得与其他编码人员合作时减少了很多麻烦，因为大家不会互相干扰。此外，模块是可重用的；可重用性是巨大的时间节省，保持了一致性，并减少了出错的可能性。</p>
+<p>模块化编程的价值确实适用于你如何使用人工智能辅助工具。它们不会从简单的提示中生成高级应用程序。它们不是魔法师。但如果你将任务分解成清晰、具体的部分，这些工具就会表现出色。否则，你可能会得到一堆偏离主题的代码混乱。</p>
+<p>根据蒂图斯·卡皮尔尼安，私人市场实验室的联合创始人兼首席产品官：</p>
+<blockquote>
+<p>在我开始使用人工智能工具后，我可以专注于问题和我的解决方案方法，而不是我需要编写的实际代码的细节。当我遇到技术问题时，我会先将其分解成更小的部分，输入和输出清晰明了。这样做的原因是我使用的人工智能工具的上下文窗口可能不足以一次性提出一个好的解决方案。我发现如果我要求模型提供使用简单输入的代码，执行一个单一的任务并提供我可以验证的输出，调试和构建会更容易。如果我对中间输出不满意，我会向ChatGPT描述我的问题，并尝试运行它提供的更新代码。一旦我对解决方案满意，我可以添加额外的处理步骤，或者在现有函数内部，或者取前一步的输出进一步优化，使其更接近我想要的解决方案。</p>
+<p>人工智能工具还提高了我的生产力，让我在将代码片段发送到编译器或部署云函数并消耗资源之前，先检查我构建的代码片段是否正确。我只需将代码的一部分粘贴到ChatGPT窗口中，并询问它是否正确，假设我初始化&#x2F;提供了代码片段运行所需的正确上下文（例如，导入、变量、常量、调用的自定义函数等）。这让我能够生成运行良好且更快的解决方案。</p>
+</blockquote>
+<h1 id="启动项目"><a href="#启动项目" class="headerlink" title="启动项目"></a>启动项目</h1><p>冷启动问题或空白页面问题</p>
+<p>这里有一个场景：你盯着一个空屏幕，没有代码，没有数据，甚至没有明确的前进路径。毫无疑问，这听起来令人不知所措。第一个大难题是选择项目的架构、设计模式和使用什么技术。这些决定非常重要，因为你将长期与它们共存，所以你希望尽可能从一开始就做好。</p>
+<p>不要忘记人员因素。让团队达成共识，找出有效沟通的方法，从零开始建立工作流程——这些可能和技术一样具有挑战性。这不仅仅是写下第一行代码，而是为接下来的所有内容打下坚实的基础。应对这个阶段需要聪明的规划、技术知识和扎实的团队合作。</p>
+<p>人工智能辅助编程工具可以提供很大帮助。您可以使用它们来搭建应用程序的基本框架。您将找到一个与您的愿景相符的定制起点。这些工具让您免于繁琐的初始设置，直接进入项目中更有趣的部分。</p>
+<p>您可以提出一个特定任务，然后提示LLM生成模板或启动代码。</p>
+<p>这是一个示例提示：</p>
+<blockquote>
+<p>提示：生成一个网页应用的启动代码，该应用将用户的社交媒体动态从多个平台聚合到一个单一的仪表板界面。你建议我使用什么语言和框架？关于一般文件结构呢？</p>
+</blockquote>
+<p>使用此方法，ChatGPT 首先建议使用 React 创建流畅的单页面应用（SPA）。它还建议使用 Redux 来维护强类型和可重用的组件。接着建议使用 Node.js 运行应用程序，使用 Express.js 处理 API 端点。然后推荐使用 Passport.js 进行登录，使用 MongoDB 和 Mongoose 进行数据库和模型构建。至于文件结构，图 8-3 显示了布局。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0803-20240829151931-zusn8r6.png"></p>
+<p> 图 8-3. ChatGPT 建议了一种新网页应用的文件结构</p>
+<h1 id="自动填充"><a href="#自动填充" class="headerlink" title="自动填充"></a>自动填充</h1><p>你知道当你深陷编码区，设置时间单位的常量时，代码一行接一行重复吗？这时 GitHub Copilot 就派上用场了。你可以让它提供自动填充。</p>
+<p>让我们举个例子。假设您正在创建一个希望实现响应式的应用程序。这意味着您需要为 CSS-in-JS 样式组件库设置断点常量。</p>
+<p>您可以先写这个：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">breakpoints = &#123;</span><br><span class="line">    &#x27;xs&#x27;: &#x27;320px&#x27;,  # Extra small devices</span><br></pre></td></tr></table></figure>
+
+<p>然后在在线聊天中，您可以使用此提示：</p>
+<blockquote>
+<p>为其他屏幕尺寸创建常量。</p>
+</blockquote>
+<p>图 8-4 显示了结果。它提供了其他屏幕尺寸和具有类似样式的变量。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0804-20240829151931-gqya3zj.png"></p>
+<p>图 8-4. 这是 Copilot 的输出，建议不同屏幕尺寸的常量</p>
+<p>您可以进一步使用此功能。Copilot 可以通过查看您项目中的打开文件来帮助自动填充。</p>
+<p> 根据卡皮尔尼安：</p>
+<blockquote>
+<p>我发现Copilot在处理数据结构时特别有用，如果你的代码中有相似的部分。如果你在另一个文件中定义了一个对象，而这个对象是你正在使用的代码库的一部分，那么当你尝试定义一个相似的对象时，它可以在你输入时可靠地为你预填充代码。例如，一个用于常见 API 调用的对象，比如 Sendgrid 电子邮件，在这里效果很好。</p>
+<p>然而，如果不小心，这个自动补全可能会产生错误。例如，在导入时，它并不总是能正确获取文件夹结构，特别是如果你设计了自己的代码结构，或者你使用的框架比较新且文档不完善。在这种情况下，我必须手动检查组件来自哪里，以及Copilot建议的目录是否正确。</p>
+</blockquote>
+<h1 id="重构"><a href="#重构" class="headerlink" title="重构"></a>重构</h1><p>重构就像是代码的春季清理。它是关于整理、重组，有时还要美化。它不是添加新功能或修复错误。</p>
+<p>重构保持代码库健康，减少杂乱，更加直观。这意味着当你或其他人稍后重新进入时，更容易理解发生了什么，从而减少头疼和对着屏幕咒骂。此外，干净的代码通常更高效且更少错误，因此对所有参与者来说都是双赢。</p>
+<p>重构是人工智能辅助工具表现出色的领域之一。通过一两个提示，您可以简化代码的复杂性，精简冗余，并将代码重组为不仅功能齐全而且优雅的形式。有了人工智能的支持，重构变得不再是一项繁琐的工作，而是保持领先的秘密武器。</p>
+<p>在本章的接下来的几个部分中，我们将查看一些重构的例子。</p>
+<h2 id="忍者代码"><a href="#忍者代码" class="headerlink" title="忍者代码"></a>忍者代码</h2><p>把忍者代码想象成那些过于夸张的动作电影特技。它华丽而复杂，让你想，“哇，他们是怎么做到的？”但问题是：一旦惊叹感消退，弄清楚它就成了一件难事。想象一下，代码如此狡猾和纠结，以至于即使是写它的人在他们的“忍者”阶段过去后也无法理清头绪。当然，完成那个忍者动作在当下感觉很酷，但当你或其他人需要重新进入并进行更改时，就不再是“嗨呀！”而是“哦哦。”事实是，虽然忍者代码可能展示了一些严肃的编程技巧，但它往往违背了良好编码实践的原则，这些原则强调保持代码的整洁、简单和易懂。</p>
+<p>无论如何，忍者代码是很常见的。但使用人工智能辅助工具重构可以帮助理清思路。以下是一个例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">console.log((function(n, a = 0, b = 1) &#123; while (--n) [a, b] = [b, a + b]; </span><br><span class="line">return a; &#125;)(10));</span><br></pre></td></tr></table></figure>
+
+<p>让ChatGPT来完成工作：</p>
+<blockquote>
+<p>提示：你能一步一步解释这段代码吗？另外，你能用更简单、更易维护的方式写出来吗？</p>
+</blockquote>
+<p>ChatGPT 确定这是一个计算第 n 个斐波那契数的函数。接下来分六步描述，并提供简化版本，如图 8-5 所示：</p>
+<blockquote>
+<p>ChatGPT：在这个版本中，calculateFibonacci 函数清晰地展示了遍历斐波那契数列的过程。它更冗长，但更容易理解和维护，特别是对于将来可能阅读此代码的其他开发人员。</p>
+</blockquote>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0805-20240829151932-t457xtm.png"></p>
+<p> 图 8-5. ChatGPT 提供了一个更简单的版本的忍者代码</p>
+<h2 id="提取方法"><a href="#提取方法" class="headerlink" title="提取方法"></a>提取方法</h2><p>当你有一个很长的方法或函数时，你可以应用提取方法。你会挑选出一段专注于某个任务的代码，比如数据检查或特定计算，然后将其转化为一个新方法。</p>
+<p>这种方法不仅仅是让事情看起来整洁。它也是实用的。它帮助你保持代码易于阅读和理解。当你需要再次执行相同的任务时，你可以调用你的新方法，而不是重写代码。如果出现故障，当你的代码被很好地分割成这些专注的小块时，更容易解决。这是为了让你的生活更轻松，并保持代码的整洁和有序。</p>
+<p>以下是提取方法的一些提示：</p>
+<blockquote>
+<p>提问：在函数式编程语言中提取方法时有哪些常见的陷阱需要避免？</p>
+<p>提示：我附上了一段我的 C#代码。你能建议哪些部分适合提取方法重构吗？</p>
+<p>提示：你能比较一下我的原始函数和提取方法后的重构版本吗？哪个更高效？</p>
+</blockquote>
+<h2 id="分解条件语句"><a href="#分解条件语句" class="headerlink" title="分解条件语句"></a>分解条件语句</h2><p>分解条件语句是将复杂的 if-then-else 语句拆分成更易于理解的内容。你知道那种——那些冗长、曲折的条件，让你盯着屏幕眯眼试图弄清楚发生了什么。</p>
+<p>假设你有一个 if 语句，包含一个复杂的条件，检查多个变量，并可能调用其他函数。你可以将这个条件提取到一个方法中，方法名清楚地描述这个条件在检查什么。例如，像 <code>if (user.isActive() &amp;&amp; user.hasSubscription() &amp;&amp; !user.isBlocked())</code> 这样的条件可以重构为一个名为 <code>canUserAccessContent()</code> 的方法。这不仅使你的主方法更简洁，还能让代码立即自解释。</p>
+<p>同样， then 和 else 块中的代码可以提取到不同的方法中。这使得程序的主流程更加易读。读者现在可以在高层次上理解流程：如果这个条件为真，就这样做；否则，就那样做。逻辑的每个部分都在自己命名整齐的方法中，使得单独测试和修改变得更容易。</p>
+<p>这里有一些提示：</p>
+<blockquote>
+<p>提示：你能解释一下如何分解 Java 代码中的条件语句以提高可读性吗？</p>
+<p>提示：我如何使用分解条件技术来拆分复杂的如果-那么-否则语句？</p>
+</blockquote>
+<h2 id="重命名"><a href="#重命名" class="headerlink" title="重命名"></a>重命名</h2><p>重命名函数、变量和类可能看起来是一个小改动，但它对代码的可读性和可维护性有很大影响。这在代码随着时间演变而原始名称不再准确描述代码功能的情况下特别有用。例如，一个最初命名为 processData 的方法可能变得更加专业化。将其重命名为更具描述性的名称，如 filterInvalidEntries ，可以立即明确其功能。</p>
+<p>编写重命名提示非常简单：</p>
+<blockquote>
+<p>提示：对于在我的 SQL 脚本中保存数据库中用户总数的变量来说，什么是一个好的名称？</p>
+<p>提示：这是我的 JavaScript 代码片段。你能审查一下变量和方法名称并提出改进建议吗？</p>
+<p>提示：我不确定我的 Java 类中的名称是否足够清晰。你能提议更清晰的名称吗？</p>
+</blockquote>
+<p>但你需要小心，比如在使用像Copilot这样的工具时。如果你更改了名称，这可能会破坏仍在使用旧名称的代码部分。</p>
+<h2 id="死代码"><a href="#死代码" class="headerlink" title="死代码"></a>死代码</h2><p>死代码顾名思义是没有被使用的代码。这些是被遗忘的代码行，来自于被废弃的功能或使某些部分变得多余的更新。</p>
+<p>清理项目中的无效代码使一切更加整洁和易于管理。对于任何新加入项目的人来说，这也减少了困惑。如果某些代码似乎没有任何作用，他们就不必费解为什么会存在这些代码。</p>
+<p>这里有一些有用的提示：</p>
+<blockquote>
+<p>提示：你能帮我识别这段 JavaScript 代码中的潜在死代码吗？</p>
+<p>提示：这是我的 Python 项目的一部分。你能指出任何看起来未使用或冗余的代码吗？</p>
+<p>提示：请查看这些 SQL 过程，并确认是否有任何可以安全删除的</p>
+</blockquote>
+<p>注意，使用LLM可能存在风险。有时候，看起来像是旧的、尘封的代码角落实际上可能对那些罕见的、以防万一的场景很重要。然后还有连锁反应：移除一个部分可能会影响到依赖它的其他内容，特别是如果它是复杂逻辑或设置的一部分。所以要小心。</p>
+<p>另一个问题是生成式人工智能可能无法真正理解关系。因此，在人工智能系统变得更加复杂之前，最好避免使用它们来清除死代码。</p>
+<p>当涉及到处理死代码时，替代工具可能是更好的选择。一个例子是代码检查工具。可以把它看作是你代码的整理团队。如果你在使用 JavaScript，可以使用 ESLint。或者对于 Python 爱好者，可以使用 Pylint，Ruby 开发者可以使用 RuboCop。这些工具就像代码的语法检查器。它们擅长发现那些恼人的语法错误、潜在的 bug，当然，还有那些偷偷潜伏但没有任何作用的代码片段。</p>
+<p>你还有重型检查工具：静态代码分析工具。顶级供应商有 SonarQube、Code Climate 和 Coverity。这些工具就像侦探。它们在不运行代码的情况下深入分析你的代码，嗅探可能在后续出现问题的复杂模式，包括死代码。</p>
+<h1 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h1><p>函数是编码的基础，在任何类型的软件程序中都发挥着重要作用，无论使用什么编程语言。它们是代码块，有助于保持程序整洁和易读，因为它们让你可以轻松重用代码——对任何开发者来说都是救命稻草。它们还可以将一个大任务拆分成更小、更易管理的部分。这使得处理复杂软件变得容易得多，特别是在需要修复错误、进行更新或只是想理解代码在做什么时。</p>
+<p>从一开始就要准确实现函数。使它们工作是一回事，但你还需要确保它们与其他代码良好配合。你希望你的函数清晰、易于维护且高效。你需要考虑给每个函数命名，使其有意义，如何设置它，如何处理进出的数据，以及如何处理任何问题。</p>
+<p>以下是一些需要牢记的指导原则：</p>
+<ul>
+<li>单一职责原则：你的功能需要专注于一项工作——就是这样。这使得弄清楚它在做什么、检查它是否正常工作以及在不正常时修复它变得简单得多。</li>
+<li>清楚命名：给你的函数起一个名字，让它准确地告诉你它的作用。如果它计算总价，则将其称为calculateTotalPrice。这使您的代码更具可读性。</li>
+<li>简洁明了：一个好的经验法则是，你应该能够在屏幕上看到整个函数而无需滚动。短函数更容易处理，出错的可能性更小。</li>
+<li>参数是关键：使用参数作为输入，返回值作为输出。这使得您的函数可预测且自包含。</li>
+<li>保持一致：遵循您语言或项目的编码规范和风格指南。这有助于保持代码的一致性，便于他人阅读。</li>
+</ul>
+<p>当你记住这些提示时，你可以快速生成一些非常有效的函数提示，ChatGPT可以提供帮助。查看这些示例提示：</p>
+<blockquote>
+<p><em>Prompt:</em> Write a Python function named calculate_area that takes two integers as parameters, length and width, and returns the area of a rectangle. Include a docstring explaining the function’s purpose and ensure the function handles non-integer inputs by raising a TypeError.</p>
+<p><em>Prompt:</em> 我需要一个名为filterAndTransform 的JavaScript 函数。它应该将对象数组作为输入。每个对象都有属性名称（字符串）和年龄（数字）。该函数应返回一个新数组，其中包含 18 岁或以上人员的姓名（已转换为大写）。包括解释逻辑的注释。</p>
+<p><em>Prompt:</em> Create a C++ function named efficientSort that sorts an array of integers in ascending order. The function should be optimized for time complexity. Provide comments within the function explaining the choice of sorting algorithm and its time complexity.</p>
+<p><em>Prompt:</em> 您能否生成一个名为 safeDivide 的 Java 函数，它接受两个双参数（分子和分母）并返回它们的除法？该函数应通过返回自定义错误消息来处理除零。包括解释该函数及其错误处理的 Javadoc 注释</p>
+</blockquote>
+<h1 id="面向对象编程"><a href="#面向对象编程" class="headerlink" title="面向对象编程"></a>面向对象编程</h1><p>面向对象编程，简称 OOP，是一种使用“对象”来表示数据和方法的计算机程序编写方式。可以把它想象成创建一堆小的自包含盒子，每个盒子都有自己的一套工具和信息。这些盒子称为类，类似于创建不同对象的蓝图。类定义了对象的结构和行为——类似于模板。然后从这个类中，可以创建单个对象，每个对象都有自己特定的细节，但遵循相同的基本结构。</p>
+<p>深入了解面向对象编程的世界可能会让你感觉像是走进了一个复杂概念的迷宫，比如抽象、继承、封装和多态。它们可能让人觉得像是用外星语言写成的。</p>
+<p>这就是ChatGPT可以成为您的翻译器的地方。它将这些复杂的想法分解成易于消化的简明解释。对封装的真正含义感到困惑？只需问一下，您将得到一个实际上有意义的答案，去掉技术术语。</p>
+<p>这里有一些提示：</p>
+<blockquote>
+<p>你能用&lt;你喜欢的编程语言&gt;创建一个简单的类来演示封装吗？</p>
+<p>封装在编程中的一些现实世界示例是什么？</p>
+<p>用日常生活中的类比来解释 OOP 中的抽象。</p>
+<p>提示：你能给我一个编程场景中继承的例子吗？</p>
+<p>继承如何促进面向对象编程中的代码重用？</p>
+<p>多态如何增强程序的灵活性？</p>
+<p>多态性在什么场景中特别有用，您能提供一些例子吗？</p>
+</blockquote>
+<p>人工智能辅助编程工具也可以帮助生成类的初始结构。以下是一些示例提示：</p>
+<ul>
+<li><em>Prompt:</em> Design an Employee class with properties like employeeName, employeeID, and department. Implement a method that displays the employee’s details. Also, include a constructor to set these properties.</li>
+<li><em>Prompt:</em> I need a BankAccount class in Java. It should have private properties like balance and accountNumber. Can you add methods for deposit(), withdraw(), and checkBalance() that modify or access these properties safely?</li>
+<li><em>Prompt:</em> Could you show me how to create a Vehicle class in C# and then a Truck class that inherits from it? Make sure to include properties like wheels and fuelType and demonstrate the use of different access modifiers.</li>
+<li><em>Prompt:</em> In C++, how would I write a FileHandler class that opens a file in its constructor and closes it in its destructor? Also, include methods for writeToFile() and readFromFile().</li>
+</ul>
+<h1 id="框架和库"><a href="#框架和库" class="headerlink" title="框架和库"></a>框架和库</h1><p>在没有框架和库的情况下进行软件开发就像尝试从头开始烘焙一个精美的蛋糕而没有食谱或预混合的材料。这是可能的，但要困难得多，并且需要更多时间。框架和库是让开发者生活更轻松的秘密武器。你不需要每次都重新发明轮子，只需利用现有的资源。</p>
+<p>人工智能辅助编程工具确实可以提供帮助。首先，它们可以用于学习基本特性和工作流程。它们还可以告诉你何时最好使用框架或库。</p>
+<p>但对他们的帮助要保持谨慎。以下是 Capilnean 的说法：</p>
+<blockquote>
+<p>鉴于 React 以及其他框架和库的更新数量庞大，并且我们使用特定版本的框架，我不得不将这些作为系统提示提供给我的ChatGPT实例，以优化我的结果。有时，GPT 提供的解决方案更偏向学术而非生产级，因此我倾向于依赖我们的高级开发人员来处理更复杂的问题。对于 React，我发现自己更多是在请 GPT 检查我的语法和处理特定数据类型的方法，而不是实际为我构建完整的功能。</p>
+<p>同样适用于 NodeJS。在我去ChatGPT请求某个功能的代码片段之前，我必须考虑我们的内部 API 和处理数据的方法。一旦我能够将我们某个函数的输出描述为我正在构建的功能的输入，它通常能够提供给我稳定的代码。如果输出不好或者出现错误，我在这里使用相同的过程。我提供问题并请求朝正确方向的代码更新。</p>
+</blockquote>
+<h1 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h1><p>数据是每个应用程序的命脉，确实如此。它是让应用程序生存和运作的关键。就像血液携带氧气和营养物质以维持我们身体的功能，数据在应用程序中流动，为其提供所需的信息和洞察力，使其发挥作用。</p>
+<p>但是创建示例数据可能会很繁琐。想象一下：你很兴奋地想测试你崭新的应用程序，但首先，你需要一堆数据来看看它在现实世界中是如何工作的。你开始输入一行又一行的数据——名字、日期、数字，随便什么都行。但是，然后，它就一直在继续。一直在继续。</p>
+<p>此外，您必须注意使其足够真实，以便您的测试有效，但又不能详细到为每个条目写小说。如果您需要一个大型数据集？算了吧：您基本上是在报名参加一场复制粘贴、调整和仔细检查的马拉松。</p>
+<p>一个人工智能辅助编程工具可以派上用场。但首先，你需要选择一个数据库并创建模式和表。还需要提供表之间的关系。然后你需要进行配置和设置。然后人工智能可以开始提供帮助。</p>
+<p>以下是一些提示，以帮助评估数据库：</p>
+<blockquote>
+<p>提示：哪种类型的数据库最适合处理&lt;特定数据类型或功能，例如用户交互、产品库存等&gt;?</p>
+<p>提示：对于预期&lt;高&#x2F;低&gt;流量的应用程序，使用&lt;数据类型，例如：图像、文本、实时数据&gt;，我应该考虑哪个数据库？</p>
+<p>提示：我预算有限。你能推荐一个适合小型本地配送服务应用的经济实惠的数据库解决方案吗？</p>
+<p>提示：我对数据库管理比较陌生。哪些数据库对初学者友好且易于维护？</p>
+</blockquote>
+<p>以下是一些请求数据库模式帮助的提示：</p>
+<blockquote>
+<p>提示：你能帮我设计一个基本的数据库模式用于&lt;应用类型，例如：在线商店，博客&gt;? 我需要知道我应该创建哪些表以及它们之间的主要关系。</p>
+<p>提示：在关系数据库中管理&lt;特定类型的数据，例如客户订单，库存&gt;的高效表结构是什么？我应该包含哪些字段和数据类型？</p>
+<p>提示：我应该如何定义关系数据库中表之间的关系，以便处理&lt;描述应用程序的功能，例如事件管理、课程注册&gt;? 具体来说，我需要帮助理解外键和连接表。</p>
+<p>提示：我正在为&lt;描述项目&gt;设计关系数据库模式。您能指导我如何有效设置主键和外键以确保数据完整性吗？</p>
+<p>提示：请问您推荐什么样的规范化策略用于处理&lt;数据类型或应用功能&gt;的数据库？我该如何避免数据冗余并确保数据完整性？</p>
+<p>提示：我正在为一个&lt;项目类型，例如社交媒体应用&gt;使用 NoSQL 数据库。我应该如何设计文档结构来存储&lt;特定数据类型，例如用户资料、帖子、评论&gt;?</p>
+<p>提示：在设计我的数据库模式时，我应该考虑哪些索引策略来优化查询性能，特别是针对&lt;查询或操作类型，例如，全文搜索，频繁更新&gt;?</p>
+<p>提示：我需要将现有数据库迁移到新架构。重新设计数据库结构时需要考虑的关键因素和步骤是什么，以确保数据完整性不丢失？</p>
+</blockquote>
+<p>以下是设置初始数据库环境的一些提示：</p>
+<blockquote>
+<p>提示：您能提供在&lt;特定操作系统，例如：Windows，Linux&gt;上安装&lt;特定数据库服务器，例如：MySQL，PostgreSQL&gt;的逐步说明吗？</p>
+<p>提示：安装&lt;数据库名称&gt;后，我应该初始设置哪些基本配置以优化性能？</p>
+<p>提示：保护&lt;特定数据库&gt;服务器的最佳实践是什么？我特别感兴趣的是用户身份验证和保护敏感数据。</p>
+<p>提示：如何优化&lt;特定数据库&gt;的性能，以支持处理&lt;描述数据性质和预期负载，例如，大型数据集，高交易量&gt;的应用程序？</p>
+</blockquote>
+<p>现在，让我们看看如何使用人工智能创建示例数据。以下是一些示例提示：</p>
+<blockquote>
+<p>生成 100 个 ID 和邮箱数据的演示数据，并将其保存到 CSV 文件中。</p>
+<p>生成 50 个产品的演示数据，包括产品 ID、名称、价格和类别。</p>
+<p>创建一个包含 150 条订单记录的演示数据集，每条记录包括订单 ID、客户 ID、订单日期和总金额。</p>
+<p>生成 100 名员工的示例数据，包括员工 ID、全名、部门和电子邮件地址。</p>
+<p>生成 80 条客户反馈条目的示例数据，包括反馈 ID、客户 ID、评论。</p>
+</blockquote>
+<p>使用这些数据，您可以为其创建 SQL 语句。您可以使用类似于以下内容的方式来处理客户反馈条目：</p>
+<blockquote>
+<p>生成一个 SQL 插入语句，将数据填充到反馈表中。</p>
+</blockquote>
+<p>ChatGPT 在数据转换的细节任务中可以成为救星。如果你是开发者，你知道在不同格式之间转换数据，如 XML、SQL、JSON、CSV 和 TOML 是很常见的。但说实话，这可能是一个乏味且有时容易出错的过程。这就是 ChatGPT 的用武之地。</p>
+<p>这里有一些示例提示：</p>
+<blockquote>
+<p><em>Prompt:</em> Here’s a CSV row: ‘John Doe, 35, New York’. Can you convert this into an XML format for me?</p>
+<p><em>Prompt:</em> I have a JSON array like this: [{‘name’: ‘Alice’, ‘job’: ‘Engineer’}, {‘name’: ‘Bob’, ‘job’: ‘Designer’}]. How would I represent this in a SQL table format?</p>
+<p><em>Prompt:</em> I need to convert this TOML configuration: ‘title &#x3D; “My Project” owner &#x3D; “Sara”’ into an equivalent YAML format. How would you convert this?</p>
+</blockquote>
+<h1 id="前端开发"><a href="#前端开发" class="headerlink" title="前端开发"></a>前端开发</h1><p>前端开发涉及使网站看起来美观并顺畅导航。其核心使用 HTML 来设置网页的基本结构，使用 CSS 来美化和布局，使用 JavaScript 来实现交互。如今，前端开发人员通常使用像 React 和 Vue 这样的框架。这些框架提供了可重用组件和实时数据更新的方式，使得构建动态和引人入胜的网站和应用成为可能。</p>
+<p>前端开发可能很具挑战性，即使对于经验丰富的开发者也是如此。首先，网页浏览器和用户交互的不可预测性。你需要处理不同的浏览器、设备、屏幕尺寸和用户偏好。这就像试图制作一件适合所有人的 T 恤，且看起来都很好。接下来，前端世界变化很快。框架更新频繁出现。</p>
+<p>前端开发还有一点是，它不仅仅是编码。它还涉及良好的用户体验（UX）和用户界面（UI）设计。这是一种许多程序员没有的独特技能组合。UX 和 UI 设计涉及理解人们如何与技术互动，什么使设计在视觉上具有吸引力，以及如何在应用程序或网站中创建流畅、合乎逻辑的流程。这就像既是艺术家又是心理学家。对于很多传统程序员来说，他们可能在算法和数据结构方面很有天赋，但色彩、布局和用户旅程的世界可能是陌生的领域。</p>
+<p>无论如何，人工智能辅助编程工具可以提供帮助。我们将在接下来的几个部分中查看其中的一些。</p>
+<h2 id="CSS"><a href="#CSS" class="headerlink" title="CSS"></a>CSS</h2><p>为网站编写 CSS 可能很棘手，尤其是在处理大型复杂网站时。确保在不同浏览器和设备上看起来都不错是一个挑战。你必须了解所有奇怪的浏览器特定问题。还很容易不小心搞乱某些东西，以至于你样式的一个部分踩到了另一个部分的脚，导致效果看起来很奇怪。此外，传统 CSS 不允许使用变量或函数，这意味着你在代码中会大量重复自己（尽管像 SASS 和 LESS 这样的工具可以帮助解决这个问题）。即使是像居中一个 <div> 这样简单的事情也可能是一场苦战。</p>
+<p>以下是一些常见 CSS 任务的提示：</p>
+<blockquote>
+<p>提示：你能给我提供一个响应式导航栏的 CSS 代码片段，在移动设备上折叠成汉堡菜单吗？</p>
+<p>提示：我在 CSS 的弹性盒布局中遇到问题，项目没有正确对齐。你能建议可能出错的地方吗？</p>
+<p>提示：我需要为我网站上的按钮添加悬停效果。你能给我一个 CSS 示例，让按钮在悬停时改变颜色吗？</p>
+<p>提示：我想在我网站的首页添加一个淡入动画。你能提供一个 CSS 代码片段吗？</p>
+</blockquote>
+<h2 id="创建图形"><a href="#创建图形" class="headerlink" title="创建图形"></a>创建图形</h2><p>创建专业的网站或应用程序图形需要丰富的设计背景，以及对像 Photoshop 这样的复杂工具的理解。但有很多强大的文本生成图像的人工智能系统可以帮助你创建出色的图像。其中一些系统包括：</p>
+<ul>
+<li> Canva</li>
+<li>Stable Diffusion</li>
+<li>DALL·E 3（内置于ChatGPT）</li>
+<li> Adobe’s FireFly</li>
+<li> Midjourney</li>
+</ul>
+<p>使用这些系统，您可以创建多种类型的资产，包括主图像、按钮和徽标。</p>
+<p>让我们看一个例子。我们将让ChatGPT创建一个徽标：</p>
+<blockquote>
+<p><em>Prompt:</em> I’m creating a website for my home bakery business named “Sweet Whisk.” I want a logo that’s warm and inviting. The main products are cakes and cookies, so maybe those could be incorporated into the design. I like pastel colors, especially light pink and mint green. The style should be simple and modern, with a touch of <strong>playfulness</strong>.</p>
+</blockquote>
+<p>图 8-6 显示了ChatGPT创建的内容。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0806-20240829151932-b2xksvc.png"></p>
+<p> 图 8-6. ChatGPT 在给定一些指导方针时创建了一个徽标</p>
+<p>如果您想对输出进行更改，可以继续提示ChatGPT。其他人工智能图像工具，如 Firefly，具有比ChatGPT更多的图像设计功能，但ChatGPT仍然可以创建引人注目的图像——无需太多工作。</p>
+<h2 id="人工智能工具"><a href="#人工智能工具" class="headerlink" title="人工智能工具"></a>人工智能工具</h2><p>有一些优秀的人工智能工具可以根据提示或您想要的前端外观图片快速生成网站。它们会为您处理所有编码。这甚至包括转换为 React、Angular 和 Vue 等框架。此外，人工智能工具通常还能够导入线框，例如来自 Figma 的线框。</p>
+<p>代码创建后，您可以进入并调整内容以达到最佳效果。使用人工智能是加快整个网站构建过程的有效捷径。</p>
+<p>以下是一些可用的人工智能工具：</p>
+<ul>
+<li> TeleportHQ</li>
+<li> Anima</li>
+<li>Locofy</li>
+<li> v0 by Vercel</li>
+</ul>
+<p>让我们仔细看看 Vercel 的 v0，它易于使用。实际上，界面类似于 ChatGPT，如图 8-7 所示。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0807-20240829151933-go70zoc.png"></p>
+<p> 图 8-7. 这是 Vercel 的 v0 接口</p>
+<p>您可以输入您希望系统创建的接口类型的提示或上传一张图片。对于这个例子，我将使用一个提示：</p>
+<blockquote>
+<p>电子商务仪表板，带侧边导航和最近订单表格。</p>
+</blockquote>
+<p>这将带您进入设计工作室，类似于图 8-8。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0808-20240829151933-068po2k.png"></p>
+<p> 图 8-8. 当你输入提示时，Vercel 提供的 v0 设计工作室</p>
+<p>人工智能将创建三个仪表板版本。您也可以创建其他版本。然后，通过提示，您可以进行更改，例如文本大小、颜色等。</p>
+<p>完成后，您可以点击右上角的代码。您将看到基于 shadcn&#x2F;ui 和 Tailwind CSS 的干净 React 代码列表。</p>
+<p>还有几个使用人工智能生成前端的开源系统。考虑截图转代码。该项目的创建者是 Abi Raja，他是 Pico 的首席执行官和创始人。他之前的创业公司于 2013 年被雅虎收购。</p>
+<p>拉贾花了六个月时间创建 Screenshot to Code 的初始代码库。“前端开发人员通常将设计和模型转换为代码，”拉贾说。“这项工作大部分是重复的。但我的软件可以帮助自动化这个过程，完成大约 90%的任务。”</p>
+<p>目前，截图转代码支持导出到 React、Bootstrap 和 HTML&#x2F;Tailwind CSS。该项目在 GitHub 上拥有超过 31,000 个星标。</p>
+<p>使用ChatGPT，您还可以将图像转换为代码。假设您想创建一个计算器应用程序，并希望它看起来像 iPhone 上的版本。图 8-9 显示了该图像。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0809-20240829151933-sm5dma8.png"></p>
+<p> 图 8-9 您可以将 iPhone 计算器应用的图像输入ChatGPT以生成代码</p>
+<p>首先，我们将请求ChatGPT识别图像，它会正确识别。然后我们可以使用这个提示：</p>
+<blockquote>
+<p>提示：为此图像建议代码</p>
+</blockquote>
+<p>图 8-10 显示了计算器。</p>
+<p>ChatGPT 创建了 Python 代码。没错，样式有些不对，但这仍然相当不错。当然，如果你想让它看起来更像 iPhone 版本，你可以在提示中更具体，比如告诉 ChatGPT 使用类似 React 的东西。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0810-20240829151934-9sofry9.png"> 图 8-10. ChatGPT 根据苹果 iPhone 应用的图像创建计算器代码</p>
+<h1 id="API-接口"><a href="#API-接口" class="headerlink" title="API 接口"></a>API 接口</h1><p>掌握一个新的 API 可能是个挑战。首先，你得浏览文档，这些文档可能很复杂且技术性强。而且这些文档的质量参差不齐——有些清晰易懂，而有些则不然。然后就是登录和获取访问权限的问题，比如使用 API 密钥或 OAuth 令牌。此外，试图弄清楚 API 返回的数据结构和响应格式可能会让人不知所措。还有错误处理，以及需要跟上 API 的任何更新或更改。</p>
+<p>幸运的是，使用ChatGPT可以让应对这些挑战变得简单一些。</p>
+<p>查看一下，举个简单的例子。假设你想使用 API 获取天气信息。你可以向ChatGPT请求 API 建议：</p>
+<blockquote>
+<p>好的天气 API 有哪些？</p>
+</blockquote>
+<p>一个推荐的是开放天气 API。接下来，问以下问题：</p>
+<blockquote>
+<p>如何开始使用 OpenWeather API？</p>
+</blockquote>
+<p>ChatGPT描述了主要步骤。</p>
+<p>您可以让它展示如何发出请求：</p>
+<blockquote>
+<p>如何使用 OpenWeather API 创建请求？我该如何使用 Python 做到这一点？</p>
+</blockquote>
+<p>ChatGPT 将经过该过程，提供这些步骤的详细信息：</p>
+<ul>
+<li>导入 requests 库。</li>
+<li> 定义 API 密钥。</li>
+<li>创建 API 请求 URL 并使用当前天气数据端点。</li>
+<li>执行请求并处理响应。</li>
+<li>检查请求是否成功。</li>
+</ul>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>在本章中，我们深入探讨了模块化编程、函数和面向对象编程。我们还研究了如何使用人工智能快速学习新语言和框架，以及如何利用它更高效地处理数据。然后我们看到了如何创建引人注目的前端。</p>
+<p>但重要的是要重复：人工智能辅助编程工具远非完美。因此，保持警惕并仔细检查所有内容是很重要的。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/09/13/aiassistedprogramming07/" rel="prev" title="第7章  想法、规划和需求">
+                  <i class="fa fa-angle-left"></i> 第7章  想法、规划和需求
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/09/18/aiassistedprogramming09/" rel="next" title="第9章  调试、测试和部署">
+                  第9章  调试、测试和部署 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Howard Huang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">616k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">18:40</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动-->
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.33/fancybox/fancybox.umd.js" integrity="sha256-+2+qOqR8CKoHh/AsVR9k2qaDBKWjYNC2nozhYmv5j9k=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

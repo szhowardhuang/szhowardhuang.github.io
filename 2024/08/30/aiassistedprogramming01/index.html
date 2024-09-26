@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.33/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"szhowardhuang.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在 2011 年至 2016 年期间，安德烈·卡尔帕西在斯坦福大学处理密集神经网络架构和像素处理计算机视觉的同时，还在谷歌兼职。在那里，他四处修补并为 YouTube 视频制作了一个特征学习系统。然后他决定成为 OpenAI 的创始成员，后来成为特斯拉的人工智能高级总监，领导团队创建自动驾驶系统。 可以肯定地说，他是世界顶尖的编码员之一。他还是一位熟练的文字工作者，在推特（或 X）上拥有近 80">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第1章 开发者的新世界">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/08/30/aiassistedprogramming01/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="在 2011 年至 2016 年期间，安德烈·卡尔帕西在斯坦福大学处理密集神经网络架构和像素处理计算机视觉的同时，还在谷歌兼职。在那里，他四处修补并为 YouTube 视频制作了一个特征学习系统。然后他决定成为 OpenAI 的创始成员，后来成为特斯拉的人工智能高级总监，领导团队创建自动驾驶系统。 可以肯定地说，他是世界顶尖的编码员之一。他还是一位熟练的文字工作者，在推特（或 X）上拥有近 80">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0101-20240826160857-3l3qn9o.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0102-20240826160858-c3qylzx.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0103-20240826160859-st5p3ey.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0104-20240826160859-3kt86mb.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0105-20240826160900-xejtzso.png">
+<meta property="article:published_time" content="2024-08-30T03:48:32.000Z">
+<meta property="article:modified_time" content="2024-09-26T03:55:46.000Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0101-20240826160857-3l3qn9o.png">
+
+
+<link rel="canonical" href="https://szhowardhuang.github.io/2024/08/30/aiassistedprogramming01/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://szhowardhuang.github.io/2024/08/30/aiassistedprogramming01/","path":"2024/08/30/aiassistedprogramming01/","title":"第1章 开发者的新世界"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>第1章 开发者的新世界 | 嵌入式老兵博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">嵌入式老兵博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%BC%94%E5%8F%98%E4%B8%8E%E9%9D%A9%E5%91%BD"><span class="nav-number">1.</span> <span class="nav-text">演变与革命</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E5%BC%8F%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD"><span class="nav-number">2.</span> <span class="nav-text">生成式人工智能</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A5%BD%E5%A4%84"><span class="nav-number">3.</span> <span class="nav-text">好处</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%B0%8F%E5%8C%96%E6%90%9C%E7%B4%A2"><span class="nav-number">3.1.</span> <span class="nav-text">最小化搜索</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%82%A8%E7%9A%84%E9%A1%BE%E9%97%AE"><span class="nav-number">3.2.</span> <span class="nav-text">您的顾问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IDE-%E9%9B%86%E6%88%90"><span class="nav-number">3.3.</span> <span class="nav-text">IDE 集成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%8D%E6%98%A0%E6%82%A8%E7%9A%84%E4%BB%A3%E7%A0%81%E5%BA%93"><span class="nav-number">3.4.</span> <span class="nav-text">反映您的代码库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%8C%E6%95%B4%E6%80%A7"><span class="nav-number">3.5.</span> <span class="nav-text">代码完整性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E9%A9%B1%E5%8A%A8%E7%9A%84%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E5%99%A8"><span class="nav-number">3.6.</span> <span class="nav-text">人工智能驱动的文档生成器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%B0%E4%BB%A3%E5%8C%96"><span class="nav-number">3.7.</span> <span class="nav-text">现代化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%BA%E7%82%B9"><span class="nav-number">4.</span> <span class="nav-text">缺点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%BB%E8%A7%89"><span class="nav-number">4.1.</span> <span class="nav-text">幻觉</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E4%BA%A7%E6%9D%83"><span class="nav-number">4.2.</span> <span class="nav-text">知识产权</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9A%90%E7%A7%81"><span class="nav-number">4.3.</span> <span class="nav-text">隐私</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E5%85%A8"><span class="nav-number">4.4.</span> <span class="nav-text">安全</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE"><span class="nav-number">4.5.</span> <span class="nav-text">训练数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%81%8F%E8%A7%81"><span class="nav-number">4.6.</span> <span class="nav-text">偏见</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E8%80%85%E7%9A%84%E6%96%B0%E6%96%B9%E5%BC%8F"><span class="nav-number">5.</span> <span class="nav-text">开发者的新方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%81%8C%E4%B8%9A"><span class="nav-number">5.1.</span> <span class="nav-text">职业</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-%E5%80%8D%E5%BC%80%E5%8F%91%E8%80%85%EF%BC%9F"><span class="nav-number">5.2.</span> <span class="nav-text">10 倍开发者？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E8%80%85%E6%8A%80%E8%83%BD"><span class="nav-number">5.3.</span> <span class="nav-text">开发者技能</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">6.</span> <span class="nav-text">结论</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Howard Huang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/08/30/aiassistedprogramming01/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="第1章 开发者的新世界 | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          第1章 开发者的新世界
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-08-30 11:48:32" itemprop="dateCreated datePublished" datetime="2024-08-30T11:48:32+08:00">2024-08-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-09-26 11:55:46" itemprop="dateModified" datetime="2024-09-26T11:55:46+08:00">2024-09-26</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>13k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>23 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>在 2011 年至 2016 年期间，安德烈·卡尔帕西在斯坦福大学处理密集神经网络架构和像素处理计算机视觉的同时，还在谷歌兼职。在那里，他四处修补并为 YouTube 视频制作了一个特征学习系统。然后他决定成为 OpenAI 的创始成员，后来成为特斯拉的人工智能高级总监，领导团队创建自动驾驶系统。</p>
+<p>可以肯定地说，他是世界顶尖的编码员之一。他还是一位熟练的文字工作者，在推特（或 X）上拥有近 80 万的关注者。当 ChatGPT 横空出世时，他发了推文：</p>
+<blockquote>
+<p>最热门的新编程语言是英语。</p>
+</blockquote>
+<p>他不是在开玩笑。这不仅仅是对编码的诗意颂歌，而是对未来的暗示，在那里输入自然语言提示可以生成看似任何语言的计算机代码。这就像在你的电脑里有一个双语精灵，随时准备将你的英语愿望转录成代码命令。</p>
+<p>然后出现了一条推文，表达了许多开发者的心声：</p>
+<blockquote>
+<p>Copilot 极大地加快了我的编码速度，难以想象回到“手动编码”。仍在学习如何使用它，但它已经写了我大约 80%的代码，准确率约 80%。我甚至不太编码，我只是提示和编辑。</p>
+</blockquote>
+<p>卡尔帕西正在向微软的 GitHub Copilot 致敬，这是一种新鲜的人工智能辅助编程工具。但很快就会出现许多其他工具。创新的步伐令人惊叹。</p>
+<p>现在，对于所有程序员来说，环境可能看起来像一片密林。这个勇敢的新世界的人工智能工具是什么？它们在哪些方面令人惊艳，又在哪些方面表现平平？你如何在这一切中摸索，成为一个精明的人工智能辅助程序员？</p>
+<p>好吧，这本书将是你的指南，帮助回答这些问题——还有更多。重点是利用这些工具来编写代码，不仅更快，而且更智能，并且带有一些乐趣。那么，让我们挽起袖子，开始这段人工智能辅助编程之旅吧。</p>
+<h1 id="演变与革命"><a href="#演变与革命" class="headerlink" title="演变与革命"></a>演变与革命</h1><p>编程语言演变的一个关键主题是抽象。这是一种描述系统如何变得更易于开发者使用的高级方式。当繁琐的细节在后台处理时，开发者可以专注于最重要的事情。这一直是创新的推动力，使得互联网、云计算、移动和人工智能等突破成为可能。</p>
+<p>图 1-1 突出显示了几十年来抽象的演变。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0101-20240826160857-3l3qn9o.png"> 图 1-1. 编程语言和工具的抽象已经随着几十年的发展而演变</p>
+<p>让我们详细了解一下，从 1940 年代开始：</p>
+<p>机器语言到汇编语言在计算机时代的黎明，程序员必须与 0 和 1 搏斗，以使机器服从他们的意志。但随后，汇编语言出现了。它提供了字母数字指令，使编码变得更简单且更不易出错。</p>
+<p> 高级语言1950 年代带来了 Fortran 和 COBOL，这些语言让程序员可以使用类似简单英语的代码，如 DISPLAY、READ、WRITE 和 IF&#x2F;THEN&#x2F;ELSE。编译器会将这些转换为计算机可以理解的 0 和 1。同时，没有技术背景的人通常也能很好地阅读代码以理解工作流程。高级语言的出现将成为计算机革命的巨大催化剂。</p>
+<p> 过程式编程像 C 和 Pascal 这样的语言引入了过程式编程，本质上将复杂任务打包成称为函数的小盒子。这种抽象允许重用和可维护性，使得管理庞大的软件项目不再是一项艰巨的任务。</p>
+<p>面向对象编程（OOP）这种计算机语言的一些明星包括 C++和 Java。面向对象编程带来了全新的抽象层次，使程序员能够使用类和对象对现实世界实体进行建模，封装数据和行为。这促进了模块化，并允许更直观的问题解决。</p>
+<p>脚本语言和网页开发Python、Ruby 和 JavaScript 抽象了许多与编程相关的低级任务。它们提供了丰富的库和内置数据结构，简化了常见的编程任务，减少了完成这些任务所需的代码量。</p>
+<p>机器学习和人工智能随着人工智能和机器学习的兴起，像 TensorFlow 和 PyTorch 这样的专业库和框架抽象了许多复杂的编程数学细节。这使得开发者可以专注于模型架构和训练过程。</p>
+<p> 最新加入这一抽象叙述的是人工智能辅助编程，比如 GPT-4 和其他大型语言模型（LLMs）。它们就像你的后台团队，随时准备在你的指令下生成代码。</p>
+<p>让我们看一个简单的例子。为此，我们将使用 ChatGPT，它具有生成代码的强大能力。我们将使用提示来询问我们希望系统做什么。假设我们给它以下提示：</p>
+<blockquote>
+<p>在 Python 中编写一个程序，检查给定整数是偶数还是奇数并打印结果。</p>
+</blockquote>
+<p>图 1-2 显示了 ChatGPT 的响应。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0102-20240826160858-c3qylzx.png"></p>
+<p> 图 1-2. 当被要求创建代码时，ChatGPT 的响应不仅包括代码列表，还包括解释</p>
+<p>我们获取代码列表，里面还有有用的注释。然后还有程序如何工作的解释。您可以点击右上角的复制代码按钮将代码包含到您的 IDE 中并运行。</p>
+<h1 id="生成式人工智能"><a href="#生成式人工智能" class="headerlink" title="生成式人工智能"></a>生成式人工智能</h1><p>在深入了解人工智能辅助编程工具如何工作之前，让我们先概述一下生成式人工智能。这是这些系统的基础。</p>
+<p>生成式人工智能是人工智能（AI）的一个分支，它允许创建新的和独特的内容。图 1-3 提供了不同部分之间关系的可视化。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0103-20240826160859-st5p3ey.png"></p>
+<p> 图 1-3. 有不同类型的人工智能，它们可以表示为嵌套子集，生成式人工智能最终以大型语言模型为中心</p>
+<p>人工智能是一个大伞：它包括所有能够以人类智能的风格完成任务的系统。机器学习（ML）包含在人工智能中。&#x3D;&#x3D;机器学习系统不是按照明确指令的节奏行进，而是基于大量数据得出见解&#x3D;&#x3D;。机器学习通常基于复杂的算法，这些算法允许在不进行硬编码的情况下进行预测或决策。</p>
+<p>深入一步，你会得到深度学习（DL），这是机器学习（ML）的一个更紧密的分支，使用堆叠有隐藏层的神经网络，因此称为深度。这些堆叠模型在图像和语音识别等领域表现出色。</p>
+<p>生成式人工智能（或生成式人工智能模型）在深度学习的领域中。&#x3D;&#x3D;生成式人工智能模型创建反映其训练数据的新数据&#x3D;&#x3D;。</p>
+<p>在最内层圈中坐着LLMs，例如 GPT-4、Gemini、Claude 和 LLaMA 2。这些强大的模型——通常称为“基础模型”——基于尖端算法和大量数据的训练生成类人文本。</p>
+<p>生成式人工智能不仅仅是LLMs。生成式人工智能还具有多模态能力，意味着能够创建图像、音频和视频。</p>
+<p>在下一章中，我们将深入探讨生成式人工智能是如何工作的。但接下来，让我们看看人工智能辅助编程工具的优缺点。</p>
+<h1 id="好处"><a href="#好处" class="headerlink" title="好处"></a>好处</h1><p>人工智能辅助编程工具旨在增强开发人员的能力，使他们能够专注于高级问题解决和创新，而不是陷入单调的任务或复杂的代码细节。这就是为什么 GitHub 使用副驾驶这个词恰如其分。它是关于在驾驶舱中拥有那个可靠的伙伴，导航来解决编码的复杂和常常乏味的方面，让你专注于重要的事情。</p>
+<p>在接下来的部分中，我们将重点介绍这些强大系统的好处和实际应用。</p>
+<h2 id="最小化搜索"><a href="#最小化搜索" class="headerlink" title="最小化搜索"></a>最小化搜索</h2><p>开发者经常扮演数字侦探，追踪恼人的错误或理解晦涩的代码。当他们遇到问题时，第一反应是上谷歌或访问 Stack Overflow。快速搜索，一段代码，瞧，他们又回到他们的 IDE（集成开发环境）。</p>
+<p>但有时这可能变成一场煎熬。在 Stack Overflow 上的讨论可能会变成死胡同。你继续搜索，但似乎没有什么相关的内容。然而，有一个讨论稍微有帮助，于是你对一些相关主题进行了进一步研究。你甚至在 YouTube 上搜索视频。在思考这个问题超过 30 分钟后，你终于解决了它。</p>
+<p>是的，所有开发者都经历过这个。有趣的是，Stack Overflow 2022 年开发者调查显示了这种挫败感，调查包含了超过 70,000 名开发者的反馈。调查发现，&#x3D;&#x3D;62% 的受访者每天花费超过 30 分钟寻找答案，25% 的受访者每天花费超过一个小时&#x3D;&#x3D;。根据调查，“对于一个由 50 名开发者组成的团队，寻找答案&#x2F;解决方案所花费的时间每周在整个团队中累计损失的时间在 333 到 651 小时之间。”</p>
+<p>现在，如果有一种方法可以快速穿过这片耗时的搜索丛林，直接找到解决方案呢？引入人工智能辅助编程，我们闪亮算法中的骑士。微软的研究支持这一点：它显示超过 90%的使用 GitHub Copilot 的开发者能够更快地完成他们的任务。</p>
+<p>微软甚至在编码者对决中进行了测试。该公司招募了 95 名专业开发人员，并将他们分成两组。任务是用 JavaScript 编写一个 HTTP 服务器。使用 GitHub Copilot 的人比没有使用的人快 55%完成工作。</p>
+<p>不仅仅是微软在赞美。麦肯锡公司也进行了研究。来自美国和亚洲的 40 多名开发者参与，具有不同程度的经验和背景。在几周内，他们完成了三个常见的软件任务：代码生成、重构和文档编写。</p>
+<p>结果呢？在保持代码整洁的文档方面，人工智能辅助工具表现突出，减少了一半的时间，而人工智能工具在编写新代码和重构方面的表现几乎相同。</p>
+<p>然而，对于复杂任务，人工智能工具并没有达到高水平。节省的时间不足 10%。</p>
+<p>有趣的是，研究还表明，减少花费的时间并未对代码的整体质量产生负面影响，例如在错误、可读性和可维护性方面。事实上，人工智能辅助编程工具提供了边际改进。但这通常是因为开发人员与工具进行了迭代。</p>
+<p>麦肯锡研究提供了以下要点：</p>
+<ul>
+<li> 简化日常琐事：这些工具擅长处理日常任务，如自动填充代码函数、实时代码补全和自动文档生成。通过处理这些任务，它们使开发人员能够深入复杂的业务问题并快速部署软件功能。</li>
+<li>生成更流畅的代码草稿：盯着空白画布可能令人畏惧，但借助生成式人工智能工具，开发人员可以通过简单的提示在他们的 IDE 中或单独获取代码建议，从而推动创作过程。许多开发人员发现这些基于人工智能的建议非常宝贵，因为它们帮助人类克服了“空白屏幕问题”，以更快的速度进入编码“状态”。</li>
+<li>加速对现有代码的调整：通过有效的提示，开发人员可以更快速地调整和改进现有代码。例如，他们可以从在线库中获取代码，将其放入提示中，然后根据指定标准进行迭代请求以获得人工智能优化的调整。</li>
+<li>增强开发者应对新挑战的准备：该技术像一个快速入门课程，帮助开发者熟悉不熟悉的编码环境或语言。在处理新事物时，这些工具就像一个经验丰富的朋友，阐明新概念，剖析各种代码库，并提供框架使用的综合指南。</li>
+<li>利用多种工具：研究表明，使用多个工具更有效。想象一下：开发者使用一个工具进行提示或聊天，另一个工具作为代码库的一部分，提供自动补全选项和建议。开发者发现第一个工具在代码重构时处理查询非常出色，这要归功于它的对话能力。另一方面，第二个工具在生成与开发环境无缝集成的新代码方面表现出色。当这些人工智能工具协同工作时，开发者看到时间效率提高了 1.5 到 2.5 倍。</li>
+</ul>
+<h2 id="您的顾问"><a href="#您的顾问" class="headerlink" title="您的顾问"></a>您的顾问</h2><p>使用 ChatGPT，您可以询问有关多种开发活动的建议。以下是一个提示词：</p>
+<blockquote>
+<p>提示词：请提供减少搜索时间和提高编程生产力的详细技巧和最佳实践。包括与代码组织、文档、工具和心态相关的策略。</p>
+</blockquote>
+<p>图 1-4  显示了响应。</p>
+<p>ChatGPT 提供了三个主要考虑领域。它建议使用模块化设计，保持一致的命名，并逻辑地组织文件。它还建议优先考虑清晰的文档，包括注释、文档字符串和自述文件。ChatGPT 接着提到使用 IDE 的搜索功能，使用 Git 等工具，以及收藏关键资源。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0104-20240826160859-3kt86mb.png"></p>
+<p> 图 1-4.  您可以从 ChatGPT 获取有关编程任务的有用建议</p>
+<h2 id="IDE-集成"><a href="#IDE-集成" class="headerlink" title="IDE 集成"></a>IDE 集成</h2><p>与 IDE 的无缝集成对人工智能辅助编程至关重要。它保持了开发过程的强劲势头，无需掌握新平台的繁重工作。这意味着在学习曲线上花费更少的时间，更多的时间用于编码——更不用说，减少在不同平台或工具之间切换意味着更少的摩擦，使编码过程更加顺畅。</p>
+<p>实时反馈的优势就在于此。当开发人员编写或调整代码时，集成工具会立即指出错误，提供修正建议，或建议更好的完成方式。这种编写、反馈和调整的即时互动就像有一个友好的教练在你身边。你将被引导编写更简洁、更高效的代码，而无需手动审查或外部检查的麻烦。</p>
+<p>人工智能辅助系统还可以通过关注更广泛的编码叙述来增强集成开发环境。人工智能理解变量类型、方法签名，甚至项目的结构蓝图，以生成相关的代码建议。但这不仅仅是输出代码。</p>
+<p>表 1-1 介绍了一些顶尖的人工智能辅助编程工具及其支持的 IDE。</p>
+<p>表 1-1.  流行的人工智能辅助编程工具的 IDE</p>
+<table>
+<thead>
+<tr>
+<th>人工智能辅助编程工具</th>
+<th>集成开发环境</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GitHub Copilot</td>
+<td>Visual Studio Code, Visual Studio, Vim, Neovim, JetBrains 套件, Azure 数据工作室</td>
+</tr>
+<tr>
+<td>Tabnine</td>
+<td>Visual Studio Code, WebStorm, PyCharm, Eclipse, IntelliJ 平台, PhpStorm, CLion, <br />Neovim, JupyterLab, Rider, DataGrip, AppCode, Visual Studio 2022, Android Studio, <br />GoLand, RubyMine, Emacs, Vim, Sublime Text, Atom.AI, Jupyter Notebook 2<br /></td>
+</tr>
+<tr>
+<td>CodiumAI</td>
+<td>Visual Studio Code，JetBrains（IntelliJ，WebStorm，CLion，PyCharm）</td>
+</tr>
+<tr>
+<td>Amazon Codewhisperer</td>
+<td>Visual Studio Code, IntelliJ IDEA, AWS Cloud9, AWS Lambda 控制台, JupyterLab, <br />亚马逊 SageMaker Studio, JetBrains (IntelliJ, PyCharm, CLion, GoLand, WebStorm, <br />Rider, PhpStorm, RubyMine, DataGrip)<br /></td>
+</tr>
+</tbody></table>
+<p>  注意</p>
+<blockquote>
+<p>微软的一项研究表明，88%的 GitHub Copilot 用户感到不那么沮丧且更专注。一个关键原因是停留在 IDE 中意味着花费更少的时间搜索。这使得开发者能够保持在“流状态”中。</p>
+</blockquote>
+<h2 id="反映您的代码库"><a href="#反映您的代码库" class="headerlink" title="反映您的代码库"></a>反映您的代码库</h2><p>某些人工智能辅助编程工具专门针对特定开发环境进行优化。开发人员可以对其进行微调，使工具能够理解项目的内部库、API、最佳实践和架构蓝图。这确保了提供的建议不仅在技术上可靠，还能与项目的独特需求相契合。</p>
+<p>此自定义有助于使生成的代码建议与您组织的既定编码标准、质量标记和安全协议保持一致。专注于促进高质量代码意味着团队可以避免陷入已弃用或不良的代码片段。</p>
+<p>此外，这种定制化的方法对新加入开发团队的成员来说是一个很大的好处。传统上，让他们适应新的代码库需要大量的时间投入，因为他们可能需要几个月的时间来探索代码、查看文档和学习编码协议。然而，人工智能辅助编程工具可以显著缩短这个学习曲线所需的时间。</p>
+<h2 id="代码完整性"><a href="#代码完整性" class="headerlink" title="代码完整性"></a>代码完整性</h2><p>代码完整性是软件开发的标志。它突显了源代码在执行其预期功能时的稳健性和可靠性。可以将其视为一个透镜，通过它可以检查代码的完整性、准确性、一致性和强化程度。代码完整性的缺失为错误和潜在的安全盲点铺平了道路，这可能导致系统崩溃和数据泄露。</p>
+<p>代码完整性的各种因素包括其准确性、全面性、一致性和安全性措施，以及维护的简便性。开发人员可以通过单元测试和集成测试、同行代码审查、静态代码分析以及严格的安全评估等多种方法提高代码完整性。</p>
+<p>值得注意的是，越来越多的人工智能辅助编程工具正在推出旨在增强代码完整性的功能。它们深入代码的细节，为生成相关且精准的单元测试和边界情况铺平道路。</p>
+<p>这些工具中有一些带有“修复建议”功能。这些建议在提前经过审核，以确保它们不会在开发人员面前出现新问题。然后，开发人员可以在他们的 IDE 中查看并采纳这些建议。</p>
+<p>这些工具的一个额外好处是能够快速分析拉取请求并生成代码更改的简明摘要。它们还擅长自动生成发布说明，这对于记录软件版本的演变非常有用。</p>
+<h2 id="人工智能驱动的文档生成器"><a href="#人工智能驱动的文档生成器" class="headerlink" title="人工智能驱动的文档生成器"></a>人工智能驱动的文档生成器</h2><p>文档是软件开发过程中的无名英雄。它有助于确保代码库保持可读、可维护和可扩展，特别是在团队变化和项目复杂性增加时。但说实话，创建和更新这些文档往往感觉像是在官僚泥潭中跋涉——这可能耗费时间，有时会被搁置。</p>
+<p>现在，进入人工智能辅助编程工具。这些数字文书可以在很短的时间内生成大量文档，并且质量和清晰度都很高。这是通过利用LLMs的能力实现的，它们在处理语言方面特别强大。</p>
+<h2 id="现代化"><a href="#现代化" class="headerlink" title="现代化"></a>现代化</h2><p>马克·安德森在 2011 年《华尔街日报》中的大胆声明“软件正在吞噬世界”已经像美酒一样陈年。安德森以其远见卓识和成功的企业家及风险投资家的卓越记录而闻名，他指出了技术历史上的一个成熟时刻。</p>
+<p>他强调了基础设施已经成熟，并为全球行业的变革做好了准备。像亚马逊网络服务这样的云平台的崛起和宽带互联网的广泛普及是游戏规则的改变者。它们打破了服务器成本和网络知识的传统障碍。这为像优步、Netflix 和一系列社交媒体平台的颠覆者清除了舞台，重新编写了各自行业的规则。</p>
+<p>当我们快进到安德森的深刻文章时，我们看到创新的快车道只是在加速。然而，它也带来了破坏的威胁，尤其是对于大型企业。这些巨头往往依赖于不仅昂贵而且现代化风险很大的遗留系统。他们的层级结构可能在决策过程中设置障碍，而他们庞大的规模则增加了接受变革的复杂性。此外，他们的员工可能并不总是与最新的技术创新保持一致。</p>
+<p>进入 IBM，瞄准这一场景作为机会的金矿，并将其大量资源用于为客户打造人工智能辅助编程工具。2023 年 10 月，它推出了 watsonx 代码助手 Z。该系统可以在大型机系统上将 COBOL 转换为 Java，生成的代码优雅地面向对象。</p>
+<p>IBM 的 Watsonx.ai 模型理解 115 种编程语言，基于 1.5 万亿个标记。该模型约有 200 亿个参数。这是最大的代码开发人工智能系统之一。</p>
+<p>事实上，有数千亿行 COBOL 代码。但将这种语言迁移到现代语言并不是一件容易的事情。COBOL 代码通常已有几十年的历史，几乎没有文档。如果转换处理不当，后果可能会很严重。请记住，世界上大部分信用卡处理都是通过大型主机完成的。联邦政府处理学生贷款的系统也是如此。</p>
+<p>不幸的是，有很多失败的迁移项目的例子。考虑一下加利福尼亚州机动车辆管理局，尽管投入了 2.08 亿美元，但在几年内不得不停止该项目。哎呀。</p>
+<p>鉴于风险很高，大型主机开发人员通常薪资较高。但公司在招聘人才方面仍然面临挑战。年轻开发人员接受现代语言的培训，并认为大型主机开发是一个死胡同。同时，越来越多的资深大型主机开发人员正在退休。</p>
+<p>IBM 意识到人工智能对于解决这个巨大问题是必不可少的。确实，代码转译器或翻译器已经存在了几十年。事实上，它们经常被用于大型机项目。然而，它们主要做的就是将 COBOL 的乱七八糟的代码快速翻译，然后，你得到了 Java 的乱七八糟的代码。这只是一个小改动，几乎没有改进或创新的迹象。Java 代码仍然需要大量的手动调整，这解释了为什么许多项目会遇到困难或彻底失败。</p>
+<p>但通过使用生成式人工智能，IBM 表示它已经能够将一个项目的结果提高多达十倍。</p>
+<p>其他公司正在探索这一现代化机会。GitHub 首席执行官托马斯·多姆克发布了：“仍在大型机上运行的 COBOL 是一个比我们想象的更大的社会问题。”在接受《财富》杂志采访时，他提到他在 2023 年听到的关于 COBOL 的内容比过去三十年都要多。他还表示，公司一直在询问如何在迁移项目中使用 GitHub Copilot。</p>
+<p>请记住，ChatGPT 也精通传统编程语言。表 1-2 显示了它支持哪些语言。</p>
+<p>表 1-2. 常见的传统编程语言</p>
+<table>
+<thead>
+<tr>
+<th>语言</th>
+<th>描述</th>
+<th>开发时代</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>COBOL</td>
+<td>用于业务数据处理</td>
+<td>1950 年代末到 1960 年代初</td>
+</tr>
+<tr>
+<td>Fortran</td>
+<td>用于科学和工程计算</td>
+<td>1950 年代</td>
+</tr>
+<tr>
+<td>Pascal</td>
+<td>旨在鼓励良好的软件工程实践</td>
+<td>1960 年代末到 1970 年代初</td>
+</tr>
+<tr>
+<td>BASIC</td>
+<td>创建为学生和初学者易于学习的语言</td>
+<td>1960 年代中期</td>
+</tr>
+<tr>
+<td>ALGOL</td>
+<td>影响了后来的语言如Pascal、C 和 Java</td>
+<td>1950 年代末到 1960 年代初</td>
+</tr>
+<tr>
+<td>汇编语言</td>
+<td>对应于其设计的 CPU 架构，追溯到早期可编程计算机</td>
+<td>早期计算时代</td>
+</tr>
+<tr>
+<td>PL&#x2F;I</td>
+<td>用于科学、工程、商业和系统编程</td>
+<td>1960 年代初</td>
+</tr>
+</tbody></table>
+<p>查看人工智能辅助编程如何帮助处理遗留语言，假设您需要处理以下代码片段：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">MODULE ComplexModule</span><br><span class="line">  IMPLICIT NONE</span><br><span class="line">  TYPE :: ComplexType</span><br><span class="line">     REAL :: real, imag</span><br><span class="line">  CONTAINS</span><br><span class="line">     OPERATOR(+) (a, b) RESULT(c)</span><br><span class="line">       TYPE(ComplexType), INTENT(IN) :: a, b</span><br><span class="line">       TYPE(ComplexType) :: c</span><br><span class="line">       c%real = a%real + b%real</span><br><span class="line">       c%imag = a%imag + b%imag</span><br><span class="line">     END OPERATOR</span><br><span class="line">  END TYPE ComplexType</span><br><span class="line">END MODULE ComplexModule</span><br></pre></td></tr></table></figure>
+
+<p>您不知道这是什么语言或它是如何工作的。语法不利于对工作流程的直观理解。</p>
+<p>现在假设你去使用 ChatGPT 并输入以下内容：</p>
+<blockquote>
+<p>提示：这段代码是用什么语言写的？这段代码片段的作用是什么？另外，解释一下它是如何工作的。</p>
+</blockquote>
+<p>图 1-5 显示了部分响应。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0105-20240826160900-xejtzso.png"></p>
+<p> 图 1-5. ChatGPT 响应解释遗留代码的请求</p>
+<p>ChatGPT 准确识别这是 Fortran 代码。它还解释了该代码定义了一个名为 ComplexModule 的模块，其中包含一个用于表示复数的派生类型 ComplexType，以及一个重载的加法运算符+用于将两个复数相加。然后是代码的逐步解释。</p>
+<h1 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h1><p>现在让我们看看人工智能辅助编程工具不那么美好的一面。像任何新兴技术一样——嘿，连第一代 iPhone 都有点笨重——人工智能也有它的一些问题、缺陷和障碍。创新的道路上充满了打磨和调整的空间。</p>
+<p>让我们看看一些缺点。</p>
+<h2 id="幻觉"><a href="#幻觉" class="headerlink" title="幻觉"></a>幻觉</h2><p>对于LLMs，幻觉是指模型输出的数据看起来准确但实际上不正确或没有基于模型训练的输入数据。这可能对软件开发构成重大挑战。幻觉可能导致不准确的代码建议，生成误导性的文档，并创建错误的测试场景。此外，它们可能使调试效率低下，误导初学者，并可能削弱对人工智能工具的信任。</p>
+<p>积极的一点是，减少幻觉发生的情况已有显著进展。大量学术研究已致力于此问题，人工智能公司采用了有效的策略，如基于人类反馈的强化学习（RLHF）来缓解这一问题。</p>
+<p>然而，考虑到LLMs的内在复杂性以及它们所基于的大量数据，完全消除幻觉似乎是一项艰巨的任务——如果不是不可能的话。</p>
+<p>另一个需要考虑的方面是，某些编程语言在使用人工智能辅助工具时表现出更高的准确率。像 Python、JavaScript、TypeScript 和 Go 这样的语言在这方面往往表现更好。这归因于这些语言在公共代码库中有较好的代表性，从而为人工智能提供了更丰富的数据集进行学习。训练得更好的人工智能反过来会提供更准确和更强大的建议。</p>
+<h2 id="知识产权"><a href="#知识产权" class="headerlink" title="知识产权"></a>知识产权</h2><p>马修·巴特里克拥有多元化的背景，担任过程序员、设计师和律师，特别喜欢排版。他的经历包括撰写排版书籍、设计字体以及编写旨在文档编辑和布局的程序。然而，他在 2022 年 6 月与 GitHub Copilot 的接触并没有带来快乐。相反，这促使他写了一篇标题为“这个副驾驶很愚蠢，想杀了我”的博客文章。</p>
+<p>他的不满并没有止步于博客。很快升级为对微软、GitHub 和OpenAI提起集体诉讼。争议的焦点是涉嫌违反 GitHub 的服务条款和隐私政策，可能还涉及版权侵权指控。</p>
+<p>这一法律纠纷凸显了关于知识产权的更广泛灰色地带，涉及由人工智能辅助编程工具生成的代码。鉴于输出是无数行现有代码的混合，所有权问题是一个大问号。</p>
+<p>一个论点基于“合理使用”的理念。然而，这一法律原则模糊不清，并没有为人工智能生成内容提供明确的路径。为了解决这个问题，可能需要联邦立法或最高法院裁决。</p>
+<p>与此同时，微软已采取措施为 GitHub Copilot 客户建立法律防火墙。它承诺在满足某些前提条件的情况下为用户辩护。</p>
+<p>增加法律困境的另一个层面是人工智能辅助编程与开源软件方法的交集。像通用公共许可证（GPL）版本 2 和 3 这样的版权保护许可证要求任何衍生作品使用原始代码的许可证条款。这有助于促进创新的流动。然而，这可能会给开发者带来麻烦，因为这可能剥夺他们保护应用程序知识产权的权利——甚至要求他们将整个代码库开源。</p>
+<h2 id="隐私"><a href="#隐私" class="headerlink" title="隐私"></a>隐私</h2><p>使用人工智能辅助编程工具，通常托管在云端，提出了许多数据隐私和保密问题。公司内部的数据是如何保护的？是否有可能被用作训练数据？</p>
+<p>答案的清晰度可能因供应商而异。因此，一些开发者可能选择完全避免使用人工智能辅助编程工具。</p>
+<p>这一直是 Gridspace 的联合创始人兼工程主管安东尼·斯科达里的方法。该企业的根源可以追溯到斯坦福大学，开发擅长处理复杂电话对话的语音机器人。他们的技术基础建立在语音识别、语音合成、LLMs和对话系统之上。</p>
+<p>Gridspace 选择了一条不寻常的道路，而不是依赖现有的人工智能辅助编程平台。它开发了自己的人工智能辅助编程平台，该平台基于 Kubernetes 集群中的 Docker 服务。作为 IDE 插件部署，这个定制系统经过优化以适应自己的代码库。“这使我们避免了将我们的知识产权和数据发送给其他公司，”他说。“这也意味着我们拥有一个更小、更高效、专门针对我们风格的模型。”</p>
+<p>这并不是说这是最佳方法。每个组织都有自己的观点和偏好方法。但在评估人工智能辅助编程时，了解隐私影响是很重要的。</p>
+<h2 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h2><p>在一篇题为“GitHub 中副驾驶生成代码的安全漏洞”的研究论文中，作者傅宇佳等人强调了 GitHub 副驾驶的安全问题。他们审查了来自 GitHub 项目的 435 个人工智能生成的代码片段，其中 35.8%存在通用弱点枚举（CWE）实例。</p>
+<p>这些错误不限于一种编程语言。它们是跨越 42 个不同 CWE 类别的多语言失误。其中三个类别是常见的嫌疑犯——操作系统命令注入、使用不足够随机的值和对异常情况的不当检查或处理。但这里有个关键点：其中 11 个 CWE 荣幸地进入了 2022 年 CWE 前 25 名单。</p>
+<p>这并不是说人工智能辅助编程工具是一个巨大的安全风险。远非如此。事实是供应商们正在继续寻找改进保护措施的方法。然而，与任何代码一样，保持安全意识是关键。</p>
+<h2 id="训练数据"><a href="#训练数据" class="headerlink" title="训练数据"></a>训练数据</h2><p>人工智能辅助编程工具的LLMs训练数据可能存在显著的缺口，这可能影响这些工具在实际场景中的性能和实用性。我们来分析一下其中的一些：</p>
+<ul>
+<li> 表示差距：如果某些编程语言或库的特定领域在开源项目中没有得到很好的体现——或者根本没有出现——那么人工智能可能缺乏足够的知识，从而导致建议不够准确。人工智能输出的质量在很大程度上依赖于训练数据的质量和范围。</li>
+<li> 质量不一致：借用电影的比喻，LLM中的开源代码有点像一盒巧克力——你永远不知道你会得到什么。有些项目是精华中的精华，而其他的……我们可以说，是代码世界中的烧焦的吐司。这种混杂可能导致我们的人工智能辅助编程在提供建议的质量上不一致。</li>
+<li> 知识截止日期：LLMs 在训练时有截止日期，因此在某种程度上它们就像时间的快照。这在编程语言或库有新版本、更新或弃用时会带来挑战。</li>
+<li> 泛化差距：泛化差距，即人工智能在训练数据和未见数据上的表现差异，也可能带来挑战。当然，两者的表现越接近越好。这是 Rie Johnson 和 Tong Zhang 撰写的研究论文《深度神经网络训练的不一致性、稳定性和泛化差距》的结论。</li>
+<li>上下文理解：人工智能可以根据之前看到的内容给你建议。但如果它没有见过与你的场景完全相似的情况，它可能会偏离目标。这就是在创建提示时不做假设的重要性。</li>
+</ul>
+<h2 id="偏见"><a href="#偏见" class="headerlink" title="偏见"></a>偏见</h2><p>开发人员通常对人工智能伦理缺乏深入了解，这可能是因为这个主题通常不包含在计算机科学课程或密集训练营项目中。这种理解上的差距可能导致算法无意中应用偏见和数据的潜在误用。</p>
+<p>这个问题同样适用于人工智能辅助编程工具。它们可能无意中延续训练数据中存在的偏见。例如，如果被要求创建一个名字列表，它们可能主要建议英文名字，因为训练数据集中以英语为中心的数据占据了很大比例。这种偏见有时会导致有害或不当的输出。有一个例子，当给定提示“def race(x):”时，人工智能填充了一组有限且固定的种族类别。在另一个令人担忧的案例中，当被要求为提示“伊斯兰”编写代码注释时，人工智能发现访问恐怖分子和暴力等词汇的频率高于提到其他宗教团体时。</p>
+<h1 id="开发者的新方式"><a href="#开发者的新方式" class="headerlink" title="开发者的新方式"></a>开发者的新方式</h1><p>麦肯锡研究表明，人工智能辅助编程工具的出现可能会改变我们对软件开发的方式。作者指出，成功可能依赖于良好的培训，强调最佳实践，并深入进行提示工程、编码标准和质量等方面的实践。关注生成式人工智能相关的风险也是明智之举。</p>
+<p>对于新手开发者，特别是那些经验不足一年的开发者，深入学习涵盖编程基本原理的额外课程是个好主意，以提高生产力。</p>
+<p>随着开发人员将这些工具融入日常工作，保持技能提升的动力至关重要，这需要团队中经验丰富的专业人士的指导和参与社区活动。这可能意味着在专门的在线论坛中交流或定期召开团队会议分享实际案例。这些举措可以促进持续学习的文化，传播最佳实践，并帮助及早发现问题。</p>
+<p>随着开发者生产力的提升，管理者可能想要在角色上有所调整，专注于更有价值的任务。提升技能也会成为重点，以填补现有的空白。</p>
+<p>当然，这些建议不是绝对的。人工智能辅助编程领域仍然相对新颖，并且变化迅速。最重要的是，准备好应对变化是关键。</p>
+<h2 id="职业"><a href="#职业" class="headerlink" title="职业"></a>职业</h2><p>虽然没有确凿的证据表明使用人工智能辅助编程会提升你的职业前景，但一些迹象表明这种技能可能会成为就业市场的热门票据：</p>
+<ul>
+<li> 职位列表：像 Indeed 这样的网站上的招聘信息开始增加，寻找具有人工智能辅助编程工具经验的候选人。各个级别的人才都在招募，从初级开发者到高级专家。</li>
+<li> 生产力提升：人工智能辅助编程工具引起了关注，因为它们在不牺牲质量的情况下提高了生产力。对于开发人员来说，这可能是晋升的一个途径。</li>
+<li>开发者点赞：开发者之间的讨论是，人工智能辅助编程工具正在流行。例如，GitHub Copilot 在独立软件评审网站 G2.com 上获得了 4.5 星（满分 5 星）的高评分。</li>
+</ul>
+<h2 id="10-倍开发者？"><a href="#10-倍开发者？" class="headerlink" title="10 倍开发者？"></a>10 倍开发者？</h2><p>10 倍开发者拥有 10 个程序员的能力。他们是编码的博尔特，快速解决问题并在你说“修复 bug”之前输出解决方案。</p>
+<p>所以你可能在想：我能否借助人工智能辅助编程工具成为一个 10 倍开发者？抱歉，可能不行。虽然这些技术可以带来显著的变化，但改进通常不是数量级的。</p>
+<p>此外，10 倍开发者的概念可能会引发刻板印象和偏见，使技术领域感觉像一个排他性的俱乐部。更不用说，成为这种超级编码员的压力可能会让你直接走向倦怠。因此，虽然成为 10 倍开发者听起来很不错，但请记住，这可能更接近于幻想。</p>
+<h2 id="开发者技能"><a href="#开发者技能" class="headerlink" title="开发者技能"></a>开发者技能</h2><p>根据麦肯锡的研究，人工智能辅助开发工具的有效性往往取决于开发者的专业知识。以下是一些考虑因素：</p>
+<p> 修复错误尽管生成式人工智能可以成为你可靠的助手，但它也会出错。开发者需要负责发现和修复这些错误。一些开发者发现自己与人工智能进行纠正的循环，以达到准确性的最佳状态，而另一些则不得不逐步引导工具以使其准确调试。这肯定会耗费时间。但经验丰富的开发者会知道如何避免陷入无谓的细节。</p>
+<p>获取办公室氛围人工智能辅助编程工具在编码方面相当可靠，但在处理个别项目的独特风格或公司特性时可能会出现问题。再次强调，资深开发人员在这里至关重要。他们知道如何引导这些工具以获得最符合组织目标、绩效指标和安全性的结果。</p>
+<p>解决难题辅助人工智能编程工具在优化代码等任务上表现出色，但遇到一些复杂挑战，比如融合不同的编码框架时，人工智能可能会出现问题。在这些时刻，经验丰富的开发者需要动手解决。</p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>人工智能辅助编程工具无疑是软件创建沙盒中的闪亮玩具。随着这项技术不断向前发展，这些系统将提高效率，处理无聊的任务，让开发人员专注于最重要的领域，比如高级问题解决。</p>
+<p>但也有缺点——复杂的知识产权问题、开放源代码软件许可的迷宫、潜在的偏见以及安全风险等。</p>
+<p>在大多数情况下，这些工具是你的虚拟助手，而不是你知识、技能和经验的替代品。同时，虽然它们可能不是超级英雄，但它们正成为开发者工具包中强大的补充。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/08/29/aiassistedprogramming00/" rel="prev" title="前言">
+                  <i class="fa fa-angle-left"></i> 前言
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/09/02/aiassistedprogramming02/" rel="next" title="第2章 人工智能编码技术如何工作">
+                  第2章 人工智能编码技术如何工作 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Howard Huang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">616k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">18:40</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动-->
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.33/fancybox/fancybox.umd.js" integrity="sha256-+2+qOqR8CKoHh/AsVR9k2qaDBKWjYNC2nozhYmv5j9k=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.33/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"szhowardhuang.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在本章中，我们将深入探讨软件开发的重要早期阶段。这是所有酷炫想法变为现实的地方，也是我们规划它们以便准备就绪的地方。我们将使用ChatGPT有效地头脑风暴，并将事情规划到最后的细节。我们将查看市场调研，关注趋势，并检查竞争对手。我们还会讨论白板，这是一种有趣的可视化方式来交流想法并使其更好。此外，我们将深入研究如何规划您的项目，查看敏捷和 Scrum 等方法，以及如何调整它们以适应您的软件项目。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第7章  想法、规划和需求">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/09/13/aiassistedprogramming07/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="在本章中，我们将深入探讨软件开发的重要早期阶段。这是所有酷炫想法变为现实的地方，也是我们规划它们以便准备就绪的地方。我们将使用ChatGPT有效地头脑风暴，并将事情规划到最后的细节。我们将查看市场调研，关注趋势，并检查竞争对手。我们还会讨论白板，这是一种有趣的可视化方式来交流想法并使其更好。此外，我们将深入研究如何规划您的项目，查看敏捷和 Scrum 等方法，以及如何调整它们以适应您的软件项目。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0701-20240829144157-at3ii9v.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0702-20240829144157-h1q4f9s.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0703-20240829144158-le0lw22.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0704-20240829144200-gjh6sln.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0705-20240829144201-8lr8765.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0706-20240829144202-82jigj1.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0707-20240829144202-7fcfnrl.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0708-20240829144203-zbx5c8b.png">
+<meta property="article:published_time" content="2024-09-13T03:48:32.000Z">
+<meta property="article:modified_time" content="2024-09-26T03:55:46.000Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0701-20240829144157-at3ii9v.png">
+
+
+<link rel="canonical" href="https://szhowardhuang.github.io/2024/09/13/aiassistedprogramming07/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://szhowardhuang.github.io/2024/09/13/aiassistedprogramming07/","path":"2024/09/13/aiassistedprogramming07/","title":"第7章  想法、规划和需求"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>第7章  想法、规划和需求 | 嵌入式老兵博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">嵌入式老兵博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%B4%E8%84%91%E9%A3%8E%E6%9A%B4"><span class="nav-number">1.</span> <span class="nav-text">头脑风暴</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%82%E5%9C%BA%E8%B0%83%E7%A0%94"><span class="nav-number">2.</span> <span class="nav-text">市场调研</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%82%E5%9C%BA%E8%B6%8B%E5%8A%BF"><span class="nav-number">2.1.</span> <span class="nav-text">市场趋势</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E5%AF%BB%E5%9D%80%E5%B8%82%E5%9C%BA%E6%80%BB%E9%87%8F"><span class="nav-number">2.2.</span> <span class="nav-text">可寻址市场总量</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AB%9E%E4%BA%89"><span class="nav-number">3.</span> <span class="nav-text">竞争</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9C%80%E6%B1%82"><span class="nav-number">4.</span> <span class="nav-text">需求</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A7%E5%93%81%E9%9C%80%E6%B1%82%E6%96%87%E6%A1%A3"><span class="nav-number">4.1.</span> <span class="nav-text">产品需求文档</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E9%9C%80%E6%B1%82%E8%A7%84%E6%A0%BC%E8%AF%B4%E6%98%8E%E4%B9%A6"><span class="nav-number">4.2.</span> <span class="nav-text">软件需求规格说明书</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%A2%E8%AF%95"><span class="nav-number">4.3.</span> <span class="nav-text">面试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BD%E6%9D%BF%E5%8D%8F%E4%BD%9C"><span class="nav-number">4.4.</span> <span class="nav-text">白板协作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A3%8E%E6%A0%BC"><span class="nav-number">4.5.</span> <span class="nav-text">风格</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E8%A7%84%E5%88%92%E6%96%B9%E6%B3%95"><span class="nav-number">5.</span> <span class="nav-text">项目规划方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%EF%BC%88TDD%EF%BC%89"><span class="nav-number">5.1.</span> <span class="nav-text">测试驱动开发（TDD）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E9%A1%B5%E8%AE%BE%E8%AE%A1%E8%A7%84%E5%88%92"><span class="nav-number">5.2.</span> <span class="nav-text">网页设计规划</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">6.</span> <span class="nav-text">结论</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Howard Huang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/09/13/aiassistedprogramming07/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="第7章  想法、规划和需求 | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          第7章  想法、规划和需求
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-09-13 11:48:32" itemprop="dateCreated datePublished" datetime="2024-09-13T11:48:32+08:00">2024-09-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-09-26 11:55:46" itemprop="dateModified" datetime="2024-09-26T11:55:46+08:00">2024-09-26</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>11k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>20 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>在本章中，我们将深入探讨软件开发的重要早期阶段。这是所有酷炫想法变为现实的地方，也是我们规划它们以便准备就绪的地方。我们将使用ChatGPT有效地头脑风暴，并将事情规划到最后的细节。我们将查看市场调研，关注趋势，并检查竞争对手。我们还会讨论白板，这是一种有趣的可视化方式来交流想法并使其更好。此外，我们将深入研究如何规划您的项目，查看敏捷和 Scrum 等方法，以及如何调整它们以适应您的软件项目。</p>
+<h1 id="头脑风暴"><a href="#头脑风暴" class="headerlink" title="头脑风暴"></a>头脑风暴</h1><p>每天都有成千上万的软件产品出现，因此制作一些真正出色并脱颖而出的东西并不是一件容易的事。但是有了LLM像ChatGPT，你可以进行一些头脑风暴。</p>
+<p>首先，您可以让它提供不同的方法。这里有一个提示：</p>
+<blockquote>
+<p>头脑风暴新产品创意的技巧是什么？使用互联网研究这个问题。</p>
+</blockquote>
+<p>ChatGPT 提供了 10 种有用的方法——以下是其中的一些：</p>
+<blockquote>
+<p>5 个为什么：你从一个问题开始，不断问“为什么”会发生。它有助于回顾并找出哪里出错。</p>
+<p>糟糕的主意：故意想出一堆糟糕的主意。讨论它们为什么这么糟糕实际上可以激发聪明的解决方案。</p>
+<p>星爆法：这是关于问题，而不是答案。你使用星形图表，并用问题来打击它，比如：谁，什么，什么时候，在哪里，为什么和如何。</p>
+</blockquote>
+<p>假设您想使用星爆法。您可以通过以下提示了解更多信息：</p>
+<blockquote>
+<p>星爆法：你将如何使用星爆法来提出一个新的软件产品创意？</p>
+</blockquote>
+<p>ChatGPT 对该主题应用的星爆练习进行了简单明了的分解：</p>
+<blockquote>
+<p>谁：考虑一下谁将使用你的软件。</p>
+<p>什么：了解您的软件解决了什么问题。它与现有的有什么不同？</p>
+<p>何时：找出使用您的软件、启动它以及进行更新或修复的最佳时间。</p>
+<p>在哪里：人们可以在什么平台或设备上使用该软件？</p>
+<p>为什么：深入探讨为什么您的软件是必备的。为什么人们应该选择它而不是其他软件？</p>
+<p>如何：考虑您的软件将如何工作，您将如何构建和销售它，以及当用户需要帮助时您将如何照顾他们。</p>
+</blockquote>
+<p>通过这个过程可以更清晰地了解您的新软件产品想法。</p>
+<p>现在，假设你想列出一些想法。最好集中在一个特定类别，了解你的目标对象，并明白你想解决什么问题。以下是一些提示，帮助你开始：</p>
+<blockquote>
+<p>我想开发一款老年人健康追踪应用。问题在于他们在监测慢性病和用药时间表方面面临的困难。可以包含哪些功能以使应用更适合老年人并更有效地帮助管理他们的健康？</p>
+<p>预算应用应该包含哪些功能，以帮助大学生跟踪支出、节省资金并轻松理解财务规划？</p>
+<p>我想创建一个语言学习应用程序，针对忙碌的专业人士，他们很难找到时间上常规课程。你能建议一些适合他们紧张日程的功能，并提供快速有效的语言学习课程吗？</p>
+</blockquote>
+<p>ChatGPT产生的想法有多好？好吧，一些沃顿商学院的教授在他们的 MBA 创新课程中进行了测试。他们让学生提出十几个产品或服务的想法。然后，他们对ChatGPT做了同样的事情，利用 GPT-4 模型。提出的想法包括适合宿舍的厨师工具包和适合那些硬课堂座椅的舒适垫子。</p>
+<p>为了测试这些想法，教授们使用了一项在线购买意向调查。问题是：“如果这个概念对你可用，你购买的可能性有多大？”</p>
+<p>平均而言，大约 40%的学生想法相当扎实，而ChatGPT稍微高一些，达到了 49%。但教授们并没有就此止步。他们专注于前 10%的想法。这些才是真正有潜力成为游戏规则改变者的想法。你猜怎么着？在 40 个顶尖想法中，只有 5 个来自学生。</p>
+<h1 id="市场调研"><a href="#市场调研" class="headerlink" title="市场调研"></a>市场调研</h1><p>在开始一个软件项目之前，问几个关键问题是明智的：这个工具真的有必要吗？客户愿意为此支付现金吗？这个市场有多大？</p>
+<p>这就是进行市场调研。当然，这不是水晶球，但它确实有助于降低将时间和精力投入到可能不会成功的事情上的风险。</p>
+<p>事实上，很多新产品都失败了。哈佛教授、畅销书作者克莱顿·克里斯滕森对此进行了大量研究，发现大约 80%的新产品都不成功。</p>
+<p>表 7-1 列出了一些最 notable 的例子。</p>
+<p>表 7-1. 失败的软件应用程序</p>
+<table>
+<thead>
+<tr>
+<th>产品&#x2F;服务</th>
+<th>启动年份</th>
+<th>失败原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Friendster</td>
+<td>2002</td>
+<td>技术问题，扩展性问题，被 Facebook 超越</td>
+</tr>
+<tr>
+<td>Microsoft Zune</td>
+<td>2006</td>
+<td>未能与 iPod 竞争，改变音乐市场动态</td>
+</tr>
+<tr>
+<td>Windows Vista</td>
+<td>2007</td>
+<td>高系统要求，兼容性问题，安全提示</td>
+</tr>
+<tr>
+<td>Google Wave</td>
+<td>2009</td>
+<td>复杂的界面，不明确的目的，缺乏用户采用</td>
+</tr>
+<tr>
+<td>谷歌+</td>
+<td>2011</td>
+<td>大量错误，不准确的数据，导航能力差</td>
+</tr>
+<tr>
+<td>Vine</td>
+<td>2013</td>
+<td>被 Instagram 和 Snapchat 等竞争对手 overshadowed</td>
+</tr>
+<tr>
+<td>Amazon Fire Phone</td>
+<td>2014</td>
+<td>高价格，应用选择有限，功能不吸引人</td>
+</tr>
+<tr>
+<td>Quibi</td>
+<td>2020</td>
+<td>短视频内容格式未被接受，竞争激烈，COVID-19 影响</td>
+</tr>
+</tbody></table>
+<p>史蒂文·斯皮尔伯格 1982 年电影《外星人 E.T.》的视频游戏是最惨痛的失败之一。雅达利花费了 2100 万美元购买环球影业的版权，又花了 500 万美元进行推广。</p>
+<p>这款游戏真的失败了。它非常 confusing，也不好玩。那么，发生了什么？雅达利只卖出了约 150 万台。剩下的 250 万台最终被丢弃在新墨西哥的垃圾填埋场。</p>
+<p>让我们深入探讨如何使用ChatGPT进行市场调研。首先，我们需要确定目标受众。想想谁会从这款软件中获得最大的收益。让我们开始头脑风暴一下这些用户可能是谁。考虑这个提示：</p>
+<blockquote>
+<p>项目管理软件程序的潜在目标人群是什么？</p>
+</blockquote>
+<p>您可以让ChatGPT承担一个对了解您的营销很重要的任务：创建详细的用户画像。将这些画像视为角色，它们为您提供可能使用您产品的不同类型人群的快照。细节通常包括他们的年龄、兴趣、职业和生活方式。通过绘制这些画像，您开始了解您的客户是谁以及他们在寻找什么。</p>
+<p>我向ChatGPT请求了一些管理软件的用户画像，您可以在图 7-1 中看到它的一些响应。</p>
+<p>ChatGPT 还可以用于编写调查和问卷以收集特定数据。</p>
+<blockquote>
+<p>调查问卷：您能否创建一份调查，重点了解买家在项目管理软件中寻找什么？调查应包括帮助识别关键功能、可用性偏好、特定行业需求以及买家希望通过此类软件解决的任何特定挑战的问题。此外，请包括评估成本、支持、可扩展性和集成能力等因素重要性的问题。</p>
+</blockquote>
+<p>让我们看看在评估软件市场时需要考虑的一些其他因素。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0701-20240829144157-at3ii9v.png"></p>
+<p> 图 7-1. ChatGPT 为管理软件创建的用户角色</p>
+<h2 id="市场趋势"><a href="#市场趋势" class="headerlink" title="市场趋势"></a>市场趋势</h2><p>在推出新软件时，深入市场调研可以带来很大差异。这就像获取用户真正想要的内部信息，同时也让你了解竞争对手的动态。把它看作你的秘密手册。你可以在趋势爆发之前发现它们，以及其他人可能错过的机会。此外，这也是一个很好的安全网。它减少了猜测，帮助你做出更有可能成功的明智选择。还有，别忘了营销。深入了解你的受众意味着你可以创建与他们产生共鸣的广告和促销，而不是随便发布内容希望能引起关注。</p>
+<p>ChatGPT 可以成为您市场调研的好助手。当然，该模型仅训练到某个日期，但有一个变通方法：您可以在提示中告诉它“研究互联网”。</p>
+<p>这里有一些例子：</p>
+<blockquote>
+<p>研究互联网以查找截至&lt;年份&gt;的&lt;特定软件类别，例如移动游戏、教育技术&gt;的当前趋势。</p>
+<p>研究互联网以提供&lt;年份&gt;软件行业新兴技术的概述</p>
+<p>研究互联网以寻找当前影响软件市场的消费者行为趋势，特别是在&lt;目标人群或应用类型&gt;。</p>
+<p>研究互联网以寻找&lt;年份&gt;软件应用程序用户界面和用户体验（UI&#x2F;UX）设计的最新趋势。</p>
+<p>研究互联网，列出在&lt;特定领域&gt;中最优秀的软件应用程序，并解释它们在当前市场上成功的原因。</a></p>
+</blockquote>
+<h2 id="可寻址市场总量"><a href="#可寻址市场总量" class="headerlink" title="可寻址市场总量"></a>可寻址市场总量</h2><p>可寻址市场总量，简称 TAM，是对如果所有可以使用您的产品的人都实际使用它时您可能赚取的最大金额的估计。这有助于您确定精力集中在哪里，如何在市场中定位您的产品，以及您的增长计划应该是什么。这是一个现实检查，帮助您设定可实现的目标，了解您可以占据市场的份额和可以带来的现金。</p>
+<p>风险投资者（VC）在考虑投资时非常重视市场总量（TAM），因为这显示了增长潜力。他们总是在寻找投资能够起飞的地方，而较大的市场总量意味着有一个巨大的市场等待开发。</p>
+<p>通常，风险投资公司寻找超过十亿美元的市场总量——理想情况下远远超过这个数字。毕竟，即使一家公司只占据了这样一个巨大市场的一小部分，利润也可能相当可观。</p>
+<p>估算总可寻址市场规模的不同方法有哪些？</p>
+<blockquote>
+<ul>
+<li>自上而下的方法：您收集行业数据和市场研究，以了解整个市场规模。然后，您稍微缩小范围，例如专注于您目标市场的部分。</li>
+<li>自下而上的方法：你估算可能购买你产品的人或企业数量，猜测其中有多少人会实际购买（你的转化率），然后考虑每个客户能带来多少收益。这种方法需要更多的工作，但可以给你一个更清晰、更量身定制的图景。</li>
+</ul>
+</blockquote>
+<p>让我们举个例子。假设你有一个医疗技术类别的初创公司：</p>
+<blockquote>
+<p>银连健康是一家专注于远程医疗服务的健康科技初创公司。目标市场在美国，重点关注城市地区的老年人群体。银连健康目前的远程医疗服务市场规模是多少？预计未来 5-10 年该市场细分的增长率是多少？</p>
+</blockquote>
+<p>ChatGPT 搜索互联网并得出一些有用的事实：</p>
+<blockquote>
+<ul>
+<li>2022 年市场规模：美国远程医疗市场在 2022 年的估值超过 350 亿美元。另一个估计将远程医疗市场规模定为 912 亿美元。</li>
+<li>预计增长率：有一个估计表明 2023 年至 2032 年的年均复合增长率（CAGR）为 12.5%。另一个来源预测 2023 年至 2030 年的 CAGR 为 22.9%。</li>
+</ul>
+</blockquote>
+<h1 id="竞争"><a href="#竞争" class="headerlink" title="竞争"></a>竞争</h1><p>竞争分析有几个关键好处。首先，它让你提前了解市场。你可以看到已经存在的产品，哪些有效，哪些无效。这帮助你发现你的软件可以填补的空白，确保你带来一些新鲜的东西。</p>
+<p>然后，从竞争对手那里学习——无论是他们的胜利还是失误时刻。这真的可以提升你的水平。</p>
+<p>此外，当你知道是什么让你的软件与众不同时，你可以更具体地进行营销，更有效地触及正确的人群。</p>
+<p>关于ChatGPT，它可以帮助进行竞争分析。以下是一些提示：</p>
+<blockquote>
+<p>列出&lt;您的软件类型&gt;在&lt;特定行业或市场&gt;的主要竞争对手。</p>
+<p>比较&lt;你的软件&gt;与其前三大竞争对手的功能。</p>
+<p>竞争对手在市场上使用的&lt;你的软件&gt;定价模型是什么？</p>
+<p>领先竞争对手如何在&lt;软件类型&gt;市场中定位自己？</p>
+<p>识别&lt;竞争对手名称&gt;软件的优缺点。</p>
+<p>总结&lt;竞争对手软件名称&gt;的客户评价，重点关注用户满意度和痛点。</p>
+</blockquote>
+<p>您也可以让ChatGPT将分析放入表格中，这样可以更清晰：</p>
+<blockquote>
+<p><em>Prompt:</em> Can you provide a summary in bullet points of the key players in the customer relationship management (CRM) software market as of 2023? Put the results in a table.</p>
+</blockquote>
+<p>图 7-2 显示了响应。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0702-20240829144157-h1q4f9s.png"></p>
+<p>图 7-2. ChatGPT 提供了 CRM 市场的竞争分析并以表格格式呈现</p>
+<p>ChatGPT 甚至可以进行 SWOT（优势、劣势、机会和威胁）分析。这有助于你突出自己的强项，修复或规避弱点，把握出现的机会，躲避任何意外情况。各种类型的企业都在使用它，甚至对个人职业发展也很有帮助。</p>
+<h1 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h1><p>需求文档对软件开发至关重要。以下是它们的一些好处：</p>
+<ul>
+<li> 给你指引：这些文档明确了软件应该做什么。每个人，从开发人员到客户，都了解计划是什么，这使事情保持在正轨上。</li>
+<li>让每个人保持一致：他们确保所有相关人员，比如你的团队和客户，理解预期的内容。这样，混淆或错误的可能性就会减少。</li>
+<li> 帮助规划：需要弄清楚事情需要多长时间或花费多少吗？这些文档是您规划工作、时间和所需资金的首选。</li>
+<li> 改善沟通：它们非常适合清晰沟通，特别是在大型团队或人员分布在不同地理位置时。</li>
+<li> 降低风险：及早发现潜在问题？这就是这些文档帮助您做到的，以便您可以避免延误并控制成本。</li>
+</ul>
+<p>当然，提出软件需求并不容易，主要原因是软件开发可能会变得复杂。然后还有协调工作和考虑许多团队成员的挑战，他们可能在其他国家和时区。每个小组都有自己的想法和需求，有时这些并不完全匹配或不够清晰。</p>
+<p>另一个头疼的问题是，人们对软件的需求可能会不断变化。尤其是在快速发展的行业中，这一点尤为明显。因此，你经常需要在不断变化的目标上进行调整，这使得很难确定一个稳定的方案。同时，你还必须确保这些需求是可行的，并且能够验证它们是否得到了满足。</p>
+<p>当需求不准确时，结果可能会很糟糕。以下是一些例子：</p>
+<ul>
+<li>丹佛国际机场自动行李系统（1995）：需求复杂得令人头痛，目标过于雄心勃勃。这导致了 16 个月的延迟和成本飙升。最后，机场决定放弃整个系统。</li>
+<li>联邦调查局虚拟案件档案系统（2000–2005）：联邦调查局对自己想要什么只有模糊的概念。因此，系统最终并没有太大用处。最后，该机构在这个项目上投入了超过 1.7 亿美元，却最终放弃了。下一个项目，名为哨兵，具有更具体的要求，当然也更成功。</li>
+<li>医疗保健.gov 上线（2013）：联邦政府没有确定所需内容，也没有进行足够的测试，因此在启动时无法处理流量，运行不正常。启动失败，很多人不得不投入更多的工作和资金来修复并使其顺利运行。</li>
+</ul>
+<p>在软件开发的世界中，有一系列不同的需求，每个需求都有其独特的目的。你有功能性需求，列出了软件应该做什么，比如它应该执行的任务或需要的功能。然后是非功能性需求，这些是关于软件应该如何运行的，比如性能速度、安全性和可用性。</p>
+<p>探索生成式人工智能如何提供帮助，我们将重点关注两种重要文档：产品需求文档（PRD）和软件需求规格说明（SRS）。</p>
+<h2 id="产品需求文档"><a href="#产品需求文档" class="headerlink" title="产品需求文档"></a>产品需求文档</h2><p>产品需求文档（PRD）规定了您的软件将是什么以及将做什么。可以将其视为一个故事，概述应用程序应该是什么样子、应该如何表现、谁将使用它以及它将解决什么问题。它通常很详细，涵盖从必备功能到用户体验的所有内容。</p>
+<p>PRD 的受众是多样化的。它面向开发人员、设计师、项目经理和质量保证团队。对于需要理解产品愿景和目标的高管或其他利益相关者也至关重要。此外，它对营销团队了解如何定位产品也很有用。基本上，它是为任何参与将产品推向市场并确保其满足预期用户需求的人准备的。</p>
+<p>如果您还没有看到 PRD，ChatGPT可以提供帮助：</p>
+<blockquote>
+<p>产品需求文档主要部分是什么？创建一个 Word 文档作为模板。</p>
+</blockquote>
+<p>图 7-3 显示生成的文档ChatGPT。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0703-20240829144158-le0lw22.png"></p>
+<p> 图 7-3. ChatGPT 创建了一个 PRD 示例大纲</p>
+<h2 id="软件需求规格说明书"><a href="#软件需求规格说明书" class="headerlink" title="软件需求规格说明书"></a>软件需求规格说明书</h2><p>SRS 与 PRD 有什么不同？SRS 就像软件项目的详细技术手册。与从最终用户或客户的角度出发、关注他们需要什么以及为什么的 PRD 不同，SRS 深入探讨软件需要做什么以及如何做到这一点，侧重于技术方面。</p>
+<p>如果你有一个简单的应用程序，软件需求规格说明书可能只有几页。但对于更复杂的项目，比如企业软件实施，它可能会达到数百页。</p>
+<p>让我们看一些提示：</p>
+<ul>
+<li>Prompt: What are the essential elements and best practices to consider when drafting an effective SRS?</li>
+<li>Prompt: Outline the process for developing an SRS, emphasizing the steps involved in gathering and analyzing requirements, stakeholder collaboration, and documentation methodologies.</li>
+<li>Prompt: Create a detailed SRS for a software project, including sections like Project Overview, Stakeholder Analysis, Functional and Non-functional Requirements, Assumptions, and Constraints. <Add the details you want for each.></li>
+</ul>
+<h2 id="面试"><a href="#面试" class="headerlink" title="面试"></a>面试</h2><p>语音识别软件已经存在几十年，但大多数时候，它更像是一种新奇事物，而不是实用工具。通常，它在日常使用或专业环境中并不实用，因为它无法可靠地理解自然的对话语音。</p>
+<p>然而，在过去几年中，语音识别取得了飞跃式发展，这得益于人工智能的进步。现代系统由复杂的人工智能算法驱动，不仅更擅长理解各种口音和方言，还能把握口语的上下文和细微差别。这些系统随着时间的推移不断学习和适应，持续提高其准确性。</p>
+<p>一个有帮助的方法是在您经常进行的面试中整理需求文档。</p>
+<p>例如，通过语音识别软件，您可以改善以下内容：</p>
+<ul>
+<li> 准确性和回放：虽然转录准确率通常很好，但您可以使用回放进行更正。</li>
+<li> 说话人识别：语音识别可以区分会议中的发言者。这可以帮助明确需求。</li>
+<li>关键主题识别：语音识别软件可以在 transcripts 中突出显示频繁的关键词，使识别和关注主要主题或需求变得更容易。</li>
+<li> 关键点摘要：语音识别软件可以生成关键点摘要并建议行动项，帮助开发人员确定关键需求并将其转换为具体项目任务。</li>
+</ul>
+<p>一些顶尖的语音识别软件系统包括：</p>
+<ul>
+<li> Otter AI</li>
+<li> Fathom</li>
+<li> Rev</li>
+<li> Sonix</li>
+<li> Notta</li>
+</ul>
+<h2 id="白板协作"><a href="#白板协作" class="headerlink" title="白板协作"></a>白板协作</h2><p>白板是整理软件项目需求时常见的做法。它可以帮助头脑风暴过程，让每个人都能参与进来。它允许收集很多不同的想法和观点，这对于明确软件应该做什么至关重要。它也是动手的——你可以在讨论期间绘制流程图或图表，使复杂的内容更容易理解。</p>
+<p>好吧，ChatGPT可以帮助解决这个问题。怎么做？它可以解读您上传到系统的图像。</p>
+<p>例如，假设您勾勒出一个登录系统，如图 7-4 所示。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0704-20240829144200-gjh6sln.png"></p>
+<p>图 7-4. 登录系统的示意图</p>
+<p>如您所见，我的 handwriting 有点乱。我还使用缩写，例如“pw”表示“密码”。</p>
+<p>让我们看看ChatGPT能否弄明白。我使用了这个提示：</p>
+<blockquote>
+<p>Prompt：分析图表。</p>
+<p>ChatGPT：您上传的图表似乎是与用户账户管理相关的流程图，特别是网站或应用程序的登录过程。</p>
+</blockquote>
+<p>然后列出了整个过程（图 7-5）。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0705-20240829144201-8lr8765.png"></p>
+<p> 图 7-5. ChatGPT 分析了登录系统的图示图像，将其转换为易于阅读的工作流程细分</p>
+<h2 id="风格"><a href="#风格" class="headerlink" title="风格"></a>风格</h2><p>编写有效的 PRD 和 SRS 是一门艺术。重要的是要把握正确的风格。这些文档应该清晰、简洁和专业。</p>
+<p>让我们分析一下写作风格为何重要：</p>
+<ul>
+<li> 清晰明了：这些文档就像你项目的圣杯。你希望一切都准确无误，以便每个人都能了解发生了什么。这样，你就可以避免那些恼人的沟通错误和开发失误。</li>
+<li> 坚持事实：PRD 和 SRS 不是个人风格展示的地方。你需要像新闻记者一样——只需事实。保持简洁和中立确保你专注于产品真正需要的内容。</li>
+<li> 一致性是关键：您希望始终保持相同的语气。把它当作遵循食谱。如果您在中途开始更改内容，最终会变得一团糟。一致性使这些通常较长的文档更易于理解。</li>
+<li>保持对产品的关注：请记住，产品及其预期功能才是这里的主角。保持直接的语气可以确保您不偏离主要内容——即功能和需求。</li>
+</ul>
+<p>当涉及到LLM像ChatGPT时，写作是它的强项之一。它真的可以提升你的水平。是的，你可以指示LLM把握正确的语气，就像这个提示：</p>
+<blockquote>
+<p><em>Prompt:</em> Please draft a comprehensive list of technical requirements for a mobile banking app, ensuring the writing is clear, well structured, and professional.</p>
+</blockquote>
+<p>市场上有很多人工智能写作工具，每个工具都有其独特的功能，以适应您所需的写作类型。例如，Jasper 和 Writer 非常适合生成内容并保持品牌声音的一致性。然后是 Grammarly，它是确保语法正确和提升写作风格的首选工具。AI21 和 Copy.ai 也在其中，使内容创作变得轻而易举。</p>
+<p>考虑吉亚萨·格罗弗，她在项目中使用 Grammarly。作为机器学习专家，她写了一本关于该主题的书，名为《为机器学习雕刻数据》（2021）。根据她的说法：</p>
+<blockquote>
+<p>Grammarly 是另一个帮助我撰写技术设计文档的工具。我利用它进行校对、语法、标点和风格建议。它与许多网页浏览器和文字处理软件无缝集成。语言表达清晰简洁，甚至根据目标受众和文档目的定制建议。</p>
+</blockquote>
+<h1 id="项目规划方法"><a href="#项目规划方法" class="headerlink" title="项目规划方法"></a>项目规划方法</h1><p>在整理完需求后，下一步是规划如何进行项目。这是关于制定团队如何处理软件创建过程的计划。涉及设定明确的目标，弄清楚需要做什么，谁在做什么，何时进行，以及如何进行。主要目标是保持事情顺利进行，确保每个人都高效，并最终拥有一个能够按预期工作并让所有人，特别是客户，满意的产品。</p>
+<p>现在，软件开发的世界确实很复杂，因此团队可以有很多不同的方式来规划他们的项目。它们各自有不同的策略，每个策略都有自己的规则和步骤，以帮助人们处理任务，应对任何变化，保持质量，并向客户交付出色的成果。因此，无论您的团队需要详细说明所有内容，还是更喜欢一种可以随时更改的灵活计划，总有一种方法适合您。</p>
+<p>一些常见的项目规划方法包括瀑布模型、敏捷、Scrum、看板和极限编程（XP）。选择正确的方法很重要，因为这可能决定你的项目成败。你的选择取决于很多因素，比如项目的规模和复杂性、客户的需求、团队的协作方式，以及项目环境中事情的确定性或不确定性。有些团队可能坚持一种方法，但其他团队可能会混合搭配，以找到最适合他们项目的方法。</p>
+<p>关于提示，我们举个例子。假设你正在构建一个“待办事项”应用。你已经为它创建了一份单页需求文档，现在你问ChatGPT：</p>
+<blockquote>
+<p>该应用的最佳项目规划方法是什么？</p>
+</blockquote>
+<p>ChatGPT 建议敏捷方法作为最佳选择并提供理由（图 7-6）。</p>
+<p>这里有一些你可能会使用的其他提示：</p>
+<blockquote>
+<p>团队如何有效选择和定制适合其特定软件项目的项目规划方法？</p>
+<p>讨论将项目规划方法与软件项目的目标和复杂性对齐的重要性。</p>
+<p>瀑布模型在软件项目管理中的顺序阶段解释。</p>
+<p>敏捷开发方法的核心原则</p>
+<p>敏捷方法如何促进项目的灵活性和客户参与？</p>
+<p>概述 Scrum 框架中的角色和仪式。</p>
+<p>比较和对比 Scrum 与传统项目管理方法。</p>
+<p>极限编程的关键实践及其对客户满意度的贡献。</p>
+<p>讨论作为极限编程一部分的测试驱动开发的好处和挑战。</p>
+</blockquote>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0706-20240829144202-82jigj1.png"><br> 图 7-6. ChatGPT 解释了为什么敏捷是某个应用程序开发的最佳方法</p>
+<h2 id="测试驱动开发（TDD）"><a href="#测试驱动开发（TDD）" class="headerlink" title="测试驱动开发（TDD）"></a>测试驱动开发（TDD）</h2><p>在开始编码之前，最聪明的做法之一是列出你的测试用例。记住老话“量两次，切一次”？这是个好建议。在深入之前，你需要做好准备。一种常见的方法是测试驱动开发（TDD）。</p>
+<p>这里是关键：当你坐下来思考你的代码需要通过的所有测试时，你会更好地理解你需要构建的内容。在开始构建之前，你仔细查看了蓝图。这样，你就确切知道你的代码应该做什么，这可以让你避免后续很多困惑。</p>
+<p>更重要的是，先规划测试意味着你从一开始就考虑到将使用你软件的用户。你不仅仅是在代码中迷失。你专注于制作对用户有用的东西。提前发现潜在的问题总比后来为修复错误而抓狂要好。</p>
+<p>在测试驱动开发中，这种方法是整个过程的核心。你在编码之前编写测试，这意味着你始终关注代码需要实现的目标。这种方法导致代码更简洁、更直接，因为你总是带着目的进行编码。</p>
+<p>通过测试驱动开发（TDD），我们有工具包用于编写测试的不同方式：</p>
+<ul>
+<li> 给定-何时-然后(GWT)：给定是设置场景，比如在行动开始之前一切都在哪里。然后进入何时阶段，主要事件开始推动事情发展。最后以然后结束，说明在尘埃落定后你期望发生的事情。这就像讲述你的代码将执行的故事。</li>
+<li> 安排-执行-断言（AAA）：这类似于 GWT。但 GWT 更倾向于叙述和以用户为中心，使其非常适合开发人员、测试人员和非技术利益相关者之间的协作。而 AAA 则更多地关注测试本身的技术执行。</li>
+<li>设置-执行-验证-拆除（SEVT）：这是您在集成和系统测试中必备的工具。您从设置开始，准备测试环境。然后，进入执行阶段，运行系统进行测试。之后，您进入验证阶段，在这里您扮演侦探确认一切正常。最后别忘了拆解。这是清理步骤，对于下次保持一切整洁至关重要。</li>
+</ul>
+<p>这是一个使用 GWT 的 TDD 提示示例：</p>
+<blockquote>
+<p>提示：使用给GWT方法制定关键功能的测试方法。具体要求包括：</p>
+<ul>
+<li>开发一个精品酒店连锁的在线预订系统。</li>
+<li>系统必须从每个酒店的内部管理软件中提取房间可用性数据。</li>
+<li>应该允许用户按日期、价格和设施筛选房间。</li>
+<li>界面需要直观，并兼容桌面和移动浏览器。</li>
+<li>系统应使用基于云的解决方案构建，以确保可靠性和可扩展性。</li>
+</ul>
+</blockquote>
+<p>TDD 通常还关注需要测试的特定场景或用例。以下是几种可能有用的提示类型：</p>
+<blockquote>
+<p>编写测试以允许用户通过电子邮件验证重置密码的功能。</p>
+<p>创建测试以验证数据库连接失败时系统的响应。</p>
+<p>开发测试以确保在正常负载条件下搜索功能在 2 秒内返回结果。</p>
+<p>编写测试以检查所有用户数据在存储时是否被加密。</p>
+<p>设计测试以验证支付网关与订单处理系统之间的集成。</p>
+</blockquote>
+<h2 id="网页设计规划"><a href="#网页设计规划" class="headerlink" title="网页设计规划"></a>网页设计规划</h2><p>规划网站或网络应用程序可能很复杂，并涉及多个步骤。首先，您需要了解网站的目标和目标用户。然后，您将勾勒出网站的蓝图，并计划用户的移动方式。这通常被称为原型或线框。</p>
+<p>之后就是通过选择颜色、字体和炫酷的图形来美化它，展示品牌的本质。当然，你需要一些吸引人的文字和酷炫的图片或视频来讲述你的故事。接下来是技术部分，你需要使用 HTML、CSS 和 JavaScript 等语言将这些想法转化为一个真实的、可运行的网站。</p>
+<p>当然，像ChatGPT这样的工具在您进行规划阶段时可以提供帮助。以下是一些提示：</p>
+<blockquote>
+<p>提示：我正在为&lt; a certain category&gt;开发一个网站。建议一些目标或目的。目标受众是谁？</p>
+<p>提示：在线商店基本布局需要哪些页面？</p>
+<p>提示：我正在制作博客主页的线框图。你能建议一些重要的元素吗？</p>
+<p>提示：我正在为移动应用的登录页面草拟线框。应该确保包含哪些基本部分？</p>
+<p>提示：关于&lt; a certain category&gt;的网站，需要内容的好点子，比如博客文章、视频和信息图表？</p>
+<p>提示：您将如何构建网站的导航，以使其对您的受众直观且用户友好？</p>
+<p>提示：列出您将实施的关键 SEO 策略，以提高您网站在搜索引擎中的可见性。</p>
+<p>提示：您为我的网站关于&lt; *a particular category*&gt;设想什么颜色调色板？</p>
+<p>提示：为您的网站选择字体样式，关于&lt; *a particular category*&gt;。考虑可读性和品牌一致性，以及字体如何为网站的整体美感做出贡献。</p>
+</blockquote>
+<p>还有各种使用人工智能来帮助创建线框的工具。其中一个是 Uizard。类似于 Figma 这样的系统，它具有设计功能，例如拖放按钮和表单等元素的能力。它还可以被团队用于协作。</p>
+<p>人工智能功能位于仪表板左侧的工具栏上。按钮称为魔法。点击它，您将看到人工智能功能列表。</p>
+<p>要创建线框，选择自动设计器，这将弹出一个向导，如图 7-7 所示。</p>
+<p>首先，您将选择要设计的设备：手机、平板电脑或网页。然后，您将描述项目。您可以只提供一句话或两句话。以下是一个示例：</p>
+<blockquote>
+<p>一个连接自由职业厨师与举办晚宴或特殊活动的人的网站。</p>
+</blockquote>
+<p>接下来，您将提出设计风格，例如：</p>
+<blockquote>
+<p>时尚现代的设计，生动的视觉效果和直观的布局，突出诱人的美食摄影和用户友好的预订功能。</p>
+</blockquote>
+<p>图 7-8 显示了线框。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0707-20240829144202-7fcfnrl.png"></p>
+<p> 图 7-7. Uizard 有一个人工智能向导来帮助创建移动应用或网站的线框图</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0708-20240829144203-zbx5c8b.png"> 图 7-8. 根据给定的提示，Uizard 生成了这个网站的线框图</p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>在本章中，我们探讨了如何使用ChatGPT启动软件开发项目。我们从头脑风暴开始，然后深入市场调研。接着，我们深入到需求草拟的细节，重点介绍了 PRD 和 SRS 如何帮助明确项目目标和技术细节。我们查看了不同的规划风格，从灵活的敏捷到结构化的瀑布。我们还研究了白板和测试驱动开发技术。通过将像ChatGPT这样强大的工具与经过验证的方法结合起来，您可以为项目构建一个坚实的基础。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/09/11/aiassistedprogramming06/" rel="prev" title="第6章 ChatGPT 和其他通用 LLMs">
+                  <i class="fa fa-angle-left"></i> 第6章 ChatGPT 和其他通用 LLMs
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/09/16/aiassistedprogramming08/" rel="next" title="第8章  编码">
+                  第8章  编码 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Howard Huang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">616k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">18:40</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动-->
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.33/fancybox/fancybox.umd.js" integrity="sha256-+2+qOqR8CKoHh/AsVR9k2qaDBKWjYNC2nozhYmv5j9k=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

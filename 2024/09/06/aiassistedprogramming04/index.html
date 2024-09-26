@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.33/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"szhowardhuang.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在本章中，我们将介绍 GitHub Copilot，我简称为 Copilot。它是人工智能编码助手领域的佼佼者。人们甚至称它为生成式人工智能的“杀手级应用”。这主要归功于它先进的代码建议、创建和解释能力，显著提高了开发者的生产力。通过根据上下文理解和预测编码模式，它不仅节省了时间，还帮助编写更高效和无错误的代码。 在本章中，我们将深入探讨 Copilot：它的费用、如何设置以及它提供的所有酷炫功能">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第4章  GitHub Copilot">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/09/06/aiassistedprogramming04/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="在本章中，我们将介绍 GitHub Copilot，我简称为 Copilot。它是人工智能编码助手领域的佼佼者。人们甚至称它为生成式人工智能的“杀手级应用”。这主要归功于它先进的代码建议、创建和解释能力，显著提高了开发者的生产力。通过根据上下文理解和预测编码模式，它不仅节省了时间，还帮助编写更高效和无错误的代码。 在本章中，我们将深入探讨 Copilot：它的费用、如何设置以及它提供的所有酷炫功能">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0401-20240829123924-trxnxs8.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0402-20240829123924-6xnt4gi.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0403-20240829123925-u7tbrp9.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0404-20240829123926-44lkgip.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0405-20240829123927-lpgism9.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0406-20240829123928-4l52zya.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0407-20240829123929-cg5zar3.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0408-20240829123929-dspo5d2.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0409-20240829123930-mdnin30.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0410-20240829123931-cddv7tq.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0411-20240829123932-bshdkqa.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0412-20240829123932-o2e8z8p.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0413-20240829123933-c1dwekt.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0414-20240829123934-ost0gnj.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0415-20240829123934-zzvqh0v.png">
+<meta property="article:published_time" content="2024-09-06T03:48:32.000Z">
+<meta property="article:modified_time" content="2024-09-26T03:55:47.000Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://szhowardhuang.github.io/assets_aiassistedprogramming/net-img-aiap_0401-20240829123924-trxnxs8.png">
+
+
+<link rel="canonical" href="https://szhowardhuang.github.io/2024/09/06/aiassistedprogramming04/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://szhowardhuang.github.io/2024/09/06/aiassistedprogramming04/","path":"2024/09/06/aiassistedprogramming04/","title":"第4章  GitHub Copilot"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>第4章  GitHub Copilot | 嵌入式老兵博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">嵌入式老兵博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#GitHub-Copilot"><span class="nav-number">1.</span> <span class="nav-text">GitHub Copilot</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%BB%B7%E5%92%8C%E7%89%88%E6%9C%AC"><span class="nav-number">1.1.</span> <span class="nav-text">定价和版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B%EF%BC%9A%E7%BC%96%E7%A8%8B%E7%A1%AC%E4%BB%B6"><span class="nav-number">1.2.</span> <span class="nav-text">案例：编程硬件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E4%BE%8B%EF%BC%9AShopify"><span class="nav-number">1.3.</span> <span class="nav-text">用例：Shopify</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E4%BE%8B%EF%BC%9A%E5%9F%83%E6%A3%AE%E5%93%B2"><span class="nav-number">1.4.</span> <span class="nav-text">用例：埃森哲</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E5%85%A8"><span class="nav-number">1.5.</span> <span class="nav-text">安全</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A5%E9%97%A8"><span class="nav-number">2.</span> <span class="nav-text">入门</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Codespaces-%E5%92%8C-Visual-Studio-Code"><span class="nav-number">2.1.</span> <span class="nav-text">Codespaces 和 Visual Studio Code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E8%AE%AE"><span class="nav-number">2.2.</span> <span class="nav-text">建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%84%E8%AE%BA"><span class="nav-number">2.3.</span> <span class="nav-text">评论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%81%8A%E5%A4%A9"><span class="nav-number">2.4.</span> <span class="nav-text">聊天</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E7%BA%BF%E8%81%8A%E5%A4%A9"><span class="nav-number">2.5.</span> <span class="nav-text">在线聊天</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E5%BC%80%E6%A0%87%E7%AD%BE%E9%A1%B5"><span class="nav-number">2.6.</span> <span class="nav-text">打开标签页</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%95%8C%E9%9D%A2"><span class="nav-number">2.7.</span> <span class="nav-text">命令行界面</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Copilot-%E5%90%88%E4%BD%9C%E4%BC%99%E4%BC%B4%E8%AE%A1%E5%88%92"><span class="nav-number">3.</span> <span class="nav-text">Copilot 合作伙伴计划</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">4.</span> <span class="nav-text">结论</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Howard Huang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/09/06/aiassistedprogramming04/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="第4章  GitHub Copilot | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          第4章  GitHub Copilot
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-09-06 11:48:32" itemprop="dateCreated datePublished" datetime="2024-09-06T11:48:32+08:00">2024-09-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-09-26 11:55:47" itemprop="dateModified" datetime="2024-09-26T11:55:47+08:00">2024-09-26</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>12k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>21 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>在本章中，我们将介绍 GitHub Copilot，我简称为 Copilot。它是人工智能编码助手领域的佼佼者。人们甚至称它为生成式人工智能的“杀手级应用”。这主要归功于它先进的代码建议、创建和解释能力，显著提高了开发者的生产力。通过根据上下文理解和预测编码模式，它不仅节省了时间，还帮助编写更高效和无错误的代码。</p>
+<p>在本章中，我们将深入探讨 Copilot：它的费用、如何设置以及它提供的所有酷炫功能。我们也会真实地谈谈它的缺点。此外，我还会提供一些实用技巧，以便充分利用它。我们不会止步于此：我们还将看看 Copilot 如何与其他公司合作，参与 Copilot 合作伙伴计划。本章将全面展示 Copilot 的功能。</p>
+<h1 id="GitHub-Copilot"><a href="#GitHub-Copilot" class="headerlink" title="GitHub Copilot"></a>GitHub Copilot</h1><p>在 2021 年 6 月，微软推出了 GitHub Copilot。GitHub 的首席执行官 Nat Friedman 在一篇博客中将其描述为“人工智能配对程序员”，旨在通过帮助开发人员更高效地完成任务来加快他们的工作。</p>
+<p>Copilot 是微软与 OpenAI 合作的结果。最初，它利用了一种名为 Codex 的大型语言模型，这是针对编码的 GPT-3 变体。微软通过集成一种称为中间填充（FIM）的新方法增强了该 LLM 的能力，使其更好地理解代码上下文。这提高了代码建议的质量并缩短了响应时间。该增强功能由更先进的 GPT-3.5 Turbo 提供支持，导致代码建议的接受率明显上升。为了提高安全性，该工具集成了一个人工智能系统，以即时阻止风险编码模式，重点关注硬编码凭据和 SQL 注入等漏洞。</p>
+<h2 id="定价和版本"><a href="#定价和版本" class="headerlink" title="定价和版本"></a>定价和版本</h2><p>Copilot 提供 30 天免费试用。试用结束后，您有三个选择。</p>
+<p> 个人版: 该计划每月 10 美元或每年 100 美元。它提供多行函数建议等功能，可以使您的编码工作流程更加顺畅。一个突出特点是加速测试生成，这是确保您的代码可靠和稳健的关键因素。此外，它还有筛选易受攻击编码模式的功能。它还防止任何可能与公共代码相似的建议，确保您创建的内容是独特和原创的。</p>
+<p> 商业版: 此套餐更为全面，费用为每位用户每月 19 美元。它包括个人版 Copilot 计划的所有内容以及一些为企业设计的额外福利。它简化了许可证管理，这对公司处理订阅和访问权限是一个很大的优势。还有一个用于管理组织内政策的功能，帮助确保治理的一致性和所有项目的一致性。一个主要亮点是其一流的隐私保护措施，这对于保护敏感的商业数据安全至关重要。此外，它支持企业代理，确保公司网络的安全和顺畅连接。</p>
+<p>大型企业版: 每位用户每月收费 39 美元。企业版的主要特点是允许在内部代码库上训练系统。企业版提高了开发人员的效率，因为该工具开始提供更准确的代码建议。它有助于推动采用更好的实践并遵守安全规则。它针对开发人员内部编码的方式以及他们喜欢的 API、框架和包进行了定制。企业版的另一个优势是您可以在经典语言如 COBOL 和Fortran上进行训练。通用LLMs可能在这些语言上效果不佳，因为缺乏来自公共库的训练数据。当然，它们对您公司特有的专有语言也没有任何了解。GitHub 系统还通过持续扫描公司的代码库来增强企业版的模型。例如，它关注最近的拉取请求和合并，以及点赞和点踩反馈。所有这些都有助于突出公司正在使用的最新方法和策略。</p>
+<p>拥有自定义模型有助于在组织内部传播知识。人工智能提取并分享隐藏在代码中的细微知识。随着持续的训练，人工智能跟上不断变化的代码库，使其帮助随着时间的推移变得更加精准。不过，组织处理与将这些人工智能工具融入开发过程相关的隐私和知识产权风险仍然非常重要。</p>
+<p>  注意</p>
+<p>2023 年，Gartner 的研究显示不到 10%的大型企业已经开始使用人工智能辅助编程工具。这种犹豫部分是由于对安全性和准确性的担忧。然而，随着技术的快速进步，预计越来越多的企业将在不久的将来开始采用这些工具。总之，它们提供的好处实在是太重要了，无法忽视。</p>
+<h2 id="案例：编程硬件"><a href="#案例：编程硬件" class="headerlink" title="案例：编程硬件"></a>案例：编程硬件</h2><p>一个有趣的案例研究涉及先进微处理器公司（AMD）。成立于 1969 年，该公司是中央处理器（CPU）的先驱。如今，该公司是数据中心、嵌入式系统、游戏平台和个人电脑的半导体领导者。</p>
+<p>在深入之前，让我们通过回顾一些关于硬件系统开发的基础知识来设定背景。这与为网页应用程序构建软件是完全不同的游戏。关键挑战在于开发人员需要深入了解硬件系统。与在通用计算机上运行的常规软件不同，固件直接与硬件对话。这需要一种更为严格的精确性和兼容性。</p>
+<p>这种精确度至关重要，因为固件开发中的错误可能导致非常昂贵的后果。仅一个错误可能意味着数百万的财务损失。而且这不仅仅是钱的问题——时间也是一个重要因素。修复固件问题通常需要重新审视制造过程，这可能会延长几个月的时间表。这种延迟不仅影响发布计划，还影响产品在市场上的竞争力。</p>
+<p>显然，在这种环境下，敏捷软件开发中常见的“快速行动和破坏事物”的思维方式是行不通的。这种方法的风险太大。因此，固件开发人员必须投入大量时间和精力进行详细规划和广泛测试。这种谨慎的方法确保固件在与硬件配对之前尽可能稳固和无错误。</p>
+<p>当 AMD 在 2023 年查看Copilot时，设定了非常高的标准，并且有相当多的合理怀疑。在一个试点项目中，AMD 为各种硬件描述语言（HDL）创建了一个定制版本的Copilot，如 Verilog 和 SystemVerilog。HDL 是专门用于描述电子电路的架构、设计和功能的特定类型编程语言，特别是数字逻辑电路。它们对于在不同抽象层次上建模和模拟电子系统至关重要。</p>
+<p>试点结果比预期的要好得多。令人惊讶的是，Copilot生成的代码风格实际上更符合 AMD 的标准，而不是他们自己程序员所编写的代码。改进是如此显著，以至于一些程序员甚至从使用 Vim 这个高度可定制的文本编辑器转向采用 Visual Studio Code 作为他们的 IDE。</p>
+<h2 id="用例：Shopify"><a href="#用例：Shopify" class="headerlink" title="用例：Shopify"></a>用例：Shopify</h2><p>另一个有趣的案例研究是 Shopify。该公司运营一个平台，让客户建立电子商务网站。Shopify 在美国的市场份额约为 10%，在欧洲为 6%。</p>
+<p>毫无疑问，这需要一个庞大的基础设施。考虑到大约有 300 个公共仓库和大约 5000 个私有仓库。此外，Shopify 每天大约进行 1500 次代码部署。</p>
+<p>Shopify 是最早加入 Copilot 热潮的公司之一，这对提高开发者的生产力产生了重大影响。目前，近 2000 名 Shopify 开发者使用该工具。这里有个很酷的地方：70% 的人表示它很有帮助，75% 的人经常使用。来自 Copilot 的代码建议中约有 26% 被接受。</p>
+<p>当然，有一些功能没有普及，比如与命令行界面（CLI）的集成。但尽管如此，很多开发者每天都在使用代码补全和聊天。</p>
+<p>这里有一些有趣的收获：</p>
+<ul>
+<li>代码建议的价值：即使开发者不使用某个建议，这也不是完全的损失。任何建议都可以激发编写更好代码的想法。</li>
+<li> 采用率：通常会随着时间的推移而增加，这并不令人惊讶。调整日常工作流程并习惯新功能需要时间。Copilot 也有一个学习曲线。</li>
+<li>高级开发人员的采用：在Copilot刚被采用的早期，经验丰富的开发者并不太热衷于使用它。他们倾向于将其视为玩具而不是严肃的工具。但随着时间的推移，他们注意到其他开发者获得了真实的结果，他们开始对其产生好感。</li>
+<li> 学习增强：Shopify 注意到Copilot擅长推动人们尝试新的语言或框架。例如，Rust 的采用明显增加。</li>
+</ul>
+<p>大约有百万行 Shopify 代码库是使用这个工具编写的，这表明Copilot对这个业务来说非常重要。</p>
+<h2 id="用例：埃森哲"><a href="#用例：埃森哲" class="headerlink" title="用例：埃森哲"></a>用例：埃森哲</h2><p>埃森哲是一家大型专业服务组织，帮助客户通过创新技术和系统改善运营和增长。该公司在 120 多个国家拥有超过 733,000 名员工。</p>
+<p>在 2023 年，埃森哲对Copilot进行了 450 名内部开发人员的测试。该公司没有设定任何具体任务或目标。相反，管理者只是要求每个人像往常一样进行工作。</p>
+<p>在埃森哲进行的Copilot试验持续了六个月。那么，发生了什么呢？在编码方面，Copilot的建议接受率为 35%，其中 88%的更改在代码审查后仍然保留。生产力也显著提升。拉取请求增加了 50%，合并率上升了 15%。效率也大幅提升，构建数量增加了 50%，成功率提高了 45%。开发人员呢？他们对此非常满意：高达 96%的人觉得他们从第一天起就很成功。</p>
+<p>在看到这些结果后，埃森哲决定在全球范围内向其 50,000 名开发人员推出Copilot。</p>
+<h2 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h2><p>高德纳调查了超过 2000 名首席信息官（CIO），发现 66%的人计划在 2023 年将最多资源投入网络和信息安全。这个趋势已经持续多年。</p>
+<p>在网络威胁变得越来越复杂和普遍的情况下，安全漏洞可能意味着巨大的财务损失、声誉受损、法律问题和运营中断。此外，随着数据隐私法规变得更加严格，首席信息官必须保持警惕以确保合规，以避免罚款并保持客户信任。</p>
+<p>这就是为什么对于 GitHub 来说，安全是其Copilot计划的主要关注点。GitHub 开发了一个基于LLMs的系统，可以在发生时发现并修复不安全的编码模式。</p>
+<p>然后还有 GitHub 的高级安全功能，由 Copilot 提供支持。以下是主要功能：</p>
+<p> 代码扫描：实时高级安全将搜索安全漏洞和编码错误。</p>
+<p> 秘密扫描：该产品可以挖掘出已检查到私有仓库中的密钥和令牌等秘密。</p>
+<p> 依赖审查：这显示了依赖项更改的影响。它还提供了合并拉取请求时的漏洞详细信息。</p>
+<h1 id="入门"><a href="#入门" class="headerlink" title="入门"></a>入门</h1><p>要开始使用Copilot，您首先需要创建一个 GitHub 账户。GitHub 是一个支持版本控制和协作软件开发的在线服务。它基于 Git 构建，Git 是一个提供代码审查和项目管理功能的工具。</p>
+<p>设置好您的账户后，点击屏幕右上角的个人资料照片。您将看到一个下拉菜单，如图 4-1 所示。</p>
+<p>选择Copilot然后点击启用 GitHub Copilot。您可以选择计划类型，然后点击继续。您将提供您的支付信息，假设您不符合免费账户的资格。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0401-20240829123924-trxnxs8.png"></p>
+<p> 图 4-1. 从个人资料照片下拉菜单开始启用 Copilot</p>
+<h2 id="Codespaces-和-Visual-Studio-Code"><a href="#Codespaces-和-Visual-Studio-Code" class="headerlink" title="Codespaces 和 Visual Studio Code"></a>Codespaces 和 Visual Studio Code</h2><p>有两种使用Copilot的方法。一种方法是通过 Codespaces 访问它，这是一个基于云的开发环境，运行在 Visual Studio Code（VS Code）上，直接在 <a target="_blank" rel="noopener" href="https://github.com/">https://github.com</a> 上可用。</p>
+<p>或者，如果您使用的是 Visual Studio Code 的桌面版本，可以选择Copilot扩展。在本书中，我们将重点使用 VS Code 扩展。</p>
+<p>IDE 本身是免费的。图 4-2 显示了 VS Code 的主屏幕。您可以在各种平台上运行此系统，包括 Windows（版本 7、8、10 和 11）；macOS；以及各种 Linux 发行版，如 Ubuntu、Debian、Fedora 等。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0402-20240829123924-6xnt4gi.png"></p>
+<p>图 4-2. Visual Studio Code 的主屏幕包括活动栏和生成及显示代码的区域</p>
+<p>左侧是活动栏，它是一堆图标。您可以使用这些图标加载文件和文件夹。您还可以选择第五个图标，即方块组，进入安装扩展的区域（图 4-3）。</p>
+<p>如果在搜索框中输入“GitHub Copilot”，您将看到扩展列表。选择顶部的一个并点击安装。</p>
+<p>然后查看屏幕右下角。如果您看到Copilot图标，则表示您可以使用该服务。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0403-20240829123925-u7tbrp9.png"></p>
+<p>图 4-3. 您可以在 VS Code 中安装扩展，例如 Copilot</p>
+<p>在屏幕中间，您将看到打印“你好，Copilot！”的代码。这是通过使用以下提示创建的，Copilot 转换成代码：</p>
+<blockquote>
+<p><em>Prompt:</em> # write a “Hello, Copilot!” program</p>
+</blockquote>
+<p>#字符指定注释。这是指示Copilot生成代码的一种方式。</p>
+<p>注意代码是用 Python 编写的。为什么呢？文件的扩展名是 py。Copilot使用文件扩展名来确定使用什么语言。</p>
+<p>在屏幕右上角，有一个运行程序的图标。点击它，VS Code 将启动终端。然后你会看到打印出的消息。</p>
+<h2 id="建议"><a href="#建议" class="headerlink" title="建议"></a>建议</h2><p>在 VS Code 中开始使用Copilot非常简单。当你开始输入代码时，该工具会启动，提供代码建议并根据你的输入生成代码片段。</p>
+<p>假设您输入一个函数的头部在 Python 中：</p>
+<pre data-type="programlisting"><strong>def find_factorial(number):</strong></pre>
+
+<p>Copilot 将及时建议完整的函数体，如图 4-4 所示。生成的代码称为幽灵文本，并以灰色突出显示。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0404-20240829123926-44lkgip.png"></p>
+<p> 图 4-4. Copilot 在用户编写函数头时建议代码</p>
+<p>请记住，代码在您的机器上可能看起来有些不同，这是正常的，因为底层LLM是根据一组复杂的概率工作。</p>
+<p>但是问题是：GitHub 明白你正在尝试编写一个根据参数计算阶乘的函数。因此，它建议你需要的 If–Then 结构以获得正确的结果。</p>
+<p>您可以按 Tab 键接受代码建议。但如果这不是您想要的，请按 Esc 键跳过。</p>
+<p>如果您将鼠标悬停在生成的代码上，您将看到更多选项，如图 4-5 所示。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0405-20240829123927-lpgism9.png"></p>
+<p>图 4-5. 悬停在生成的代码上会出现更多选项，显示在右上角</p>
+<p>您可以点击接受以接受代码建议，就像按下 Tab 键一样，或者您可以选择接受单词一次选择代码中的一个单词。如果您点击三个点，您将获得一个菜单，可以接受一行或始终显示工具栏。</p>
+<p>点击左侧的 1&#x2F;2 可以查看生成代码的替代方案；在图 4-5 中，有两个替代方案，当前显示的是第一个。点击“&gt;”将带你到版本 2。然后点击“&lt;”将带你回到版本 1。</p>
+<p>您还可以使用表 4-1 中列出的快捷键来导航选项。</p>
+<p>表 4-1. 滚动代码建议的快捷键</p>
+<table>
+<thead>
+<tr>
+<th>OS</th>
+<th>下一建议</th>
+<th>之前的建议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>macOS</td>
+<td>选项（⌥）或 Alt+］</td>
+<td>选项（⌥）或 Alt+[</td>
+</tr>
+<tr>
+<td>window</td>
+<td>Alt+］</td>
+<td>Alt+[</td>
+</tr>
+<tr>
+<td>Linux</td>
+<td>Alt+]</td>
+<td>Alt+[</td>
+</tr>
+</tbody></table>
+<p>如果按 Ctrl+Enter，VS Code 将创建一个新标签页以显示 10 个替代解决方案（图 4-6）。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0406-20240829123928-4l52zya.png"></p>
+<p> 图 4-6. 按 Ctrl+Enter 会弹出一个单独的标签页，显示 10 个不同版本的代码</p>
+<p>要选择其中一个选项，请点击该代码上方的接受解决方案。否则，关闭标签以拒绝所有选项。</p>
+<h2 id="评论"><a href="#评论" class="headerlink" title="评论"></a>评论</h2><p>在“代码空间和 Visual Studio Code”中，我们查看了如何提示Copilot生成代码，使用一个或多个注释。为此，您需要在您正在使用的编程语言的语法中指明注释。</p>
+<p>但你可以做更多。你可以使用评论与系统互动，就像它是ChatGPT。让我们看一个例子：</p>
+<blockquote>
+<p><em>Prompt:</em> # q: What is a class in object-oriented programming?</p>
+<p><em>Copilot:</em> # a: A class is a blueprint for creating objects. An object has properties and methods (functions) associated with it. Almost everything in Python is an object.</p>
+</blockquote>
+<p>你可以看到答案也在你编写代码的语言上下文中。现在假设你问Copilot系统是如何工作的：</p>
+<blockquote>
+<p><em>Prompt:</em> # q: What is the shortcut for accepting an inline suggestion?</p>
+<p><em>Copilot:</em> # a: tab</p>
+</blockquote>
+<p>您可以询问Copilot关于 VS Code 的功能：</p>
+<blockquote>
+<p><em>Prompt:</em> # q: What is the shortcut for the user settings in VS Code?</p>
+<p><em>Copilot:</em> # a: Ctrl + ,</p>
+</blockquote>
+<p>您也可以询问它关于其他 IDE 的快捷键：</p>
+<blockquote>
+<p><em>Prompt:</em> # q: What is the shortcut for a new file in the Atom editor?</p>
+<p><em>Copilot:</em> # a: ctrl + n</p>
+</blockquote>
+<p>注意Copilot知道我在使用 Windows 系统，并根据该平台提供代码。</p>
+<h2 id="聊天"><a href="#聊天" class="headerlink" title="聊天"></a>聊天</h2><p>Copilot 聊天就像 ChatGPT，但用于你的编码环境。它方便用于讨论代码，例如当你需要弄清楚语法、修复错误、整理测试用例，或者只是理解不同的编程思想。它由 OpenAI 的 GPT-4 和 GPT-3.5 Turbo 提供支持，以及一些微软自己的 LLMs。</p>
+<p>您可以直接从 <a target="_blank" rel="noopener" href="https://github.com/">https://github.com</a> 进入聊天。它非常适合分析代码、处理拉取请求、查看文档或询问任何编码问题。此外，聊天功能在 iOS 和 Android 的 GitHub 应用中均可用，因此您可以随时随地使用。</p>
+<p>但现在，让我们关注一下这在 VS Code 中是如何工作的。这意味着添加一个新扩展。只需搜索“GitHub Copilot 聊天”。安装后，您会看到屏幕左侧弹出一个新图标。它有两个小聊天气泡，如图 4-7 所示。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0407-20240829123929-cg5zar3.png"></p>
+<p> 图 4-7. 聊天图标出现在屏幕左侧</p>
+<p>在聊天面板顶部，您会看到一组菜单图标。第一个图标由横线和一个小叉组成，用于清除您所有的聊天记录。这一点很重要，因为上下文的工作方式。当您输入提示时，LLM会检查对话历史。如果您的聊天主题杂乱无章，您可能会得到一些不太有帮助的答案。这就是为什么保持每个聊天专注于特定主题，并为新主题开始新聊天是个好主意。</p>
+<p>下一图标是一个人和一个聊天气泡，允许您发送关于系统的反馈。然后是历史按钮，一个时钟，显示之前的对话记录。</p>
+<p>如果点击三个点，您可以在编辑器内使用聊天，那里有更多空间供您聊天。</p>
+<p>在聊天框底部，有一个输入区域可以向系统提问。</p>
+<p>聊天系统有许多快捷方式。一种是@workspace，它指的是在您的工作空间中打开的文件。例如，如果您有一个 Python 计算器程序，您可以输入：</p>
+<blockquote>
+<p><em>Prompt:</em> @workspace &#x2F;explain</p>
+</blockquote>
+<p>图 4-8 显示聊天已分析程序文件并提供了深入的解释。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0408-20240829123929-dspo5d2.png"></p>
+<p> 图 4-8. 聊天可以用来解释代码，例如计算器程序</p>
+<p>您可以让聊天解释代码的某一部分。突出显示您感兴趣的部分，然后按下鼠标右键。这将弹出一个菜单（图 4-9）。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0409-20240829123930-mdnin30.png"></p>
+<p> 图 4-9. 通过高亮显示代码的一个部分并按右键聚焦聊天</p>
+<p>当你告诉聊天机器人专注于代码的某部分时，你不仅可以解释代码，还可以修复它，生成文档或创建测试。</p>
+<p>另一个有用的快捷方式是&#x2F;new 命令。它将为新项目或功能创建一个脚手架。以下是一些示例：</p>
+<blockquote>
+<p><em>Prompt:</em> &#x2F;new Create a Python script to scrape data from a website</p>
+<p><em>Prompt:</em> &#x2F;new Generate a Java class for a student with fields for name, age, and grade</p>
+<p><em>Prompt:</em> &#x2F;new Build a simple REST API using Flask</p>
+<p><em>Prompt:</em> &#x2F;new Create a JavaScript function to sort an array of numbers in ascending order</p>
+<p><em>Prompt:</em> &#x2F;new Design a SQL database schema for a blog, with tables for users, posts, and comments</p>
+</blockquote>
+<p>响应这些提示，聊天系统将显示主要步骤，然后提供代码列表。您还有几个选项可以处理它。如图 4-10 所示，顶部有一个菜单栏。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0410-20240829123931-cddv7tq.png"></p>
+<p> 图 4-10. 聊天代码列表顶部的代码处理选项</p>
+<p>第一个图标将复制代码，第二个将在文件中光标所在位置插入代码（您也可以使用 Ctrl+Enter）。如果您选择三个点，可以将代码插入到新文件或终端中。</p>
+<p>创建新 Jupyter Notebook 的快捷方式：&#x2F;newNotebook。您应该指定您希望笔记本执行的操作。以下是一些示例提示：</p>
+<blockquote>
+<p><em>Prompt:</em> &#x2F;newNotebook Create a notebook to visualize data from a csv file using matplotlib</p>
+<p><em>Prompt:</em> &#x2F;newNotebook Create a notebook to preprocess and clean a dataset for machine learning</p>
+<p><em>Prompt:</em> &#x2F;newNotebook Create a notebook to implement a simple linear regression model using scikit-learn</p>
+<p><em>Prompt:</em> &#x2F;newNotebook Create a notebook to analyze time series data</p>
+<p><em>Prompt:</em> &#x2F;newNotebook Create a notebook to scrape data from a website and analyze it</p>
+</blockquote>
+<p>聊天还提供了一个&#x2F;terminal 快捷方式。您可以询问有关终端或命令行操作的问题或获取帮助，例如导航目录、运行脚本或安装软件包。以下是一些提示：</p>
+<blockquote>
+<p><em>Prompt:</em> &#x2F;terminal What is the command to list all environment variables?</p>
+<p><em>Prompt:</em> &#x2F;terminal How do I use grep to find specific text in multiple files?</p>
+<p><em>Prompt:</em> &#x2F;terminal How can I use the find command to search for files by their permissions?</p>
+<p><em>Prompt:</em> &#x2F;terminal How do I redirect the output of a command to a file?</p>
+<p><em>Prompt:</em> &#x2F;terminal How do I use awk to process text files?</p>
+</blockquote>
+<p>然后是 @vscode，它被称为代理。通过这个，你可以询问问题或获取关于 VS Code 的某些方面的帮助，例如功能、导航、配置或扩展。</p>
+<p>这里有一些示例提示：</p>
+<blockquote>
+<p><em>Prompt:</em> @vscode How do I split the editor into multiple windows?</p>
+<p><em>Prompt:</em> @vscode How can I customize my keyboard shortcuts?</p>
+<p><em>Prompt:</em> @vscode How do I set up a multi-root workspace?</p>
+<p><em>Prompt:</em> @vscode How do I configure task automation in VS Code?</p>
+<p><em>Prompt:</em> @vscode How can I set up and use Docker with VS Code?</p>
+</blockquote>
+<p>最后，还有&#x2F;api 命令。您可以询问有关 API 开发或使用的方面，包括创建、测试或集成的帮助。以下是一些示例：</p>
+<blockquote>
+<p><em>Prompt:</em> &#x2F;api How do I make a POST request with JSON data in Node.js?</p>
+<p><em>Prompt:</em> &#x2F;api How can I handle CORS issues in an Express.js API?</p>
+<p><em>Prompt:</em> &#x2F;api How do I authenticate a user in a Django REST API?</p>
+<p><em>Prompt:</em> &#x2F;api How can I paginate results in a Rails API?</p>
+<p><em>Prompt:</em> &#x2F;api How do I version an API in ASP.NET Core?</p>
+</blockquote>
+<p>您也可以在 VS Code 的上下文中使用 &#x2F;api：</p>
+<blockquote>
+<p><em>Prompt:</em> @vscode &#x2F;api How do I create a new command in VS Code extension?</p>
+<p><em>Prompt:</em> @vscode &#x2F;api How can I read and write settings in VS Code extension?</p>
+<p><em>Prompt:</em> @vscode &#x2F;api How do I create a new webview panel in VS Code extension?</p>
+<p><em>Prompt:</em> @vscode &#x2F;api How can I interact with the file system in VS Code Extension?</p>
+<p><em>Prompt:</em> @vscode &#x2F;api How do I add a new item to the activity bar in VS Code Extension?</p>
+</blockquote>
+<p>注意，如果您想清除聊天，可以使用 &#x2F;clear。</p>
+<h2 id="在线聊天"><a href="#在线聊天" class="headerlink" title="在线聊天"></a>在线聊天</h2><p>您可以在代码列表中使用聊天功能。您将突出显示代码，然后按 Ctrl+I（Windows）或 Cmd+I（macOS）。然后您将看到一个弹出窗口，如图 4-11 所示。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0411-20240829123932-bshdkqa.png"></p>
+<p> 图 4-11. 内联聊天功能允许您在代码中聊天</p>
+<p>根据 GitHub，内联聊天已成为一个热门功能。毕竟，它允许开发者保持在他们的“工作状态”中。</p>
+<p>您可以使用之前描述的快捷方式来询问代码相关的问题。解释将显示在聊天面板上。</p>
+<p>注意代码旁边还有一个橙色闪光图标。如果你点击它，你会得到几个选项——修复代码、解释代码或重写代码——你可以在图 4-12 中看到。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0412-20240829123932-o2e8z8p.png"></p>
+<p> 图 4-12. 按压橙色闪光图标可以直接与代码交互</p>
+<p>让我们尝试一个使用在线聊天的例子。我们将使用这个提示：</p>
+<blockquote>
+<p><em>Prompt:</em> Create a function for a bubble sort</p>
+</blockquote>
+<p>聊天生成代码来实现这一点。但假设我们想看看是否有更快的排序类型。突出显示函数并执行内联聊天。图 4-13 显示了响应。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0413-20240829123933-c1dwekt.png"></p>
+<p> 图 4-13. 内联聊天已响应创建比冒泡排序更快的排序请求</p>
+<p>聊天建议快速排序，并以“差异模式”显示。这允许比较和对比这两种方法。您可以接受新代码的全部或仅部分。</p>
+<h2 id="打开标签页"><a href="#打开标签页" class="headerlink" title="打开标签页"></a>打开标签页</h2><p>当你在进行标准软件开发项目时，你的 IDE 通常会包含一堆文件，每个文件在应用程序框架中扮演着自己的角色。以使用 React 的网页项目为例。你会看到组件的.jsx 和.js 文件，还有 HTML 和 CSS 文件，更不用说.json 和.env 文件了。</p>
+<p>这对Copilot意味着什么？这很有帮助。Copilot 越了解您工作的上下文就越好。这意味着它会考虑您正在处理的当前文件中的所有内容。至于其他打开的文件，LLM 并不会扫描它们全部。它专注于与您正在做的事情相关的部分。此外，Copilot 不会查看您项目中的其他文件，可能是为了尊重您的隐私。</p>
+<h2 id="命令行界面"><a href="#命令行界面" class="headerlink" title="命令行界面"></a>命令行界面</h2><p>您可以在命令行界面中使用Copilot。Copilot的两个主要功能是解释命令和建议命令。</p>
+<p>要做到这一点，您需要安装 GitHub 命令行工具，然后登录到您的 GitHub 账户：</p>
+<pre data-type="programlisting"><strong>gh auth login</strong></pre>
+
+<p>接下来，您将安装Copilot：</p>
+<pre data-type="programlisting"><strong>gh extension install github/gh-copilot</strong></pre>
+
+<p>您可以升级扩展：</p>
+<pre data-type="programlisting"><strong>gh extension upgrade gh-copilot</strong></pre>
+
+<p>这是请求Copilot解释 CLI 命令的示例：</p>
+<blockquote>
+<p><em>Prompt:</em> gh copilot explain xcopy</p>
+</blockquote>
+<p>图 4-14 显示输出。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0414-20240829123934-ost0gnj.png"></p>
+<p> 图 4-14. Copilot 解释了 CLI 中的 xcopy 命令</p>
+<p>这里是如何让Copilot建议一个命令：</p>
+<blockquote>
+<p><em>Prompt:</em> gh copilot suggest</p>
+</blockquote>
+<p>接下来，Copilot 将询问您想要帮助的命令类型——通用 shell 命令、gh 命令或 git 命令——请指定。然后它会询问您希望命令执行什么。以下是一个示例：</p>
+<blockquote>
+<p><em>Prompt:</em> What are the commands for viewing and setting environment variables in the system?</p>
+</blockquote>
+<p>图 4-15 显示了Copilot的响应，其中包括使用的命令建议。您可以复制此内容或询问Copilot以获取更多帮助，例如解释命令或修改它。</p>
+<p><img src="/../assets_aiassistedprogramming/net-img-aiap_0415-20240829123934-zzvqh0v.png"></p>
+<p> 图 4-15. Copilot 在命令行界面的建议功能根据您提供的参数提供命令</p>
+<h1 id="Copilot-合作伙伴计划"><a href="#Copilot-合作伙伴计划" class="headerlink" title="Copilot 合作伙伴计划"></a>Copilot 合作伙伴计划</h1><p>开发人员通常通过使用第三方工具来增强他们的应用程序并更好地利用数据。以 Splunk 为例。它是挖掘日志和数据分析的热门工具。开发人员依靠 Splunk 监控他们的应用程序并快速修复问题，这要归功于其强大的搜索和报告功能。还有 New Relic，它专注于确保您的应用程序顺利运行。它提供实时洞察和诊断，帮助您发现和修复性能问题，使您的应用程序运行得更好，以提供良好的用户体验。还有 Datadog。它是监控基础设施和应用程序的关键工具。凭借其广泛的集成，Datadog 使开发人员能够收集、混合和展示来自各种地方的数据，帮助他们做出明智的选择，以提升性能和管理资源。</p>
+<p>考虑到这些系统的重要性，GitHub 推出了Copilot合作伙伴计划。它拥有不断扩展的热门集成平台阵容，所有平台均可通过插件访问。</p>
+<p>该项目的早期合作伙伴之一是 DataStax，该公司开发了 Astra DB，这是一个用于构建高级人工智能应用程序的向量数据库。借助插件，开发人员可以使用 Chat 加快数据库创建。例如，Chat 提供数据库结构和元数据的代码建议，所有建议都符合编码标准。这导致代码更整洁，更易于维护。</p>
+<p>请使用@datastax 标签提问。一些示例提示包括：</p>
+<blockquote>
+<p><em>Prompt:</em> Tell me about my chat_prod database</p>
+<p><em>Prompt:</em> Tell me about the schema of a table</p>
+<p><em>Prompt:</em> Write a SQL query to read from the chat table</p>
+</blockquote>
+<p>  注意</p>
+<blockquote>
+<p>玛丽-布伦达·阿科达，人工智能眼科领域的研究员，拥有相关专利，是Copilot的 avid 用户。她说：“有一次，我在不到一个小时的时间里使用Copilot编写了整个模型开发过程的代码。这是一个通常需要我花费更多时间和精力的任务。有趣的是，当我不得不使用一个不支持Copilot的在线 IDE 时，我意识到开发过程是多么繁琐和缓慢。”</p>
+</blockquote>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>Copilot 已迅速成为编码必备的人工智能工具，大大提高了开发者的生产力和代码质量。本章介绍了它的关键特性，包括建议复杂代码块的能力、可靠的安全措施、出色的性能以及在 VS Code 中的易用性。Copilot 中的聊天和内联聊天功能使得在编码过程中与人工智能互动成为可能。尽管它仍然是一个需要人工指导的工具，但 Copilot 无疑是对人工智能驱动编码未来的一个窥探。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/09/04/aiassistedprogramming03/" rel="prev" title="第3章 提示工程">
+                  <i class="fa fa-angle-left"></i> 第3章 提示工程
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/09/09/aiassistedprogramming05/" rel="next" title="第5章 其他人工智能辅助编程工具">
+                  第5章 其他人工智能辅助编程工具 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Howard Huang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">616k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">18:40</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动-->
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.33/fancybox/fancybox.umd.js" integrity="sha256-+2+qOqR8CKoHh/AsVR9k2qaDBKWjYNC2nozhYmv5j9k=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
