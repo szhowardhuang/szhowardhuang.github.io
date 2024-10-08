@@ -120,7 +120,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">69</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -138,6 +138,192 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/04/29/ai-agent-everything/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/04/29/ai-agent-everything/" class="post-title-link" itemprop="url">AI 代理无处不在</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-04-29 12:31:29 / 修改时间：16:15:37" itemprop="dateCreated datePublished" datetime="2024-04-29T12:31:29+08:00">2024-04-29</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>5.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>9 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>我现在越来越觉得AI代理是非常重要的技术。 就像linux的kernel，AI代理就是LLM OS的调度核心。</p>
+<p>LLMs现在已经存在了几年，它们正迅速发展成为 AI 代理和代理工作流。LLMs很棒，但它们仍然不擅长自动化处理事务。LLMs与其他工具结合起来是利用LLMs所拥有的通用智能的一种非常高效的方式，通过消耗大量的语言数据。LLMs最大的问题在于它们偶尔会迷失方向（幻觉），我们永远不知道何时LLMs或代理可能会失败。围绕这些失败已经有一些防护措施，但我们远未充分利用LLMs普通智能的全部能力。</p>
+<h2 id="从-RAG-到-Agents"><a href="#从-RAG-到-Agents" class="headerlink" title="从 RAG 到 Agents"></a>从 RAG 到 Agents</h2><p>RAG 是一种半参数类型的系统，其中参数部分是大型语言模型，其余部分是非参数部分。将所有不同部分组合在一起得到半参数系统。LLMs 将所有信息存储在它们的权重或参数中（以编码形式），而系统的其余部分没有定义该知识的参数。</p>
+<ul>
+<li>交换索引（特定信息在LLMs中）使我们能够进行定制，这意味着我们不会遭受过时信息，也可以修改索引中的内容。</li>
+<li>用这些索引来作为LLMs的基础信息，意味着我们会减少幻觉，我们可以通过指向来源进行引用和归因</li>
+</ul>
+<p>因此，原则上，RAG 为我们的LLMs创建更好的情境化。</p>
+<p><img src="/../asset_aiagenteverything/01.png"></p>
+<p>“代理”是一种自动推理和决策引擎。它接收用户输入&#x2F;查询，并可以做出内部决策来执行该查询，以返回正确的结果。关键代理组件可以包括但不限于：</p>
+<ul>
+<li>将复杂问题分解为更小的问题</li>
+<li>选择要使用的外部工具+确定调用该工具的参数</li>
+<li>规划一组任务</li>
+<li>将先前完成的任务存储在内存模块中</li>
+</ul>
+<p><img src="/../asset_aiagenteverything/02.webp"></p>
+<p>我们有不同类型的代理，从简单到极其复杂的代理。根据任务的复杂性，我们设计这些代理，使它们能够自主决定选择可用的工具。下面的图片显示了不同类型的代理及其复杂程度。</p>
+<p><img src="/../asset_aiagenteverything/03.webp"></p>
+<h2 id="代理系统概述"><a href="#代理系统概述" class="headerlink" title="代理系统概述"></a>代理系统概述</h2><p>在一个由LLM驱动的自主代理系统中，LLM充当代理的大脑，利用不同的组件在数字世界中执行操作。</p>
+<h3 id="工具使用"><a href="#工具使用" class="headerlink" title="工具使用"></a>工具使用</h3><p>代理程序学会调用外部 API 或工具，以获取模型权重中可能缺失的额外信息&#x2F;上下文或功能（通常在预训练后难以更改）。这包括当前信息、数学引擎、代码执行能力、访问专有信息源等等。</p>
+<h3 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h3><ul>
+<li>短期记忆：在上下文学习中，可以将其视为利用模型的短期记忆来处理给定问题。上下文长度窗口可以被视为短期记忆。</li>
+<li>长期记忆：为代理提供在较长时间内保留和召回（无限）信息的能力，通常通过利用外部向量存储和快速检索。RAG 中的检索部分可以被视为长期记忆。</li>
+</ul>
+<h3 id="计划"><a href="#计划" class="headerlink" title="计划"></a>计划</h3><ul>
+<li>子目标和任务分解：代理将较大的任务分解为较小、可管理的子目标，从而有效处理复杂任务。</li>
+<li>反思和完善：代理可以进行自我批评（虽然在某些方面存疑），并对过去的行动进行自我反思，从错误中吸取教训，并为未来的步骤进行完善，从而改善最终结果。</li>
+</ul>
+<p><img src="/../asset_aiagenteverything/04.webp"></p>
+<h2 id="人工智能代理的工具使用"><a href="#人工智能代理的工具使用" class="headerlink" title="人工智能代理的工具使用"></a>人工智能代理的工具使用</h2><p>能够使用工具是人类在许多方面与其他生物有所不同的地方。我们创造、修改和利用外部物体来扩展我们的身体和认知能力。同样，为LLMs配备外部工具可以显著扩展它们的能力。</p>
+<p>在 AI 代理设置中，工具对应于一组工具，使LLM代理能够与外部环境（如 Google 搜索、代码解释器、数学引擎等）进行交互。工具也可以是某种形式的数据库、知识库和外部模型。当代理与外部工具交互时，它通过工作流执行任务，帮助代理获取观察结果或完成给定子任务和最终任务所需的上下文。</p>
+<p>工具如何以不同方式被LLMs利用的几个示例：</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2205.00445">MRKL</a>（Modular Reasoning, Knowledge, and Language）是一个框架，将LLMs与专家模块结合起来，这些模块可以是LLMs或符号化的（计算器或天气 API）。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2303.17580">HuggingGPT</a> — 一个由LLM驱动的代理，利用LLMs作为任务规划器，连接各种现有的 AI 模型（基于描述）来解决 AI 任务。</p>
+</li>
+</ul>
+<p><img src="/../asset_aiagenteverything/05.webp"></p>
+<p>HuggingGPT 的整个过程如上图所示，可以根据原始论文中提到的内容分为四个阶段：</p>
+<p>任务规划：使用 ChatGPT 分析用户的请求以理解他们的意图，并将其拆分为可能可解决的任务。</p>
+<p>模型选择：为了解决计划中的任务，ChatGPT 基于模型描述从 Hugging Face 上选择专家模型。</p>
+<p>任务执行：调用并执行每个选择的模型，并将结果返回给 ChatGPT。</p>
+<p>响应生成：最后，ChatGPT 被用于整合所有模型的预测并为用户生成响应。</p>
+<p>HuggingGPT 在一个真实示例中是如何运作的, 如下图。</p>
+<p><img src="/../asset_aiagenteverything/06.png"></p>
+<h2 id="在代理工作流程中解决内存问题"><a href="#在代理工作流程中解决内存问题" class="headerlink" title="在代理工作流程中解决内存问题"></a>在代理工作流程中解决内存问题</h2><p>内存可以被定义为用于获取、存储、保留和稍后检索信息的资源或存储器。在任何计算系统中都有几种类型的内存。</p>
+<h3 id="缓冲内存（感觉内存）"><a href="#缓冲内存（感觉内存）" class="headerlink" title="缓冲内存（感觉内存）:"></a>缓冲内存（感觉内存）:</h3><p>正如感觉记忆作为感觉信息的短暂保留（任务完成后立即消失）的作用，计算机系统中的缓冲存储器可以保存瞬态数据，如指令集。对于LLMs，这可能指的是令牌缓冲区或输入队列。</p>
+<h3 id="工作记忆（短期记忆，STM）："><a href="#工作记忆（短期记忆，STM）：" class="headerlink" title="工作记忆（短期记忆，STM）："></a>工作记忆（短期记忆，STM）：</h3><p>LLMs在处理文本时，采用类似于人类工作记忆的机制。它们使用注意力机制来保持对输入的某些部分的“关注”。在基于 Transformer 的模型（如 GPT）中，注意力权重起着类似于 STM 的作用，同时保持和处理多个信息片段。LLM的工作记忆是其上下文长度。</p>
+<h3 id="参数内存（长期记忆，LTM）："><a href="#参数内存（长期记忆，LTM）：" class="headerlink" title="参数内存（长期记忆，LTM）："></a>参数内存（长期记忆，LTM）：</h3><p>LLMs 的参数（或权重）可以被视为一种长期记忆形式。一旦训练完成，这些参数会编码从训练数据中获取的大量信息，并可以无限期地保留。</p>
+<p>在LLMs中，“记忆”不是作为离散事件存储的，而是作为模式（抽象世界模型，尽管不完全）在一个互连节点网络中表示，并且该模型通过根据其训练状态动态生成响应来“回忆”信息。</p>
+<p>外部存储器可以解决有限注意力跨度的问题。标准做法是将嵌入向量（文本转换为密集向量）保存到一个支持快速最大内积搜索（<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Maximum_inner-product_search">MIPS</a>）的向量存储数据库中。为了优化检索速度，常见选择是使用近似最近邻居（ANN）算法，以返回大约前 k 个最近邻居，以换取一点精度损失来获得巨大的加速。</p>
+<p>用于此检索的一些算法：<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Locality-sensitive_hashing">LSH</a>、<a target="_blank" rel="noopener" href="https://github.com/spotify/annoy">ANNOY</a>、<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1603.09320">HNSW</a>、<a target="_blank" rel="noopener" href="https://github.com/facebookresearch/faiss">FAISS</a> 和 <a target="_blank" rel="noopener" href="https://github.com/google-research/google-research/tree/master/scann">ScaNN</a></p>
+<p>所有这些方法背后的一般原则——LSH、ANNOY、HNSW、FAISS 和 ScaNN——是在高维空间中高效地近似最近邻搜索。这些方法旨在通过使用将相似数据点组合在一起的策略，以允许更快的检索来克服精确搜索的计算强度。</p>
+<h2 id="计划：当前-AI-代理的最大问题"><a href="#计划：当前-AI-代理的最大问题" class="headerlink" title="计划：当前 AI 代理的最大问题"></a>计划：当前 AI 代理的最大问题</h2><p>有时代理会为了回答一个单一&#x2F;简单的问题而大量调用，为每个查询积累令牌给LLM。这不仅成本高昂，还会引入延迟。令牌生成仍然是一个相对缓慢的过程，大部分（不是全部）基于LLM的应用程序中的延迟来自生成输出令牌。反复调用LLM并要求其提供想法&#x2F;观察，我们最终会生成大量输出令牌（成本），导致高延迟（用户体验下降）。</p>
+<p>一个例子如下图所示。为了达到正确答案或行动，LLMs经常发出多个请求，由于代理工作流程的固有结构以树形或图形，这会引入许多延迟。</p>
+<p>有很多类似的论文，比如<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2201.11903">思维链</a>，<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2305.10601.pdf">思维树</a>，<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2308.10379.pdf">思维算法</a>。</p>
+<p><img src="/../asset_aiagenteverything/07.webp"></p>
+<p>最新的高级提示策略是”思维算法”：这篇思维算法新论文的理念与思维树论文相同，但主要区别在于上下文保存的方式。在思维树中，我们使用基于树的数据结构，但在这里我们使用基于图的结构，因此给我们提供了比使用简单的 BFS 或 DFS 更好的方式来浏览所有的知识图。</p>
+<p>另一个优势是思维算法使用更少的提示来实现类似的结果。这些提示策略背后的整个理念是以最少的调用LLM来获得最多的上下文。</p>
+<p>AI 代理的另一个问题是LLMs是非确定性的。虽然对于创意生成有益，但在需要可预测性的场景中，这带来了严重挑战。例如，如果我们正在编写一个LLM支持的聊天应用程序来进行 Postgres 查询（Text2SQL），我们希望有很高的可预测性。</p>
+<h2 id="自我反馈"><a href="#自我反馈" class="headerlink" title="自我反馈"></a>自我反馈</h2><p>由于计划模块不涉及任何反馈，这使得实现长期规划变得非常困难，尤其是解决复杂任务时尤为必要。为了解决这一挑战，我们可以创建一个过程，根据过去的行动和观察，反复反思和完善执行计划。目标是纠正和改进过去的错误，有助于提高最终结果的质量。这在复杂的现实环境和任务中尤为重要，试错是完成任务的关键。</p>
+<h3 id="ReAct"><a href="#ReAct" class="headerlink" title="ReAct"></a>ReAct</h3><p><a target="_blank" rel="noopener" href="https://www.promptingguide.ai/techniques/react">ReAct</a> 结合推理和行动，旨在使LLM能够通过交替执行一系列步骤（重复 N 次）： Thought ， Action 和 Observation 来解决复杂任务。ReAct 促使LLMs生成口头推理痕迹和任务的行动。这使系统能够进行动态推理，为行动创建、维护和调整计划，同时还能与外部环境（例如维基百科）进行交互，将额外信息纳入推理过程。</p>
+<p><img src="/../asset_aiagenteverything/08.webp"></p>
+<p>下图显示了 ReAct 的示例以及执行问答所涉及的不同步骤。</p>
+<p><img src="/../asset_aiagenteverything/09.webp"></p>
+<h3 id="Reflexion"><a href="#Reflexion" class="headerlink" title="Reflexion"></a>Reflexion</h3><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2303.11366">Reflexion</a>这是一个旨在为代理人提供动态记忆和自我反思能力以提高推理能力的框架。 Reflexion 具有标准的 RL 设置，其中奖励模型提供简单的二进制奖励，行动空间遵循 ReAct 中的设置，其中特定于任务的行动空间通过语言进行增强，以实现复杂的推理步骤。在每个动作 𝑎𝑡 之后，代理计算启发式 ℎ𝑡，并根据自我反思结果决定是否重置环境以开始新的试验。</p>
+<p><img src="/../asset_aiagenteverything/10.webp"></p>
+<p>heuristic (启发式)函数确定何时规划低效或包含幻觉,需要停止。低效的规划是指花费太长时间而没有成功。幻觉被定义为遇到一系列连续相同的行动，导致环境中出现相同的观察。</p>
+<h3 id="Chain-of-Hindsight-（CoH）"><a href="#Chain-of-Hindsight-（CoH）" class="headerlink" title="Chain of Hindsight （CoH）"></a>Chain of Hindsight （CoH）</h3><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2302.02676">CoH</a> , 在回顾链中，模型被要求通过查看自己的过去工作来改进自己，评分，并附有如何在下次做得更好的注释。模型通过尝试产生一个能获得更高评分的新输出来进行练习，利用自己尝试和反馈的历史。为了防止模型仅仅记住答案，训练过程中会隐藏部分历史记录。</p>
+<h3 id="Algorithm-Distillation-AD"><a href="#Algorithm-Distillation-AD" class="headerlink" title="Algorithm Distillation (AD)"></a>Algorithm Distillation (AD)</h3><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2210.14215">AD</a> 将类似的想法应用于机器人或代理学习任务（如视频游戏中的 RL 代理）。代理人回顾了自己在过去几次尝试中的表现，并试图找出改进的模式。然后，它预测下一步应该比以前的更好，学习变得更好的策略，而不仅仅是特定问题的解决方案。</p>
+<p>AD 专注于从代理人与环境互动的历史中学习的理念。通过查看过去行动序列及其结果，代理人试图将成功的策略提炼到其策略中。</p>
+<p>Reflexion 反思则赋予代理人记住过去行动并反思其有效性的能力，特别关注检测和避免重复或无效策略（如幻觉）。</p>
+<h2 id="代理类型"><a href="#代理类型" class="headerlink" title="代理类型"></a>代理类型</h2><h3 id="路由代理"><a href="#路由代理" class="headerlink" title="路由代理"></a>路由代理</h3><p>最简单的代理推理形式。根据用户查询和一组选择，输出一个选择子集以路由该查询。</p>
+<p><img src="/../asset_aiagenteverything/11.webp"></p>
+<p>在上述查询中，“作者在艺术学校期间做了什么？”被传递给路由器。路由器的工作是通过系统确定查询的最佳路径，以检索最相关的信息。</p>
+<p>路由器可以选择两条可能的路径：</p>
+<p>矢量查询引擎：该引擎根据查询向量与文档向量之间的语义相似性，从更大的集合中检索前 k 个相关文档。它使用向量空间模型来理解和检索与查询在语义上最接近的文档。</p>
+<p>摘要查询引擎：该引擎检索所有文档并提供其内容的摘要。它允许系统广泛了解一个主题，而无需逐个查看每个文档。</p>
+<p>根据路由器的决定，要么返回来自矢量查询引擎的特定文档子集，要么返回来自摘要查询引擎的所有相关文档的摘要，以回答用户的查询。这从根本上改变了最终返回的输出类型。有些查询可能需要详细答案，有些可能对较广泛的答案满意。这些路由器代理帮助我们修改LLMs的行为。</p>
+<h3 id="查询规划代理"><a href="#查询规划代理" class="headerlink" title="查询规划代理"></a>查询规划代理</h3><p>查询规划代理背后的理念是首先将复杂查询分解为每个相关数据源的子问题，然后收集所有中间响应并综合出最终响应。</p>
+<p><img src="/../asset_aiagenteverything/12.webp"></p>
+<p>查看查询规划代理如何通过子查询获得更好的响应。</p>
+<p><img src="/../asset_aiagenteverything/13.webp"></p>
+<h3 id="工具使用代理"><a href="#工具使用代理" class="headerlink" title="工具使用代理"></a>工具使用代理</h3><p>这是可以使用工具或 API 的代理类型，推断运行该工具所需的参数，并将其结果返回给LLM上下文，以获得更准确的答案。</p>
+<p><img src="/../asset_aiagenteverything/14.webp"></p>
+<p>代理如何处理序列化的一堆问题？代理如何随时间保持状态？</p>
+<p>这就是更高级代理如 HuggingGPT 和 ChemCrow 进入画面的地方。在这些多代理设置中，系统可以使用多个工具，并且通常还集成了动态内存。这些系统通常使用 ReAct 和 Reflexion 等方法，在代理的环境和行动中具有细致自洽的方法。</p>
+<p><img src="/../asset_aiagenteverything/15.webp"></p>
+<p>以下是用于构建 LLM 代理的工具和框架的示例：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://python.langchain.com/docs/get_started/introduction">LangChain</a>：一个基于语言模型的应用程序和代理开发框架。</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/Significant-Gravitas/AutoGPT">AutoGPT</a>：提供构建 AI 代理的工具。</li>
+<li><a target="_blank" rel="noopener" href="https://microsoft.github.io/autogen/">AutoGen</a> ：一个框架，可以使用多个代理开发LLM应用程序，这些代理可以相互对话以解决任务。</li>
+<li><a target="_blank" rel="noopener" href="https://www.llamaindex.ai/">LlamaIndex</a> - 用于将自定义数据源连接到大型语言模型的框架。</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/gpt-engineer-org/gpt-engineer">GPT Engineer</a> ：自动化代码生成以完成开发任务。</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/melih-unsal/DemoGPT">DemoGPT</a> ：自主 AI 代理以创建交互式 Streamlit 应用程序。</li>
+</ul>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>LLM 代理仍处于萌芽阶段，构建它们仍存在许多挑战和限制，比如基于 LLM 的代理需要适应角色以有效地完成领域内的任务，能够进行长期规划，普遍的人类对齐，可靠性，知识限制，以及许多其他问题。</p>
+<p>在未来，我们可能会研究更高级的概念，如 KV 缓存和LLM编译器与操作系统。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://medium.com/aiguys/ai-agents-are-all-you-need-0b38e8ee5481">https://medium.com/aiguys/ai-agents-are-all-you-need-0b38e8ee5481</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1714,116 +1900,6 @@ INFERENCE(env, policy, device)
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/03/26/coding-for-next/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Howard Huang">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/03/26/coding-for-next/" class="post-title-link" itemprop="url">编码是一个值得学习的技能吗？</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2024-03-26 22:42:45 / 修改时间：22:57:25" itemprop="dateCreated datePublished" datetime="2024-03-26T22:42:45+08:00">2024-03-26</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>2.6k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>5 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>许多在 50 年前出现的技术都遵循了两种轨迹之一：要么随着时代的发展而进化，要么消失在人们的视野中。一个例子是 1938 年推出的第一台可编程机械计算机。由于内存限制和庞大的重量，很难想象今天我们的家庭或工作场所会容纳这样的设备。</p>
-<p>事实上，有许多科技先驱对计算机的未来及其与人类的互动进行了推测。这种做法并不新鲜 - 它有着悠久的历史，持续至今，并预计将持续到未来。塑造未来的前景总是吸引我们，引发支持者和反对者之间的无休止辩论。</p>
-<p>以下是 NVIDIA 首席执行官 Jensen Huang 在题为“谁将塑造人工智能的未来？”的活动上的发言</p>
-<p>“It’s going to sound completely opposite of what people feel. You probably recall over the course of the last 10–15 years, almost everybody who sits on a stage like this would tell you it is vital that your children learn computer science … everybody should learn how to program. In fact, it’s almost exactly the opposite. It is our job to create computing technology such that nobody has to program and that the programming language is human. Everybody in the world is now a programmer. This is the miracle of artificial intelligence”</p>
-<p>我不完全同意 Jensen（至少最初不同意），因为学习编程本身就是一种揭示基本解决方案的方式，直到我们能够开发专注于解决实际业务场景的代码行。我的意思是，编程就像学习任何其他学科或学科一样，培养了我们在决策中的判断力。仅仅通过指示 ChatGPT 来构建整个移动应用程序是具有挑战性的。它可能能够做到，但是在不知道它应该遵循的逻辑顺序的情况下理解整个代码将会很困难。此外，该过程可能存在偏见，并可能在途中遇到错误。</p>
-<p>就像其他科学、技术或学科一样，编程将不可避免地受到人工智能的影响，但仍然需要开发人员继续构建更多和更优秀的模型或软件，比如 NVIDIA 销售的那些。</p>
-<p>对于 90%的人来说，由于人工智能工程师和提示工程师的团队在所有这些代码行后面工作，提示将变得越来越用户友好，最终优化我们与之交互的聊天界面，无论我们使用 ChatGPT、Gemini、Claude 3、Copilot等等。重点是，虽然主要角色（人工智能）似乎似乎做了一切，但实际上在我们看到的屏幕后面，有人类开发人员通过代码继续投入时间和知识。</p>
-<p>Jensen的言论指出了一个基本观念：从学习过程到实施（可能只需要一个提示），人工智能在编程中的角色正处于转变之中。山姆·奥特曼在多次采访中强调，编程在未来仍将保持其重要性，但形式将与我们今天习惯的不同。这种变化主要是由于人工智能在这个领域中作为进步的催化剂的作用。</p>
-<p>另一方面，有人声称，像 Stability AI 的首席执行官兼联合创始人 Emad Mostaque 一样的声音认为，在大约 5 年内，我们所熟知的程序员可能不再存在。</p>
-<p>对于那些渴望涉足编程的人来说，这可能是一个令人畏惧和不确定的情况。然而，现实情况是，未来大部分的代码开发可能会由人工智能而不是人类编写的代码驱动。这让我产生了以下的问题：</p>
-<pre><code>编程语言的目标之一不就是以更易于理解和使用的方式发展，从而使更多的人能够通过编码来创造解决方案吗？
-</code></pre>
-<p><img src="/../asset_coding/01.webp"></p>
-<p>回顾历史，特别是 20 世纪 50 年代，我们可以看到编程语言复杂且需要广泛的专业知识才能掌握。然而，随着时间的推移，这种进入门槛逐渐变得更加容易接触，使得编码变得更加包容和吸引人。</p>
-<p>如今我们通过人工智能助手获取代码。因此，许多非程序员或初学者可能正在以与过去完全不同的方式创建他们的第一行代码。然而，就功能而言，他们有潜力达到相同的解决方案或目标。</p>
-<p>我们所熟知的编程在未来 3 到 5 年内不太可能消失，但是我们中的一些人可能会想知道 20 年后会发生什么。我们还会继续编码吗？对此，我会质疑到那时我们是否还会使用计算机。</p>
-<h2 id="接下来的抽象层"><a href="#接下来的抽象层" class="headerlink" title="接下来的抽象层"></a>接下来的抽象层</h2><p>在标准计算机中，我们通常会遇到软件层和硬件层。这两个层之间的通信是通过所谓的机器语言来实现的，通常以二进制系统表示，这对人类来说可能很复杂。通过对体系结构的详细研究，可以明显看出，抽象和复杂性的元素与每个抽象层有不同程度的关联。随着时间的推移，这些层积累起来，给我们带来了现代计算机，大大提高了人与机器之间的通信便利性，使我们能够使用更简单的指令执行各种任务。</p>
-<p><img src="/../asset_coding/02.webp"></p>
-<p>AI 助手的概念将是一个额外的层次，它将被添加到图表的顶部。这代表了人类更容易与计算机进行交流的机会。目前，多模态在捕捉我们想要提供的尽可能多的信息方面发挥着重要作用（音频、图像、文本），这些信息被 AI 用作启动生成接近我们期望的回应的提示。</p>
-<p>在这个意义上，现在我们正在经历一波代码 AI 助手的浪潮，比如 GitHub Copilot，CodiumAI，AWS Code Whisperer，Tabnine，它们无疑正在改变人们编写代码的方式。</p>
-<p>然而，尽管人工智能似乎会让程序员黯然失色，但现实是许多当前的模型仍然容易出错。此外，对于聊天机器人的回应缺乏控制。一个例子是最近谷歌 Gemini 引起轰动的事件，它拒绝生成白人的图像，并过分强调包容性。</p>
-<p>如果您经常使用人工智能来生成代码，您可能已经注意到，由于其复杂性或项目所需的代码量，一次性生成高质量代码自然是一项挑战。</p>
-<p>现在，事实是人工智能是一个很棒的编码助手，它将帮助我们更快地编写和调试代码，但如果我们期望它能够自己从零开始构建软件，它的能力仍然有限。不可避免地，它将在未来这样做，也许比我们预期的要早，但这是否意味着我们应该停止学习编程呢？</p>
-<p>当然不是。</p>
-<p>AI 艺术并没有阻止这个领域的爱好者进行绘画、绘图或创作。同样地，AI 不会使程序员过时，而是代表编码中的接下来的一层抽象，使人与机器之间的交互更加顺畅。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://medium.com/artificial-corner/nvidia-ceo-advises-against-learning-to-code-is-coding-still-a-worthwhile-skill-to-learn-704f091a8078">https://medium.com/artificial-corner/nvidia-ceo-advises-against-learning-to-code-is-coding-still-a-worthwhile-skill-to-learn-704f091a8078</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/6/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1847,13 +1923,13 @@ INFERENCE(env, policy, device)
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">616k</span>
+    <span title="站点总字数">628k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">18:40</span>
+    <span title="站点阅读时长">19:03</span>
   </span>
 </div>
 <div class="busuanzi-count">

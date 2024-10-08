@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.33/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"szhowardhuang.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="想象一下你正在为医疗领域构建一个问答系统。你希望确保它能够准确检索相关的医疗文章，当用户提问时。但是通用嵌入模型可能难以处理高度专业化的词汇和医学术语的细微差别。 这就是微调的用武之地！！ 在这篇博客中，我们将深入探讨针对特定领域（如医学、法律或金融）微调嵌入模型的过程。我们将生成一个专门针对您领域的数据集，并使用它来训练模型，以更好地理解您选择的领域中的细微语言模式和概念。  到最后，您将拥有一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="特定领域Embed模型的微调指南">
+<meta property="og:url" content="https://szhowardhuang.github.io/2024/10/08/finetuneembed/index.html">
+<meta property="og:site_name" content="嵌入式老兵博客">
+<meta property="og:description" content="想象一下你正在为医疗领域构建一个问答系统。你希望确保它能够准确检索相关的医疗文章，当用户提问时。但是通用嵌入模型可能难以处理高度专业化的词汇和医学术语的细微差别。 这就是微调的用武之地！！ 在这篇博客中，我们将深入探讨针对特定领域（如医学、法律或金融）微调嵌入模型的过程。我们将生成一个专门针对您领域的数据集，并使用它来训练模型，以更好地理解您选择的领域中的细微语言模式和概念。  到最后，您将拥有一">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_finetuneembed/net-img-0AjX-xfa4UvNVu9js-20241008112653-df9yses.jpg">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_finetuneembed/net-img-0SdkOLVaUARue8gWb-20241008112654-oguu9m1.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_finetuneembed/net-img-0MpKQ16XXAOxwyIJy-20241008112654-wsisckp.jpg">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_finetuneembed/net-img-06-f6qOEl0Pjwh9Rz-20241008112655-yq8a6jp.png">
+<meta property="og:image" content="https://szhowardhuang.github.io/asset_finetuneembed/net-img-1meSlEskxptTA_5rz10iNBw-20241008112656-103n9el.gif">
+<meta property="article:published_time" content="2024-10-08T03:36:55.346Z">
+<meta property="article:modified_time" content="2024-10-08T03:35:42.170Z">
+<meta property="article:author" content="Howard Huang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://szhowardhuang.github.io/asset_finetuneembed/net-img-0AjX-xfa4UvNVu9js-20241008112653-df9yses.jpg">
+
+
+<link rel="canonical" href="https://szhowardhuang.github.io/2024/10/08/finetuneembed/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://szhowardhuang.github.io/2024/10/08/finetuneembed/","path":"2024/10/08/finetuneembed/","title":"特定领域Embed模型的微调指南"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>特定领域Embed模型的微调指南 | 嵌入式老兵博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">嵌入式老兵博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B5%8C%E5%85%A5%EF%BC%9A%E7%90%86%E8%A7%A3%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">嵌入：理解概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A5%97%E5%A8%83%E5%BC%8F%E7%9A%84%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0"><span class="nav-number">2.</span> <span class="nav-text">套娃式的表示学习</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Bge-base-en"><span class="nav-number">3.</span> <span class="nav-text">Bge-base-en</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%BE%AE%E8%B0%83%E5%B5%8C%E5%85%A5%E6%A8%A1%E5%9E%8B%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">为什么要微调嵌入模型？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86%E6%A0%BC%E5%BC%8F%EF%BC%9A%E6%9E%84%E5%BB%BA%E5%BE%AE%E8%B0%83%E7%9A%84%E5%9F%BA%E7%A1%80"><span class="nav-number">5.</span> <span class="nav-text">数据集格式：构建微调的基础</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0%EF%BC%9A%E6%8C%87%E5%AF%BC%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B"><span class="nav-number">6.</span> <span class="nav-text">损失函数：指导训练过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="nav-number">7.</span> <span class="nav-text">代码示例</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96%E9%A1%B9"><span class="nav-number">7.1.</span> <span class="nav-text">安装依赖项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PDF-%E8%A7%A3%E6%9E%90%E5%92%8C%E6%96%87%E6%9C%AC%E6%8F%90%E5%8F%96"><span class="nav-number">7.2.</span> <span class="nav-text">PDF 解析和文本提取</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%96%87%E6%9C%AC%E5%88%86%E5%9D%97"><span class="nav-number">7.3.</span> <span class="nav-text">自定义文本分块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86%E7%94%9F%E6%88%90%E5%99%A8"><span class="nav-number">7.4.</span> <span class="nav-text">数据集生成器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E9%97%AE%E7%AD%94%E7%94%9F%E6%88%90"><span class="nav-number">7.5.</span> <span class="nav-text">运行问答生成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">7.6.</span> <span class="nav-text">加载数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BD%E6%A8%A1%E5%9E%8B"><span class="nav-number">7.7.</span> <span class="nav-text">加载模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-number">7.8.</span> <span class="nav-text">定义损失函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E8%AE%AD%E7%BB%83%E5%8F%82%E6%95%B0"><span class="nav-number">7.9.</span> <span class="nav-text">定义训练参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E8%AF%84%E4%BC%B0%E5%99%A8"><span class="nav-number">7.10.</span> <span class="nav-text">创建评估器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E5%BE%AE%E8%B0%83%E4%B9%8B%E5%89%8D%E8%AF%84%E4%BC%B0%E6%A8%A1%E5%9E%8B"><span class="nav-number">7.11.</span> <span class="nav-text">在微调之前评估模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E8%AE%AD%E7%BB%83%E5%99%A8"><span class="nav-number">7.12.</span> <span class="nav-text">定义训练器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E5%BE%AE%E8%B0%83"><span class="nav-number">7.13.</span> <span class="nav-text">开始微调</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AE%E8%B0%83%E5%90%8E%E7%9A%84%E8%AF%84%E4%BC%B0"><span class="nav-number">7.14.</span> <span class="nav-text">微调后的评估</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Howard Huang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">69</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/10/08/finetuneembed/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="特定领域Embed模型的微调指南 | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          特定领域Embed模型的微调指南
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-10-08 11:36:55 / 修改时间：11:35:42" itemprop="dateCreated datePublished" datetime="2024-10-08T11:36:55+08:00">2024-10-08</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>13k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>23 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>想象一下你正在为医疗领域构建一个问答系统。你希望确保它能够准确检索相关的医疗文章，当用户提问时。但是通用嵌入模型可能难以处理高度专业化的词汇和医学术语的细微差别。</p>
+<p><strong>这就是微调的用武之地！！</strong></p>
+<p>在这篇博客中，我们将深入探讨针对特定领域（如医学、法律或金融）微调嵌入模型的过程。我们将生成一个专门针对您领域的数据集，并使用它来训练模型，以更好地理解您选择的领域中的细微语言模式和概念。</p>
+<blockquote>
+<p><em>到最后，您将拥有一个针对您的领域优化的更强大的嵌入模型，从而实现更准确的检索和改进的自然语言处理任务结果。</em></p>
+</blockquote>
+<h1 id="嵌入：理解概念"><a href="#嵌入：理解概念" class="headerlink" title="嵌入：理解概念"></a>嵌入：理解概念</h1><p><img src="/../asset_finetuneembed/net-img-0AjX-xfa4UvNVu9js-20241008112653-df9yses.jpg"></p>
+<p>嵌入是文本或图像的强大数值表示，捕捉语义关系。想象一下，将文本或音频视为多维空间中的一个点，相似的单词或短语比不相似的更靠近。</p>
+<p><img src="/../asset_finetuneembed/net-img-0SdkOLVaUARue8gWb-20241008112654-oguu9m1.png"></p>
+<p>嵌入对于许多自然语言处理任务是必不可少的，例如：</p>
+<p><img src="/../asset_finetuneembed/net-img-0MpKQ16XXAOxwyIJy-20241008112654-wsisckp.jpg"></p>
+<ul>
+<li>语义相似度：找出两段图像或文本的相似程度。</li>
+<li>文本分类：根据数据的含义将其分组到类别中。</li>
+<li>问答：找到最相关的文档以回答问题。</li>
+<li>检索增强生成（RAG）：结合用于检索的嵌入模型和用于文本生成的语言模型，以提高生成文本的质量和相关性。</li>
+</ul>
+<h1 id="套娃式的表示学习"><a href="#套娃式的表示学习" class="headerlink" title="套娃式的表示学习"></a>套娃式的表示学习</h1><p><img src="/../asset_finetuneembed/net-img-06-f6qOEl0Pjwh9Rz-20241008112655-yq8a6jp.png"></p>
+<p>Matryoshka 表示学习（MRL）是一种创建“可截断”嵌入向量的技术。想象一系列嵌套的娃娃，每个娃娃里面包含一个更小的娃娃。MRL 以一种方式嵌入文本，使得早期维度（如外层娃娃）包含最重要的信息，而后续维度添加细节。这使得在需要时只使用嵌入向量的一部分，从而减少存储和计算成本。</p>
+<p><img src="/../asset_finetuneembed/net-img-1meSlEskxptTA_5rz10iNBw-20241008112656-103n9el.gif"></p>
+<h1 id="Bge-base-en"><a href="#Bge-base-en" class="headerlink" title="Bge-base-en"></a>Bge-base-en</h1><p>BAAI&#x2F;bge-base-en-v1.5 模型，由北京人工智能研究院开发，是一个强大的文本嵌入模型。它在各种自然语言处理任务中表现出色，并且在 MTEB 和 C-MTEB 等基准测试中表现良好。 bge-base-en 模型是计算资源有限的应用程序（比如我的情况）的不错选择。</p>
+<h1 id="为什么要微调嵌入模型？"><a href="#为什么要微调嵌入模型？" class="headerlink" title="为什么要微调嵌入模型？"></a>为什么要微调嵌入模型？</h1><p>针对特定领域微调嵌入模型对于优化 RAG 系统至关重要。这个过程确保模型对相似性的理解与您领域的特定上下文和语言细微差别相一致。经过微调的嵌入模型更能检索与问题最相关的文档，从而最终导致您的 RAG 系统提供更准确和相关的响应。</p>
+<h1 id="数据集格式：构建微调的基础"><a href="#数据集格式：构建微调的基础" class="headerlink" title="数据集格式：构建微调的基础"></a>数据集格式：构建微调的基础</h1><p>您可以使用各种数据集格式进行微调。</p>
+<p>这里是最常见的类型：</p>
+<ul>
+<li>正向对: 一对相关句子（例如，问题，答案）。</li>
+<li>三元组：（锚点，正样本，负样本）三元组，其中锚点与正样本相似，与负样本不同。</li>
+<li>相似度得分的句子对：一对句子及其表示关系的相似度得分。</li>
+<li>带类的文本：带有相应类标签的文本。</li>
+</ul>
+<p>在这篇博客中，我们将创建一个问题和答案对的数据集，以微调我们的 bge-base-en-v1.5 模型。</p>
+<h1 id="损失函数：指导训练过程"><a href="#损失函数：指导训练过程" class="headerlink" title="损失函数：指导训练过程"></a>损失函数：指导训练过程</h1><p>损失函数对于训练嵌入模型至关重要。它们衡量模型预测与实际标签之间的差异，为模型调整权重提供信号。</p>
+<p>不同的损失函数适用于不同的数据集格式：</p>
+<ul>
+<li>三元组损失：与（锚点，正样本，负样本）三元组一起使用，鼓励模型将相似句子靠近，非相似句子远离。</li>
+<li>对比损失：与正负样本对一起使用，鼓励相似句子靠近，不相似句子远离。</li>
+<li>余弦相似度损失：与句子对和相似度评分一起使用，鼓励模型生成与提供的评分匹配的余弦相似度的嵌入。</li>
+<li>套娃损失：一种专门设计的损失函数，用于创建可截断的套娃嵌入。</li>
+</ul>
+<h1 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h1><h2 id="安装依赖项"><a href="#安装依赖项" class="headerlink" title="安装依赖项"></a>安装依赖项</h2><p>我们首先安装必要的库。我们将使用 datasets 、 sentence-transformers 和 google-generativeai 来处理数据集、嵌入模型和文本生成。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">apt-get -qq install poppler-utils tesseract-ocr</span><br><span class="line">pip install datasets sentence-transformers google-generativeai</span><br><span class="line">pip install -q --user --upgrade pillow</span><br><span class="line">pip install -q unstructured[&quot;all-docs&quot;] pi_heif</span><br><span class="line">pip install -q --upgrade unstructured</span><br><span class="line">pip install --upgrade nltk</span><br></pre></td></tr></table></figure>
+
+<p>我们还将安装 unstructured 用于 PDF 解析和 nltk 用于文本处理。</p>
+<h2 id="PDF-解析和文本提取"><a href="#PDF-解析和文本提取" class="headerlink" title="PDF 解析和文本提取"></a>PDF 解析和文本提取</h2><p>我们将使用 unstructured 库从 PDF 文件中提取文本和表格。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">import nltk</span><br><span class="line">import os </span><br><span class="line">from unstructured.partition.pdf import partition_pdf</span><br><span class="line">from collections import Counter</span><br><span class="line">nltk.download(&#x27;punkt&#x27;)</span><br><span class="line">nltk.download(&#x27;averaged_perceptron_tagger&#x27;)</span><br><span class="line">nltk.download(&#x27;punkt_tab&#x27;) </span><br><span class="line"></span><br><span class="line">def process_pdfs_in_folder(folder_path):</span><br><span class="line">    total_text = []  # To accumulate the text from all PDFs</span><br><span class="line"></span><br><span class="line">    # Get list of all PDF files in the folder</span><br><span class="line">    pdf_files = [f for f in os.listdir(folder_path) if f.endswith(&#x27;.pdf&#x27;)]</span><br><span class="line"></span><br><span class="line">    for pdf_file in pdf_files:</span><br><span class="line">        pdf_path = os.path.join(folder_path, pdf_file)</span><br><span class="line">        print(f&quot;Processing: &#123;pdf_path&#125;&quot;)</span><br><span class="line"></span><br><span class="line">        # Apply the partition logic</span><br><span class="line">        elements = partition_pdf(pdf_path, strategy=&quot;auto&quot;)</span><br><span class="line"></span><br><span class="line">        # Display the types of elements</span><br><span class="line">        display(Counter(type(element) for element in elements))</span><br><span class="line"></span><br><span class="line">        # Join the elements to form text and add it to total_text list</span><br><span class="line">        text = &quot;\n\n&quot;.join([str(el) for el in elements])</span><br><span class="line">        total_text.append(text)</span><br><span class="line"></span><br><span class="line">    # Return the total concatenated text</span><br><span class="line">    return &quot;\n\n&quot;.join(total_text)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">folder_path = &quot;data&quot;</span><br><span class="line">all_text = process_pdfs_in_folder(folder_path)</span><br></pre></td></tr></table></figure>
+
+<p>我们遍历指定文件夹中的每个 PDF，并将内容分割为文本、表格和图形。</p>
+<p>然后将文本元素组合成一个单一的文本表示。</p>
+<h2 id="自定义文本分块"><a href="#自定义文本分块" class="headerlink" title="自定义文本分块"></a>自定义文本分块</h2><p>我们现在使用 nltk 将提取的文本分成可管理的块。这对于使文本更适合llm处理是必不可少的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">import nltk</span><br><span class="line"></span><br><span class="line">nltk.download(&#x27;punkt&#x27;)</span><br><span class="line"></span><br><span class="line">def nltk_based_splitter(text: str, chunk_size: int, overlap: int) -&gt; list:</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Splits the input text into chunks of a specified size, with optional overlap between chunks.</span><br><span class="line"></span><br><span class="line">    Parameters:</span><br><span class="line">    - text: The input text to be split.</span><br><span class="line">    - chunk_size: The maximum size of each chunk (in terms of characters).</span><br><span class="line">    - overlap: The number of overlapping characters between consecutive chunks.</span><br><span class="line"></span><br><span class="line">    Returns:</span><br><span class="line">    - A list of text chunks, with or without overlap.</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">    from nltk.tokenize import sent_tokenize</span><br><span class="line"></span><br><span class="line">    # Tokenize the input text into individual sentences</span><br><span class="line">    sentences = sent_tokenize(text)</span><br><span class="line"></span><br><span class="line">    chunks = []</span><br><span class="line">    current_chunk = &quot;&quot;</span><br><span class="line"></span><br><span class="line">    for sentence in sentences:</span><br><span class="line">        # If the current chunk plus the next sentence doesn&#x27;t exceed the chunk size, add the sentence to the chunk</span><br><span class="line">        if len(current_chunk) + len(sentence) &lt;= chunk_size:</span><br><span class="line">            current_chunk += &quot; &quot; + sentence</span><br><span class="line">        else:</span><br><span class="line">            # Otherwise, add the current chunk to the list of chunks and start a new chunk with the current sentence</span><br><span class="line">            chunks.append(current_chunk.strip())  # Strip to remove leading spaces</span><br><span class="line">            current_chunk = sentence</span><br><span class="line"></span><br><span class="line">    # After the loop, if there is any leftover text in the current chunk, add it to the list of chunks</span><br><span class="line">    if current_chunk:</span><br><span class="line">        chunks.append(current_chunk.strip())</span><br><span class="line"></span><br><span class="line">    # Handle overlap if it&#x27;s specified (overlap &gt; 0)</span><br><span class="line">    if overlap &gt; 0:</span><br><span class="line">        overlapping_chunks = []</span><br><span class="line">        for i in range(len(chunks)):</span><br><span class="line">            if i &gt; 0:</span><br><span class="line">                # Calculate the start index for overlap from the previous chunk</span><br><span class="line">                start_overlap = max(0, len(chunks[i-1]) - overlap)</span><br><span class="line">                # Combine the overlapping portion of the previous chunk with the current chunk</span><br><span class="line">                chunk_with_overlap = chunks[i-1][start_overlap:] + &quot; &quot; + chunks[i]</span><br><span class="line">                # Append the combined chunk, making sure it&#x27;s not longer than chunk_size</span><br><span class="line">                overlapping_chunks.append(chunk_with_overlap[:chunk_size])</span><br><span class="line">            else:</span><br><span class="line">                # For the first chunk, there&#x27;s no previous chunk to overlap with</span><br><span class="line">                overlapping_chunks.append(chunks[i][:chunk_size])</span><br><span class="line"></span><br><span class="line">        return overlapping_chunks  # Return the list of chunks with overlap</span><br><span class="line"></span><br><span class="line">    # If overlap is 0, return the non-overlapping chunks</span><br><span class="line">    return chunks</span><br><span class="line"></span><br><span class="line">chunks = nltk_based_splitter(text=all_text, </span><br><span class="line">                                  chunk_size=2048,</span><br><span class="line">                                  overlap=0)</span><br></pre></td></tr></table></figure>
+
+<h2 id="数据集生成器"><a href="#数据集生成器" class="headerlink" title="数据集生成器"></a>数据集生成器</h2><p>在本节中，我们定义两个函数：</p>
+<p>prompt 函数为 Google Gemini 创建一个提示，请求基于提供的文本块的问题-答案对。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">import google.generativeai as genai</span><br><span class="line">import pandas as pd</span><br><span class="line"></span><br><span class="line"># Replace with your valid Google API key</span><br><span class="line">GOOGLE_API_KEY = &quot;xxxxxxxxxxxx&quot;</span><br><span class="line"></span><br><span class="line"># Prompt generator with an explicit request for structured output</span><br><span class="line">def prompt(text_chunk):</span><br><span class="line">    return f&quot;&quot;&quot;</span><br><span class="line">    Based on the following text, generate one Question and its corresponding Answer.</span><br><span class="line">    Please format the output as follows:</span><br><span class="line">    Question: [Your question]</span><br><span class="line">    Answer: [Your answer]</span><br><span class="line"></span><br><span class="line">    Text: &#123;text_chunk&#125;</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line"># Function to interact with Google&#x27;s Gemini and return a QA pair</span><br><span class="line">def generate_with_gemini(text_chunk:str, temperature:float, model_name:str):</span><br><span class="line">    genai.configure(api_key=GOOGLE_API_KEY)</span><br><span class="line">    generation_config = &#123;&quot;temperature&quot;: temperature&#125;</span><br><span class="line"></span><br><span class="line">    # Initialize the generative model</span><br><span class="line">    gen_model = genai.GenerativeModel(model_name, generation_config=generation_config)</span><br><span class="line"></span><br><span class="line">    # Generate response based on the prompt</span><br><span class="line">    response = gen_model.generate_content(prompt(text_chunk))</span><br><span class="line"></span><br><span class="line">    # Extract question and answer from response using keyword</span><br><span class="line">    try:</span><br><span class="line">        question, answer = response.text.split(&quot;Answer:&quot;, 1)</span><br><span class="line">        question = question.replace(&quot;Question:&quot;, &quot;&quot;).strip()</span><br><span class="line">        answer = answer.strip()</span><br><span class="line">    except ValueError:</span><br><span class="line">        question, answer = &quot;N/A&quot;, &quot;N/A&quot;  # Handle unexpected format in response</span><br><span class="line"></span><br><span class="line">    return question, answer</span><br></pre></td></tr></table></figure>
+
+<p>generate_with_gemini 函数与Gemini模型交互，并使用创建的提示生成问答对。</p>
+<h2 id="运行问答生成"><a href="#运行问答生成" class="headerlink" title="运行问答生成"></a>运行问答生成</h2><p>使用 process_text_chunks 函数，我们使用Gemini模型为每个文本块生成问答对。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">def process_text_chunks(text_chunks:list, temperature:int, model_name=str):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Processes a list of text chunks to generate questions and answers using a specified model.</span><br><span class="line"></span><br><span class="line">    Parameters:</span><br><span class="line">    - text_chunks: A list of text chunks to process.</span><br><span class="line">    - temperature: The sampling temperature to control randomness in the generated outputs.</span><br><span class="line">    - model_name: The name of the model to use for generating questions and answers.</span><br><span class="line"></span><br><span class="line">    Returns:</span><br><span class="line">    - A Pandas DataFrame containing the text chunks, questions, and answers.</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    results = []</span><br><span class="line"></span><br><span class="line">    # Iterate through each text chunk</span><br><span class="line">    for chunk in text_chunks:</span><br><span class="line">        question, answer = generate_with_gemini(chunk, temperature, model_name)</span><br><span class="line">        results.append(&#123;&quot;Text Chunk&quot;: chunk, &quot;Question&quot;: question, &quot;Answer&quot;: answer&#125;)</span><br><span class="line"></span><br><span class="line">    # Convert results into a Pandas DataFrame</span><br><span class="line">    df = pd.DataFrame(results)</span><br><span class="line">    return df</span><br><span class="line"># Process the text chunks and get the DataFrame</span><br><span class="line">df_results = process_text_chunks(text_chunks=chunks, </span><br><span class="line">                                 temperature=0.7, </span><br><span class="line">                                 model_name=&quot;gemini-1.5-flash&quot;)</span><br><span class="line">df_results.to_csv(&quot;generated_qa_pairs.csv&quot;, index=False)</span><br></pre></td></tr></table></figure>
+
+<p>这些结果然后存储在一个 Pandas 数据框中。</p>
+<h2 id="加载数据集"><a href="#加载数据集" class="headerlink" title="加载数据集"></a>加载数据集</h2><p>接下来，我们从 CSV 文件加载生成的问答对到 HuggingFace 数据集中。我们确保数据格式正确，以便进行微调。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">from datasets import load_dataset</span><br><span class="line"></span><br><span class="line"># Load the CSV file into a Hugging Face Dataset</span><br><span class="line">dataset = load_dataset(&#x27;csv&#x27;, data_files=&#x27;generated_qa_pairs.csv&#x27;)</span><br><span class="line"></span><br><span class="line">def process_example(example, idx):</span><br><span class="line">    return &#123;</span><br><span class="line">        &quot;id&quot;: idx,  # Add unique ID based on the index</span><br><span class="line">        &quot;anchor&quot;: example[&quot;Question&quot;],</span><br><span class="line">        &quot;positive&quot;: example[&quot;Answer&quot;]</span><br><span class="line">    &#125;</span><br><span class="line">dataset = dataset.map(process_example,</span><br><span class="line">                      with_indices=True , </span><br><span class="line">                      remove_columns=[&quot;Text Chunk&quot;, &quot;Question&quot;, &quot;Answer&quot;])</span><br></pre></td></tr></table></figure>
+
+<h2 id="加载模型"><a href="#加载模型" class="headerlink" title="加载模型"></a>加载模型</h2><p>我们从 HuggingFace 加载 BAAI&#x2F;bge-base-en-v1.5 模型，确保选择适当的执行设备（CPU 或 GPU）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">import torch</span><br><span class="line">from sentence_transformers import SentenceTransformer</span><br><span class="line">from sentence_transformers.evaluation import (</span><br><span class="line">    InformationRetrievalEvaluator,</span><br><span class="line">    SequentialEvaluator,</span><br><span class="line">)</span><br><span class="line">from sentence_transformers.util import cos_sim</span><br><span class="line">from datasets import load_dataset, concatenate_datasets</span><br><span class="line">from sentence_transformers.losses import MatryoshkaLoss, MultipleNegativesRankingLoss</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">model_id = &quot;BAAI/bge-base-en-v1.5&quot; </span><br><span class="line"></span><br><span class="line"># Load a model</span><br><span class="line">model = SentenceTransformer(</span><br><span class="line">    model_id, device=&quot;cuda&quot; if torch.cuda.is_available() else &quot;cpu&quot;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h2 id="定义损失函数"><a href="#定义损失函数" class="headerlink" title="定义损失函数"></a>定义损失函数</h2><p>在这里，我们配置Matryoshka 损失函数，指定用于截断嵌入的维度。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># Important: large to small</span><br><span class="line">matryoshka_dimensions = [768, 512, 256, 128, 64] </span><br><span class="line">inner_train_loss = MultipleNegativesRankingLoss(model)</span><br><span class="line">train_loss = MatryoshkaLoss(</span><br><span class="line">    model, inner_train_loss, matryoshka_dims=matryoshka_dimensions</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>内部损失函数， MultipleNegativesRankingLoss ，帮助模型生成适合检索任务的嵌入。</p>
+<h2 id="定义训练参数"><a href="#定义训练参数" class="headerlink" title="定义训练参数"></a>定义训练参数</h2><p>我们使用 SentenceTransformerTrainingArguments 来定义训练参数。这包括输出目录、训练轮数、批量大小、学习率和评估策略。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">from sentence_transformers import SentenceTransformerTrainingArguments</span><br><span class="line">from sentence_transformers.training_args import BatchSamplers</span><br><span class="line"></span><br><span class="line"># define training arguments</span><br><span class="line">args = SentenceTransformerTrainingArguments(</span><br><span class="line">    output_dir=&quot;bge-finetuned&quot;,                 # output directory and hugging face model ID</span><br><span class="line">    num_train_epochs=1,                         # number of epochs</span><br><span class="line">    per_device_train_batch_size=4,              # train batch size</span><br><span class="line">    gradient_accumulation_steps=16,             # for a global batch size of 512</span><br><span class="line">    per_device_eval_batch_size=16,              # evaluation batch size</span><br><span class="line">    warmup_ratio=0.1,                           # warmup ratio</span><br><span class="line">    learning_rate=2e-5,                         # learning rate, 2e-5 is a good value</span><br><span class="line">    lr_scheduler_type=&quot;cosine&quot;,                 # use constant learning rate scheduler</span><br><span class="line">    optim=&quot;adamw_torch_fused&quot;,                  # use fused adamw optimizer</span><br><span class="line">    tf32=True,                                  # use tf32 precision</span><br><span class="line">    bf16=True,                                  # use bf16 precision</span><br><span class="line">    batch_sampler=BatchSamplers.NO_DUPLICATES,  # MultipleNegativesRankingLoss benefits from no duplicate samples in a batch</span><br><span class="line">    eval_strategy=&quot;epoch&quot;,                      # evaluate after each epoch</span><br><span class="line">    save_strategy=&quot;epoch&quot;,                      # save after each epoch</span><br><span class="line">    logging_steps=10,                           # log every 10 steps</span><br><span class="line">    save_total_limit=3,                         # save only the last 3 models</span><br><span class="line">    load_best_model_at_end=True,                # load the best model when training ends</span><br><span class="line">    metric_for_best_model=&quot;eval_dim_128_cosine_ndcg@10&quot;,  # Optimizing for the best ndcg@10 score for the 128 dimension</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>注意：如果您在使用 Tesla T4 时遇到训练错误，请尝试注释掉 tf32&#x3D;True 和 bf16&#x3D;True 行以禁用 TF32 和 BF16 精度。</p>
+<h2 id="创建评估器"><a href="#创建评估器" class="headerlink" title="创建评估器"></a>创建评估器</h2><p>我们创建一个评估器来衡量模型在训练过程中的性能。评估器使用 InformationRetrievalEvaluator 评估模型在Matryoshka  损失中每个维度的检索性能。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">corpus = dict(</span><br><span class="line">    zip(dataset[&#x27;train&#x27;][&#x27;id&#x27;], </span><br><span class="line">        dataset[&#x27;train&#x27;][&#x27;positive&#x27;])</span><br><span class="line">)  # Our corpus (cid =&gt; document)</span><br><span class="line"></span><br><span class="line">queries = dict(</span><br><span class="line">    zip(dataset[&#x27;train&#x27;][&#x27;id&#x27;], </span><br><span class="line">        dataset[&#x27;train&#x27;][&#x27;anchor&#x27;])</span><br><span class="line">)  # Our queries (qid =&gt; question)</span><br><span class="line"></span><br><span class="line"># Create a mapping of relevant document (1 in our case) for each query</span><br><span class="line">relevant_docs = &#123;&#125;  # Query ID to relevant documents (qid =&gt; set([relevant_cids])</span><br><span class="line">for q_id in queries:</span><br><span class="line">    relevant_docs[q_id] = [q_id]</span><br><span class="line"></span><br><span class="line">matryoshka_evaluators = []</span><br><span class="line"># Iterate over the different dimensions</span><br><span class="line">for dim in matryoshka_dimensions:</span><br><span class="line">    ir_evaluator = InformationRetrievalEvaluator(</span><br><span class="line">        queries=queries,</span><br><span class="line">        corpus=corpus,</span><br><span class="line">        relevant_docs=relevant_docs,</span><br><span class="line">        name=f&quot;dim_&#123;dim&#125;&quot;,</span><br><span class="line">        truncate_dim=dim,  # Truncate the embeddings to a certain dimension</span><br><span class="line">        score_functions=&#123;&quot;cosine&quot;: cos_sim&#125;,</span><br><span class="line">    )</span><br><span class="line">    matryoshka_evaluators.append(ir_evaluator)</span><br><span class="line"></span><br><span class="line"># Create a sequential evaluator</span><br><span class="line">evaluator = SequentialEvaluator(matryoshka_evaluators)</span><br></pre></td></tr></table></figure>
+
+<h2 id="在微调之前评估模型"><a href="#在微调之前评估模型" class="headerlink" title="在微调之前评估模型"></a>在微调之前评估模型</h2><p>我们评估基础模型以获取微调前的基准性能。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">results = evaluator(model)</span><br><span class="line"></span><br><span class="line">for dim in matryoshka_dimensions:</span><br><span class="line">    key = f&quot;dim_&#123;dim&#125;_cosine_ndcg@10&quot;</span><br><span class="line">    print(f&quot;&#123;key&#125;: &#123;results[key]&#125;&quot;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="定义训练器"><a href="#定义训练器" class="headerlink" title="定义训练器"></a>定义训练器</h2><p>我们创建一个 SentenceTransformerTrainer 对象，指定模型、训练参数、数据集、损失函数和评估器。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">from sentence_transformers import SentenceTransformerTrainer</span><br><span class="line"></span><br><span class="line">trainer = SentenceTransformerTrainer(</span><br><span class="line">    model=model, # our embedding model</span><br><span class="line">    args=args,  # training arguments we defined above</span><br><span class="line">    train_dataset=dataset.select_columns(</span><br><span class="line">        [&quot;positive&quot;, &quot;anchor&quot;]</span><br><span class="line">    ),</span><br><span class="line">    loss=train_loss, # Matryoshka loss</span><br><span class="line">    evaluator=evaluator, # Sequential Evaluator</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h2 id="开始微调"><a href="#开始微调" class="headerlink" title="开始微调"></a>开始微调</h2><p>trainer.train() 方法开始微调过程，使用提供的数据和损失函数更新模型的权重。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># start training </span><br><span class="line">trainer.train()</span><br><span class="line"># save the best model</span><br><span class="line">trainer.save_model()</span><br></pre></td></tr></table></figure>
+
+<p>训练完成后，我们将最佳性能模型保存到指定的输出目录。</p>
+<h2 id="微调后的评估"><a href="#微调后的评估" class="headerlink" title="微调后的评估"></a>微调后的评估</h2><p>最后，我们加载微调后的模型，并使用相同的评估器进行评估，以衡量微调后性能的提升。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">from sentence_transformers import SentenceTransformer</span><br><span class="line"></span><br><span class="line">fine_tuned_model = SentenceTransformer(</span><br><span class="line">    args.output_dir, device=&quot;cuda&quot; if torch.cuda.is_available() else &quot;cpu&quot;</span><br><span class="line">)</span><br><span class="line"># Evaluate the model</span><br><span class="line">results = evaluator(fine_tuned_model)</span><br><span class="line"></span><br><span class="line"># Print the main score</span><br><span class="line">for dim in matryoshka_dimensions:</span><br><span class="line">    key = f&quot;dim_&#123;dim&#125;_cosine_ndcg@10&quot;</span><br><span class="line">    print(f&quot;&#123;key&#125;: &#123;results[key]&#125;&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>通过对您领域的嵌入模型进行微调，您为您的自然语言处理应用程序提供了对该领域特定语言和概念的更深入理解，这可以在问答、文档检索和文本生成等任务中带来显著改善。</p>
+<p>本文讨论的技术，例如利用 mrl 和使用像 bge-base-en 这样的强大模型，为构建特定领域的嵌入模型提供了一条实用路径。虽然我们专注于微调的过程，但请记住，数据集的质量同样重要，仔细策划一个准确反映您领域细微差别的数据集对于实现最佳结果至关重要。</p>
+<p><a target="_blank" rel="noopener" href="https://blog.gopenai.com/fine-tuning-embeddings-for-specific-domains-a-comprehensive-guide-5e4298b42185">Fine-tuning Embeddings for Specific Domains: A Comprehensive Guide | by kirouane Ayoub | Oct, 2024 | GoPenAI</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/09/26/GPUMemoryNeed4LLMs/" rel="prev" title="如何估算大模型推理占用的VRAM">
+                  <i class="fa fa-angle-left"></i> 如何估算大模型推理占用的VRAM
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Howard Huang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">628k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">19:03</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+    <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动-->
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.33/fancybox/fancybox.umd.js" integrity="sha256-+2+qOqR8CKoHh/AsVR9k2qaDBKWjYNC2nozhYmv5j9k=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
