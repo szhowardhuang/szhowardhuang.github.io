@@ -120,7 +120,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">69</span>
+          <span class="site-state-item-count">70</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -138,6 +138,130 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/07/08/AIOS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Howard Huang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/07/08/AIOS/" class="post-title-link" itemprop="url">LLM代理操作系统 （AIOS）</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-07-08 09:25:04 / 修改时间：10:31:31" itemprop="dateCreated datePublished" datetime="2024-07-08T09:25:04+08:00">2024-07-08</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>一种称为AIOS（LLM代理操作系统）的新方法旨在改变基于大型语言模型的代理的开发和部署。通过集成到LLMs操作系统中，AIOS 创建了一个功能类似于大脑的操作系统，标志着向通用人工智能 （AGI） 迈出了一步。</p>
+<p><strong>AIOS的主要特点和优势：</strong></p>
+<ol>
+<li>资源分配优化：AIOS改善了资源分配，确保了LLM代理请求的高效利用。</li>
+<li>无缝上下文切换：它简化了在代理之间切换上下文的过程，实现了平稳过渡并保持连续性。</li>
+<li>并发代理执行：AIOS 允许多个代理同时运行，从而提高整体系统性能和响应能力。</li>
+<li>全面的代理工具集：它为代理提供了广泛的工具供代理使用，从而为他们提供了扩展的功能。</li>
+<li>强大的访问控制：AIOS实施严格的访问控制措施，对代理权限进行管理，维护系统安全。</li>
+</ol>
+<p><img src="/../asset_aios/01.png" alt="Example of how an agent (i.e., Travel Agent) requires both LLM level and OS"></p>
+<p>代理（即旅行代理）如何需要LLM级别和操作系统级别的资源和功能来完成任务的示例</p>
+<h2 id="LLM内核"><a href="#LLM内核" class="headerlink" title="LLM内核"></a>LLM内核</h2><p>AIOS的核心是LLM内核，这是一个专门的组件，旨在通过一套专用模块管理LLM相关的活动：</p>
+<ul>
+<li>代理调度器：该模块优化了代理请求的调度，确保了LLM资源的高效利用。通过对请求队列进行优先级排序和管理，Agent Scheduler 可以最大限度地提高吞吐量并最小化延迟。</li>
+<li>上下文管理器：上下文管理器负责保存和恢复 LLM的生成进度，即使中断，也可以无缝恢复任务。它还管理上下文窗口，确保LLM上下文容量的最佳利用。</li>
+<li>内存管理器：AIOS 包括一个内存管理器，为每个代理的交互提供短期内存。这使代理能够保持本地状态并快速访问相关信息，从而提高他们的响应能力和性能。</li>
+<li>存储管理器：为了实现长期持久性，存储管理器可以安全地保存代理交互。这使代理能够访问历史数据，从过去的经验中学习，并根据广泛的知识做出明智的决策。</li>
+<li>工具管理器：工具管理器负责监督代理可以使用的外部 API 工具。通过集成各种工具，AIOS 使代理能够执行复杂的任务并访问丰富的信息和功能。</li>
+<li>访问管理器：为确保隐私和安全，访问管理器在代理之间实施严格的访问控制策略。它管理权限、身份验证和授权，防止未经授权的访问并保护敏感数据。</li>
+</ul>
+<h2 id="开发人员友好的界面和-SDK"><a href="#开发人员友好的界面和-SDK" class="headerlink" title="开发人员友好的界面和 SDK"></a>开发人员友好的界面和 SDK</h2><p>AIOS 提供了一个直观的LLM系统调用接口，允许开发人员轻松地与底层LLM内核进行交互。此外，AIOS SDK 提供了一套全面的工具和库，使开发人员能够轻松创建复杂的代理应用程序。SDK 抽象了复杂的功能，使代理开发更加易于访问和高效。</p>
+<h2 id="三层架构"><a href="#三层架构" class="headerlink" title="三层架构"></a>三层架构</h2><p>AIOS采用三层架构，保证模块化、可扩展性和性能：</p>
+<ol>
+<li>应用程序层：此层是开发和部署代理应用程序的地方。开发人员利用 AIOS SDK 创建可以执行各种任务的智能和交互式代理。</li>
+<li>内核层：内核层由两个主要组件组成 — 操作系统内核和LLM内核。操作系统内核处理常规操作系统任务，而LLM内核则专门用于管理LLM特定的活动，确保最佳性能和资源利用率。</li>
+<li>硬件层：硬件层包含系统的物理组件，例如 CPU、GPU、内存和存储设备。AIOS 有效地利用这些资源来提供无缝且高性能的代理执行环境。</li>
+</ol>
+<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><p>在AIOS上进行的实验表明，它能够同时运行多个代理，并具有出色的可靠性和效率。即使代理请求暂停和恢复，LLM响应也保持一致，从而确保了生成的输出的完整性。此外，AIOS的智能调度机制明显优于顺序代理执行，在等待和处理时间上实现了更好的平衡。</p>
+<p><img src="/../asset_aios/02.png" alt="AIOS architecture"></p>
+<p>AIOS 架构概述</p>
+<h2 id="未来研究方向"><a href="#未来研究方向" class="headerlink" title="未来研究方向"></a>未来研究方向</h2><p>虽然 AIOS 为LLM基于代理的开发和部署提供了一种开创性的方法，但未来还有几种令人兴奋的研究和改进途径：</p>
+<ul>
+<li>高级调度算法：开发考虑座席请求之间的依赖关系的调度算法，并根据优先级和紧急程度优化资源分配。</li>
+<li>高效的上下文管理：探索更高效地管理上下文的技术，例如上下文压缩和摘要，以最大限度地提高上下文窗口的LLM利用率。</li>
+<li>优化内存和存储：研究优化内存和存储架构的方法，以促进无缝代理协作，例如实施共享内存池和分层缓存机制。</li>
+<li>增强安全性和隐私性：不断增强 AIOS 的安全和隐私功能，包括高级加密技术、安全通信协议和强大的访问控制机制。</li>
+</ul>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>AIOS代表了开发和部署基于代理的LLM的一步。通过集成到LLMs操作系统中，AIOS为代理执行创造了一个智能高效的环境。凭借其全面的模块集、开发人员友好的界面和优化的架构，AIOS 为智能代理生态系统奠定了基础。</p>
+<p>随着研究人员继续探索和扩展AIOS的功能，我们可以预见未来，基于LLM智能体的代理将变得越来越复杂、自主，并成为各个领域不可或缺的一部分。AIOS开辟了许多可能性，为下一代智能系统铺平了道路，这些系统能够以前所未有的方式理解、推理并与世界互动。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a target="_blank" rel="noopener" href="https://medium.com/@simeon.emanuilov/llm-agent-operating-system-aios-and-the-future-of-llm-powered-agents-3d08b4e91c34">https://medium.com/@simeon.emanuilov/llm-agent-operating-system-aios-and-the-future-of-llm-powered-agents-3d08b4e91c34</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -2382,206 +2506,6 @@ pip install stable_baselines3
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://szhowardhuang.github.io/2024/05/05/reinforce-learing-game-2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Howard Huang">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 嵌入式老兵博客">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/05/05/reinforce-learing-game-2/" class="post-title-link" itemprop="url">通过游戏深入了解强化学习 下篇</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2024-05-05 16:22:58 / 修改时间：20:33:42" itemprop="dateCreated datePublished" datetime="2024-05-05T16:22:58+08:00">2024-05-05</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>11k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>19 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>回顾一下第一部分中，强化学习中基于价值和基于策略的算法。</p>
-<h3 id="基于价值的算法"><a href="#基于价值的算法" class="headerlink" title="基于价值的算法"></a>基于价值的算法</h3><p><img src="/../asset_reinforcelearninggame2/01.png"></p>
-<p>专注于优化价值函数，该函数估计状态-动作对（Q 值）的未来奖励。这种方法包括 Q 学习等方法，其目标是通过学习每个状态下每个动作的价值来最大化预期回报。</p>
-<h3 id="基于策略的算法"><a href="#基于策略的算法" class="headerlink" title="基于策略的算法"></a>基于策略的算法</h3><p><img src="/../asset_reinforcelearninggame2/02.png"></p>
-<p>直接学习决定代理行为的策略，而不需要价值函数。 （通常将 θ 建模为神经网络。）</p>
-<p>这些方法通过调整参数来优化策略，以最大化预期回报。示例包括 REINFORCE，其中策略朝着提高性能的方向更新。</p>
-<h3 id="Advantage-Actor-Critic-A2C"><a href="#Advantage-Actor-Critic-A2C" class="headerlink" title="Advantage Actor Critic (A2C)"></a>Advantage Actor Critic (A2C)</h3><p>虽然 REINFORCE 方法具有直接更新策略而无需计算所有 Q 值的优点（如基于值的算法所要求的那样），但它引入了新问题：</p>
-<ul>
-<li>样本效率低下</li>
-<li>梯度的高方差</li>
-</ul>
-<p>在 REINFORCE 中，我们使用trajectory 的返回值来引导我们的梯度。然而，在随机环境中，这些返回值可能变得非常大或非常小，导致梯度不稳定。</p>
-<p><img src="/../asset_reinforcelearninggame2/04.webp"></p>
-<p>为了减少REINFORCE的方差，常用的方法是用优势函数A(s,a)代替R(τ)。</p>
-<p><img src="/../asset_reinforcelearninggame2/05.webp"></p>
-<p>优势函数是通过从 V 函数中减去 Q 函数来计算的。它评估如果我们在给定状态下采取特定行动，与该状态下收到的平均奖励相比，我们可以获得多少额外奖励。</p>
-<p>但现在问题来了，我们如何获得Q和V的值呢？</p>
-<p>我们可以以 TD 误差的形式重新表述这个方程，将 Q 函数表示为即时奖励与下一个状态值的总和。</p>
-<p><img src="/../asset_reinforcelearninggame2/06.webp"><br>R：立即奖励，V：状态值</p>
-<p>现在，通过构建一个新的模型（critic）来预测价值函数，我们可以轻松获得所采取行动的优势。</p>
-<h3 id="Actor-Critic"><a href="#Actor-Critic" class="headerlink" title="Actor &amp; Critic"></a>Actor &amp; Critic</h3><p><img src="/../asset_reinforcelearninggame2/07.webp"></p>
-<p>A2C 算法由两个模型组成：Actor 和 Critic。 Actor 负责确定动作 π(a|s)，而 Critic 则评估状态值 V(s)。</p>
-<ul>
-<li>Critic：通过评估状态值来计算优势 ( &#x3D; Return — V(s_t))。</li>
-<li>Actor：功能类似于REINFORCE算法中的代理，负责根据提供的状态预测动作。</li>
-</ul>
-<p>尽管 Actor 和 Critic 是两个不同的模型，但在实践中，它们通常共享相同的网络架构，只有最后一层产生不同的输出</p>
-<h3 id="A2C优化"><a href="#A2C优化" class="headerlink" title="A2C优化"></a>A2C优化</h3><p><img src="/../asset_reinforcelearninggame2/08.webp"></p>
-<ul>
-<li>N：未来奖励的步数</li>
-<li>Rt：&#x3D; rt + γ<em>rt_1 + … + γ^(N-1)</em> rt_N-1 + Vω(s_t+N)</li>
-<li>θ: actor</li>
-<li>ω: critic</li>
-</ul>
-<p>对于 Actor：我们根据损失函数 J &#x3D; logπ(a|s) * A(s, a) 更新网络，实现与 REINFORCE 相同。</p>
-<p><img src="/../asset_reinforcelearninggame2/09.webp"></p>
-<p>对于 Critic：我们可以在 Rt 和 Vω(St) 之间应用 MSE 来改进我们的 Critic。</p>
-<p><img src="/../asset_reinforcelearninggame2/10.webp"></p>
-<p>函数Vω(s)表示从状态s开始的期望回报。由于回报 Rt​提供了对处于该状态的好坏程度的直接衡量，因此critic的任务是使用价值函数 Vω(s) 尽可能接近地预测这些回报。</p>
-<h3 id="A2C实施"><a href="#A2C实施" class="headerlink" title="A2C实施"></a>A2C实施</h3><p>在我们的第一个实现中，我们将玩车杆游戏，这是一个旨在解决车杆问题的基本环境。您还可以尝试其他一些经典的控制环境，例如 Pendulum 和 Acrobot。</p>
-<p><img src="/../asset_reinforcelearninggame2/11.webp"></p>
-<p><img src="/../asset_reinforcelearninggame2/12.webp"></p>
-<p>在开始之前一定要先通读<a target="_blank" rel="noopener" href="https://gymnasium.farama.org/environments/classic_control/cart_pole/">文档</a></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> gymnasium <span class="keyword">as</span> gym</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> ema_pytorch <span class="keyword">import</span> EMA</span><br><span class="line"><span class="keyword">from</span> torch.distributions.categorical <span class="keyword">import</span> Categorical</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">make_env</span>(<span class="params">env_id</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">wrapped_env</span>():</span><br><span class="line">        env = gym.make(env_id, render_mode=<span class="string">&#x27;rgb_array&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> env</span><br><span class="line">    <span class="keyword">return</span> wrapped_env</span><br><span class="line"></span><br><span class="line">env_id = <span class="string">&#x27;CartPole-v1&#x27;</span></span><br><span class="line">env = make_env(env_id)()</span><br></pre></td></tr></table></figure>
-
-<p><img src="/../asset_reinforcelearninggame2/13.webp"><br>车杆的动作和观察空间</p>
-<p>动作空间很简单，在每个时间步，我们可以选择将小车推到左边或右边。同时，观察空间包含四个连续值，分别代表小车位置、小车速度、极角和极角速度。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Actor</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, obs_dim, n_actions</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        self.model = nn.Sequential(</span><br><span class="line">            nn.Linear(obs_dim, <span class="number">64</span>),</span><br><span class="line">            nn.Tanh(),</span><br><span class="line">            nn.Linear(<span class="number">64</span>, <span class="number">64</span>),</span><br><span class="line">            nn.Tanh(),</span><br><span class="line">            nn.Linear(<span class="number">64</span>, n_actions)</span><br><span class="line">        )</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        logits = self.model(x)</span><br><span class="line">        <span class="keyword">return</span> Categorical(logits = logits)</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Critic</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, obs_dim</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        self.model = nn.Sequential(</span><br><span class="line">            nn.Linear(obs_dim, <span class="number">64</span>),</span><br><span class="line">            nn.ReLU(),</span><br><span class="line">            nn.Linear(<span class="number">64</span>, <span class="number">64</span>),</span><br><span class="line">            nn.ReLU(),</span><br><span class="line">            nn.Linear(<span class="number">64</span>, <span class="number">1</span>)</span><br><span class="line">        )</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        <span class="keyword">return</span> self.model(x)</span><br></pre></td></tr></table></figure>
-<p>在A2C中，我们将有两个模型，Actor和Critic。 Actor 输出概率分布来确定采取哪个操作，而 Critic 则提供状态值。</p>
-<p>在大多数情况下，Actor 和 Critic 将集成到一个模型中</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">gamma = <span class="number">0.99</span></span><br><span class="line">episodes = <span class="number">200</span></span><br><span class="line">env = make_env(env_id)()</span><br><span class="line">device = <span class="string">&quot;cuda&quot;</span> <span class="keyword">if</span> torch.cuda.is_available() <span class="keyword">else</span> <span class="string">&quot;cpu&quot;</span></span><br><span class="line"></span><br><span class="line">actor = Actor(<span class="number">4</span>, <span class="number">2</span>).to(device)</span><br><span class="line">critic = Critic(obs_shape[<span class="number">0</span>]).to(device)</span><br><span class="line">actor_optim = torch.optim.Adam(actor.parameters(), lr=<span class="number">1e-3</span>)</span><br><span class="line">critic_optim = torch.optim.Adam(critic.parameters(), lr=<span class="number">1e-3</span>)</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> episode <span class="keyword">in</span> tqdm(<span class="built_in">range</span>(<span class="number">1</span>, episodes + <span class="number">1</span>), desc=<span class="string">&quot;A2C training progress: ~~&quot;</span>):          </span><br><span class="line">    done = <span class="literal">False</span></span><br><span class="line">    obs, _ = env.reset()</span><br><span class="line">    log_probs = []</span><br><span class="line">    values = []</span><br><span class="line">    rewards = []</span><br><span class="line">    frame = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">not</span> done:</span><br><span class="line">        obs = torch.tensor(obs).to(device)</span><br><span class="line">        dist = actor(obs)</span><br><span class="line">        value = critic(obs)</span><br><span class="line">        action = dist.sample()</span><br><span class="line">        log_prob = dist.log_prob(action)</span><br><span class="line">        next_obs, reward, done, _, info = env.step(action.detach().cpu().numpy())</span><br><span class="line">      </span><br><span class="line">        log_probs.append(log_prob)</span><br><span class="line">        values.append(value)</span><br><span class="line">        rewards.append(reward)</span><br><span class="line">        obs = next_obs</span><br><span class="line">        </span><br><span class="line">        frame += <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> frame &gt;= <span class="number">300</span>:</span><br><span class="line">            <span class="comment"># Give some constraints to the length of the episode</span></span><br><span class="line">            <span class="comment"># otherwise, it will become too large.</span></span><br><span class="line">            <span class="keyword">break</span>   </span><br><span class="line">    R = <span class="number">0</span></span><br><span class="line">    returns = []</span><br><span class="line">    <span class="keyword">for</span> r <span class="keyword">in</span> rewards[::-<span class="number">1</span>]:</span><br><span class="line">        R = r + gamma * R</span><br><span class="line">        returns.insert(<span class="number">0</span>, R)</span><br><span class="line">        </span><br><span class="line">    returns = torch.tensor(returns).to(device)</span><br><span class="line">    values = torch.stack(values).to(device)</span><br><span class="line">    advantage = returns - values</span><br><span class="line">    </span><br><span class="line">    critic_loss = advantage.<span class="built_in">pow</span>(<span class="number">2</span>).mean()</span><br><span class="line">    critic_optim.zero_grad()</span><br><span class="line">    critic_loss.backward()</span><br><span class="line">    critic_optim.step() <span class="comment"># update critic</span></span><br><span class="line">    </span><br><span class="line">    actor_loss = (-torch.stack(log_probs)*advantage.detach()).mean()</span><br><span class="line">    actor_optim.zero_grad()</span><br><span class="line">    actor_loss.backward()</span><br><span class="line">    actor_optim.step() <span class="comment"># update actor</span></span><br></pre></td></tr></table></figure>
-
-<p>训练过程与REINFORCE算法基本相同；唯一的区别是对数概率现在乘以优势而不是回报。</p>
-<p><img src="/../asset_reinforcelearninggame2/14.webp"></p>
-<h3 id="车杆结果"><a href="#车杆结果" class="headerlink" title="车杆结果"></a>车杆结果</h3><p><img src="/../asset_reinforcelearninggame2/14.gif"></p>
-<h3 id="在线策略-离线策略模型"><a href="#在线策略-离线策略模型" class="headerlink" title="在线策略 &amp; 离线策略模型"></a>在线策略 &amp; 离线策略模型</h3><p><img src="/../asset_reinforcelearninggame2/15.webp"></p>
-<h4 id="在线策略模型：（例如-REINFORCE，AC2）"><a href="#在线策略模型：（例如-REINFORCE，AC2）" class="headerlink" title="在线策略模型：（例如 REINFORCE，AC2）"></a>在线策略模型：（例如 REINFORCE，AC2）</h4><ul>
-<li>基于当前策略，同策略模型通过与环境交互来收集数据。每次更新都需要由更新的策略生成的新数据。</li>
-<li>根据收集的数据执行更新。该模型直接从其自身策略生成的数据中学习。</li>
-</ul>
-<h4 id="离线策略模型：（例如-DQN）"><a href="#离线策略模型：（例如-DQN）" class="headerlink" title="离线策略模型：（例如 DQN）"></a>离线策略模型：（例如 DQN）</h4><ul>
-<li><p>离线策略模型可以从任何来源收集数据，包括过去的经验或不同的策略。</p>
-</li>
-<li><p>这些模型从收集到的数据中学习，无论这些数据是由哪种策略产生，或者源自何处。</p>
-</li>
-</ul>
-<h3 id="近端策略优化-PPO"><a href="#近端策略优化-PPO" class="headerlink" title="近端策略优化 (PPO)"></a>近端策略优化 (PPO)</h3><p>在A2C部分，我们通过从V函数中减去Q函数来解决梯度高方差的问题。然而，另一个有待解决的挑战是样本效率低下。</p>
-<p>REINFORCE 和 AC2 等同策略模型中的样本效率低下源于需要根据当前策略 π_θ 收集数据。更新模型参数 θ 会导致策略发生变化，这需要收集新的trajectories。</p>
-<p>在之前的实验中，trajectories的最大长度为300。这意味着每次更新参数时，我们都会利用300个数据点，这不是一种有效的数据使用方式。</p>
-<p>PPO 修改了严格的在线策略规定，以允许在某些条件下使用离线策略数据。通过将重要性采样应用于我们的策略梯度，我们可以获得以下结果：<br><img src="/../asset_reinforcelearninggame2/16.webp"></p>
-<p><img src="/../asset_reinforcelearninggame2/17.webp"></p>
-<p>我们可以看到数据不再从当前策略 π_θ 收集，而是从表示为 π_bar 的不同策略收集。这种调整允许我们利用从不同策略采样的数据对原始策略 π_θ 执行多次更新。</p>
-<h3 id="Clipped-Surrogate-Objective-Function-（截断替代目标函数）"><a href="#Clipped-Surrogate-Objective-Function-（截断替代目标函数）" class="headerlink" title="Clipped Surrogate Objective Function （截断替代目标函数）"></a>Clipped Surrogate Objective Function （截断替代目标函数）</h3><p><img src="/../asset_reinforcelearninggame2/18.webp"></p>
-<p>对于大多数优化方法来说，使用较小的梯度来更新模型的权重通常会带来更好、更稳定的结果。</p>
-<p>然而，在策略梯度方法中，梯度log(π_θ)可以很大也可以很小；因此，为了使训练更加稳定，必须限制梯度。</p>
-<p>PPO 通过裁剪 [1−ε, 1+ε] 范围之外的梯度来实现这一点。我们将在下表中进一步讨论这个问题~~</p>
-<p><img src="/../asset_reinforcelearninggame2/19.webp"><br><img src="/../asset_reinforcelearninggame2/20.webp"></p>
-<h4 id="Case-1-2"><a href="#Case-1-2" class="headerlink" title="Case 1, 2:"></a>Case 1, 2:</h4><p>比率 pt 在 [1−ε, 1+ε] 范围内，因此我们对梯度不做任何操作并返回 pt​(θ)At​。</p>
-<h4 id="Case-3，6"><a href="#Case-3，6" class="headerlink" title="Case 3，6:"></a>Case 3，6:</h4><p>由于 p𝑡 &lt; 1−𝜖（情况 3），这表明新策略𝜋𝜃​采取行动𝑎_𝑡的概率小于旧策略，并且考虑到优势是正的，我们希望增加 πθ​的值。因此，在这种情况下不需要剪裁。</p>
-<h4 id="Case-4，5"><a href="#Case-4，5" class="headerlink" title="Case 4，5:"></a>Case 4，5:</h4><p>以情况 4 为例，我们可以看到概率 πθ​ 小于 𝜋old​（因为 p𝑡&lt;1−𝜖），并且考虑到优势为负，这将倾向于进一步降低 𝜋𝜃 ，这可能会使训练不稳定。因此，我们将梯度设置为 0 以确保策略不会发生变化。</p>
-<p>这就是PPO的全部内容。</p>
-<h3 id="赛车实施"><a href="#赛车实施" class="headerlink" title="赛车实施"></a>赛车实施</h3><p>完整的实现可以在这里找到：<a target="_blank" rel="noopener" href="https://github.com/Yukino1010/ReinforcementModels.git">链接</a></p>
-<p><img src="/../asset_reinforcelearninggame2/21.webp"></p>
-<p>在我们的第二个实现中，我们将使用 Box2D 环境来玩赛车游戏。规则很简单：每次访问一个轨道块我们都会得到1000分；然而，每帧我们都会损失 0.1 分。例如，如果您完成了 732 帧，您的奖励将为 1000–0.1*732 &#x3D; 926.8 积分。 （更多详情请参考这里：<a target="_blank" rel="noopener" href="https://arc.net/l/quote/jbfidurc">链接</a></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#import ...</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">make_env</span>(<span class="params">env_id</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">wrapped_env</span>():</span><br><span class="line">        env = gym.make(env_id, render_mode=<span class="string">&#x27;rgb_array&#x27;</span>, continuous=<span class="literal">False</span>)</span><br><span class="line">        env = MaxAndSkipEnv(env, skip=<span class="number">4</span>)</span><br><span class="line">        env = ResizeObservation(env, <span class="number">84</span>)</span><br><span class="line">        env = GrayScaleObservation(env)</span><br><span class="line">        env = FrameStack(env, <span class="number">4</span>)</span><br><span class="line">        <span class="keyword">return</span> env</span><br><span class="line">    <span class="keyword">return</span> wrapped_env</span><br><span class="line"></span><br><span class="line">env_id = <span class="string">&quot;CarRacing-v2&quot;</span></span><br><span class="line">num_envs = <span class="number">4</span> <span class="comment"># use four parallel env to collect data</span></span><br><span class="line">envs = DummyVecEnv([make_env(env_id) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(num_envs)])</span><br></pre></td></tr></table></figure>
-
-<p>在赛车游戏中，您可以选择不同类型的动作空间，离散的或连续的。在本实验中，我们将使用离散动作空间，其中包含五个不同的动作。</p>
-<ul>
-<li>0：什么也不做</li>
-<li>1：左转</li>
-<li>2：右转</li>
-<li>3：加油门</li>
-<li>4：刹车</li>
-</ul>
-<p>观察空间是96x96 RGB图像。这次，我将使用一些<a target="_blank" rel="noopener" href="https://gymnasium.farama.org/api/wrappers/observation_wrappers/">ENV wrappers</a>将其转换为84x84的灰度图像，这更适合模型训练。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ActorCritic</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, num_inputs, num_actions</span>):</span><br><span class="line">        <span class="built_in">super</span>(ActorCritic, self).__init__()</span><br><span class="line">        <span class="comment"># Common layers</span></span><br><span class="line">        self.conv1 = nn.Conv2d(num_inputs, <span class="number">32</span>, kernel_size=<span class="number">7</span>, stride=<span class="number">2</span>, padding=<span class="number">1</span>)</span><br><span class="line">        self.conv2 = nn.Conv2d(<span class="number">32</span>, <span class="number">64</span>, kernel_size=<span class="number">4</span>, stride=<span class="number">2</span>, padding=<span class="number">1</span>)</span><br><span class="line">        self.conv3 = nn.Conv2d(<span class="number">64</span>, <span class="number">64</span>, kernel_size=<span class="number">3</span>, stride=<span class="number">2</span>, padding=<span class="number">1</span>)</span><br><span class="line">        self.conv4 = nn.Conv2d(<span class="number">64</span>, <span class="number">128</span>, kernel_size=<span class="number">3</span>, stride=<span class="number">2</span>, padding=<span class="number">1</span>)</span><br><span class="line">        </span><br><span class="line">        self.fc1 = nn.Linear(<span class="number">128</span> * <span class="number">5</span> * <span class="number">5</span>, <span class="number">512</span>)</span><br><span class="line">        self.actor_fc = nn.Linear(<span class="number">512</span>, num_actions)</span><br><span class="line">        self.critic_fc = nn.Linear(<span class="number">512</span>, <span class="number">1</span>)</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        x = F.relu(self.conv1(x))</span><br><span class="line">        x = F.relu(self.conv2(x))</span><br><span class="line">        x = F.relu(self.conv3(x))</span><br><span class="line">        x = F.relu(self.conv4(x))</span><br><span class="line">        </span><br><span class="line">        x = x.view(-<span class="number">1</span>, <span class="number">128</span> * <span class="number">5</span> * <span class="number">5</span>)  </span><br><span class="line">        x = F.relu(self.fc1(x))</span><br><span class="line">        logits = self.actor_fc(x) <span class="comment"># Actor</span></span><br><span class="line">        state_values = self.critic_fc(x) <span class="comment"># Critic</span></span><br><span class="line">        <span class="keyword">return</span> Categorical(logits=logits), state_values</span><br></pre></td></tr></table></figure>
-
-<p>由于观察的是图像，我们将使用基于 CNN 的架构来构建我们的代理。它将输出一个 Categorical 对象和当前状态的值。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">gamma = <span class="number">0.99</span></span><br><span class="line">gae_lambda = <span class="number">0.95</span></span><br><span class="line">clip_coef = <span class="number">0.2</span></span><br><span class="line">ent_coef = <span class="number">0.01</span></span><br><span class="line">vf_coef = <span class="number">1</span> </span><br><span class="line"></span><br><span class="line">num_envs = <span class="number">4</span></span><br><span class="line">num_steps = <span class="number">512</span></span><br><span class="line">minibatch_size = <span class="number">32</span></span><br><span class="line">total_steps = <span class="number">500000</span></span><br><span class="line">batch_size = num_envs * num_steps</span><br><span class="line">device = <span class="string">&quot;cuda&quot;</span> <span class="keyword">if</span> torch.cuda.is_available() <span class="keyword">else</span> <span class="string">&quot;cpu&quot;</span></span><br><span class="line">agent = ActorCritic(<span class="number">4</span>, n_action).to(device) <span class="comment"># n_action = 5</span></span><br><span class="line">ema = EMA(agent, beta = <span class="number">0.995</span>, update_every = <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> tqdm(<span class="built_in">range</span>(<span class="number">1</span>, num_updates + <span class="number">1</span>), desc=<span class="string">&quot;PPO training progress: ~~&quot;</span>):</span><br><span class="line">    <span class="keyword">for</span> step <span class="keyword">in</span> <span class="built_in">range</span>(num_steps):</span><br><span class="line">        global_step += <span class="number">1</span> * num_envs</span><br><span class="line">        obs[step] = next_obs</span><br><span class="line">        <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">            dist, value = agent(next_obs)</span><br><span class="line">            values[step] = value.view(-<span class="number">1</span>)</span><br><span class="line">            action = dist.sample()</span><br><span class="line">            logprob = dist.log_prob(action)</span><br><span class="line"></span><br><span class="line">        actions[step] = action</span><br><span class="line">        logprobs[step] = logprob</span><br><span class="line">        next_obs, reward, done, info = envs.step(action.cpu().numpy())</span><br><span class="line">        dones[step] = torch.Tensor(done).to(device)</span><br><span class="line">        rewards[step] = torch.tensor(reward).to(device).view(-<span class="number">1</span>)</span><br><span class="line">        next_obs = torch.Tensor(next_obs).to(device)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        _, next_value = agent(next_obs)</span><br><span class="line">        advantages = torch.zeros_like(rewards).to(device)</span><br><span class="line">        lastgaelam = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">reversed</span>(<span class="built_in">range</span>(num_steps)):</span><br><span class="line">            <span class="keyword">if</span> t == num_steps - <span class="number">1</span>:</span><br><span class="line">                is_done = <span class="number">1.0</span> - dones[t]</span><br><span class="line">                nextvalues = next_value</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                is_done = <span class="number">1.0</span> - dones[t]</span><br><span class="line">                nextvalues = values[t+<span class="number">1</span>]</span><br><span class="line">            delta = rewards[t] + gamma * nextvalues * is_done - values[t]</span><br><span class="line">            advantages[t] = lastgaelam = delta + gamma * gae_lambda * is_done * lastgaelam</span><br><span class="line">        returns = advantages + values</span><br><span class="line"></span><br><span class="line">    b_obs = obs.view((-<span class="number">1</span>,) + obs_shape)</span><br><span class="line">    b_actions = actions.view((-<span class="number">1</span>,) + action_shape)</span><br><span class="line">    b_logprobs = logprobs.view(-<span class="number">1</span>)</span><br><span class="line">    b_advantages = advantages.view(-<span class="number">1</span>)</span><br><span class="line">    b_returns = returns.view(-<span class="number">1</span>)</span><br><span class="line">    b_inds = np.arange(batch_size)</span><br><span class="line">   </span><br><span class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">        np.random.shuffle(b_inds)</span><br><span class="line">        <span class="keyword">for</span> start <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, batch_size, minibatch_size):</span><br><span class="line">            end = start + minibatch_size</span><br><span class="line">            mb_inds = b_inds[start:end]</span><br><span class="line">            dist, new_value = agent(b_obs[mb_inds])</span><br><span class="line">            newlogprob = dist.log_prob(b_actions.long()[mb_inds])</span><br><span class="line">            entropy = dist.entropy()</span><br><span class="line">            logratio = newlogprob - b_logprobs[mb_inds]</span><br><span class="line">            ratio = logratio.exp()</span><br><span class="line"></span><br><span class="line">            <span class="comment"># Policy loss</span></span><br><span class="line">            mb_advantages = b_advantages[mb_inds]</span><br><span class="line">            pg_loss1 = -mb_advantages * ratio</span><br><span class="line">            pg_loss2 = -mb_advantages * torch.clamp(ratio, <span class="number">1</span> - clip_coef, <span class="number">1</span> + clip_coef)</span><br><span class="line">            pg_loss = torch.<span class="built_in">max</span>(pg_loss1, pg_loss2).mean()</span><br><span class="line">            <span class="comment"># Value loss</span></span><br><span class="line">            newvalue = newvalue.view(-<span class="number">1</span>)</span><br><span class="line">            v_loss = v_loss_fn(newvalue, b_returns[mb_inds])</span><br><span class="line">            entropy_loss = entropy.mean()</span><br><span class="line">            loss = pg_loss - ent_coef * entropy_loss + v_loss * vf_coef</span><br><span class="line"></span><br><span class="line">            optimizer.zero_grad()</span><br><span class="line">            loss.backward()</span><br><span class="line">            nn.utils.clip_grad_norm_(agent.parameters(), <span class="number">0.5</span>)</span><br><span class="line">            optimizer.step()</span><br><span class="line">            ema.update()</span><br></pre></td></tr></table></figure>
-
-<p>为了执行 PPO，我们首先从旧策略中收集数据（b_obs、b_actions，…）。然后我们可以比较新旧策略之间的差异（new_logprob - b_logprobs）。最后，我们可以迭代不同的批次并更新 Actor 和 Critic。</p>
-<p>我所做的其他一些修改包括合并熵损失以及用 GAE（通用优势估计器）替换优势函数。</p>
-<p>熵用于鼓励模型探索更多可能的动作，从而探索更多可能的轨迹。同时，GAE是优势函数的变体，旨在减少奖励的方差（详细信息可以在<a target="_blank" rel="noopener" href="https://towardsdatascience.com/generalized-advantage-estimation-in-reinforcement-learning-bf4a957f7975">这里</a>找到）</p>
-<h3 id="赛车结果"><a href="#赛车结果" class="headerlink" title="赛车结果"></a>赛车结果</h3><p><img src="/../asset_reinforcelearninggame2/22.gif"></p>
-<h3 id="使用第三方模块"><a href="#使用第三方模块" class="headerlink" title="使用第三方模块"></a>使用第三方模块</h3><p>其实除了我们自己建立模型之外，我们还可以使用第三方模块来帮助我们快速建立模型。在最后一节中，我将使用 Stable Baselines3 来玩 linyiLYi 创建的<a target="_blank" rel="noopener" href="https://github.com/linyiLYi/snake-ai/tree/master">迷你蛇游戏</a>。</p>
-<p>环境详细信息可以在<a target="_blank" rel="noopener" href="https://github.com/linyiLYi/snake-ai/tree/master">这里</a>和<a target="_blank" rel="noopener" href="https://youtu.be/jTVMxJBtmFs?si=sdXihKfhT77oLvlK">这里</a>找到</p>
-<p>由于OpenAI不再支持旧的gym环境，直接使用snake环境会导致错误。解决办法是降级Stable Baselines的版本或者将snake env转换成Gymnasium使用的格式。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> snake_game_custom_wrapper_cnn <span class="keyword">import</span> SnakeEnv</span><br><span class="line"><span class="keyword">from</span> sb3_contrib <span class="keyword">import</span> MaskablePPO</span><br><span class="line"><span class="keyword">from</span> sb3_contrib.common.wrappers <span class="keyword">import</span> ActionMasker</span><br><span class="line"><span class="keyword">from</span> stable_baselines3.common.type_aliases <span class="keyword">import</span> GymEnv</span><br><span class="line"><span class="keyword">from</span> stable_baselines3.common.vec_env <span class="keyword">import</span> VecEnv, DummyVecEnv</span><br><span class="line"></span><br><span class="line"><span class="comment"># From https://github.com/linyiLYi/snake-ai/tree/master</span></span><br><span class="line">EXPECTED_METHOD_NAME = <span class="string">&#x27;get_action_mask&#x27;</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_action_masks</span>(<span class="params">env: GymEnv</span>) -&gt; np.ndarray:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Checks whether gym env exposes a method returning invalid action masks</span></span><br><span class="line"><span class="string">    :param env: the Gym environment to get masks from</span></span><br><span class="line"><span class="string">    :return: A numpy array of the masks</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(env, VecEnv):</span><br><span class="line">        <span class="keyword">return</span> np.stack(env.env_method(EXPECTED_METHOD_NAME))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">getattr</span>(env, EXPECTED_METHOD_NAME)()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Linear scheduler</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">linear_schedule</span>(<span class="params">initial_value, final_value=<span class="number">0.0</span></span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(initial_value, <span class="built_in">str</span>):</span><br><span class="line">        initial_value = <span class="built_in">float</span>(initial_value)</span><br><span class="line">        final_value = <span class="built_in">float</span>(final_value)</span><br><span class="line">        <span class="keyword">assert</span> (initial_value &gt; <span class="number">0.0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">scheduler</span>(<span class="params">progress</span>):</span><br><span class="line">        <span class="keyword">return</span> final_value + progress * (initial_value - final_value)</span><br><span class="line">    <span class="keyword">return</span> scheduler</span><br><span class="line">lr_schedule = linear_schedule(<span class="number">2.5e-4</span>, <span class="number">2.5e-6</span>)</span><br><span class="line">clip_range_schedule = linear_schedule(<span class="number">0.150</span>, <span class="number">0.025</span>)</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">num_envs = <span class="number">16</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">make_env</span>(<span class="params">seed=<span class="number">0</span></span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_init</span>():</span><br><span class="line">        env = SnakeEnv()</span><br><span class="line">        env = ActionMasker(env, SnakeEnv.get_action_mask)</span><br><span class="line">        <span class="keyword">return</span> env</span><br><span class="line">    <span class="keyword">return</span> _init</span><br><span class="line">envs = DummyVecEnv([make_env() <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(num_envs)])</span><br><span class="line"></span><br><span class="line">model = MaskablePPO(</span><br><span class="line">    <span class="string">&quot;CnnPolicy&quot;</span>,</span><br><span class="line">    envs,</span><br><span class="line">    device=<span class="string">&quot;cuda&quot;</span>,</span><br><span class="line">    verbose=<span class="number">1</span>,</span><br><span class="line">    n_steps=<span class="number">2048</span>,</span><br><span class="line">    batch_size=<span class="number">512</span>,</span><br><span class="line">    n_epochs=<span class="number">4</span>,</span><br><span class="line">    gamma=<span class="number">0.94</span>,</span><br><span class="line">    learning_rate=lr_schedule,</span><br><span class="line">    clip_range=clip_range_schedule,</span><br><span class="line">)</span><br><span class="line">model.learn(total_timesteps=<span class="built_in">int</span>(<span class="number">5000000</span>))</span><br><span class="line">model.save(<span class="string">&quot;./ppo_snake_final.zip&quot;</span>)</span><br><span class="line">envs.close()</span><br></pre></td></tr></table></figure>
-
-<h3 id="贪吃蛇游戏的结果"><a href="#贪吃蛇游戏的结果" class="headerlink" title="贪吃蛇游戏的结果"></a>贪吃蛇游戏的结果</h3><p><img src="/../asset_reinforcelearninggame2/23.gif"></p>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a target="_blank" rel="noopener" href="https://levelup.gitconnected.com/mastering-game-worlds-a-deep-dive-into-reinforcement-learning-part-2-574263e11bb1">https://levelup.gitconnected.com/mastering-game-worlds-a-deep-dive-into-reinforcement-learning-part-2-574263e11bb1</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -2605,13 +2529,13 @@ pip install stable_baselines3
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">628k</span>
+    <span title="站点总字数">638k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">19:03</span>
+    <span title="站点阅读时长">19:19</span>
   </span>
 </div>
 <div class="busuanzi-count">
